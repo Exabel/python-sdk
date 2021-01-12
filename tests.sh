@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
 
-# Run all the tests.
+# Runs all the tests.
 
 python -m unittest -v

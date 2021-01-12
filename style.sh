@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Run all the style checks.
+# Runs all the style checks.
 
 set -e
 mypy exabel_data_sdk tests setup.py
