@@ -100,7 +100,7 @@ spec:
       if (buildLevel >= BUILD_PUBLISH) {
         container('python') {
           stage('Python build and verify') {
-            sh 'pip3 install grpcio'
+            sh 'pip3 install grpcio pandas protobuf'
             sh './build.sh'
           }
         }
