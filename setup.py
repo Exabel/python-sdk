@@ -9,7 +9,7 @@ setuptools.setup(
     author="Exabel",
     author_email="support@exabel.com",
     description="Python SDK for the Exabel Data API",
-    licence="MIT",
+    license="MIT",
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/Exabel/python-sdk",
