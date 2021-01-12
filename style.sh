@@ -2,7 +2,7 @@
 
 # Runs all the style checks.
 
-set -e
+set -euf
 mypy exabel_data_sdk tests setup.py
 isort --check-only exabel_data_sdk tests setup.py
 black --check exabel_data_sdk tests setup.py
