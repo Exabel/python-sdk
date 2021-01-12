@@ -101,7 +101,7 @@ spec:
         container('python') {
           stage('Python build and verify') {
             sh 'ls'
-            sh 'build.sh'
+            sh './build.sh'
           }
         }
       }
