@@ -13,8 +13,8 @@ disable=duplicate-code,
         too-few-public-methods,
         too-many-arguments,
         too-many-locals,
-        too-many-return-statements
-
+        too-many-return-statements,
+        unsubscriptable-object # Due to a pylint bug which appears when run with Python 3.9.
 
 [BASIC]
 
