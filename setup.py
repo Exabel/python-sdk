@@ -8,7 +8,7 @@ setuptools.setup(
     version="0.0.1",
     author="Exabel",
     author_email="support@exabel.com",
-    description="Exabel’s Python SDK for the data API",
+    description="Python SDK for the Exabel Data API",
     licence="MIT",
     long_description=long_description,
     long_description_content_type="text/markdown",
