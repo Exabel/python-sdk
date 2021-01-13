@@ -1,0 +1,21 @@
+[MASTER]
+
+ignore=stubs
+
+[MESSAGES CONTROL]
+
+disable=duplicate-code,
+        import-error,
+        missing-module-docstring,
+        no-member,
+        no-name-in-module,
+        no-self-use,
+        too-few-public-methods,
+        too-many-arguments,
+        too-many-locals,
+        too-many-return-statements,
+        unsubscriptable-object # Due to a pylint bug which appears when run with Python 3.9.
+
+[BASIC]
+
+no-docstring-rgx=^_|^test_|^Test
