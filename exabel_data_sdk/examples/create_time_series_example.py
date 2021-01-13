@@ -5,7 +5,7 @@ from exabel_data_sdk.client.api.data_classes.entity import Entity
 from exabel_data_sdk.client.api.data_classes.relationship import Relationship
 from exabel_data_sdk.client.api.data_classes.relationship_type import RelationshipType
 from exabel_data_sdk.client.api.data_classes.signal import Signal
-from exabel_data_sdk.client.exabel_client import ExabelClient
+from exabel_data_sdk import ExabelClient
 
 
 def create_time_series() -> None:

@@ -1,4 +1,4 @@
-from exabel.external_api_sdk.exabel.client.exabel_client import ExabelClient
+from exabel_data_sdk import ExabelClient
 
 
 def get_company() -> None:
