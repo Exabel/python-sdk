@@ -4,7 +4,7 @@
 String label = "buildpod.${env.JOB_NAME}.${env.BUILD_NUMBER}".replaceAll(/[^\w-]/, '_')
 
 // Sets special branch locations
-String officialMaster = 'git@github.com:Exabel/python-sdk.git:master'
+String officialMain = 'git@github.com:Exabel/python-sdk.git:main'
 
 // Build levels
 BUILD_NONE = 0    // Build nothing -- assuming no code changes
@@ -83,7 +83,7 @@ spec:
         gitBranch = BRANCH_NAME
         gitCommit = sh(returnStdout: true, script: 'git rev-parse --short HEAD').trim()
         tagName = (gitBranch + '.' + gitCommit).replaceAll(/[^\w-\.]/, '_')
-        ON_MASTER = (gitRemote + ':' + gitBranch == officialMaster)
+        ON_MAIN = (gitRemote + ':' + gitBranch == officialMain)
 
         changed = getChangedFilesList()
         echo 'Changed files: ' + changed
@@ -106,7 +106,7 @@ spec:
         }
       }
 
-      if (!ON_MASTER) {
+      if (!ON_MAIN) {
         notifySlack('#40b59b', 'SUCCESS')
       }
     } catch (org.jenkinsci.plugins.workflow.steps.FlowInterruptedException e) {
@@ -130,7 +130,7 @@ String getSlackUser() {
 }
 
 String getChannel() {
-  if (ON_MASTER) {
+  if (ON_MAIN) {
     return '#jenkins-ci'
   }
   return "@${getSlackUser()}"
