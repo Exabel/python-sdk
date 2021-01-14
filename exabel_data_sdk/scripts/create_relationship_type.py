@@ -2,6 +2,7 @@ import argparse
 import sys
 from typing import Sequence
 
+
 from exabel_data_sdk import ExabelClient
 from exabel_data_sdk.client.api.data_classes.relationship_type import RelationshipType
 from exabel_data_sdk.scripts.base_script import BaseScript
