@@ -9,7 +9,7 @@ from exabel_data_sdk.scripts.base_script import BaseScript
 
 class DeleteEntities(BaseScript):
     """
-    Deletes all entities of a given entity type.
+    Deletes all entities of  a given entity type.
 
     Only entities that are not read-only are deleted.
     """
@@ -27,7 +27,7 @@ class DeleteEntities(BaseScript):
             required=False,
             action="store_true",
             default=False,
-            help="Only print to console instead of deleting",
+            help="Only print to console   instead of deleting",
         )
 
     def run_script(self, client: ExabelClient, args: argparse.Namespace) -> None:
