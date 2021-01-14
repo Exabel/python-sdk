@@ -7,6 +7,8 @@ from exabel_data_sdk.client.api.data_classes.entity import Entity
 from exabel_data_sdk.scripts.base_script import BaseScript
 
 
+
+
 class DeleteEntities(BaseScript):
     """
     Deletes all entities of a given entity type.
