@@ -11,7 +11,7 @@ class DeleteEntities(BaseScript):
     """
     Deletes all entities of  a given entity type.
 
-    Only entities that are not read-only are deleted.
+    Only entities that are n  ot read-only are deleted.
     """
 
     def __init__(self, argv: Sequence[str], description: str):
