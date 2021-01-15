@@ -6,6 +6,65 @@ String label = "buildpod.${env.JOB_NAME}.${env.BUILD_NUMBER}".replaceAll(/[^\w-]
 // Sets special branch locations
 String officialMain = 'git@github.com:Exabel/python-sdk.git:main'
 
+// Build levels
+BUILD_NONE = 0    // Build nothing -- assuming no code changes
+BUILD_PUBLISH = 1 // Build only what's needed to publish maven artifacts
+BUILD_ALL = 2     // Build, test and publish everything
+
+// List of files that do not contain any code
+Collection<String> fileRegexNoCode = [/.*[.]md/, /LICENSE/]
+
+// Returns the full list of changed files in the pull request
+Collection<String> getAllChangedFilesList() {
+  if (env.CHANGE_ID) {
+    // This is a PR, return the files as reported by GitHub.
+    return pullRequest.files.collect { it.filename }
+  } else {
+    // This is a pure branch build, return something that will build everything.
+    return ['__first_build__']
+  }
+}
+
+// Returns the list of changed files between the current commit and another commit
+Collection<String> getChangedFiles(String commit) {
+  return sh(returnStdout: true, script: "git --no-pager diff --name-only $commit").trim().split('\n')
+}
+
+// Returns a list of changed files since the previous successful build.
+Collection<String> getChangedFilesList() {
+  def build = currentBuild.previousSuccessfulBuild
+  if (build == null) {
+    echo 'No previous successful builds'
+    return getAllChangedFilesList()
+  }
+  echo "Previous successful build: #$build.id"
+  def buildData = build.rawBuild.getAction(hudson.plugins.git.util.BuildData.class)
+  String commit = buildData.lastBuiltRevision.sha1String
+  if (commit == null) {
+    echo 'No previous build commit found'
+    return getAllChangedFilesList()
+  }
+  echo "Previous successful commit: $commit"
+  if (!env.CHANGE_ID) {
+    // This is a pure branch build, just use the diff since the previous
+    return getChangedFiles(commit)
+  } else {
+    // This is a PR, ignore changes in the base branch by doing a temporary merge from the previous success
+    String currentCommit = sh(returnStdout: true, script: "git rev-parse HEAD").trim()
+    sh "git -c advice.detachedHead=false checkout $commit"
+    if (sh(returnStatus: true, script: "git merge origin/${pullRequest.base} -m 'Tmp diff commit'")) {
+      // Merge failed, just use the diff without merging
+      sh "git checkout -f $currentCommit"
+      return getChangedFiles(commit)
+    } else {
+      // Merge successful. Grab the diff with the actual commit
+      def files = getChangedFiles(currentCommit)
+      sh "git checkout $currentCommit"
+      return files
+    }
+  }
+}
+
 podTemplate(label: label, yaml: """
 apiVersion: v1
 kind: Pod
@@ -46,13 +105,28 @@ spec:
       stage('Get git environment') {
         gitRemote = sh(returnStdout: true, script: 'git config remote.origin.url').trim()
         gitBranch = BRANCH_NAME
+        gitCommit = sh(returnStdout: true, script: 'git rev-parse --short HEAD').trim()
+        tagName = (gitBranch + '.' + gitCommit).replaceAll(/[^\w-\.]/, '_')
         ON_MAIN = (gitRemote + ':' + gitBranch == officialMain)
+
+        changed = getChangedFilesList()
+        echo 'Changed files: ' + changed
+
+        if (changed.every { f -> fileRegexNoCode.any { f ==~ it } }) {
+          echo 'No code changes -- do not build anything.'
+          buildLevel = BUILD_NONE
+        } else {
+          echo 'Full build.'
+          buildLevel = BUILD_ALL
+        }
       }
 
-      container('python') {
-        stage('Python build and verify') {
-          sh 'pip3 install grpcio pandas protobuf'
-          sh './build.sh'
+      if (buildLevel >= BUILD_PUBLISH) {
+        container('python') {
+          stage('Python build and verify') {
+            sh 'pip3 install grpcio pandas protobuf'
+            sh './build.sh'
+          }
         }
       }
 
