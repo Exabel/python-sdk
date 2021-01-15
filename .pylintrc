@@ -5,7 +5,6 @@ ignore=stubs
 [MESSAGES CONTROL]
 
 disable=duplicate-code,
-        import-error,
         missing-module-docstring,
         no-member,
         no-name-in-module,
