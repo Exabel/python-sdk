@@ -1,7 +1,9 @@
 import pandas as pd
 from dateutil import tz
 
-from exabel_data_sdk import ExabelClient
+from exabel_data_
+
+sdk import ExabelClient
 from exabel_data_sdk.client.api.data_classes.entity import Entity
 from exabel_data_sdk.client.api.data_classes.relationship import Relationship
 from exabel_data_sdk.client.api.data_classes.relationship_type import RelationshipType
