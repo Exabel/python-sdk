@@ -30,8 +30,8 @@ Collection<String> getChangedFilesList() {
   }
   if (build != null && commit != null) {
     echo "Previous successful commit: $commit"
-    sh "git diff --name-only $commit"
-    return = sh(returnStdout: true, script: 'git config remote.origin.url').trim().split('\n')
+    sh "git diff --name-only $commit" // TODO: Remove
+    return sh(returnStdout: true, script: 'git config remote.origin.url').trim().split('\n')
   }
 
   echo 'No previous successful builds'
