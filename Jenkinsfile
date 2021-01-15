@@ -55,12 +55,12 @@ Collection<String> getChangedFilesList() {
       return getAllChangedFilesList()
     } else if (sh(returnStatus: true, script: "git merge origin/${pullRequest.base} -m 'Tmp diff commit'")) {
       // Merge failed, just use the diff without merging
-      sh "git checkout -c advice.detachedHead=false $gitCommit"
+      sh "git -c advice.detachedHead=false checkout $gitCommit"
       return getChangedFiles(commit)
     } else {
       // Merge successful. Grab the diff with the actual commit
       def files = getChangedFiles(gitCommit)
-      sh "git checkout -c advice.detachedHead=false $gitCommit"
+      sh "git -c advice.detachedHead=false checkout $gitCommit"
       return files
     }
   }
