@@ -51,15 +51,17 @@ Collection<String> getChangedFilesList() {
   } else {
     // This is a PR, ignore changes in the base branch by doing a temporary merge from the previous success
     String currentCommit = sh(returnStdout: true, script: "git rev-parse HEAD").trim()
-    if (sh(returnStatus: true, script: "git -c advice.detachedHead=false checkout $commit") ||
-        sh(returnStatus: true, script: "git merge origin/${pullRequest.base} -m 'Tmp diff commit'")) {
-      // Checkout or merge failed, just use the diff without merging
-      sh "git checkout -f $currentCommit"
+    if (sh(returnStatus: true, script: "git -c advice.detachedHead=false checkout $commit")) {
+      // Checkout failed, was it force pushed?
+      return getAllChangedFilesList()
+    } else if (sh(returnStatus: true, script: "git merge origin/${pullRequest.base} -m 'Tmp diff commit'")) {
+      // Merge failed, just use the diff without merging
+      sh "git checkout -c advice.detachedHead=false $currentCommit"
       return getChangedFiles(commit)
     } else {
       // Merge successful. Grab the diff with the actual commit
       def files = getChangedFiles(currentCommit)
-      sh "git checkout $currentCommit"
+      sh "git checkout -c advice.detachedHead=false $currentCommit"
       return files
     }
   }
