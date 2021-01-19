@@ -5,7 +5,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setuptools.setup(
     name="exabel-data-sdk",
-    version="0.0.2",
+    version="0.0.3",
     author="Exabel",
     author_email="support@exabel.com",
     description="Python SDK for the Exabel Data API",
@@ -15,10 +15,11 @@ setuptools.setup(
     url="https://github.com/Exabel/python-sdk",
     packages=setuptools.find_packages(),
     install_requires=["grpcio", "pandas", "protobuf"],
-    python_requires=">=3.7",
+    python_requires=">=3.6",
     classifiers=[
         "Development Status :: 4 - Beta",
         "Intended Audience :: Financial and Insurance Industry",
+        "Programming Language :: Python :: 3.6",
         "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3.8",
         "Programming Language :: Python :: 3.9",
