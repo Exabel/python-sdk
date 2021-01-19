@@ -107,6 +107,7 @@ spec:
         gitRemote = sh(returnStdout: true, script: 'git config remote.origin.url').trim()
         gitBranch = BRANCH_NAME
         gitCommit = sh(returnStdout: true, script: 'git rev-parse --short HEAD').trim()
+        TAG_NAME = "${gitBranch}.${gitCommit}".replaceAll(/[^\w-\.]/, '_')
         ON_MAIN = (gitRemote + ':' + gitBranch == officialMain)
 
         changed = getChangedFilesList()
@@ -124,8 +125,8 @@ spec:
       if (buildLevel >= BUILD_PUBLISH) {
         container('python') {
           stage('Python build and verify') {
-            sh 'pip3 install grpcio pandas protobuf'
-            sh './build.sh'
+            sh "docker build -t ${TAG_NAME} ."
+            sh "docker run ${TAG_NAME} pipenv run ./build.sh"
           }
         }
       }
