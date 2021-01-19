@@ -1,6 +1,3 @@
-from __future__ import annotations
-
-from dataclasses import dataclass
 from enum import Enum
 
 
@@ -28,7 +25,6 @@ class ErrorType(Enum):
     INTERNAL = 10
 
 
-@dataclass
 class RequestError(Exception):
     """Represents an error returned from the Exabel Api."""
 

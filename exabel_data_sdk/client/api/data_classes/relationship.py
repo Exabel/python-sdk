@@ -1,13 +1,9 @@
-from __future__ import annotations
-
-from dataclasses import dataclass
 from typing import Mapping, Union
 
 from exabel_data_sdk.client.api.proto_utils import from_struct, to_struct
 from exabel_data_sdk.stubs.exabel.api.data.v1.all_pb2 import Relationship as ProtoRelationship
 
 
-@dataclass
 class Relationship:
     """
     A relationship resource in the Data API.
@@ -27,20 +23,24 @@ class Relationship:
         read_only:         Whether this resource is read only.
     """
 
-    relationship_type: str
-
-    from_entity: str
-
-    to_entity: str
-
-    description: str
-
-    properties: Mapping[str, Union[str, bool, int, float]]
-
-    read_only: bool = False
+    def __init__(
+        self,
+        relationship_type: str,
+        from_entity: str,
+        to_entity: str,
+        description: str,
+        properties: Mapping[str, Union[str, bool, int, float]],
+        read_only: bool = False,
+    ):
+        self.relationship_type = relationship_type
+        self.from_entity = from_entity
+        self.to_entity = to_entity
+        self.description = description
+        self.properties = properties
+        self.read_only = read_only
 
     @staticmethod
-    def from_proto(relationship: ProtoRelationship) -> Relationship:
+    def from_proto(relationship: ProtoRelationship) -> "Relationship":
         """Create a Relationship from the given protobuf Relationship."""
         return Relationship(
             relationship_type=relationship.parent,
@@ -59,4 +59,16 @@ class Relationship:
             to_entity=self.to_entity,
             description=self.description,
             properties=to_struct(self.properties),
+        )
+
+    def __eq__(self, other: object) -> bool:
+        if not isinstance(other, Relationship):
+            return False
+        return (
+            self.relationship_type == other.relationship_type
+            and self.from_entity == other.from_entity
+            and self.to_entity == other.to_entity
+            and self.description == other.description
+            and self.properties == other.properties
+            and self.read_only == other.read_only
         )

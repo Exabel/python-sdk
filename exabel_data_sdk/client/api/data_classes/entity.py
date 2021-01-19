@@ -1,13 +1,9 @@
-from __future__ import annotations
-
-from dataclasses import dataclass
 from typing import Mapping, Union
 
 from exabel_data_sdk.client.api.proto_utils import from_struct, to_struct
 from exabel_data_sdk.stubs.exabel.api.data.v1.all_pb2 import Entity as ProtoEntity
 
 
-@dataclass
 class Entity:
     r"""
     An entity resource in the Data API.
@@ -26,18 +22,22 @@ class Entity:
         read_only (bool):   Whether this resource is read only.
     """
 
-    name: str
-
-    display_name: str
-
-    description: str
-
-    properties: Mapping[str, Union[str, bool, int, float]]
-
-    read_only: bool = False
+    def __init__(
+        self,
+        name: str,
+        display_name: str,
+        description: str,
+        properties: Mapping[str, Union[str, bool, int, float]],
+        read_only: bool = False,
+    ):
+        self.name = name
+        self.display_name = display_name
+        self.description = description
+        self.properties = properties
+        self.read_only = read_only
 
     @staticmethod
-    def from_proto(entity: ProtoEntity) -> Entity:
+    def from_proto(entity: ProtoEntity) -> "Entity":
         """Create an Entity from the given protobuf Entity."""
         return Entity(
             name=entity.name,
@@ -54,4 +54,15 @@ class Entity:
             display_name=self.display_name,
             description=self.description,
             properties=to_struct(self.properties),
+        )
+
+    def __eq__(self, other: object) -> bool:
+        if not isinstance(other, Entity):
+            return False
+        return (
+            self.name == other.name
+            and self.display_name == other.display_name
+            and self.description == other.description
+            and self.properties == other.properties
+            and self.read_only == other.read_only
         )

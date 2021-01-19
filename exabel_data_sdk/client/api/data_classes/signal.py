@@ -1,12 +1,7 @@
-from __future__ import annotations
-
-from dataclasses import dataclass
-
 from exabel_data_sdk.stubs.exabel.api.data.v1.all_pb2 import Signal as ProtoSignal
 from exabel_data_sdk.stubs.exabel.api.math.aggregation_pb2 import Aggregation
 
 
-@dataclass
 class Signal:
     r"""
     A signal resource in the Data API.
@@ -24,18 +19,22 @@ class Signal:
         read_only:    Whether this Signal is read only.
     """
 
-    name: str
-
-    entity_type: str
-
-    display_name: str
-
-    description: str
-
-    read_only: bool = False
+    def __init__(
+        self,
+        name: str,
+        entity_type: str,
+        display_name: str,
+        description: str,
+        read_only: bool = False,
+    ):
+        self.name = name
+        self.entity_type = entity_type
+        self.display_name = display_name
+        self.description = description
+        self.read_only = read_only
 
     @staticmethod
-    def from_proto(signal: ProtoSignal) -> Signal:
+    def from_proto(signal: ProtoSignal) -> "Signal":
         """Create a Signal from the given protobuf Signal."""
         return Signal(
             name=signal.name,
@@ -53,4 +52,15 @@ class Signal:
             description=self.description,
             entity_type=self.entity_type,
             downsampling_method=Aggregation.LAST,
+        )
+
+    def __eq__(self, other: object) -> bool:
+        if not isinstance(other, Signal):
+            return False
+        return (
+            self.name == other.name
+            and self.entity_type == other.entity_type
+            and self.display_name == other.display_name
+            and self.description == other.description
+            and self.read_only == other.read_only
         )
