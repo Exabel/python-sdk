@@ -86,6 +86,9 @@ spec:
       resourceRequestCpu: '2.5', resourceLimitCpu: '3.5',
       resourceRequestMemory: '6Gi', resourceLimitMemory: '8Gi',
     ),
+  ],
+  volumes: [
+    hostPathVolume(mountPath: '/var/run/docker.sock', hostPath: '/var/run/docker.sock'),
   ]) {
 
   node(label) {
