@@ -126,9 +126,8 @@ spec:
 
       if (buildLevel >= BUILD_PUBLISH) {
         stage('Python build and verify') {
-          echo "${TAG_NAME}"
           sh "docker build -t python-sdk-build:${TAG_NAME} ."
-          sh "docker run ${TAG_NAME} pipenv run ./build.sh"
+          sh "docker run python-sdk-build:${TAG_NAME} pipenv run ./build.sh"
         }
       }
 
