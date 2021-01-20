@@ -109,7 +109,7 @@ spec:
         gitRemote = sh(returnStdout: true, script: 'git config remote.origin.url').trim()
         gitBranch = BRANCH_NAME
         gitCommit = sh(returnStdout: true, script: 'git rev-parse --short HEAD').trim()
-        TAG_NAME = "${gitBranch}.${gitCommit}".replaceAll(/[^\w-\.]/, '_').toLowerCase()
+        TAG_NAME = "${gitBranch}.${gitCommit}".replaceAll(/[^\w-\.]/, '_')
         ON_MAIN = (gitRemote + ':' + gitBranch == officialMain)
 
         changed = getChangedFilesList()
@@ -127,7 +127,7 @@ spec:
       if (buildLevel >= BUILD_PUBLISH) {
         stage('Python build and verify') {
           echo "${TAG_NAME}"
-          sh "docker build -t ${TAG_NAME} ."
+          sh "docker build -t python-sdk-build:${TAG_NAME} ."
           sh "docker run ${TAG_NAME} pipenv run ./build.sh"
         }
       }
