@@ -80,11 +80,10 @@ spec:
 """,
   containers: [
     containerTemplate(
-      name: 'python', image: 'eu.gcr.io/jenkins-exabel/python-build:v6',
-      ttyEnabled: true, command: 'cat',
-
-      resourceRequestCpu: '2.5', resourceLimitCpu: '3.5',
-      resourceRequestMemory: '6Gi', resourceLimitMemory: '8Gi',
+      name: 'jnlp', image: 'eu.gcr.io/jenkins-exabel/jenkins-k8s-slave:v4',
+      args: '${computer.jnlpmac} ${computer.name}',
+      resourceRequestCpu: '0.1', resourceLimitCpu: '3.0',
+      resourceRequestMemory: '150Mi', resourceLimitMemory: '6Gi'
     ),
   ],
   volumes: [
@@ -126,11 +125,9 @@ spec:
       }
 
       if (buildLevel >= BUILD_PUBLISH) {
-        container('python') {
-          stage('Python build and verify') {
-            sh "docker build -t ${TAG_NAME} ."
-            sh "docker run ${TAG_NAME} pipenv run ./build.sh"
-          }
+        stage('Python build and verify') {
+          sh "docker build -t ${TAG_NAME} ."
+          sh "docker run ${TAG_NAME} pipenv run ./build.sh"
         }
       }
 
