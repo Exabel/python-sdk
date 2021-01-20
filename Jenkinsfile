@@ -109,7 +109,7 @@ spec:
         gitRemote = sh(returnStdout: true, script: 'git config remote.origin.url').trim()
         gitBranch = BRANCH_NAME
         gitCommit = sh(returnStdout: true, script: 'git rev-parse --short HEAD').trim()
-        TAG_NAME = "${gitBranch}.${gitCommit}".replaceAll(/[^\w-\.]/, '_')
+        TAG_NAME = "${gitBranch}.${gitCommit}".replaceAll(/[^\w-\.]/, '_').toLowerCase()
         ON_MAIN = (gitRemote + ':' + gitBranch == officialMain)
 
         changed = getChangedFilesList()
