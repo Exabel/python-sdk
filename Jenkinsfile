@@ -126,6 +126,7 @@ spec:
 
       if (buildLevel >= BUILD_PUBLISH) {
         stage('Python build and verify') {
+          echo "${TAG_NAME}"
           sh "docker build -t ${TAG_NAME} ."
           sh "docker run ${TAG_NAME} pipenv run ./build.sh"
         }
