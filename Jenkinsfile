@@ -80,12 +80,14 @@ spec:
 """,
   containers: [
     containerTemplate(
-      name: 'python', image: 'eu.gcr.io/jenkins-exabel/python-build:v6',
-      ttyEnabled: true, command: 'cat',
-
-      resourceRequestCpu: '2.5', resourceLimitCpu: '3.5',
-      resourceRequestMemory: '6Gi', resourceLimitMemory: '8Gi',
+      name: 'jnlp', image: 'eu.gcr.io/jenkins-exabel/jenkins-k8s-slave:v4',
+      args: '${computer.jnlpmac} ${computer.name}',
+      resourceRequestCpu: '0.1', resourceLimitCpu: '3.0',
+      resourceRequestMemory: '150Mi', resourceLimitMemory: '6Gi'
     ),
+  ],
+  volumes: [
+    hostPathVolume(mountPath: '/var/run/docker.sock', hostPath: '/var/run/docker.sock'),
   ]) {
 
   node(label) {
@@ -107,6 +109,7 @@ spec:
         gitRemote = sh(returnStdout: true, script: 'git config remote.origin.url').trim()
         gitBranch = BRANCH_NAME
         gitCommit = sh(returnStdout: true, script: 'git rev-parse --short HEAD').trim()
+        TAG_NAME = "${gitBranch}.${gitCommit}".replaceAll(/[^\w-\.]/, '_')
         ON_MAIN = (gitRemote + ':' + gitBranch == officialMain)
 
         changed = getChangedFilesList()
@@ -122,11 +125,9 @@ spec:
       }
 
       if (buildLevel >= BUILD_PUBLISH) {
-        container('python') {
-          stage('Python build and verify') {
-            sh 'pip3 install grpcio pandas protobuf'
-            sh './build.sh'
-          }
+        stage('Python build and verify') {
+          sh "docker build -t python-sdk-build:${TAG_NAME} ."
+          sh "docker run python-sdk-build:${TAG_NAME} pipenv run ./build.sh"
         }
       }
 
