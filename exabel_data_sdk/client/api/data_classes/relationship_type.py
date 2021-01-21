@@ -60,3 +60,9 @@ class RelationshipType:
             and self.properties == other.properties
             and self.read_only == other.read_only
         )
+
+    def __repr__(self) -> str:
+        return (
+            f"RelationshipType(name='{self.name}', description='{self.description}', "
+            f"properties={self.properties}, read_only={self.read_only})"
+        )

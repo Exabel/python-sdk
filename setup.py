@@ -5,7 +5,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setuptools.setup(
     name="exabel-data-sdk",
-    version="0.0.3",
+    version="0.0.4",
     author="Exabel",
     author_email="support@exabel.com",
     description="Python SDK for the Exabel Data API",
