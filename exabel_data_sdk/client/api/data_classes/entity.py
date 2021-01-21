@@ -66,3 +66,10 @@ class Entity:
             and self.properties == other.properties
             and self.read_only == other.read_only
         )
+
+    def __repr__(self) -> str:
+        return (
+            f"Entity(name='{self.name}', display_name='{self.display_name}', "
+            f"description='{self.description}', properties={self.properties}, "
+            f"read_only={self.read_only})"
+        )

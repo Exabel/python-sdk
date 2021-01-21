@@ -64,3 +64,10 @@ class Signal:
             and self.description == other.description
             and self.read_only == other.read_only
         )
+
+    def __repr__(self) -> str:
+        return (
+            f"Signal(name='{self.name}', entity_type='{self.entity_type}', "
+            f"display_name='{self.display_name}', description='{self.description}', "
+            f"read_only={self.read_only})"
+        )
