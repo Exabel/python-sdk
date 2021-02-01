@@ -1,6 +1,6 @@
 import argparse
 import sys
-from typing import Sequence
+from typing import List, Sequence
 
 import pandas as pd
 from dateutil import tz
@@ -46,7 +46,7 @@ class LoadTimeSeriesFromCsv(BaseScript):
     # get time series for an entity
     def get_time_series_for_entity(
         self, ts_data: pd.DataFrame, entity: str, signals: list
-    ) -> [pd.Series]:
+    ) -> List[pd.Series]:
         """
         Get a list of timeseries for an entity
 
