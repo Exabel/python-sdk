@@ -12,9 +12,9 @@ class TestUploadTimeSeries(unittest.TestCase):
         loader = LoadTimeSeriesFromCsv(sys.argv, "Load")
         data = [["a", "2021-01-01", 1], ["a", "2021-01-02", 2], ["b", "2021-01-01", 3]]
 
-        df = pd.DataFrame(data, columns=["entity", "date", "signal1"])
+        data_frame = pd.DataFrame(data, columns=["entity", "date", "signal1"])
 
-        time_series = loader.get_time_series_for_entity(df, "b", ["signal1"])
+        time_series = loader.get_time_series_for_entity(data_frame, "b", ["signal1"])
         pd.testing.assert_series_equal(
             time_series[0],
             pd.Series([3], index=pd.DatetimeIndex(["2021-01-01"], tz=tz.tzutc()), name="b/signal1"),
