@@ -4,8 +4,7 @@ import unittest
 import pandas as pd
 from dateutil import tz
 
-from exabel_data_sdk.scripts.load_time_series_from_csv import \
-  LoadTimeSeriesFromCsv
+from exabel_data_sdk.scripts.load_time_series_from_csv import LoadTimeSeriesFromCsv
 
 
 class TestUploadTimeSeries(unittest.TestCase):
