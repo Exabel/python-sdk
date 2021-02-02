@@ -30,17 +30,23 @@ class LoadTimeSeriesFromCsv(BaseScript):
             "--filename",
             required=True,
             type=str,
-            help="The name of the file to parse",
+            help="The URL of the file to parse.",
         )
         self.parser.add_argument(
-            "--sep", required=False, type=str, default=";", help="Delimiter to use."
+            "--sep", required=False, type=str, default=";", help="Delimiter to use between cells."
+        )
+        self.parser.add_argument(
+            "--signals",
+            required=False,
+            type=lambda s: [str(item).strip() for item in s.split(",")],
+            help="Delimited list input - separated with comma.",
         )
         self.parser.add_argument(
             "--dry-run",
             required=False,
             action="store_true",
             default=False,
-            help="Only print to console instead of uploading",
+            help="Only print to console instead of uploading.",
         )
 
     # get time series for an entity
@@ -88,7 +94,12 @@ class LoadTimeSeriesFromCsv(BaseScript):
         if args.dry_run:
             print("Running dry-run...")
 
-        ts_data = pd.read_csv(args.filename, header=0, sep=args.sep)
+        if args.signals is None:
+            ts_data = pd.read_csv(args.filename, header=0, sep=args.sep)
+        else:
+            ts_data = pd.read_csv(
+                args.filename, header=0, sep=args.sep, names=["entity", "date"] + args.signals
+            )
 
         # signals to produce from this csv file
         signals = ts_data.columns[2:]
