@@ -68,7 +68,7 @@ class TestUploadTimeSeries(unittest.TestCase):
         )
 
     def test_read_file_use_header_for_signal(self):
-        args = ["script-name", "--filename", "../resources/data/timeseries.csv"]
+        args = ["script-name", "--filename", "./tests/resources/data/timeseries.csv"]
 
         script = LoadTimeSeriesFromCsv(args, "LoadTest1")
         client = mock.create_autospec(ExabelClient(host="host", api_key="123"))
@@ -99,7 +99,7 @@ class TestUploadTimeSeries(unittest.TestCase):
         args = [
             "script-name",
             "--filename",
-            "../resources/data/timeseries.csv",
+            "./tests/resources/data/timeseries.csv",
             "--signals",
             "signal1_o",
         ]
@@ -150,7 +150,7 @@ class TestUploadTimeSeries(unittest.TestCase):
         args = [
             "script-name",
             "--filename",
-            "../resources/data/timeseries_multiple_signals.csv",
+            "./tests/resources/data/timeseries_multiple_signals.csv",
             "--signals",
             "signal1_o",
             "signal2_o",
