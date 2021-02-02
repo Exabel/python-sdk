@@ -1,9 +1,11 @@
+import argparse
 import sys
 import unittest
 
 import pandas as pd
 from dateutil import tz
 
+from exabel_data_sdk import ExabelClient
 from exabel_data_sdk.scripts.load_time_series_from_csv import LoadTimeSeriesFromCsv
 
 
@@ -64,6 +66,29 @@ class TestUploadTimeSeries(unittest.TestCase):
         pd.testing.assert_series_equal(
             series, pd.Series([100, 200], index=date_index, name="a/signal2")
         )
+
+    def test_read_file(self):
+        loader = LoadTimeSeriesFromCsv(sys.argv, "Load")
+
+        parser = argparse.ArgumentParser()
+        parser.add_argument("--dry-run")
+        parser.add_argument("--sep", default=";")
+        parser.add_argument("--filename", default="../resources/data/timeseries.csv")
+        args = parser.parse_args()
+
+        loader.run_script(ExabelClient(host="host", api_key="123"), args)
+
+    def test_read_file_with_signal_override(self):
+        loader = LoadTimeSeriesFromCsv(sys.argv, "Load")
+
+        parser = argparse.ArgumentParser()
+        parser.add_argument("--dry-run")
+        parser.add_argument("--sep", default=";")
+        parser.add_argument("--filename", default="../resources/data/timeseries.csv")
+        parser.add_argument("--signals", default=["signal1", "signal2"])
+        args = parser.parse_args()
+
+        loader.run_script(ExabelClient(host="host", api_key="123"), args)
 
 
 if __name__ == "__main__":

@@ -11,17 +11,25 @@ from exabel_data_sdk.scripts.base_script import BaseScript
 
 class LoadTimeSeriesFromCsv(BaseScript):
     """
-    Processes a timeseries csv file and uploads to database
-    The structure of the csv file will be on the format:
-    entity;date;signal1; ... ;signalN
+    Processes a timeseries CSV file and uploads the time series to Exabel.
 
-    Entity in the file will be Exabel entities
-    Example: "entityTypes/company/entities/F_0027L0-E"
+    The CSV file should have a header line on the format
+        entity;date;signals/`namespace`.`signal_1`; ... ;signals/`namespace`.`signal_n`
+    where `namespace` is your namespace and `signal_1` to `signal_n` refer to signals you have
+    created via the Exabel Data API.
+    Alternatively you can pass a list of signal names with the --signals parameter to override the
+    specified header names
 
-    Signals in the file will be defined signals
-    Example: "signals/test.foursquare_signal"
+    Each subsequent row consists of the following elements:
+      * the entity referred to by the entity’s resource name, e.g.,
+            entityTypes/company/entities/company_code
+      * the date on ISO format, e.g. 2020-12-31
+      * one numerical value for each of the signals `signal_1` to `signal_n`
 
-    The rows do not have to be sorted
+    Thus, a typical row would look like:
+        entityTypes/company/entities/company_code;2020-12-31;12;1234.56;1.23e6
+
+    The rows do not have to be sorted in any particular order.
     """
 
     def __init__(self, argv: Sequence[str], description: str):
@@ -49,18 +57,17 @@ class LoadTimeSeriesFromCsv(BaseScript):
             help="Only print to console instead of uploading.",
         )
 
-    # get time series for an entity
     def get_time_series_for_entity(
-        self, ts_data: pd.DataFrame, entity: str, signals: list
+        self, ts_data: pd.DataFrame, entity: str, signals: List[str]
     ) -> List[pd.Series]:
         """
         Get a list of timeseries for an entity
 
         Args:
-        ts_data:   Data frame on the format
-                   ['entity', 'date', 'signal1', ..., 'signalN']
-        entity:    The entity to create timeseries for
-        signals:   List of signals to produce timeseries for
+            ts_data:   Data frame on the format
+                       ['entity', 'date', 'signal1', ..., 'signalN']
+            entity:    The entity to create timeseries for
+            signals:   List of signals to produce timeseries for
         """
         entity_rows = ts_data.loc[ts_data.entity == entity]
 
@@ -79,11 +86,11 @@ class LoadTimeSeriesFromCsv(BaseScript):
         Get a single timeseries for an entity
 
         Args:
-        entity_rows:   Data frame on the format
-                       ['entity', 'date', 'signal1', ..., 'signalN']
-                       assumed to be filtered on the entity
-        entity:        The name of the Entity this timeseries belongs to
-        signal:        The signal to produce timeseries for
+            entity_rows:   Data frame on the format
+                           ['entity', 'date', 'signal1', ..., 'signalN']
+                           assumed to be filtered on the entity
+            entity:        The name of the Entity this timeseries belongs to
+            signal:        The signal to produce timeseries for
         """
         signal_values = entity_rows[signal].values
         date_index = pd.DatetimeIndex(entity_rows.date.values, tz=tz.tzutc())
@@ -94,12 +101,12 @@ class LoadTimeSeriesFromCsv(BaseScript):
         if args.dry_run:
             print("Running dry-run...")
 
-        if args.signals is None:
-            ts_data = pd.read_csv(args.filename, header=0, sep=args.sep)
-        else:
+        if hasattr(args, "signals"):
             ts_data = pd.read_csv(
                 args.filename, header=0, sep=args.sep, names=["entity", "date"] + args.signals
             )
+        else:
+            ts_data = pd.read_csv(args.filename, header=0, sep=args.sep)
 
         # signals to produce from this csv file
         signals = ts_data.columns[2:]
@@ -109,9 +116,8 @@ class LoadTimeSeriesFromCsv(BaseScript):
 
             # for each signal starting from column 2 -  upsert time series
             for time_series in time_series_list:
-
-                if args.dry_run:
-                    print(f"adding signal {time_series.name}")
+                if args.dry_run is None:
+                    print(f"adding timeseries for signal {time_series.name}")
                 else:
                     client.time_series_api.upsert_time_series(time_series.name, time_series)
 

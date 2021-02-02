@@ -1,8 +1,8 @@
-entity;date;signals/test.foursquare_signal;signals/test.foursquare_signal_2
-entityTypes/company/entities/F_0027L0-E;2021-01-01;1;11
-entityTypes/company/entities/F_0027L0-E;2021-01-02;2;12
-entityTypes/company/entities/F_0027L0-E;2021-01-02;3;13
-entityTypes/company/entities/F_0027L0-E;2021-01-03;4;14
-entityTypes/company/entities/F_0027L0-E;2021-01-04;5;15
-entityTypes/company/entities/F_000JHP-E;2021-01-01;4;14
-entityTypes/company/entities/F_000JHP-E;2021-01-03;5;15
+entity;date;signals/test.customer_signal;signals/test.customer_signal_2
+entityTypes/company/entities/company_A;2021-01-01;1;11
+entityTypes/company/entities/company_A;2021-01-02;2;12
+entityTypes/company/entities/company_A;2021-01-02;3;13
+entityTypes/company/entities/company_A;2021-01-03;4;14
+entityTypes/company/entities/company_A;2021-01-04;5;15
+entityTypes/company/entities/company_B;2021-01-01;4;14
+entityTypes/company/entities/company_B;2021-01-03;5;15
