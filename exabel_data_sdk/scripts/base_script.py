@@ -21,7 +21,7 @@ class BaseScript:
 
     def run(self) -> None:
         """Runs the script."""
-        args = self.parser.parse_args(self.argv[1:])
+        args = self.parse_arguments()
         api_key = self.get_api_key(args)
         client = ExabelClient(host=args.exabel_api_host, api_key=api_key)
         self.run_script(client, args)
@@ -33,7 +33,7 @@ class BaseScript:
         return args.api_key
 
     def parse_arguments(self) -> argparse.Namespace:
-        """Parse arguments input - used for unittesting."""
+        """Parse arguments input"""
         return self.parser.parse_args(self.argv[1:])
 
     @abc.abstractmethod
