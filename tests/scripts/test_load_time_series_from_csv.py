@@ -130,7 +130,6 @@ class TestUploadTimeSeries(unittest.TestCase):
 
         # second call - company_B / signal1_o
         call_args_second = client.time_series_api.upsert_time_series.call_args_list[1][0]
-        print("call args = ", call_args_second)
         self.assertEqual(
             "entityTypes/company/entities/company_B/signal1_o",
             call_args_second[0],

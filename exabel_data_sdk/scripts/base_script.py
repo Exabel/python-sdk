@@ -32,9 +32,8 @@ class BaseScript:
             raise ValueError("API key not provided.")
         return args.api_key
 
-    def parse_arguments(self):
-        args = self.parser.parse_args(self.argv[1:])
-        return args
+    def parse_arguments(self) -> argparse.Namespace:
+        return self.parser.parse_args(self.argv[1:])
 
     @abc.abstractmethod
     def run_script(self, client: ExabelClient, args: argparse.Namespace) -> None:

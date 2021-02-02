@@ -97,9 +97,6 @@ class LoadTimeSeriesFromCsv(BaseScript):
         return pd.Series(signal_values, index=date_index, name=f"{entity}/{signal}")
 
     def run_script(self, client: ExabelClient, args: argparse.Namespace) -> None:
-        self.get_time_series(client, args)
-
-    def get_time_series(self, client: ExabelClient, args: argparse.Namespace) -> None:
 
         if args.dry_run:
             print("Running dry-run...")
