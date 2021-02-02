@@ -152,7 +152,8 @@ class TestUploadTimeSeries(unittest.TestCase):
             "--filename",
             "../resources/data/timeseries_multiple_signals.csv",
             "--signals",
-            "signal1_o", "signal2_o",
+            "signal1_o",
+            "signal2_o",
         ]
 
         script = LoadTimeSeriesFromCsv(args, "LoadTest3")

@@ -46,7 +46,7 @@ class LoadTimeSeriesFromCsv(BaseScript):
         self.parser.add_argument(
             "--signals",
             required=False,
-            nargs='+',
+            nargs="+",
             type=str,
             help="Delimited list input - separated with comma.",
         )
