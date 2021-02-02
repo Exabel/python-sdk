@@ -33,6 +33,7 @@ class BaseScript:
         return args.api_key
 
     def parse_arguments(self) -> argparse.Namespace:
+        """Parse arguments input - used for unittesting."""
         return self.parser.parse_args(self.argv[1:])
 
     @abc.abstractmethod
