@@ -1,8 +1,8 @@
-entity;date;signals/test.customer_signal;signals/test.customer_signal_2
-entityTypes/company/entities/company_A;2021-01-01;1;11
-entityTypes/company/entities/company_A;2021-01-02;2;12
-entityTypes/company/entities/company_A;2021-01-02;3;13
-entityTypes/company/entities/company_A;2021-01-03;4;14
-entityTypes/company/entities/company_A;2021-01-04;5;15
-entityTypes/company/entities/company_B;2021-01-01;4;14
-entityTypes/company/entities/company_B;2021-01-03;5;15
+entity;date;signal1
+entityTypes/company/entities/company_A;2021-01-01;1
+entityTypes/company/entities/company_A;2021-01-02;2
+entityTypes/company/entities/company_A;2021-01-03;3
+entityTypes/company/entities/company_A;2021-01-04;4
+entityTypes/company/entities/company_A;2021-01-05;5
+entityTypes/company/entities/company_B;2021-01-01;4
+entityTypes/company/entities/company_B;2021-01-03;5

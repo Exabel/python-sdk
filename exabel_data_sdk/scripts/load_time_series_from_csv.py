@@ -97,11 +97,14 @@ class LoadTimeSeriesFromCsv(BaseScript):
         return pd.Series(signal_values, index=date_index, name=f"{entity}/{signal}")
 
     def run_script(self, client: ExabelClient, args: argparse.Namespace) -> None:
+        self.get_time_series(client, args)
+
+    def get_time_series(self, client: ExabelClient, args: argparse.Namespace) -> None:
 
         if args.dry_run:
             print("Running dry-run...")
 
-        if hasattr(args, "signals"):
+        if hasattr(args, "signals") and args.signals is not None:
             ts_data = pd.read_csv(
                 args.filename, header=0, sep=args.sep, names=["entity", "date"] + args.signals
             )
@@ -116,11 +119,11 @@ class LoadTimeSeriesFromCsv(BaseScript):
 
             # for each signal starting from column 2 -  upsert time series
             for time_series in time_series_list:
-                if args.dry_run is None:
+                if args.dry_run:
                     print(f"adding timeseries for signal {time_series.name}")
                 else:
                     client.time_series_api.upsert_time_series(time_series.name, time_series)
 
 
 if __name__ == "__main__":
-    LoadTimeSeriesFromCsv(sys.argv, "Upload timeseries file.").run()
+    LoadTimeSeriesFromCsv(sys.argv, "Upload timeseries file.")

@@ -1,0 +1,5 @@
+entity;date;signal1;signal2
+entityTypes/company/entities/company_A;2021-01-01;1;10
+entityTypes/company/entities/company_A;2021-01-02;2;20
+entityTypes/company/entities/company_B;2021-01-01;4;40
+entityTypes/company/entities/company_B;2021-01-03;5;50
