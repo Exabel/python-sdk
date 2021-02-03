@@ -107,7 +107,7 @@ class CreateEntityMappingFromCsv(BaseScript):
                     mapping_output.at[i, "entity"] = entities[0].name
                     found = True
                     break
-                elif len(entities) > 1:
+                if len(entities) > 1:
                     print(
                         f"Found {len(entities)} entities when searching for {ticker} "
                         f"on market {market} - drop from mapping"

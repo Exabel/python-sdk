@@ -38,7 +38,7 @@ class TestCreateEntityMappingFromCsv(unittest.TestCase):
 
         # first call - entity = "entityType/company" ticker = "C" / market = "XNYS"
         call_args = client.entity_api.search_for_entities.call_args_list[0]
-        cargs, kwargs = call_args
+        _, kwargs = call_args
         self.assertEqual(
             {"entity_type": "entityTypes/company", "mic": "XNAS", "ticker": "C"},
             kwargs,
@@ -47,15 +47,16 @@ class TestCreateEntityMappingFromCsv(unittest.TestCase):
 
         # second call - entity = "entityType/company" ticker = "C" / market = "XNAS"
         call_args = client.entity_api.search_for_entities.call_args_list[1]
-        cargs, kwargs = call_args
+        _, kwargs = call_args
         self.assertEqual(
             {"entity_type": "entityTypes/company", "mic": "XNYS", "ticker": "C"},
             kwargs,
             "Arguments not as expected",
         )
+
         # third call - entity = "entityType/company" ticker = "M" / market = "XNYS"
         call_args = client.entity_api.search_for_entities.call_args_list[2]
-        cargs, kwargs = call_args
+        _, kwargs = call_args
         self.assertEqual(
             {"entity_type": "entityTypes/company", "mic": "XNYS", "ticker": "M"},
             kwargs,
