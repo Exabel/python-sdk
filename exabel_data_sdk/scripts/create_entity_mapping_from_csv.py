@@ -87,9 +87,9 @@ class CreateEntityMappingFromCsv(BaseScript):
         """
         if hasattr(mapping_input, "ticker"):
             return self.get_mapping_by_ticker(client, args, mapping_input)
-        else:
-            print("No recognized id field in input file")
-            return mapping_input
+
+        print("No recognized id field in input file")
+        return mapping_input
 
     def get_mapping_by_ticker(
         self, client: ExabelClient, args: argparse.Namespace, mapping_input: pd.DataFrame
@@ -110,8 +110,8 @@ class CreateEntityMappingFromCsv(BaseScript):
             )
             print(f"mapping_output : {mapping_output}")
 
-            for i, r in mapping_input.iterrows():
-                markets = self.get_markets(r["market"])
+            for i, row in mapping_input.iterrows():
+                markets = self.get_markets(row["market"])
 
                 found = False
                 for market in markets:
@@ -122,16 +122,16 @@ class CreateEntityMappingFromCsv(BaseScript):
                         break
 
                     entity = client.entity_api.search_for_entities(
-                        entity_type=args.entity_type, mic=market, ticker=r["ticker"]
+                        entity_type=args.entity_type, mic=market, ticker=row["ticker"]
                     )
                     if entity:
-                        print(f"found {r['ticker']} on market {market}: {entity[0].name}")
+                        print(f"found {row['ticker']} on market {market}: {entity[0].name}")
                         mapping_output.at[i, "entity"] = entity[0].name
                         found = True
                         break
 
                 if not found:
-                    print("could not find entity mapping for {r}")
+                    print("could not find entity mapping for {row}")
 
         else:
             print("mapping by 'ticker' requires 'market'")
