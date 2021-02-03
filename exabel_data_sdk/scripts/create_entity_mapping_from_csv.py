@@ -109,7 +109,8 @@ class CreateEntityMappingFromCsv(BaseScript):
                     break
                 elif len(entities) > 1:
                     print(
-                        f"Found {len(entities)} entities when searching for {ticker} on market {market} - drop from mapping"
+                        f"Found {len(entities)} entities when searching for {ticker} "
+                        f"on market {market} - drop from mapping"
                     )
                     mapping_output = mapping_output.drop(index=i)
                     found = True
