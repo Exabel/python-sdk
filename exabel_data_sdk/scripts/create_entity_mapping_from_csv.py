@@ -63,7 +63,7 @@ class CreateEntityMappingFromCsv(BaseScript):
             required=False,
             type=str,
             default="entityTypes/company",
-            help="The entity type to search for in the mapping"
+            help="The entity type to search for in the mapping",
         )
         self.parser.add_argument(
             "--dry-run",
@@ -73,7 +73,9 @@ class CreateEntityMappingFromCsv(BaseScript):
             help="Only print to console instead of mapping.",
         )
 
-    def get_mapping(self, client: ExabelClient, args: argparse.Namespace, mapping_input: pd.DataFrame) -> pd.DataFrame:
+    def get_mapping(
+        self, client: ExabelClient, args: argparse.Namespace, mapping_input: pd.DataFrame
+    ) -> pd.DataFrame:
         """
         Entry method for creating mapping. Will sniff mapping_input to find id's to create
         mappings for
@@ -89,7 +91,9 @@ class CreateEntityMappingFromCsv(BaseScript):
             print("No recognized id field in input file")
             return mapping_input
 
-    def get_mapping_by_ticker(self, client: ExabelClient, args: argparse.Namespace, mapping_input: pd.DataFrame) -> pd.DataFrame:
+    def get_mapping_by_ticker(
+        self, client: ExabelClient, args: argparse.Namespace, mapping_input: pd.DataFrame
+    ) -> pd.DataFrame:
         """
         Implementation for looking up mappings on ticker / market pairs.
         This will return a DataFrame with the entity mapping added
@@ -102,27 +106,27 @@ class CreateEntityMappingFromCsv(BaseScript):
         if hasattr(mapping_input, "ticker") and hasattr(mapping_input, "market"):
             print("columns", mapping_input.columns.tolist())
             mapping_output = mapping_input.reindex(
-                columns=mapping_input.columns.tolist() + ['entity'],
-                fill_value='')
+                columns=mapping_input.columns.tolist() + ["entity"], fill_value=""
+            )
             print(f"mapping_output : {mapping_output}")
 
             for i, r in mapping_input.iterrows():
-                markets = self.get_markets(r['market'])
+                markets = self.get_markets(r["market"])
 
                 found = False
                 for market in markets:
                     print("check on market", market)
 
                     if args.dry_run:
-                        mapping_output.at[i, 'entity'] = 'dry-run'
+                        mapping_output.at[i, "entity"] = "dry-run"
                         break
 
                     entity = client.entity_api.search_for_entities(
-                        entity_type=args.entity_type, mic=market, ticker=r['ticker']
+                        entity_type=args.entity_type, mic=market, ticker=r["ticker"]
                     )
                     if entity:
                         print(f"found {r['ticker']} on market {market}: {entity[0].name}")
-                        mapping_output.at[i, 'entity'] = entity[0].name
+                        mapping_output.at[i, "entity"] = entity[0].name
                         found = True
                         break
 
@@ -142,8 +146,8 @@ class CreateEntityMappingFromCsv(BaseScript):
         Args:
             market - the market to translate to list of MICs
         """
-        if market == 'US':
-            markets = ['XNAS', 'XNYS']
+        if market == "US":
+            markets = ["XNAS", "XNYS"]
         else:
             markets = [market]
         return markets
