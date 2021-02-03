@@ -64,13 +64,6 @@ class CreateEntityMappingFromCsv(BaseScript):
             default="entityTypes/company",
             help="The entity type to search for in the mapping",
         )
-        self.parser.add_argument(
-            "--dry-run",
-            required=False,
-            action="store_true",
-            default=False,
-            help="Do not write output file - print to console.",
-        )
 
     def get_entity_mapping_by_ticker(
         self, client: ExabelClient, args: argparse.Namespace, mapping_input: pd.DataFrame
@@ -137,21 +130,14 @@ class CreateEntityMappingFromCsv(BaseScript):
 
     def run_script(self, client: ExabelClient, args: argparse.Namespace) -> None:
 
-        if args.dry_run:
-            print("Running dry-run...")
-
         mapping_input = pd.read_csv(args.filename_input, header=0, sep=args.sep)
         mapping_input = mapping_input.loc[0:, mapping_input.columns].drop_duplicates()
 
         try:
             mapping_output = self.get_entity_mapping_by_ticker(client, args, mapping_input)
-            if args.dry_run:
-                print(mapping_output)
-            else:
-                mapping_output.to_csv(args.filename_output, sep=args.sep, index=False)
+            mapping_output.to_csv(args.filename_output, sep=args.sep, index=False)
         except ValueError as error:
-            print(str(error))
-            raise
+            print(error)
 
 
 if __name__ == "__main__":

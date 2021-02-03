@@ -1,3 +1,4 @@
+import tempfile
 import unittest
 from unittest import mock
 
@@ -6,30 +7,20 @@ from exabel_data_sdk.scripts.create_entity_mapping_from_csv import CreateEntityM
 
 
 class TestCreateEntityMappingFromCsv(unittest.TestCase):
-    def test_file_format_error(self):
-        args = [
-            "script-name",
-            "--dry-run",
-            "--filename-input",
-            "./tests/resources/data/mapping_format_error.csv",
-            "--filename-output",
-            "/tmp/output.csv",
-        ]
+    def setUp(self):
+        self.temp_file = tempfile.NamedTemporaryFile()
 
-        script = CreateEntityMappingFromCsv(args, "MappingTest1")
-        client = mock.create_autospec(ExabelClient(host="host", api_key="123"))
-        with self.assertRaises(ValueError):
-            script.run_script(client, script.parse_arguments())
+    def tearDown(self):
+        self.temp_file.close()
 
     def test_create_mapping(self):
 
         args = [
             "script-name",
-            "--dry-run",
             "--filename-input",
             "./tests/resources/data/mapping.csv",
             "--filename-output",
-            "/tmp/output.csv",
+            self.temp_file.name,
         ]
 
         script = CreateEntityMappingFromCsv(args, "MappingTest2")
