@@ -64,25 +64,13 @@ class CreateEntityMappingFromCsv(BaseScript):
             default="entityTypes/company",
             help="The entity type to search for in the mapping",
         )
-
-    def get_entity_mapping(
-        self, client: ExabelClient, args: argparse.Namespace, mapping_input: pd.DataFrame
-    ) -> pd.DataFrame:
-        """
-        Create a mapping from identifiers to entity.
-
-        This method will sniff mapping_input to find id's to create mappings for.
-
-        Args:
-              client:        ExabelClient instance
-              args:          Command line arguments
-              mapping_input: the input ids to lookup mappings for
-        """
-        if "ticker" in mapping_input:
-            return self.get_entity_mapping_by_ticker(client, args, mapping_input)
-
-        print("No recognized id field in input file")
-        return mapping_input
+        self.parser.add_argument(
+            "--dry-run",
+            required=False,
+            action="store_true",
+            default=False,
+            help="Do not write output file - print to console.",
+        )
 
     def get_entity_mapping_by_ticker(
         self, client: ExabelClient, args: argparse.Namespace, mapping_input: pd.DataFrame
@@ -115,13 +103,13 @@ class CreateEntityMappingFromCsv(BaseScript):
                 entities = client.entity_api.search_for_entities(
                     entity_type=args.entity_type, mic=market, ticker=ticker
                 )
-                if entities and len(entities) == 1:
+                if len(entities) == 1:
                     mapping_output.at[i, "entity"] = entities[0].name
                     found = True
                     break
-                elif entities and len(entities) > 1:
+                elif len(entities) > 1:
                     print(
-                        f"Found {len(entities)} entities when searching for {ticker} on market {market} - dropping from mapping"
+                        f"Found {len(entities)} entities when searching for {ticker} on market {market} - drop from mapping"
                     )
                     mapping_output = mapping_output.drop(index=i)
                     found = True
@@ -148,15 +136,21 @@ class CreateEntityMappingFromCsv(BaseScript):
 
     def run_script(self, client: ExabelClient, args: argparse.Namespace) -> None:
 
+        if args.dry_run:
+            print("Running dry-run...")
+
         mapping_input = pd.read_csv(args.filename_input, header=0, sep=args.sep)
         mapping_input = mapping_input.loc[0:, mapping_input.columns].drop_duplicates()
 
         try:
-            mapping_output = self.get_entity_mapping(client, args, mapping_input)
+            mapping_output = self.get_entity_mapping_by_ticker(client, args, mapping_input)
+            if args.dry_run:
+                print(mapping_output)
+            else:
+                mapping_output.to_csv(args.filename_output, sep=args.sep, index=False)
         except ValueError as error:
+            print(str(error))
             raise
-
-        mapping_output.to_csv(args.filename_output, sep=args.sep, index=False)
 
 
 if __name__ == "__main__":

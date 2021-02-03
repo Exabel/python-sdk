@@ -9,10 +9,11 @@ class TestCreateEntityMappingFromCsv(unittest.TestCase):
     def test_file_format_error(self):
         args = [
             "script-name",
+            "--dry-run",
             "--filename-input",
             "./tests/resources/data/mapping_format_error.csv",
             "--filename-output",
-            "s3://exabel-foursquare-test/data/etl-output/mapping/mapping_output.csv",
+            "/tmp/output.csv",
         ]
 
         script = CreateEntityMappingFromCsv(args, "MappingTest1")
@@ -24,10 +25,11 @@ class TestCreateEntityMappingFromCsv(unittest.TestCase):
 
         args = [
             "script-name",
+            "--dry-run",
             "--filename-input",
             "./tests/resources/data/mapping.csv",
             "--filename-output",
-            "s3://exabel-foursquare-test/data/etl-output/mapping/mapping_output.csv",
+            "/tmp/output.csv",
         ]
 
         script = CreateEntityMappingFromCsv(args, "MappingTest2")
