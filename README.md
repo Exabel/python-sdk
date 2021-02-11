@@ -14,7 +14,7 @@ The SDK requires Python 3.6 or later.
 
 # Exabel Data API documentation
 
-Contact Exabel to get access to the Data API documentation.
+Contact Exabel to get access to the Data API development documentation.
 
 # Develop
 
