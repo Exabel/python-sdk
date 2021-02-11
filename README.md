@@ -12,7 +12,7 @@ or download from [PyPI](https://pypi.org/project/exabel-data-sdk/).
 
 The SDK requires Python 3.6 or later.
 
-# Exabel Data API documentation
+# Exabel Data API development documentation
 
 Contact Exabel to get access to the Data API development documentation.
 
