@@ -21,6 +21,15 @@ class Dashboard:
     def query(
         dashboard: Union[str, int], columns: Sequence[str] = None, widget: Union[str, int] = None
     ) -> Query:
+        """
+        Build a query for the dashboard table.
+
+        Args:
+            dashboard: the ID of the dashboard to request, as "dashboard:dashboard:123" or just 123
+            columns:   the specific columns to retrieve. Defaults to retrieving all columns.
+            widget:    the widget to retrieve, as "dashboard:widget:1" or just 1.
+                       Defaults to retrieving the first widget in the dashboard.
+        """
         if columns is None:
             columns = ["*"]
         cols = [Column(column) for column in columns]

@@ -1,13 +1,20 @@
 from dataclasses import dataclass
 from typing import Optional
 
-from exabel_data_sdk.query.comparison import Comparison
-from exabel_data_sdk.query.in_predicate import InPredicate
 from exabel_data_sdk.query.literal import Literal, escape
+from exabel_data_sdk.query.predicate import Comparison, InPredicate
 
 
 @dataclass
 class Column:
+    """
+    Represents a column in a table.
+
+    Can take one of two forms:
+     - If only 'name' is provided, it refers to a known column with that name
+     - If both 'expression' and 'name' are provided, it defines a new column
+       that is to be calculated using the expression and given the provided name.
+    """
 
     name: str
     expression: Optional[str] = None

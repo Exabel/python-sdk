@@ -2,8 +2,8 @@ import unittest
 
 import pandas as pd
 
-from exabel_data_sdk.query.comparison import to_sql
 from exabel_data_sdk.query.dashboard import Dashboard
+from exabel_data_sdk.query.literal import to_sql
 from exabel_data_sdk.query.signals import Signals
 
 
