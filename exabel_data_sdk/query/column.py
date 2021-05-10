@@ -25,14 +25,18 @@ class Column:
             return f"{escape(self.expression)} AS {self.name}"
         return self.name
 
-    def eq(self, value: Literal) -> Comparison:
+    def equal(self, value: Literal) -> Comparison:
+        """Create a predicate for this column to be equal to the given value."""
         return Comparison(self.name, "=", value)
 
     def less_eq(self, value: Literal) -> Comparison:
+        """Create a predicate for this column to be less than or equal to the given value."""
         return Comparison(self.name, "<=", value)
 
     def greater_eq(self, value: Literal) -> Comparison:
+        """Create a predicate for this column to be greater than or equal to the given value."""
         return Comparison(self.name, ">=", value)
 
     def in_list(self, *values: Literal) -> InPredicate:
+        """Create a predicate for this column to have one of the given values."""
         return InPredicate(self.name, values)

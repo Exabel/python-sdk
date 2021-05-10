@@ -23,14 +23,40 @@ class Signals:
     @staticmethod
     def query(
         columns: Sequence[Union[str, Column]],
-        filters: Sequence[Predicate],
+        predicates: Sequence[Predicate] = (),
         start_time: Union[str, pd.Timestamp] = None,
         end_time: Union[str, pd.Timestamp] = None,
     ) -> Query:
+        """
+        Build a query for the signals table.
+        All signals are time series.
+
+        There are four types of columns:
+         - The 'time' column which contains the date of a data point in a time series.
+         - Entity identifiers (such as Exabel ID or FactSet ID) for the entity the time series
+           applies to. The entity would typically be a company, but could also be e.g. a brand
+           or a sector.
+         - A signal from the user's signal library
+         - A DSL expression provided as part of the query, using the following syntax:
+              'expression' AS name
+
+        Most of the time, one would want to specify predicates for the entity IDs to limit
+        the scope of which entities the signals are evaluated for. Many signals will require
+        such a limitation.
+
+        Args:
+            columns:    the columns to retrieve, as string identifiers or Column objects.
+                        At least one column must be requested.
+            predicates: any conditions for what data to include
+            start_time: the first date to retrieve data for
+            end_time:   the last date to retrieve data for
+        """
+        if len(columns) == 0:
+            raise ValueError("Need to query for at least one column")
         cols = [Column(column) if isinstance(column, str) else column for column in columns]
-        filters = list(filters)
+        predicates = list(predicates)
         if start_time:
-            filters.append(Signals.TIME.greater_eq(start_time))
+            predicates.append(Signals.TIME.greater_eq(start_time))
         if end_time:
-            filters.append(Signals.TIME.less_eq(end_time))
-        return Query(Signals.TABLE, cols, filters)
+            predicates.append(Signals.TIME.less_eq(end_time))
+        return Query(Signals.TABLE, cols, predicates)

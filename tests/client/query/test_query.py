@@ -33,7 +33,7 @@ class TestQuery(unittest.TestCase):
         )
 
     def test_signals_queries(self):
-        self.assertEqual("SELECT my_signal FROM signals", Signals.query(["my_signal"], []).sql())
+        self.assertEqual("SELECT my_signal FROM signals", Signals.query(["my_signal"]).sql())
         self.assertEqual(
             "SELECT a, b FROM signals WHERE factset_id IN ('FA', 'FB') "
             "AND time >= '2020-01-01' AND time <= '2020-12-31'",

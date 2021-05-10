@@ -33,7 +33,7 @@ class Dashboard:
         if columns is None:
             columns = ["*"]
         cols = [Column(column) for column in columns]
-        filters = [Dashboard.DASHBOARD_ID.eq(dashboard)]
+        filters = [Dashboard.DASHBOARD_ID.equal(dashboard)]
         if widget is not None:
-            filters.append(Dashboard.WIDGET_ID.eq(widget))
+            filters.append(Dashboard.WIDGET_ID.equal(widget))
         return Query(Dashboard.TABLE, cols, filters)
