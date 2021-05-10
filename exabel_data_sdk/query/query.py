@@ -1,9 +1,8 @@
+from dataclasses import dataclass
 from typing import Sequence
 
-from dataclasses import dataclass
-
 from exabel_data_sdk.query.column import Column
-from exabel_data_sdk.query.filter import Filter
+from exabel_data_sdk.query.predicate import Predicate
 from exabel_data_sdk.query.table import Table
 
 
@@ -12,7 +11,7 @@ class Query:
 
     table: Table
     columns: Sequence[Column]
-    filters: Sequence[Filter]
+    filters: Sequence[Predicate]
 
     def sql(self) -> str:
         cols = ", ".join([col.sql() for col in self.columns])

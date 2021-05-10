@@ -5,5 +5,5 @@ from dataclasses import dataclass
 class Table:
 
     """The name of the table"""
-    name: str
 
+    name: str
