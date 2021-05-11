@@ -2,6 +2,7 @@ import unittest
 
 import pandas as pd
 
+from exabel_data_sdk.query.column import Column
 from exabel_data_sdk.query.dashboard import Dashboard
 from exabel_data_sdk.query.literal import to_sql
 from exabel_data_sdk.query.signals import Signals
@@ -39,8 +40,17 @@ class TestQuery(unittest.TestCase):
             "AND time >= '2020-01-01' AND time <= '2020-12-31'",
             Signals.query(
                 ["a", "b"],
-                [Signals.FACTSET_ID.in_list("FA", "FB")],
                 start_time="2020-01-01",
                 end_time=pd.Timestamp("2020-12-31"),
+                predicates=[Signals.FACTSET_ID.in_list("FA", "FB")],
+            ).sql(),
+        )
+        self.assertEqual(
+            "SELECT 'a+b' AS total, 'get(''foo'')' AS myget FROM signals "
+            "WHERE has_tag('signal:dynamicTag:367') AND time >= '2020-01-01'",
+            Signals.query(
+                [Column("total", "a+b"), Column("myget", "get('foo')")],
+                "signal:dynamicTag:367",
+                "2020-01-01",
             ).sql(),
         )

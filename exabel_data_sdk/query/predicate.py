@@ -40,3 +40,14 @@ class InPredicate(Predicate):
 
     def sql(self) -> str:
         return f"{self.column} IN ({', '.join([to_sql(value) for value in self.values])})"
+
+
+@dataclass
+class FunctionPredicate(Predicate):
+    """A predicate which is a function call."""
+
+    function: str
+    arguments: Sequence[Literal]
+
+    def sql(self) -> str:
+        return f"{self.function}({', '.join([to_sql(value) for value in self.arguments])})"

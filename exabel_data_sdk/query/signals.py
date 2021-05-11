@@ -3,7 +3,7 @@ from typing import Sequence, Union
 import pandas as pd
 
 from exabel_data_sdk.query.column import Column
-from exabel_data_sdk.query.predicate import Predicate
+from exabel_data_sdk.query.predicate import FunctionPredicate, Predicate
 from exabel_data_sdk.query.query import Query
 from exabel_data_sdk.query.table import Table
 
@@ -23,9 +23,10 @@ class Signals:
     @staticmethod
     def query(
         columns: Sequence[Union[str, Column]],
-        predicates: Sequence[Predicate] = (),
+        tag: Union[str, Sequence[str]] = None,
         start_time: Union[str, pd.Timestamp] = None,
         end_time: Union[str, pd.Timestamp] = None,
+        predicates: Sequence[Predicate] = (),
     ) -> Query:
         """
         Build a query for the signals table.
@@ -47,16 +48,27 @@ class Signals:
         Args:
             columns:    the columns to retrieve, as string identifiers or Column objects.
                         At least one column must be requested.
-            predicates: any conditions for what data to include
+            tag:        retrieve data for the entities with this tag,
+                        or with any of the provided tags if several.
             start_time: the first date to retrieve data for
             end_time:   the last date to retrieve data for
+            predicates: any additional conditions for what data to include
         """
         if len(columns) == 0:
             raise ValueError("Need to query for at least one column")
         cols = [Column(column) if isinstance(column, str) else column for column in columns]
         predicates = list(predicates)
+        if tag:
+            if isinstance(tag, str):
+                tag = [tag]
+            predicates.append(Signals.has_tag(*tag))
         if start_time:
             predicates.append(Signals.TIME.greater_eq(start_time))
         if end_time:
             predicates.append(Signals.TIME.less_eq(end_time))
         return Query(Signals.TABLE, cols, predicates)
+
+    @staticmethod
+    def has_tag(*tags: str) -> FunctionPredicate:
+        """Returns a predicate for entities having at least one of the provided tags."""
+        return FunctionPredicate("has_tag", tags)
