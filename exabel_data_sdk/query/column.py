@@ -37,6 +37,14 @@ class Column:
         """Create a predicate for this column to be greater than or equal to the given value."""
         return Comparison(self.name, ">=", value)
 
+    def less(self, value: Literal) -> Comparison:
+        """Create a predicate for this column to be less than the given value."""
+        return Comparison(self.name, "<", value)
+
+    def greater(self, value: Literal) -> Comparison:
+        """Create a predicate for this column to be greater than the given value."""
+        return Comparison(self.name, ">", value)
+
     def in_list(self, *values: Literal) -> InPredicate:
         """Create a predicate for this column to have one of the given values."""
         return InPredicate(self.name, values)
