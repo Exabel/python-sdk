@@ -106,8 +106,7 @@ class CreateEntityMappingFromCsv(BaseScript):
             return self._get_entity_mapping_by_id(
                 client, args.entity_type, "bloomberg_ticker", mapping_input
             )
-        else:
-            raise ValueError("The input file does not have a valid id to map from.")
+        raise ValueError("The input file does not have a valid id to map from.")
 
     def _get_entity_mapping_by_ticker(
         self, client: ExabelClient, entity_type: str, mapping_input: pd.DataFrame
