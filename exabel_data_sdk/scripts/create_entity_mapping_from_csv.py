@@ -96,13 +96,13 @@ class CreateEntityMappingFromCsv(BaseScript):
 
         if "ticker" in mapping_input and "market" in mapping_input:
             return self._get_entity_mapping_by_ticker(client, args.entity_type, mapping_input)
-        elif "isin" in mapping_input:
+        if "isin" in mapping_input:
             return self._get_entity_mapping_by_id(client, args.entity_type, "isin", mapping_input)
-        elif "factset_identifier" in mapping_input:
+        if "factset_identifier" in mapping_input:
             return self._get_entity_mapping_by_id(
                 client, args.entity_type, "factset_identifier", mapping_input
             )
-        elif "bloomberg_ticker" in mapping_input:
+        if "bloomberg_ticker" in mapping_input:
             return self._get_entity_mapping_by_id(
                 client, args.entity_type, "bloomberg_ticker", mapping_input
             )
