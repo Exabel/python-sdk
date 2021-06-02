@@ -96,15 +96,17 @@ class CreateEntityMappingFromCsv(BaseScript):
 
         if "ticker" in mapping_input and "market" in mapping_input:
             return self._get_entity_mapping_by_ticker(client, args.entity_type, mapping_input)
-        if "isin" in mapping_input:
-            return self._get_entity_mapping_by_id(client, args.entity_type, "isin", mapping_input)
-        if "factset_identifier" in mapping_input:
+        identifier = next(
+            (
+                column
+                for column in mapping_input
+                if column in {"isin", "factset_identifier", "bloomberg_ticker"}
+            ),
+            None,
+        )
+        if identifier is not None:
             return self._get_entity_mapping_by_id(
-                client, args.entity_type, "factset_identifier", mapping_input
-            )
-        if "bloomberg_ticker" in mapping_input:
-            return self._get_entity_mapping_by_id(
-                client, args.entity_type, "bloomberg_ticker", mapping_input
+                client, args.entity_type, identifier, mapping_input
             )
         raise ValueError("The input file does not have a valid id to map from.")
 
