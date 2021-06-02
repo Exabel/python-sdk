@@ -13,12 +13,12 @@ class TestCreateEntityMappingFromCsv(unittest.TestCase):
     def tearDown(self):
         self.temp_file.close()
 
-    def test_create_mapping(self):
+    def test_create_mapping_ticker(self):
 
         args = [
             "script-name",
             "--filename-input",
-            "./tests/resources/data/mapping.csv",
+            "./tests/resources/data/mapping_ticker.csv",
             "--filename-output",
             self.temp_file.name,
         ]
@@ -50,6 +50,93 @@ class TestCreateEntityMappingFromCsv(unittest.TestCase):
         _, kwargs = call_args
         self.assertEqual(
             {"entity_type": "entityTypes/company", "mic": "XNYS", "ticker": "M"},
+            kwargs,
+            "Arguments not as expected",
+        )
+
+    def test_create_mapping_isin(self):
+
+        args = [
+            "script-name",
+            "--filename-input",
+            "./tests/resources/data/mapping_isin.csv",
+            "--filename-output",
+            self.temp_file.name,
+        ]
+
+        script = CreateEntityMappingFromCsv(args, "MappingTestISIN")
+        client = mock.create_autospec(ExabelClient(host="host", api_key="123"))
+        script.run_script(client, script.parse_arguments())
+
+        # first call - entity = "entityType/company" isin = 'NO12345678'
+        call_args = client.entity_api.search_for_entities.call_args_list[0]
+        _, kwargs = call_args
+        self.assertEqual(
+            {"entity_type": "entityTypes/company", "isin": "NO0010096985"},
+            kwargs,
+            "Arguments not as expected",
+        )
+
+    def test_create_mapping_factset_identifier(self):
+
+        args = [
+            "script-name",
+            "--filename-input",
+            "./tests/resources/data/mapping_factset_identifier.csv",
+            "--filename-output",
+            self.temp_file.name,
+        ]
+
+        script = CreateEntityMappingFromCsv(args, "MappingTestISIN")
+        client = mock.create_autospec(ExabelClient(host="host", api_key="123"))
+        script.run_script(client, script.parse_arguments())
+
+        # first call - entity = "entityType/company" factset_identifier = '0MXNWD-E'
+        call_args = client.entity_api.search_for_entities.call_args_list[0]
+        _, kwargs = call_args
+        self.assertEqual(
+            {"entity_type": "entityTypes/company", "factset_identifier": "0MXNWD-E"},
+            kwargs,
+            "Arguments not as expected",
+        )
+
+        # second call - entity = "entityType/company" factset_identifier = 'DT699H-S'
+        call_args = client.entity_api.search_for_entities.call_args_list[1]
+        _, kwargs = call_args
+        self.assertEqual(
+            {"entity_type": "entityTypes/company", "factset_identifier": "DT699H-S"},
+            kwargs,
+            "Arguments not as expected",
+        )
+
+    def test_create_mapping_bloomberg_ticker(self):
+
+        args = [
+            "script-name",
+            "--filename-input",
+            "./tests/resources/data/mapping_bloomberg_ticker.csv",
+            "--filename-output",
+            self.temp_file.name,
+        ]
+
+        script = CreateEntityMappingFromCsv(args, "MappingTestISIN")
+        client = mock.create_autospec(ExabelClient(host="host", api_key="123"))
+        script.run_script(client, script.parse_arguments())
+
+        # first call - entity = "entityType/company" bloomberg_ticker = 'AAPL US'
+        call_args = client.entity_api.search_for_entities.call_args_list[0]
+        _, kwargs = call_args
+        self.assertEqual(
+            {"entity_type": "entityTypes/company", "bloomberg_ticker": "AAPL US"},
+            kwargs,
+            "Arguments not as expected",
+        )
+
+        # second call - entity = "entityType/company" factset_identifier = 'DT699H-S'
+        call_args = client.entity_api.search_for_entities.call_args_list[1]
+        _, kwargs = call_args
+        self.assertEqual(
+            {"entity_type": "entityTypes/company", "bloomberg_ticker": "AMZN US"},
             kwargs,
             "Arguments not as expected",
         )

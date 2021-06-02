@@ -17,26 +17,40 @@ class CreateEntityMappingFromCsv(BaseScript):
     subsequently followed by rows of id values. The separator is configurable using the
     script argument '--sep' and defaults to ';'.
 
-    Example:
+    Example 1:
         ticker;market
         C;XNAS
         FL;XNYS
         M:US
 
+    Example2:
+        bloomberg_ticker
+        AAPL US
+        AMZN US
+
     Supported id types are:
 
         * ticker - a company ticker string
-        * market - a market identifier code (MIC) or a literal to support lookup
+          and
+          market - a market identifier code (MIC) or a literal to support lookup
           on several MICs. Supported literals are:
               * 'US' - lookup on "XNYS" and "XNAS"
+        * isin - an ISIN
+        * factset_identifier - a factset identifier
+        * bloomberg_ticker   - a Bloomberg symbol
 
     Output is on the same format as the input but with 'entity' added as a column.
 
-    Example:
+    Example 1:
         ticker;market;entity
         C;XNAS;entityTypes/company/entities/company_A
         FL;XNYS;entityTypes/company/entities/company_B
         M;US;entityTypes/company/entities/company_C
+
+    Example 2:
+        bloomberg_ticker;entity
+        AAPL US;entityTypes/company/entities/company_A
+        AMZN US;entityTypes/company/entities/company_B
 
     """
 
@@ -65,8 +79,39 @@ class CreateEntityMappingFromCsv(BaseScript):
             help="The entity type to search for in the mapping",
         )
 
-    def get_entity_mapping_by_ticker(
+    def get_entity_mapping(
         self, client: ExabelClient, args: argparse.Namespace, mapping_input: pd.DataFrame
+    ) -> pd.DataFrame:
+
+        """
+        Find the entity type we are creating mapping for.
+
+        Check what type of mapping we are creating and call the relevant method.
+
+        Args:
+              client:        ExabelClient instance
+              args:          command line arguments
+              mapping_input: the input ids to lookup mappings for
+        """
+
+        if "ticker" in mapping_input and "market" in mapping_input:
+            return self._get_entity_mapping_by_ticker(client, args.entity_type, mapping_input)
+        identifier = next(
+            (
+                column
+                for column in mapping_input
+                if column in {"isin", "factset_identifier", "bloomberg_ticker"}
+            ),
+            None,
+        )
+        if identifier is not None:
+            return self._get_entity_mapping_by_id(
+                client, args.entity_type, identifier, mapping_input
+            )
+        raise ValueError("The input file does not have a valid id to map from.")
+
+    def _get_entity_mapping_by_ticker(
+        self, client: ExabelClient, entity_type: str, mapping_input: pd.DataFrame
     ) -> pd.DataFrame:
         """
         Create a mapping from ticker / market id to entity.
@@ -76,7 +121,7 @@ class CreateEntityMappingFromCsv(BaseScript):
 
         Args:
               client:        ExabelClient instance
-              args:          Command line arguments
+              entity_type:   the entity type to lookup
               mapping_input: the input ids to lookup mappings for
         """
 
@@ -94,7 +139,7 @@ class CreateEntityMappingFromCsv(BaseScript):
             found = False
             for market in markets:
                 entities = client.entity_api.search_for_entities(
-                    entity_type=args.entity_type, mic=market, ticker=ticker
+                    entity_type=entity_type, mic=market, ticker=ticker
                 )
                 if len(entities) == 1:
                     mapping_output.at[i, "entity"] = entities[0].name
@@ -111,6 +156,52 @@ class CreateEntityMappingFromCsv(BaseScript):
 
             if not found:
                 print(f"Did not find entity for {ticker} in any market - dropping from mapping")
+                mapping_output = mapping_output.drop(index=i)
+
+        return mapping_output
+
+    def _get_entity_mapping_by_id(
+        self, client: ExabelClient, entity_type: str, id_type: str, mapping_input: pd.DataFrame
+    ) -> pd.DataFrame:
+        """
+        Create a mapping from a single id.
+
+        Implementation for looking up mappings on a single id.
+        This will return a DataFrame with the entity mapping added.
+
+        Args:
+              client:        ExabelClient instance
+              entity_type:   the entity type to lookup
+              id_type:       the type of the id to use in the lookuo
+              mapping_input: the input ids to lookup mappings for
+        """
+
+        if id_type not in mapping_input:
+            raise ValueError(f"The input file must have a field named {id_type}.")
+
+        mapping_output = mapping_input.reindex(
+            columns=mapping_input.columns.tolist() + ["entity"], fill_value=""
+        )
+
+        for i, row in mapping_input.iterrows():
+            id_value = row[id_type]
+
+            arguments = {"entity_type": entity_type, id_type: id_value}
+            entities = client.entity_api.search_for_entities(**arguments)
+
+            if len(entities) == 1:
+                mapping_output.at[i, "entity"] = entities[0].name
+            elif len(entities) > 1:
+                print(
+                    f"Found {len(entities)} entities when searching for "
+                    f"'{id_value}' of type '{id_type}' - drop from mapping"
+                )
+                mapping_output = mapping_output.drop(index=i)
+            elif len(entities) == 0:
+                print(
+                    f"Did not find entity for '{id_value}' of type '{id_type}'"
+                    f" - dropping from mapping"
+                )
                 mapping_output = mapping_output.drop(index=i)
 
         return mapping_output
@@ -134,7 +225,7 @@ class CreateEntityMappingFromCsv(BaseScript):
         mapping_input = mapping_input.loc[0:, mapping_input.columns].drop_duplicates()
 
         try:
-            mapping_output = self.get_entity_mapping_by_ticker(client, args, mapping_input)
+            mapping_output = self.get_entity_mapping(client, args, mapping_input)
             mapping_output.to_csv(args.filename_output, sep=args.sep, index=False)
         except ValueError as error:
             print(error)
