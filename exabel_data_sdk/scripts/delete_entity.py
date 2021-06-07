@@ -30,13 +30,14 @@ class DeleteEntity(BaseScript):
         if args.dry_run:
             print("Running dry-run...")
 
-        result = client.entity_api.get_entity(args.data_id)
+        result = client.entity_api.get_entity(args.entity_name)
         if result.read_only:
-            print("Result exists but is read-only.")
+            print("ERROR: Result exists but is read-only.")
             print(result)
         else:
             client.entity_api.delete_entity(result.name)
             print("Deleted entity.")
+            print(result)
 
 if __name__ == "__main__":
     DeleteEntity(sys.argv, "Delete one entity with a given id.").run()
