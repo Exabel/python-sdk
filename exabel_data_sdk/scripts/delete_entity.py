@@ -13,10 +13,10 @@ class DeleteEntity(BaseScript):
     def __init__(self, argv: Sequence[str], description: str):
         super().__init__(argv, description)
         self.parser.add_argument(
-            "--entity-id",
+            "--data-id",
             required=True,
             type=str,
-            help="The entity id, for example 'EXAMPLE_ID'",
+            help="The entity data_id, for example 'graph:entity::geo_segment:factset:segment_30cb422a2a00da8c20afeb97d1c9bf60'",
         )
         self.parser.add_argument(
             "--dry-run",
@@ -30,7 +30,13 @@ class DeleteEntity(BaseScript):
         if args.dry_run:
             print("Running dry-run...")
 
+        result = client.entity_api.get_entity(args.data_id)
+        if result.read_only:
+            print("Result exists but is read-only.")
+            print(result)
+        else:
+            client.entity_api.delete_entity(result.name)
+            print("Deleted entity.")
 
-
-if __name__ == "__main__";
+if __name__ == "__main__":
     DeleteEntity(sys.argv, "Delete one entity with a given id.").run()
