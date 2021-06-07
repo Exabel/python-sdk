@@ -13,10 +13,10 @@ class DeleteEntity(BaseScript):
     def __init__(self, argv: Sequence[str], description: str):
         super().__init__(argv, description)
         self.parser.add_argument(
-            "--data-id",
+            "--entity-name",
             required=True,
             type=str,
-            help="The entity data_id, for example 'graph:entity::geo_segment:factset:segment_30cb422a2a00da8c20afeb97d1c9bf60'",
+            help="The entity name, for example 'entityTypes/geo_segment/entities/factset.segment_c8fabf00fa9e00066c7c5773f20rea95'",
         )
         self.parser.add_argument(
             "--dry-run",
