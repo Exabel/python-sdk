@@ -5,6 +5,7 @@ from typing import Sequence
 from exabel_data_sdk import ExabelClient
 from exabel_data_sdk.scripts.base_script import BaseScript
 
+
 class DeleteEntity(BaseScript):
     """
     Deletes one entity unless it is read-only.
