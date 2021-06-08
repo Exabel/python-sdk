@@ -16,7 +16,7 @@ class DeleteEntity(BaseScript):
             "--entity-name",
             required=True,
             type=str,
-            help="The entity name, for example 'entityTypes/geo_segment/entities/factset.segment_c8fabf00fa9e00066c7c5773f20rea95'",
+            help="The entity name, for example 'entityTypes/ns.EntityType/entities/ns.EntityName'",
         )
         self.parser.add_argument(
             "--dry-run",
@@ -30,14 +30,15 @@ class DeleteEntity(BaseScript):
         if args.dry_run:
             print("Running dry-run...")
 
-        result = client.entity_api.get_entity(args.entity_name)
-        if result.read_only:
-            print("ERROR: Result exists but is read-only.")
-            print(result)
+        entity = client.entity_api.get_entity(args.entity_name)
+        if entity.read_only:
+            print(f"ERROR: Entity is read-only: {entity}")
         else:
-            client.entity_api.delete_entity(result.name)
-            print("Deleted entity.")
-            print(result)
+            if args.dry_run:
+                print(f"Dry run: would have deleted: {entity}")
+            else:
+                client.entity_api.delete_entity(entity.name)
+                print("Deleted entity.")
 
 if __name__ == "__main__":
-    DeleteEntity(sys.argv, "Delete one entity with a given id.").run()
+    DeleteEntity(sys.argv, "Delete one entity with a given entity name.").run()
