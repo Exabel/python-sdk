@@ -41,5 +41,6 @@ class DeleteEntity(BaseScript):
                 client.entity_api.delete_entity(entity.name)
                 print("Deleted entity.")
 
+
 if __name__ == "__main__":
     DeleteEntity(sys.argv, "Delete one entity with a given entity name.").run()
