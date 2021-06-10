@@ -209,17 +209,17 @@ def main(argv: List[str]) -> None:
     parser.add_argument(
         "--auth0",
         default="auth.exabel.com",
-        help="The URL to the auth0 log-in page",
+        help="The domain of the Auth0 log-in page",
     )
     parser.add_argument(
         "--client-id",
         default="6OoAPIEgqz1CQokkBuwtBcYKgNiLKsMF",
-        help="The client id",
+        help="The Auth0 client id for the Python SDK",
     )
     parser.add_argument(
         "--backend",
         default="endpoints.exabel.com",
-        help="The URL to the Exabel endpoint page",
+        help="The domain of the Exabel back-end API",
     )
     args = parser.parse_args(argv[1:])
 
