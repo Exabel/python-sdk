@@ -8,7 +8,7 @@ from exabel_data_sdk.scripts.create_entity_mapping_from_csv import CreateEntityM
 
 class TestCreateEntityMappingFromCsv(unittest.TestCase):
     def setUp(self):
-        self.temp_file = tempfile.NamedTemporaryFile()
+        self.temp_file = tempfile.NamedTemporaryFile()  # pylint: disable=consider-using-with
 
     def tearDown(self):
         self.temp_file.close()

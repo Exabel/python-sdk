@@ -12,8 +12,12 @@ pandas = "*"
 protobuf = "*"
 pycodestyle = "*"
 pylint = "*"
+requests = "*"
 setuptools = "*"
 twine = "*"
+types-protobuf = "*"
+types-python-dateutil = "*"
+types-requests = "*"
 wheel = "*"
 
 [dev-packages]
