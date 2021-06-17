@@ -18,5 +18,6 @@ class BaseApi:
             assert config.api_key is not None
             self.metadata.append(("x-api-key", config.api_key))
             self.channel = grpc.secure_channel(
-                config.host + ":" + str(config.port), grpc.ssl_channel_credentials()
+                config.host + ":" + str(config.port),
+                grpc.ssl_channel_credentials(root_certificates=config.root_certificates),
             )
