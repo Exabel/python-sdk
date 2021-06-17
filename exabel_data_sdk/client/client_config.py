@@ -1,4 +1,5 @@
 import os
+from typing import Optional
 
 
 class DefaultConfig:
@@ -12,7 +13,7 @@ class DefaultConfig:
         self.host = os.getenv("EXABEL_HOST", "data.api.exabel.com")
         self.port = int(os.getenv("EXABEL_PORT", "21443"))
         self.timeout = int(os.getenv("EXABEL_TIMEOUT", "30"))
-        self.root_certificates = None
+        self.root_certificates: Optional[str] = None
 
 
 class ClientConfig(DefaultConfig):
@@ -28,7 +29,6 @@ class ClientConfig(DefaultConfig):
         port: int = None,
         timeout: int = None,
         root_certificates: str = None,
-
     ):
         """
         Initialize a new client configuration.
