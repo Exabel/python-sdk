@@ -31,7 +31,7 @@ class ExabelClient:
             host:               Override default Exabel API host.
             port:               Override default Exabel API port.
             timeout:            Override default timeout in seconds to use for API requests.
-            root_certificates:  Root certificates to use.
+            root_certificates:  Additional allowed root certificates for verifying TLS connection.
         """
         config = ClientConfig(api_key, client_name, host, port, timeout, root_certificates)
 

@@ -39,7 +39,7 @@ class ClientConfig(DefaultConfig):
             host:               Exabel API host.
             port:               Exabel API port.
             timeout:            Default timeout in seconds to use for API requests.
-            root_certificates:  Root certificates to use.
+            root_certificates:  Additional allowed root certificates for verifying TLS connection.
         """
         super().__init__()
 
