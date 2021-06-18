@@ -28,7 +28,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
     syntax="proto3",
     serialized_options=b"\n\026com.exabel.api.data.v1B\026TimeSeriesServiceProtoP\001",
     create_key=_descriptor._internal_create_key,
-    serialized_pb=b'\n,exabel/api/data/v1/time_series_service.proto\x12\x12\x65xabel.api.data.v1\x1a-exabel/api/data/v1/time_series_messages.proto\x1a exabel/api/time/time_range.proto\x1a\x1cgoogle/api/annotations.proto\x1a\x1bgoogle/protobuf/empty.proto"N\n\x15ListTimeSeriesRequest\x12\x0e\n\x06parent\x18\x01 \x01(\t\x12\x11\n\tpage_size\x18\x02 \x01(\x05\x12\x12\n\npage_token\x18\x03 \x01(\t"z\n\x16ListTimeSeriesResponse\x12\x33\n\x0btime_series\x18\x01 \x03(\x0b\x32\x1e.exabel.api.data.v1.TimeSeries\x12\x17\n\x0fnext_page_token\x18\x02 \x01(\t\x12\x12\n\ntotal_size\x18\x03 \x01(\x05"V\n\x14GetTimeSeriesRequest\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x30\n\x04view\x18\x02 \x01(\x0b\x32".exabel.api.data.v1.TimeSeriesView"\x80\x01\n\x17\x43reateTimeSeriesRequest\x12\x33\n\x0btime_series\x18\x01 \x01(\x0b\x32\x1e.exabel.api.data.v1.TimeSeries\x12\x30\n\x04view\x18\x02 \x01(\x0b\x32".exabel.api.data.v1.TimeSeriesView"\x80\x01\n\x17UpdateTimeSeriesRequest\x12\x33\n\x0btime_series\x18\x01 \x01(\x0b\x32\x1e.exabel.api.data.v1.TimeSeries\x12\x30\n\x04view\x18\x02 \x01(\x0b\x32".exabel.api.data.v1.TimeSeriesView"\'\n\x17\x44\x65leteTimeSeriesRequest\x12\x0c\n\x04name\x18\x01 \x01(\t"c\n"BatchDeleteTimeSeriesPointsRequest\x12\x0c\n\x04name\x18\x01 \x01(\t\x12/\n\x0btime_ranges\x18\x02 \x03(\x0b\x32\x1a.exabel.api.time.TimeRange2\xdc\x0f\n\x11TimeSeriesService\x12\xa1\x01\n\x0eListTimeSeries\x12).exabel.api.data.v1.ListTimeSeriesRequest\x1a*.exabel.api.data.v1.ListTimeSeriesResponse"8\x82\xd3\xe4\x93\x02\x32\x12\x30/v1/{parent=entityTypes/*/entities/*}/timeSeries\x12\x93\x01\n\x0fListTimeSeries2\x12).exabel.api.data.v1.ListTimeSeriesRequest\x1a*.exabel.api.data.v1.ListTimeSeriesResponse")\x82\xd3\xe4\x93\x02#\x12!/v1/{parent=signals/*}/timeSeries\x12\x90\x01\n\rGetTimeSeries\x12(.exabel.api.data.v1.GetTimeSeriesRequest\x1a\x1e.exabel.api.data.v1.TimeSeries"5\x82\xd3\xe4\x93\x02/\x12-/v1/{name=entityTypes/*/entities/*/signals/*}\x12\x91\x01\n\x0eGetTimeSeries2\x12(.exabel.api.data.v1.GetTimeSeriesRequest\x1a\x1e.exabel.api.data.v1.TimeSeries"5\x82\xd3\xe4\x93\x02/\x12-/v1/{name=signals/*/entityTypes/*/entities/*}\x12\xaf\x01\n\x10\x43reateTimeSeries\x12+.exabel.api.data.v1.CreateTimeSeriesRequest\x1a\x1e.exabel.api.data.v1.TimeSeries"N\x82\xd3\xe4\x93\x02H"9/v1/{time_series.name=entityTypes/*/entities/*/signals/*}:\x0btime_series\x12\xb0\x01\n\x11\x43reateTimeSeries2\x12+.exabel.api.data.v1.CreateTimeSeriesRequest\x1a\x1e.exabel.api.data.v1.TimeSeries"N\x82\xd3\xe4\x93\x02H"9/v1/{time_series.name=signals/*/entityTypes/*/entities/*}:\x0btime_series\x12\xaf\x01\n\x10UpdateTimeSeries\x12+.exabel.api.data.v1.UpdateTimeSeriesRequest\x1a\x1e.exabel.api.data.v1.TimeSeries"N\x82\xd3\xe4\x93\x02H29/v1/{time_series.name=entityTypes/*/entities/*/signals/*}:\x0btime_series\x12\xb0\x01\n\x11UpdateTimeSeries2\x12+.exabel.api.data.v1.UpdateTimeSeriesRequest\x1a\x1e.exabel.api.data.v1.TimeSeries"N\x82\xd3\xe4\x93\x02H29/v1/{time_series.name=signals/*/entityTypes/*/entities/*}:\x0btime_series\x12\x8e\x01\n\x10\x44\x65leteTimeSeries\x12+.exabel.api.data.v1.DeleteTimeSeriesRequest\x1a\x16.google.protobuf.Empty"5\x82\xd3\xe4\x93\x02/*-/v1/{name=entityTypes/*/entities/*/signals/*}\x12\x8f\x01\n\x11\x44\x65leteTimeSeries2\x12+.exabel.api.data.v1.DeleteTimeSeriesRequest\x1a\x16.google.protobuf.Empty"5\x82\xd3\xe4\x93\x02/*-/v1/{name=signals/*/entityTypes/*/entities/*}\x12\xba\x01\n\x1b\x42\x61tchDeleteTimeSeriesPoints\x12\x36.exabel.api.data.v1.BatchDeleteTimeSeriesPointsRequest\x1a\x16.google.protobuf.Empty"K\x82\xd3\xe4\x93\x02\x45"@/v1/{name=entityTypes/*/entities/*/signals/*}/points:batchDelete:\x01*\x12\xbb\x01\n\x1c\x42\x61tchDeleteTimeSeriesPoints2\x12\x36.exabel.api.data.v1.BatchDeleteTimeSeriesPointsRequest\x1a\x16.google.protobuf.Empty"K\x82\xd3\xe4\x93\x02\x45"@/v1/{name=signals/*/entityTypes/*/entities/*}/points:batchDelete:\x01*B2\n\x16\x63om.exabel.api.data.v1B\x16TimeSeriesServiceProtoP\x01\x62\x06proto3',
+    serialized_pb=b'\n,exabel/api/data/v1/time_series_service.proto\x12\x12\x65xabel.api.data.v1\x1a-exabel/api/data/v1/time_series_messages.proto\x1a exabel/api/time/time_range.proto\x1a\x1cgoogle/api/annotations.proto\x1a\x1bgoogle/protobuf/empty.proto"N\n\x15ListTimeSeriesRequest\x12\x0e\n\x06parent\x18\x01 \x01(\t\x12\x11\n\tpage_size\x18\x02 \x01(\x05\x12\x12\n\npage_token\x18\x03 \x01(\t"z\n\x16ListTimeSeriesResponse\x12\x33\n\x0btime_series\x18\x01 \x03(\x0b\x32\x1e.exabel.api.data.v1.TimeSeries\x12\x17\n\x0fnext_page_token\x18\x02 \x01(\t\x12\x12\n\ntotal_size\x18\x03 \x01(\x05"V\n\x14GetTimeSeriesRequest\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x30\n\x04view\x18\x02 \x01(\x0b\x32".exabel.api.data.v1.TimeSeriesView"\xc2\x01\n\x17\x43reateTimeSeriesRequest\x12\x33\n\x0btime_series\x18\x01 \x01(\x0b\x32\x1e.exabel.api.data.v1.TimeSeries\x12\x30\n\x04view\x18\x02 \x01(\x0b\x32".exabel.api.data.v1.TimeSeriesView\x12@\n\x12\x64\x65\x66\x61ult_known_time\x18\x03 \x01(\x0b\x32$.exabel.api.data.v1.DefaultKnownTime"\xc2\x01\n\x17UpdateTimeSeriesRequest\x12\x33\n\x0btime_series\x18\x01 \x01(\x0b\x32\x1e.exabel.api.data.v1.TimeSeries\x12\x30\n\x04view\x18\x02 \x01(\x0b\x32".exabel.api.data.v1.TimeSeriesView\x12@\n\x12\x64\x65\x66\x61ult_known_time\x18\x03 \x01(\x0b\x32$.exabel.api.data.v1.DefaultKnownTime"\'\n\x17\x44\x65leteTimeSeriesRequest\x12\x0c\n\x04name\x18\x01 \x01(\t"c\n"BatchDeleteTimeSeriesPointsRequest\x12\x0c\n\x04name\x18\x01 \x01(\t\x12/\n\x0btime_ranges\x18\x02 \x03(\x0b\x32\x1a.exabel.api.time.TimeRange2\xec\x0b\n\x11TimeSeriesService\x12\xc6\x01\n\x0eListTimeSeries\x12).exabel.api.data.v1.ListTimeSeriesRequest\x1a*.exabel.api.data.v1.ListTimeSeriesResponse"]\x82\xd3\xe4\x93\x02W\x12\x30/v1/{parent=entityTypes/*/entities/*}/timeSeriesZ#\x12!/v1/{parent=signals/*}/timeSeries\x12\xc9\x02\n\rGetTimeSeries\x12(.exabel.api.data.v1.GetTimeSeriesRequest\x1a\x1e.exabel.api.data.v1.TimeSeries"\xed\x01\x82\xd3\xe4\x93\x02\xe6\x01\x12?/v1/{name=entityTypes/*/entities/*/signals/*}/{view.known_time}ZA\x12?/v1/{name=signals/*/entityTypes/*/entities/*}/{view.known_time}Z/\x12-/v1/{name=entityTypes/*/entities/*/signals/*}Z/\x12-/v1/{name=signals/*/entityTypes/*/entities/*}\x12\xfb\x01\n\x10\x43reateTimeSeries\x12+.exabel.api.data.v1.CreateTimeSeriesRequest\x1a\x1e.exabel.api.data.v1.TimeSeries"\x99\x01\x82\xd3\xe4\x93\x02\x92\x01"9/v1/{time_series.name=entityTypes/*/entities/*/signals/*}:\x0btime_seriesZH"9/v1/{time_series.name=signals/*/entityTypes/*/entities/*}:\x0btime_series\x12\xfb\x01\n\x10UpdateTimeSeries\x12+.exabel.api.data.v1.UpdateTimeSeriesRequest\x1a\x1e.exabel.api.data.v1.TimeSeries"\x99\x01\x82\xd3\xe4\x93\x02\x92\x01\x32\x39/v1/{time_series.name=entityTypes/*/entities/*/signals/*}:\x0btime_seriesZH"9/v1/{time_series.name=signals/*/entityTypes/*/entities/*}:\x0btime_series\x12\xbf\x01\n\x10\x44\x65leteTimeSeries\x12+.exabel.api.data.v1.DeleteTimeSeriesRequest\x1a\x16.google.protobuf.Empty"f\x82\xd3\xe4\x93\x02`*-/v1/{name=entityTypes/*/entities/*/signals/*}Z/*-/v1/{name=signals/*/entityTypes/*/entities/*}\x12\x83\x02\n\x1b\x42\x61tchDeleteTimeSeriesPoints\x12\x36.exabel.api.data.v1.BatchDeleteTimeSeriesPointsRequest\x1a\x16.google.protobuf.Empty"\x93\x01\x82\xd3\xe4\x93\x02\x8c\x01"@/v1/{name=entityTypes/*/entities/*/signals/*}/points:batchDelete:\x01*ZE"@/v1/{name=signals/*/entityTypes/*/entities/*}/points:batchDelete:\x01*B2\n\x16\x63om.exabel.api.data.v1B\x16TimeSeriesServiceProtoP\x01\x62\x06proto3',
     dependencies=[
         exabel_dot_api_dot_data_dot_v1_dot_time__series__messages__pb2.DESCRIPTOR,
         exabel_dot_api_dot_time_dot_time__range__pb2.DESCRIPTOR,
@@ -302,6 +302,25 @@ _CREATETIMESERIESREQUEST = _descriptor.Descriptor(
             file=DESCRIPTOR,
             create_key=_descriptor._internal_create_key,
         ),
+        _descriptor.FieldDescriptor(
+            name="default_known_time",
+            full_name="exabel.api.data.v1.CreateTimeSeriesRequest.default_known_time",
+            index=2,
+            number=3,
+            type=11,
+            cpp_type=10,
+            label=1,
+            has_default_value=False,
+            default_value=None,
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=None,
+            file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
+        ),
     ],
     extensions=[],
     nested_types=[],
@@ -312,7 +331,7 @@ _CREATETIMESERIESREQUEST = _descriptor.Descriptor(
     extension_ranges=[],
     oneofs=[],
     serialized_start=501,
-    serialized_end=629,
+    serialized_end=695,
 )
 
 
@@ -362,6 +381,25 @@ _UPDATETIMESERIESREQUEST = _descriptor.Descriptor(
             file=DESCRIPTOR,
             create_key=_descriptor._internal_create_key,
         ),
+        _descriptor.FieldDescriptor(
+            name="default_known_time",
+            full_name="exabel.api.data.v1.UpdateTimeSeriesRequest.default_known_time",
+            index=2,
+            number=3,
+            type=11,
+            cpp_type=10,
+            label=1,
+            has_default_value=False,
+            default_value=None,
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=None,
+            file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
+        ),
     ],
     extensions=[],
     nested_types=[],
@@ -371,8 +409,8 @@ _UPDATETIMESERIESREQUEST = _descriptor.Descriptor(
     syntax="proto3",
     extension_ranges=[],
     oneofs=[],
-    serialized_start=632,
-    serialized_end=760,
+    serialized_start=698,
+    serialized_end=892,
 )
 
 
@@ -412,8 +450,8 @@ _DELETETIMESERIESREQUEST = _descriptor.Descriptor(
     syntax="proto3",
     extension_ranges=[],
     oneofs=[],
-    serialized_start=762,
-    serialized_end=801,
+    serialized_start=894,
+    serialized_end=933,
 )
 
 
@@ -472,8 +510,8 @@ _BATCHDELETETIMESERIESPOINTSREQUEST = _descriptor.Descriptor(
     syntax="proto3",
     extension_ranges=[],
     oneofs=[],
-    serialized_start=803,
-    serialized_end=902,
+    serialized_start=935,
+    serialized_end=1034,
 )
 
 _LISTTIMESERIESRESPONSE.fields_by_name[
@@ -488,12 +526,18 @@ _CREATETIMESERIESREQUEST.fields_by_name[
 _CREATETIMESERIESREQUEST.fields_by_name[
     "view"
 ].message_type = exabel_dot_api_dot_data_dot_v1_dot_time__series__messages__pb2._TIMESERIESVIEW
+_CREATETIMESERIESREQUEST.fields_by_name[
+    "default_known_time"
+].message_type = exabel_dot_api_dot_data_dot_v1_dot_time__series__messages__pb2._DEFAULTKNOWNTIME
 _UPDATETIMESERIESREQUEST.fields_by_name[
     "time_series"
 ].message_type = exabel_dot_api_dot_data_dot_v1_dot_time__series__messages__pb2._TIMESERIES
 _UPDATETIMESERIESREQUEST.fields_by_name[
     "view"
 ].message_type = exabel_dot_api_dot_data_dot_v1_dot_time__series__messages__pb2._TIMESERIESVIEW
+_UPDATETIMESERIESREQUEST.fields_by_name[
+    "default_known_time"
+].message_type = exabel_dot_api_dot_data_dot_v1_dot_time__series__messages__pb2._DEFAULTKNOWNTIME
 _BATCHDELETETIMESERIESPOINTSREQUEST.fields_by_name[
     "time_ranges"
 ].message_type = exabel_dot_api_dot_time_dot_time__range__pb2._TIMERANGE
@@ -595,8 +639,8 @@ _TIMESERIESSERVICE = _descriptor.ServiceDescriptor(
     index=0,
     serialized_options=None,
     create_key=_descriptor._internal_create_key,
-    serialized_start=905,
-    serialized_end=2917,
+    serialized_start=1037,
+    serialized_end=2553,
     methods=[
         _descriptor.MethodDescriptor(
             name="ListTimeSeries",
@@ -605,117 +649,57 @@ _TIMESERIESSERVICE = _descriptor.ServiceDescriptor(
             containing_service=None,
             input_type=_LISTTIMESERIESREQUEST,
             output_type=_LISTTIMESERIESRESPONSE,
-            serialized_options=b"\202\323\344\223\0022\0220/v1/{parent=entityTypes/*/entities/*}/timeSeries",
-            create_key=_descriptor._internal_create_key,
-        ),
-        _descriptor.MethodDescriptor(
-            name="ListTimeSeries2",
-            full_name="exabel.api.data.v1.TimeSeriesService.ListTimeSeries2",
-            index=1,
-            containing_service=None,
-            input_type=_LISTTIMESERIESREQUEST,
-            output_type=_LISTTIMESERIESRESPONSE,
-            serialized_options=b"\202\323\344\223\002#\022!/v1/{parent=signals/*}/timeSeries",
+            serialized_options=b"\202\323\344\223\002W\0220/v1/{parent=entityTypes/*/entities/*}/timeSeriesZ#\022!/v1/{parent=signals/*}/timeSeries",
             create_key=_descriptor._internal_create_key,
         ),
         _descriptor.MethodDescriptor(
             name="GetTimeSeries",
             full_name="exabel.api.data.v1.TimeSeriesService.GetTimeSeries",
-            index=2,
+            index=1,
             containing_service=None,
             input_type=_GETTIMESERIESREQUEST,
             output_type=exabel_dot_api_dot_data_dot_v1_dot_time__series__messages__pb2._TIMESERIES,
-            serialized_options=b"\202\323\344\223\002/\022-/v1/{name=entityTypes/*/entities/*/signals/*}",
-            create_key=_descriptor._internal_create_key,
-        ),
-        _descriptor.MethodDescriptor(
-            name="GetTimeSeries2",
-            full_name="exabel.api.data.v1.TimeSeriesService.GetTimeSeries2",
-            index=3,
-            containing_service=None,
-            input_type=_GETTIMESERIESREQUEST,
-            output_type=exabel_dot_api_dot_data_dot_v1_dot_time__series__messages__pb2._TIMESERIES,
-            serialized_options=b"\202\323\344\223\002/\022-/v1/{name=signals/*/entityTypes/*/entities/*}",
+            serialized_options=b"\202\323\344\223\002\346\001\022?/v1/{name=entityTypes/*/entities/*/signals/*}/{view.known_time}ZA\022?/v1/{name=signals/*/entityTypes/*/entities/*}/{view.known_time}Z/\022-/v1/{name=entityTypes/*/entities/*/signals/*}Z/\022-/v1/{name=signals/*/entityTypes/*/entities/*}",
             create_key=_descriptor._internal_create_key,
         ),
         _descriptor.MethodDescriptor(
             name="CreateTimeSeries",
             full_name="exabel.api.data.v1.TimeSeriesService.CreateTimeSeries",
-            index=4,
+            index=2,
             containing_service=None,
             input_type=_CREATETIMESERIESREQUEST,
             output_type=exabel_dot_api_dot_data_dot_v1_dot_time__series__messages__pb2._TIMESERIES,
-            serialized_options=b'\202\323\344\223\002H"9/v1/{time_series.name=entityTypes/*/entities/*/signals/*}:\013time_series',
-            create_key=_descriptor._internal_create_key,
-        ),
-        _descriptor.MethodDescriptor(
-            name="CreateTimeSeries2",
-            full_name="exabel.api.data.v1.TimeSeriesService.CreateTimeSeries2",
-            index=5,
-            containing_service=None,
-            input_type=_CREATETIMESERIESREQUEST,
-            output_type=exabel_dot_api_dot_data_dot_v1_dot_time__series__messages__pb2._TIMESERIES,
-            serialized_options=b'\202\323\344\223\002H"9/v1/{time_series.name=signals/*/entityTypes/*/entities/*}:\013time_series',
+            serialized_options=b'\202\323\344\223\002\222\001"9/v1/{time_series.name=entityTypes/*/entities/*/signals/*}:\013time_seriesZH"9/v1/{time_series.name=signals/*/entityTypes/*/entities/*}:\013time_series',
             create_key=_descriptor._internal_create_key,
         ),
         _descriptor.MethodDescriptor(
             name="UpdateTimeSeries",
             full_name="exabel.api.data.v1.TimeSeriesService.UpdateTimeSeries",
-            index=6,
+            index=3,
             containing_service=None,
             input_type=_UPDATETIMESERIESREQUEST,
             output_type=exabel_dot_api_dot_data_dot_v1_dot_time__series__messages__pb2._TIMESERIES,
-            serialized_options=b"\202\323\344\223\002H29/v1/{time_series.name=entityTypes/*/entities/*/signals/*}:\013time_series",
-            create_key=_descriptor._internal_create_key,
-        ),
-        _descriptor.MethodDescriptor(
-            name="UpdateTimeSeries2",
-            full_name="exabel.api.data.v1.TimeSeriesService.UpdateTimeSeries2",
-            index=7,
-            containing_service=None,
-            input_type=_UPDATETIMESERIESREQUEST,
-            output_type=exabel_dot_api_dot_data_dot_v1_dot_time__series__messages__pb2._TIMESERIES,
-            serialized_options=b"\202\323\344\223\002H29/v1/{time_series.name=signals/*/entityTypes/*/entities/*}:\013time_series",
+            serialized_options=b'\202\323\344\223\002\222\00129/v1/{time_series.name=entityTypes/*/entities/*/signals/*}:\013time_seriesZH"9/v1/{time_series.name=signals/*/entityTypes/*/entities/*}:\013time_series',
             create_key=_descriptor._internal_create_key,
         ),
         _descriptor.MethodDescriptor(
             name="DeleteTimeSeries",
             full_name="exabel.api.data.v1.TimeSeriesService.DeleteTimeSeries",
-            index=8,
+            index=4,
             containing_service=None,
             input_type=_DELETETIMESERIESREQUEST,
             output_type=google_dot_protobuf_dot_empty__pb2._EMPTY,
-            serialized_options=b"\202\323\344\223\002/*-/v1/{name=entityTypes/*/entities/*/signals/*}",
-            create_key=_descriptor._internal_create_key,
-        ),
-        _descriptor.MethodDescriptor(
-            name="DeleteTimeSeries2",
-            full_name="exabel.api.data.v1.TimeSeriesService.DeleteTimeSeries2",
-            index=9,
-            containing_service=None,
-            input_type=_DELETETIMESERIESREQUEST,
-            output_type=google_dot_protobuf_dot_empty__pb2._EMPTY,
-            serialized_options=b"\202\323\344\223\002/*-/v1/{name=signals/*/entityTypes/*/entities/*}",
+            serialized_options=b"\202\323\344\223\002`*-/v1/{name=entityTypes/*/entities/*/signals/*}Z/*-/v1/{name=signals/*/entityTypes/*/entities/*}",
             create_key=_descriptor._internal_create_key,
         ),
         _descriptor.MethodDescriptor(
             name="BatchDeleteTimeSeriesPoints",
             full_name="exabel.api.data.v1.TimeSeriesService.BatchDeleteTimeSeriesPoints",
-            index=10,
+            index=5,
             containing_service=None,
             input_type=_BATCHDELETETIMESERIESPOINTSREQUEST,
             output_type=google_dot_protobuf_dot_empty__pb2._EMPTY,
-            serialized_options=b'\202\323\344\223\002E"@/v1/{name=entityTypes/*/entities/*/signals/*}/points:batchDelete:\001*',
-            create_key=_descriptor._internal_create_key,
-        ),
-        _descriptor.MethodDescriptor(
-            name="BatchDeleteTimeSeriesPoints2",
-            full_name="exabel.api.data.v1.TimeSeriesService.BatchDeleteTimeSeriesPoints2",
-            index=11,
-            containing_service=None,
-            input_type=_BATCHDELETETIMESERIESPOINTSREQUEST,
-            output_type=google_dot_protobuf_dot_empty__pb2._EMPTY,
-            serialized_options=b'\202\323\344\223\002E"@/v1/{name=signals/*/entityTypes/*/entities/*}/points:batchDelete:\001*',
+            serialized_options=b'\202\323\344\223\002\214\001"@/v1/{name=entityTypes/*/entities/*/signals/*}/points:batchDelete:\001*ZE"@/v1/{name=signals/*/entityTypes/*/entities/*}/points:batchDelete:\001*',
             create_key=_descriptor._internal_create_key,
         ),
     ],

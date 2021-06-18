@@ -22,7 +22,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
     syntax="proto3",
     serialized_options=b"\n\026com.exabel.api.data.v1B\023SignalMessagesProtoP\001",
     create_key=_descriptor._internal_create_key,
-    serialized_pb=b'\n(exabel/api/data/v1/signal_messages.proto\x12\x12\x65xabel.api.data.v1\x1a!exabel/api/math/aggregation.proto"\xa4\x01\n\x06Signal\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x13\n\x0b\x65ntity_type\x18\x02 \x01(\t\x12\x14\n\x0c\x64isplay_name\x18\x03 \x01(\t\x12\x13\n\x0b\x64\x65scription\x18\x04 \x01(\t\x12\x39\n\x13\x64ownsampling_method\x18\x05 \x01(\x0e\x32\x1c.exabel.api.math.Aggregation\x12\x11\n\tread_only\x18\x06 \x01(\x08\x42/\n\x16\x63om.exabel.api.data.v1B\x13SignalMessagesProtoP\x01\x62\x06proto3',
+    serialized_pb=b'\n(exabel/api/data/v1/signal_messages.proto\x12\x12\x65xabel.api.data.v1\x1a!exabel/api/math/aggregation.proto"\xbe\x01\n\x06Signal\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x17\n\x0b\x65ntity_type\x18\x02 \x01(\tB\x02\x18\x01\x12\x14\n\x0c\x64isplay_name\x18\x03 \x01(\t\x12\x13\n\x0b\x64\x65scription\x18\x04 \x01(\t\x12\x39\n\x13\x64ownsampling_method\x18\x05 \x01(\x0e\x32\x1c.exabel.api.math.Aggregation\x12\x11\n\tread_only\x18\x06 \x01(\x08\x12\x14\n\x0c\x65ntity_types\x18\x07 \x03(\tB/\n\x16\x63om.exabel.api.data.v1B\x13SignalMessagesProtoP\x01\x62\x06proto3',
     dependencies=[
         exabel_dot_api_dot_math_dot_aggregation__pb2.DESCRIPTOR,
     ],
@@ -71,7 +71,7 @@ _SIGNAL = _descriptor.Descriptor(
             containing_type=None,
             is_extension=False,
             extension_scope=None,
-            serialized_options=None,
+            serialized_options=b"\030\001",
             file=DESCRIPTOR,
             create_key=_descriptor._internal_create_key,
         ),
@@ -151,6 +151,25 @@ _SIGNAL = _descriptor.Descriptor(
             file=DESCRIPTOR,
             create_key=_descriptor._internal_create_key,
         ),
+        _descriptor.FieldDescriptor(
+            name="entity_types",
+            full_name="exabel.api.data.v1.Signal.entity_types",
+            index=6,
+            number=7,
+            type=9,
+            cpp_type=9,
+            label=3,
+            has_default_value=False,
+            default_value=[],
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=None,
+            file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
+        ),
     ],
     extensions=[],
     nested_types=[],
@@ -161,7 +180,7 @@ _SIGNAL = _descriptor.Descriptor(
     extension_ranges=[],
     oneofs=[],
     serialized_start=100,
-    serialized_end=264,
+    serialized_end=290,
 )
 
 _SIGNAL.fields_by_name[
@@ -183,4 +202,5 @@ _sym_db.RegisterMessage(Signal)
 
 
 DESCRIPTOR._options = None
+_SIGNAL.fields_by_name["entity_type"]._options = None
 # @@protoc_insertion_point(module_scope)
