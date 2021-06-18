@@ -25,7 +25,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
     syntax="proto3",
     serialized_options=b"\n\026com.exabel.api.data.v1B\027TimeSeriesMessagesProtoP\001",
     create_key=_descriptor._internal_create_key,
-    serialized_pb=b'\n-exabel/api/data/v1/time_series_messages.proto\x12\x12\x65xabel.api.data.v1\x1a exabel/api/time/time_range.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x1egoogle/protobuf/wrappers.proto"b\n\nTimeSeries\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x33\n\x06points\x18\x02 \x03(\x0b\x32#.exabel.api.data.v1.TimeSeriesPoint\x12\x11\n\tread_only\x18\x03 \x01(\x08"h\n\x0fTimeSeriesPoint\x12(\n\x04time\x18\x01 \x01(\x0b\x32\x1a.google.protobuf.Timestamp\x12+\n\x05value\x18\x02 \x01(\x0b\x32\x1c.google.protobuf.DoubleValue"@\n\x0eTimeSeriesView\x12.\n\ntime_range\x18\x01 \x01(\x0b\x32\x1a.exabel.api.time.TimeRangeB3\n\x16\x63om.exabel.api.data.v1B\x17TimeSeriesMessagesProtoP\x01\x62\x06proto3',
+    serialized_pb=b'\n-exabel/api/data/v1/time_series_messages.proto\x12\x12\x65xabel.api.data.v1\x1a exabel/api/time/time_range.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x1egoogle/protobuf/wrappers.proto"b\n\nTimeSeries\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x33\n\x06points\x18\x02 \x03(\x0b\x32#.exabel.api.data.v1.TimeSeriesPoint\x12\x11\n\tread_only\x18\x03 \x01(\x08"\x98\x01\n\x0fTimeSeriesPoint\x12(\n\x04time\x18\x01 \x01(\x0b\x32\x1a.google.protobuf.Timestamp\x12+\n\x05value\x18\x02 \x01(\x0b\x32\x1c.google.protobuf.DoubleValue\x12.\n\nknown_time\x18\x03 \x01(\x0b\x32\x1a.google.protobuf.Timestamp"p\n\x0eTimeSeriesView\x12.\n\ntime_range\x18\x01 \x01(\x0b\x32\x1a.exabel.api.time.TimeRange\x12.\n\nknown_time\x18\x02 \x01(\x0b\x32\x1a.google.protobuf.Timestamp"m\n\x10\x44\x65\x66\x61ultKnownTime\x12\x16\n\x0c\x63urrent_time\x18\x01 \x01(\x08H\x00\x12\x30\n\nknown_time\x18\x02 \x01(\x0b\x32\x1a.google.protobuf.TimestampH\x00\x42\x0f\n\rspecificationB3\n\x16\x63om.exabel.api.data.v1B\x17TimeSeriesMessagesProtoP\x01\x62\x06proto3',
     dependencies=[
         exabel_dot_api_dot_time_dot_time__range__pb2.DESCRIPTOR,
         google_dot_protobuf_dot_timestamp__pb2.DESCRIPTOR,
@@ -159,6 +159,25 @@ _TIMESERIESPOINT = _descriptor.Descriptor(
             file=DESCRIPTOR,
             create_key=_descriptor._internal_create_key,
         ),
+        _descriptor.FieldDescriptor(
+            name="known_time",
+            full_name="exabel.api.data.v1.TimeSeriesPoint.known_time",
+            index=2,
+            number=3,
+            type=11,
+            cpp_type=10,
+            label=1,
+            has_default_value=False,
+            default_value=None,
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=None,
+            file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
+        ),
     ],
     extensions=[],
     nested_types=[],
@@ -168,8 +187,8 @@ _TIMESERIESPOINT = _descriptor.Descriptor(
     syntax="proto3",
     extension_ranges=[],
     oneofs=[],
-    serialized_start=268,
-    serialized_end=372,
+    serialized_start=269,
+    serialized_end=421,
 )
 
 
@@ -200,6 +219,25 @@ _TIMESERIESVIEW = _descriptor.Descriptor(
             file=DESCRIPTOR,
             create_key=_descriptor._internal_create_key,
         ),
+        _descriptor.FieldDescriptor(
+            name="known_time",
+            full_name="exabel.api.data.v1.TimeSeriesView.known_time",
+            index=1,
+            number=2,
+            type=11,
+            cpp_type=10,
+            label=1,
+            has_default_value=False,
+            default_value=None,
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=None,
+            file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
+        ),
     ],
     extensions=[],
     nested_types=[],
@@ -209,8 +247,77 @@ _TIMESERIESVIEW = _descriptor.Descriptor(
     syntax="proto3",
     extension_ranges=[],
     oneofs=[],
-    serialized_start=374,
-    serialized_end=438,
+    serialized_start=423,
+    serialized_end=535,
+)
+
+
+_DEFAULTKNOWNTIME = _descriptor.Descriptor(
+    name="DefaultKnownTime",
+    full_name="exabel.api.data.v1.DefaultKnownTime",
+    filename=None,
+    file=DESCRIPTOR,
+    containing_type=None,
+    create_key=_descriptor._internal_create_key,
+    fields=[
+        _descriptor.FieldDescriptor(
+            name="current_time",
+            full_name="exabel.api.data.v1.DefaultKnownTime.current_time",
+            index=0,
+            number=1,
+            type=8,
+            cpp_type=7,
+            label=1,
+            has_default_value=False,
+            default_value=False,
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=None,
+            file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
+        ),
+        _descriptor.FieldDescriptor(
+            name="known_time",
+            full_name="exabel.api.data.v1.DefaultKnownTime.known_time",
+            index=1,
+            number=2,
+            type=11,
+            cpp_type=10,
+            label=1,
+            has_default_value=False,
+            default_value=None,
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=None,
+            file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
+        ),
+    ],
+    extensions=[],
+    nested_types=[],
+    enum_types=[],
+    serialized_options=None,
+    is_extendable=False,
+    syntax="proto3",
+    extension_ranges=[],
+    oneofs=[
+        _descriptor.OneofDescriptor(
+            name="specification",
+            full_name="exabel.api.data.v1.DefaultKnownTime.specification",
+            index=0,
+            containing_type=None,
+            create_key=_descriptor._internal_create_key,
+            fields=[],
+        ),
+    ],
+    serialized_start=537,
+    serialized_end=646,
 )
 
 _TIMESERIES.fields_by_name["points"].message_type = _TIMESERIESPOINT
@@ -220,12 +327,34 @@ _TIMESERIESPOINT.fields_by_name[
 _TIMESERIESPOINT.fields_by_name[
     "value"
 ].message_type = google_dot_protobuf_dot_wrappers__pb2._DOUBLEVALUE
+_TIMESERIESPOINT.fields_by_name[
+    "known_time"
+].message_type = google_dot_protobuf_dot_timestamp__pb2._TIMESTAMP
 _TIMESERIESVIEW.fields_by_name[
     "time_range"
 ].message_type = exabel_dot_api_dot_time_dot_time__range__pb2._TIMERANGE
+_TIMESERIESVIEW.fields_by_name[
+    "known_time"
+].message_type = google_dot_protobuf_dot_timestamp__pb2._TIMESTAMP
+_DEFAULTKNOWNTIME.fields_by_name[
+    "known_time"
+].message_type = google_dot_protobuf_dot_timestamp__pb2._TIMESTAMP
+_DEFAULTKNOWNTIME.oneofs_by_name["specification"].fields.append(
+    _DEFAULTKNOWNTIME.fields_by_name["current_time"]
+)
+_DEFAULTKNOWNTIME.fields_by_name[
+    "current_time"
+].containing_oneof = _DEFAULTKNOWNTIME.oneofs_by_name["specification"]
+_DEFAULTKNOWNTIME.oneofs_by_name["specification"].fields.append(
+    _DEFAULTKNOWNTIME.fields_by_name["known_time"]
+)
+_DEFAULTKNOWNTIME.fields_by_name["known_time"].containing_oneof = _DEFAULTKNOWNTIME.oneofs_by_name[
+    "specification"
+]
 DESCRIPTOR.message_types_by_name["TimeSeries"] = _TIMESERIES
 DESCRIPTOR.message_types_by_name["TimeSeriesPoint"] = _TIMESERIESPOINT
 DESCRIPTOR.message_types_by_name["TimeSeriesView"] = _TIMESERIESVIEW
+DESCRIPTOR.message_types_by_name["DefaultKnownTime"] = _DEFAULTKNOWNTIME
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
 TimeSeries = _reflection.GeneratedProtocolMessageType(
@@ -260,6 +389,17 @@ TimeSeriesView = _reflection.GeneratedProtocolMessageType(
     },
 )
 _sym_db.RegisterMessage(TimeSeriesView)
+
+DefaultKnownTime = _reflection.GeneratedProtocolMessageType(
+    "DefaultKnownTime",
+    (_message.Message,),
+    {
+        "DESCRIPTOR": _DEFAULTKNOWNTIME,
+        "__module__": "exabel.api.data.v1.time_series_messages_pb2"
+        # @@protoc_insertion_point(class_scope:exabel.api.data.v1.DefaultKnownTime)
+    },
+)
+_sym_db.RegisterMessage(DefaultKnownTime)
 
 
 DESCRIPTOR._options = None
