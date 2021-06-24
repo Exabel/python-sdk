@@ -5,10 +5,10 @@ from dateutil import tz
 from google.protobuf import timestamp_pb2
 from google.protobuf.wrappers_pb2 import DoubleValue
 
-from exabel_data_sdk.client.api.base_api import BaseApi
+from exabel_data_sdk.client.api.api_client.grpc.time_series_grpc_client import TimeSeriesGrpcClient
+from exabel_data_sdk.client.api.api_client.http.time_series_http_client import TimeSeriesHttpClient
 from exabel_data_sdk.client.api.data_classes.paging_result import PagingResult
 from exabel_data_sdk.client.api.data_classes.request_error import ErrorType, RequestError
-from exabel_data_sdk.client.api.error_handler import handle_grpc_error
 from exabel_data_sdk.client.client_config import ClientConfig
 from exabel_data_sdk.stubs.exabel.api.data.v1.all_pb2 import (
     BatchDeleteTimeSeriesPointsRequest,
@@ -23,20 +23,17 @@ from exabel_data_sdk.stubs.exabel.api.data.v1.all_pb2 import (
     TimeSeriesView,
     UpdateTimeSeriesRequest,
 )
-from exabel_data_sdk.stubs.exabel.api.data.v1.all_pb2_grpc import TimeSeriesServiceStub
 from exabel_data_sdk.stubs.exabel.api.time.time_range_pb2 import TimeRange
 
 
-class TimeSeriesApi(BaseApi):
+class TimeSeriesApi:
     """
     API class for time series CRUD operations.
     """
 
-    def __init__(self, config: ClientConfig):
-        super().__init__(config)
-        self.stub = TimeSeriesServiceStub(self.channel)
+    def __init__(self, config: ClientConfig, use_json: bool):
+        self.client = (TimeSeriesHttpClient if use_json else TimeSeriesGrpcClient)(config)
 
-    @handle_grpc_error
     def get_signal_time_series(
         self, signal: str, page_size: int = 1000, page_token: str = None
     ) -> PagingResult[str]:
@@ -49,10 +46,8 @@ class TimeSeriesApi(BaseApi):
                         the maximum size of this field.
             page_token: The page token to resume the results from.
         """
-        response = self.stub.ListTimeSeries(
-            ListTimeSeriesRequest(parent=signal, page_size=page_size, page_token=page_token),
-            metadata=self.metadata,
-            timeout=self.config.timeout,
+        response = self.client.list_time_series(
+            ListTimeSeriesRequest(parent=signal, page_size=page_size, page_token=page_token)
         )
         return PagingResult(
             [t.name for t in response.time_series],
@@ -60,7 +55,6 @@ class TimeSeriesApi(BaseApi):
             response.total_size,
         )
 
-    @handle_grpc_error
     def get_entity_time_series(
         self, entity: str, page_size: int = 1000, page_token: str = None
     ) -> PagingResult[str]:
@@ -74,10 +68,8 @@ class TimeSeriesApi(BaseApi):
                         the maximum size of this field.
             page_token: The page token to resume the results from.
         """
-        response = self.stub.ListTimeSeries(
+        response = self.client.list_time_series(
             ListTimeSeriesRequest(parent=entity, page_size=page_size, page_token=page_token),
-            metadata=self.metadata,
-            timeout=self.config.timeout,
         )
         return PagingResult(
             [t.name for t in response.time_series],
@@ -85,7 +77,6 @@ class TimeSeriesApi(BaseApi):
             response.total_size,
         )
 
-    @handle_grpc_error
     def get_time_series(
         self, name: str, start: pd.Timestamp = None, end: pd.Timestamp = None
     ) -> pd.Series:
@@ -105,14 +96,11 @@ class TimeSeriesApi(BaseApi):
         if bool(start) != bool(end):
             raise ValueError("Either specify both 'start' and 'end' or none of them.")
         time_range = self._get_time_range(start, end)
-        time_series = self.stub.GetTimeSeries(
+        time_series = self.client.get_time_series(
             GetTimeSeriesRequest(name=name, view=TimeSeriesView(time_range=time_range)),
-            metadata=self.metadata,
-            timeout=self.config.timeout,
         )
         return self._time_series_points_to_series(time_series.points, time_series.name)
 
-    @handle_grpc_error
     def create_time_series(self, name: str, series: pd.Series) -> None:
         """
         Create a time series.
@@ -132,15 +120,12 @@ class TimeSeriesApi(BaseApi):
             series: The time series data
         """
         time_series_points = self._series_to_time_series_points(series)
-        self.stub.CreateTimeSeries(
+        self.client.create_time_series(
             CreateTimeSeriesRequest(
                 time_series=ProtoTimeSeries(name=name, points=time_series_points)
             ),
-            metadata=self.metadata,
-            timeout=self.config.timeout,
         )
 
-    @handle_grpc_error
     def upsert_time_series(self, name: str, series: pd.Series) -> None:
         """
         Create or update a time series.
@@ -160,7 +145,6 @@ class TimeSeriesApi(BaseApi):
         else:
             self.create_time_series(name, series)
 
-    @handle_grpc_error
     def clear_time_series_data(self, name: str, start: pd.Timestamp, end: pd.Timestamp) -> None:
         """
         Delete data points in the given interval for the given time series.
@@ -171,13 +155,10 @@ class TimeSeriesApi(BaseApi):
             end:    End of the period to delete data for.
         """
         time_range = self._get_time_range(start, end)
-        self.stub.BatchDeleteTimeSeriesPoints(
+        self.client.batch_delete_time_series_points(
             BatchDeleteTimeSeriesPointsRequest(name=name, time_ranges=[time_range]),
-            metadata=self.metadata,
-            timeout=self.config.timeout,
         )
 
-    @handle_grpc_error
     def append_time_series_data(self, name: str, series: pd.Series) -> pd.Series:
         """
         Append data to the given time series.
@@ -197,17 +178,14 @@ class TimeSeriesApi(BaseApi):
         )
 
         # Set empty TimeRange() in request to get back entire time series.
-        time_series = self.stub.UpdateTimeSeries(
+        time_series = self.client.update_time_series(
             UpdateTimeSeriesRequest(
                 time_series=proto_time_series,
                 view=TimeSeriesView(time_range=TimeRange()),
             ),
-            metadata=self.metadata,
-            timeout=self.config.timeout,
         )
         return self._time_series_points_to_series(time_series.points, time_series.name)
 
-    @handle_grpc_error
     def delete_time_series(self, name: str) -> None:
         """
         Delete a time series.
@@ -217,11 +195,7 @@ class TimeSeriesApi(BaseApi):
                     "entityTypes/ns.type1/entities/ns.entity1/signals/ns.signal1" or
                     "signals/ns.signal1/entityTypes/ns.type1/entities/ns.entity1".
         """
-        self.stub.DeleteTimeSeries(
-            DeleteTimeSeriesRequest(name=name),
-            metadata=self.metadata,
-            timeout=self.config.timeout,
-        )
+        self.client.delete_time_series(DeleteTimeSeriesRequest(name=name))
 
     def time_series_exists(self, name: str) -> bool:
         """

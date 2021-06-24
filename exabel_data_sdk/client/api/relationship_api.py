@@ -1,9 +1,13 @@
-from exabel_data_sdk.client.api.base_api import BaseApi
+from exabel_data_sdk.client.api.api_client.grpc.relationship_grpc_client import (
+    RelationshipGrpcClient,
+)
+from exabel_data_sdk.client.api.api_client.http.relationship_http_client import (
+    RelationshipHttpClient,
+)
 from exabel_data_sdk.client.api.data_classes.paging_result import PagingResult
 from exabel_data_sdk.client.api.data_classes.relationship import Relationship
 from exabel_data_sdk.client.api.data_classes.relationship_type import RelationshipType
 from exabel_data_sdk.client.api.data_classes.request_error import ErrorType, RequestError
-from exabel_data_sdk.client.api.error_handler import handle_grpc_error
 from exabel_data_sdk.client.client_config import ClientConfig
 from exabel_data_sdk.stubs.exabel.api.data.v1.all_pb2 import (
     CreateRelationshipRequest,
@@ -15,19 +19,16 @@ from exabel_data_sdk.stubs.exabel.api.data.v1.all_pb2 import (
     ListRelationshipsRequest,
     ListRelationshipTypesRequest,
 )
-from exabel_data_sdk.stubs.exabel.api.data.v1.all_pb2_grpc import RelationshipServiceStub
 
 
-class RelationshipApi(BaseApi):
+class RelationshipApi:
     """
     API class for entity relationship CRUD operations.
     """
 
-    def __init__(self, config: ClientConfig):
-        super().__init__(config)
-        self.stub = RelationshipServiceStub(self.channel)
+    def __init__(self, config: ClientConfig, use_json: bool = False):
+        self.client = (RelationshipHttpClient if use_json else RelationshipGrpcClient)(config)
 
-    @handle_grpc_error
     def list_relationship_types(
         self, page_size: int = 1000, page_token: str = None
     ) -> PagingResult[RelationshipType]:
@@ -39,10 +40,8 @@ class RelationshipApi(BaseApi):
                         also the maximum size of this field.
             page_token: The page token to resume the results from.
         """
-        response = self.stub.ListRelationshipTypes(
-            ListRelationshipTypesRequest(page_size=page_size, page_token=page_token),
-            metadata=self.metadata,
-            timeout=self.config.timeout,
+        response = self.client.list_relationship_types(
+            ListRelationshipTypesRequest(page_size=page_size, page_token=page_token)
         )
         return PagingResult(
             results=[RelationshipType.from_proto(t) for t in response.relationship_types],
@@ -50,7 +49,6 @@ class RelationshipApi(BaseApi):
             total_size=response.total_size,
         )
 
-    @handle_grpc_error
     def get_relationship_type(self, name: str) -> RelationshipType:
         """
         Get one relationship type.
@@ -59,14 +57,9 @@ class RelationshipApi(BaseApi):
             name:   The resource name of the requested relationship type, for example
                     "relationshipTypes/ns.type1"
         """
-        response = self.stub.GetRelationshipType(
-            GetRelationshipTypeRequest(name=name),
-            metadata=self.metadata,
-            timeout=self.config.timeout,
-        )
+        response = self.client.get_relationship_type(GetRelationshipTypeRequest(name=name))
         return RelationshipType.from_proto(response)
 
-    @handle_grpc_error
     def create_relationship_type(self, relationship_type: RelationshipType) -> RelationshipType:
         """
         Create a relationship type.
@@ -74,14 +67,11 @@ class RelationshipApi(BaseApi):
         Args:
             relationship_type: The relationship type to create.
         """
-        response = self.stub.CreateRelationshipType(
-            CreateRelationshipTypeRequest(relationship_type=relationship_type.to_proto()),
-            metadata=self.metadata,
-            timeout=self.config.timeout,
+        response = self.client.create_relationship_type(
+            CreateRelationshipTypeRequest(relationship_type=relationship_type.to_proto())
         )
         return RelationshipType.from_proto(response)
 
-    @handle_grpc_error
     def delete_relationship_type(self, relationship_type: str) -> None:
         """
         Delete a relationship type.
@@ -91,13 +81,8 @@ class RelationshipApi(BaseApi):
         Args:
             relationship_type: The relationship type to delete.
         """
-        self.stub.DeleteRelationshipType(
-            DeleteRelationshipTypeRequest(name=relationship_type),
-            metadata=self.metadata,
-            timeout=self.config.timeout,
-        )
+        self.client.delete_relationship_type(DeleteRelationshipTypeRequest(name=relationship_type))
 
-    @handle_grpc_error
     def get_relationships_from_entity(
         self,
         relationship_type: str,
@@ -118,15 +103,13 @@ class RelationshipApi(BaseApi):
             page_token:         The page token to resume the results from, as returned from a
                                 previous invocation of the method.
         """
-        response = self.stub.ListRelationships(
+        response = self.client.list_relationships(
             ListRelationshipsRequest(
                 parent=relationship_type,
                 from_entity=from_entity,
                 page_size=page_size,
                 page_token=page_token,
-            ),
-            metadata=self.metadata,
-            timeout=self.config.timeout,
+            )
         )
         return PagingResult(
             results=[Relationship.from_proto(r) for r in response.relationships],
@@ -134,7 +117,6 @@ class RelationshipApi(BaseApi):
             total_size=response.total_size,
         )
 
-    @handle_grpc_error
     def get_relationships_to_entity(
         self,
         relationship_type: str,
@@ -155,15 +137,13 @@ class RelationshipApi(BaseApi):
             page_token:         The page token to resume the results from, as returned from a
                                 previous invocation of the method.
         """
-        response = self.stub.ListRelationships(
+        response = self.client.list_relationships(
             ListRelationshipsRequest(
                 parent=relationship_type,
                 to_entity=to_entity,
                 page_size=page_size,
                 page_token=page_token,
-            ),
-            metadata=self.metadata,
-            timeout=self.config.timeout,
+            )
         )
         return PagingResult(
             results=[Relationship.from_proto(r) for r in response.relationships],
@@ -171,7 +151,6 @@ class RelationshipApi(BaseApi):
             total_size=response.total_size,
         )
 
-    @handle_grpc_error
     def get_relationship(
         self, relationship_type: str, from_entity: str, to_entity: str
     ) -> Relationship:
@@ -186,16 +165,13 @@ class RelationshipApi(BaseApi):
             to_entity:          The resource name of the end point of the relationship, for example
                                 "entityTypes/ns.type2/entities/ns.entity2".
         """
-        response = self.stub.GetRelationship(
+        response = self.client.get_relationship(
             GetRelationshipRequest(
                 parent=relationship_type, from_entity=from_entity, to_entity=to_entity
-            ),
-            metadata=self.metadata,
-            timeout=self.config.timeout,
+            )
         )
         return Relationship.from_proto(response)
 
-    @handle_grpc_error
     def create_relationship(self, relationship: Relationship) -> Relationship:
         """
         Create a relationship between two entities.
@@ -203,14 +179,11 @@ class RelationshipApi(BaseApi):
         Args:
             relationship:  The relationship to create.
         """
-        response = self.stub.CreateRelationship(
-            CreateRelationshipRequest(relationship=relationship.to_proto()),
-            metadata=self.metadata,
-            timeout=self.config.timeout,
+        response = self.client.create_relationship(
+            CreateRelationshipRequest(relationship=relationship.to_proto())
         )
         return Relationship.from_proto(response)
 
-    @handle_grpc_error
     def delete_relationship(self, relationship_type: str, from_entity: str, to_entity: str) -> None:
         """
         Delete a relationship.
@@ -222,12 +195,10 @@ class RelationshipApi(BaseApi):
             to_entity:          The resource name of the end point of the relationship,
                                 for example "entityTypes/ns.type2/entities/ns.entity2".
         """
-        self.stub.DeleteRelationship(
+        self.client.delete_relationship(
             DeleteRelationshipRequest(
                 parent=relationship_type, from_entity=from_entity, to_entity=to_entity
-            ),
-            metadata=self.metadata,
-            timeout=self.config.timeout,
+            )
         )
 
     def relationship_exists(self, relationship_type: str, from_entity: str, to_entity: str) -> bool:

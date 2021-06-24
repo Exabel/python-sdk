@@ -7,7 +7,6 @@ class TestSignal(unittest.TestCase):
     def test_proto_conversion(self):
         signal = Signal(
             name="signals/customerA.revenue",
-            entity_type="entityTypes/customerA.store",
             display_name="Revenue per store.",
             description="description",
         )

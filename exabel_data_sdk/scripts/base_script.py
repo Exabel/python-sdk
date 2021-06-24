@@ -18,12 +18,19 @@ class BaseScript:
             default="data.api.exabel.com",
             help="Data API host",
         )
+        self.parser.add_argument(
+            "--use-json",
+            required=False,
+            action="store_true",
+            default=False,
+            help="If set, send requests as JSON over HTTP rather than gRPC",
+        )
 
     def run(self) -> None:
         """Runs the script."""
         args = self.parse_arguments()
         api_key = self.get_api_key(args)
-        client = ExabelClient(host=args.exabel_api_host, api_key=api_key)
+        client = ExabelClient(host=args.exabel_api_host, api_key=api_key, use_json=args.use_json)
         self.run_script(client, args)
 
     def get_api_key(self, args: argparse.Namespace) -> str:

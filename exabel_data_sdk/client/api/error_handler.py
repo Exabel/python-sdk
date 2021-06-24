@@ -1,3 +1,4 @@
+from http import HTTPStatus
 from typing import Any, Callable, TypeVar, cast
 
 from grpc import RpcError, StatusCode
@@ -24,6 +25,25 @@ def grpc_status_to_error_type(status_code: StatusCode) -> ErrorType:
     if status_code == StatusCode.UNAVAILABLE:
         return ErrorType.UNAVAILABLE
     if status_code == StatusCode.DEADLINE_EXCEEDED:
+        return ErrorType.TIMEOUT
+    return ErrorType.INTERNAL
+
+
+def http_status_to_error_type(status_code: int) -> ErrorType:
+    """
+    Map an HTTP status code to an ErrorType.
+    """
+    if status_code == HTTPStatus.NOT_FOUND.value:
+        return ErrorType.NOT_FOUND
+    if status_code == HTTPStatus.CONFLICT.value:
+        return ErrorType.ALREADY_EXISTS
+    if status_code == HTTPStatus.BAD_REQUEST:
+        return ErrorType.INVALID_ARGUMENT
+    if status_code == HTTPStatus.FORBIDDEN:
+        return ErrorType.PERMISSION_DENIED
+    if status_code == HTTPStatus.SERVICE_UNAVAILABLE:
+        return ErrorType.UNAVAILABLE
+    if status_code == HTTPStatus.GATEWAY_TIMEOUT:
         return ErrorType.TIMEOUT
     return ErrorType.INTERNAL
 

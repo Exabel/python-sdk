@@ -1,7 +1,7 @@
-from exabel_data_sdk.client.api.base_api import BaseApi
+from exabel_data_sdk.client.api.api_client.grpc.signal_grpc_client import SignalGrpcClient
+from exabel_data_sdk.client.api.api_client.http.signal_http_client import SignalHttpClient
 from exabel_data_sdk.client.api.data_classes.paging_result import PagingResult
 from exabel_data_sdk.client.api.data_classes.signal import Signal
-from exabel_data_sdk.client.api.error_handler import handle_grpc_error
 from exabel_data_sdk.client.client_config import ClientConfig
 from exabel_data_sdk.stubs.exabel.api.data.v1.all_pb2 import (
     CreateSignalRequest,
@@ -9,19 +9,16 @@ from exabel_data_sdk.stubs.exabel.api.data.v1.all_pb2 import (
     GetSignalRequest,
     ListSignalsRequest,
 )
-from exabel_data_sdk.stubs.exabel.api.data.v1.all_pb2_grpc import SignalServiceStub
 
 
-class SignalApi(BaseApi):
+class SignalApi:
     """
     API class for Signal CRUD operations.
     """
 
-    def __init__(self, config: ClientConfig):
-        super().__init__(config)
-        self.stub = SignalServiceStub(self.channel)
+    def __init__(self, config: ClientConfig, use_json: bool):
+        self.client = (SignalHttpClient if use_json else SignalGrpcClient)(config)
 
-    @handle_grpc_error
     def list_signals(self, page_size: int = 1000, page_token: str = None) -> PagingResult[Signal]:
         """
         List all signals.
@@ -31,10 +28,8 @@ class SignalApi(BaseApi):
                             Defaults to 1000, which is also the maximum size of this field.
             page_token:     The page token to resume the results from.
         """
-        response = self.stub.ListSignals(
-            ListSignalsRequest(page_size=page_size, page_token=page_token),
-            metadata=self.metadata,
-            timeout=self.config.timeout,
+        response = self.client.list_signals(
+            ListSignalsRequest(page_size=page_size, page_token=page_token)
         )
         return PagingResult(
             results=[Signal.from_proto(t) for t in response.signals],
@@ -42,7 +37,6 @@ class SignalApi(BaseApi):
             total_size=response.total_size,
         )
 
-    @handle_grpc_error
     def get_signal(self, name: str) -> Signal:
         """
         Get one signal.
@@ -50,14 +44,11 @@ class SignalApi(BaseApi):
         Args:
             name: The resource name of the requested signal, for example "signals/ns.signal1".
         """
-        response = self.stub.GetSignal(
+        response = self.client.get_signal(
             GetSignalRequest(name=name),
-            metadata=self.metadata,
-            timeout=self.config.timeout,
         )
         return Signal.from_proto(response)
 
-    @handle_grpc_error
     def create_signal(self, signal: Signal) -> Signal:
         """
         Create one signal and returns it.
@@ -65,14 +56,11 @@ class SignalApi(BaseApi):
         Args:
             signal: The signal to create.
         """
-        response = self.stub.CreateSignal(
+        response = self.client.create_signal(
             CreateSignalRequest(signal=signal.to_proto()),
-            metadata=self.metadata,
-            timeout=self.config.timeout,
         )
         return Signal.from_proto(response)
 
-    @handle_grpc_error
     def delete_signal(self, name: str) -> None:
         """
         Delete one signal.
@@ -82,8 +70,6 @@ class SignalApi(BaseApi):
         Args:
             name: The resource name of the signal to delete, for example "signals/ns.signal1".
         """
-        self.stub.DeleteSignal(
+        self.client.delete_signal(
             DeleteSignalRequest(name=name),
-            metadata=self.metadata,
-            timeout=self.config.timeout,
         )

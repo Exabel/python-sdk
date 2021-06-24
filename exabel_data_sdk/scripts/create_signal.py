@@ -30,18 +30,11 @@ class CreateSignal(BaseScript):
             default="",
             help="One or more paragraphs of text description",
         )
-        self.parser.add_argument(
-            "--entity-type",
-            required=True,
-            type=str,
-            help="The entity type, for example 'entityTypes/ns.entityType'",
-        )
 
     def run_script(self, client: ExabelClient, args: argparse.Namespace) -> None:
         signal = client.signal_api.create_signal(
             Signal(
                 name=args.name,
-                entity_type=args.entity_type,
                 display_name=args.display_name,
                 description=args.description,
             )

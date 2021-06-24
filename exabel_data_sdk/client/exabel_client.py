@@ -18,6 +18,7 @@ class ExabelClient:
         port: int = None,
         timeout: int = None,
         root_certificates: str = None,
+        use_json: bool = False,
     ):
         """
         Initialize a new client.
@@ -32,10 +33,11 @@ class ExabelClient:
             port:               Override default Exabel API port.
             timeout:            Override default timeout in seconds to use for API requests.
             root_certificates:  Additional allowed root certificates for verifying TLS connection.
+            use_json:           Whether requests should be sent as JSON over HTTP rather than gRPC.
         """
         config = ClientConfig(api_key, client_name, host, port, timeout, root_certificates)
 
-        self.entity_api = EntityApi(config)
-        self.signal_api = SignalApi(config)
-        self.time_series_api = TimeSeriesApi(config)
-        self.relationship_api = RelationshipApi(config)
+        self.entity_api = EntityApi(config, use_json)
+        self.signal_api = SignalApi(config, use_json)
+        self.time_series_api = TimeSeriesApi(config, use_json)
+        self.relationship_api = RelationshipApi(config, use_json)

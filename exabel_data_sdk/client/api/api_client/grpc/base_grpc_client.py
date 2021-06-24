@@ -3,9 +3,9 @@ import grpc
 from exabel_data_sdk.client.client_config import ClientConfig
 
 
-class BaseApi:
+class BaseGrpcClient:
     """
-    Base class for API classes.
+    Base class for clients that access the Exabel Data API with gRPC.
     """
 
     def __init__(self, config: ClientConfig):

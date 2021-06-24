@@ -1,11 +1,11 @@
 from typing import Sequence
 
-from exabel_data_sdk.client.api.base_api import BaseApi
+from exabel_data_sdk.client.api.api_client.grpc.entity_grpc_client import EntityGrpcClient
+from exabel_data_sdk.client.api.api_client.http.entity_http_client import EntityHttpClient
 from exabel_data_sdk.client.api.data_classes.entity import Entity
 from exabel_data_sdk.client.api.data_classes.entity_type import EntityType
 from exabel_data_sdk.client.api.data_classes.paging_result import PagingResult
 from exabel_data_sdk.client.api.data_classes.request_error import ErrorType, RequestError
-from exabel_data_sdk.client.api.error_handler import handle_grpc_error
 from exabel_data_sdk.client.client_config import ClientConfig
 from exabel_data_sdk.stubs.exabel.api.data.v1.all_pb2 import (
     CreateEntityRequest,
@@ -17,19 +17,16 @@ from exabel_data_sdk.stubs.exabel.api.data.v1.all_pb2 import (
     SearchEntitiesRequest,
     SearchTerm,
 )
-from exabel_data_sdk.stubs.exabel.api.data.v1.all_pb2_grpc import EntityServiceStub
 
 
-class EntityApi(BaseApi):
+class EntityApi:
     """
     API class for CRUD operations on entities and entity types.
     """
 
-    def __init__(self, config: ClientConfig):
-        super().__init__(config)
-        self.stub = EntityServiceStub(self.channel)
+    def __init__(self, config: ClientConfig, use_json: bool):
+        self.client = (EntityHttpClient if use_json else EntityGrpcClient)(config)
 
-    @handle_grpc_error
     def list_entity_types(
         self, page_size: int = 1000, page_token: str = None
     ) -> PagingResult[EntityType]:
@@ -42,10 +39,8 @@ class EntityApi(BaseApi):
             page_token: The page token to resume the results from, as returned from a previous
                         request to this method with the same query parameters.
         """
-        response = self.stub.ListEntityTypes(
-            ListEntityTypesRequest(page_size=page_size, page_token=page_token),
-            metadata=self.metadata,
-            timeout=self.config.timeout,
+        response = self.client.list_entity_types(
+            ListEntityTypesRequest(page_size=page_size, page_token=page_token)
         )
         return PagingResult(
             results=[EntityType.from_proto(t) for t in response.entity_types],
@@ -53,7 +48,6 @@ class EntityApi(BaseApi):
             total_size=response.total_size,
         )
 
-    @handle_grpc_error
     def get_entity_type(self, name: str) -> EntityType:
         """
         Get one entity type.
@@ -62,14 +56,9 @@ class EntityApi(BaseApi):
             name:   The resource name of the requested entity type, for example
                     "entityTypes/ns.type1".
         """
-        response = self.stub.GetEntityType(
-            GetEntityTypeRequest(name=name),
-            metadata=self.metadata,
-            timeout=self.config.timeout,
-        )
+        response = self.client.get_entity_type(GetEntityTypeRequest(name=name))
         return EntityType.from_proto(response)
 
-    @handle_grpc_error
     def list_entities(
         self, entity_type: str, page_size: int = 1000, page_token: str = None
     ) -> PagingResult[Entity]:
@@ -83,10 +72,8 @@ class EntityApi(BaseApi):
                             Defaults to 1000, which is also the maximum size of this field.
             page_token:     The page token to resume the results from.
         """
-        response = self.stub.ListEntities(
-            ListEntitiesRequest(parent=entity_type, page_size=page_size, page_token=page_token),
-            metadata=self.metadata,
-            timeout=self.config.timeout,
+        response = self.client.list_entities(
+            ListEntitiesRequest(parent=entity_type, page_size=page_size, page_token=page_token)
         )
         return PagingResult(
             results=[Entity.from_proto(t) for t in response.entities],
@@ -94,7 +81,6 @@ class EntityApi(BaseApi):
             total_size=response.total_size,
         )
 
-    @handle_grpc_error
     def get_entity(self, name: str) -> Entity:
         """
         Get one entity.
@@ -103,14 +89,9 @@ class EntityApi(BaseApi):
             name:   The resource name of the requested entity, for example
                     "entityTypes/ns.type1/entities/ns.entity1".
         """
-        response = self.stub.GetEntity(
-            GetEntityRequest(name=name),
-            metadata=self.metadata,
-            timeout=self.config.timeout,
-        )
+        response = self.client.get_entity(GetEntityRequest(name=name))
         return Entity.from_proto(response)
 
-    @handle_grpc_error
     def create_entity(self, entity: Entity, entity_type: str) -> Entity:
         """
         Create an entity.
@@ -119,14 +100,11 @@ class EntityApi(BaseApi):
             entity:         The entity to create.
             entity_type:    The entity type of the entity, for example "entityTypes/ns.type1".
         """
-        response = self.stub.CreateEntity(
-            CreateEntityRequest(parent=entity_type, entity=entity.to_proto()),
-            metadata=self.metadata,
-            timeout=self.config.timeout,
+        response = self.client.create_entity(
+            CreateEntityRequest(parent=entity_type, entity=entity.to_proto())
         )
         return Entity.from_proto(response)
 
-    @handle_grpc_error
     def delete_entity(self, name: str) -> None:
         """
         Delete one entity.
@@ -137,13 +115,8 @@ class EntityApi(BaseApi):
             name:   The resource name of the entity to delete,
                     for example "entityTypes/ns.type1/entities/ns.entity1".
         """
-        self.stub.DeleteEntity(
-            DeleteEntityRequest(name=name),
-            metadata=self.metadata,
-            timeout=self.config.timeout,
-        )
+        self.client.delete_entity(DeleteEntityRequest(name=name))
 
-    @handle_grpc_error
     def search_for_entities(self, entity_type: str, **search_terms: str) -> Sequence[Entity]:
         """
         Search for entities.
@@ -155,10 +128,8 @@ class EntityApi(BaseApi):
         terms = []
         for field, query in search_terms.items():
             terms.append(SearchTerm(field=field, query=query))
-        response = self.stub.SearchEntities(
-            SearchEntitiesRequest(parent=entity_type, terms=terms),
-            metadata=self.metadata,
-            timeout=self.config.timeout,
+        response = self.client.search_entities(
+            SearchEntitiesRequest(parent=entity_type, terms=terms)
         )
         return [Entity.from_proto(t) for t in response.entities]
 
