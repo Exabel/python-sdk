@@ -63,7 +63,6 @@ def create_time_series() -> None:
             name=f"signals/{customer_namespace}.signal1",
             display_name="Signal 1",
             description="description",
-            entity_type="entityTypes/brand",
         )
     )
     print(f"Created signal: {signal}")
