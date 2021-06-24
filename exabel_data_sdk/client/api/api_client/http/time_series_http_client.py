@@ -31,6 +31,10 @@ class TimeSeriesHttpClient(TimeSeriesApiClient, BaseHttpClient):
         )
 
     def update_time_series(self, request: UpdateTimeSeriesRequest) -> TimeSeries:
+        # Due to a mistake in the proto definition of UpdateTimeSeries, where an additional binding
+        # is listed as a POST instead of a PATCH, this method only works if the time series resource
+        # name is created with the entity before the signal (while in principle both orders should
+        # work).
         name = request.time_series.name
         if name.startswith("signal"):
             parts = name.split("/")
