@@ -106,17 +106,24 @@ type___GetSignalRequest = GetSignalRequest
 
 class CreateSignalRequest(google___protobuf___message___Message):
     DESCRIPTOR: google___protobuf___descriptor___Descriptor = ...
+    no_library_signal: builtin___bool = ...
     @property
     def signal(self) -> exabel___api___data___v1___signal_messages_pb2___Signal: ...
     def __init__(
         self,
         *,
         signal: typing___Optional[exabel___api___data___v1___signal_messages_pb2___Signal] = None,
+        no_library_signal: typing___Optional[builtin___bool] = None,
     ) -> None: ...
     def HasField(
         self, field_name: typing_extensions___Literal["signal", b"signal"]
     ) -> builtin___bool: ...
-    def ClearField(self, field_name: typing_extensions___Literal["signal", b"signal"]) -> None: ...
+    def ClearField(
+        self,
+        field_name: typing_extensions___Literal[
+            "no_library_signal", b"no_library_signal", "signal", b"signal"
+        ],
+    ) -> None: ...
 
 type___CreateSignalRequest = CreateSignalRequest
 

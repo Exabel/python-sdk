@@ -26,7 +26,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
     syntax="proto3",
     serialized_options=b"\n\026com.exabel.api.data.v1B\022SignalServiceProtoP\001",
     create_key=_descriptor._internal_create_key,
-    serialized_pb=b'\n\'exabel/api/data/v1/signal_service.proto\x12\x12\x65xabel.api.data.v1\x1a(exabel/api/data/v1/signal_messages.proto\x1a\x1cgoogle/api/annotations.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a google/protobuf/field_mask.proto";\n\x12ListSignalsRequest\x12\x11\n\tpage_size\x18\x01 \x01(\x05\x12\x12\n\npage_token\x18\x02 \x01(\t"o\n\x13ListSignalsResponse\x12+\n\x07signals\x18\x01 \x03(\x0b\x32\x1a.exabel.api.data.v1.Signal\x12\x17\n\x0fnext_page_token\x18\x02 \x01(\t\x12\x12\n\ntotal_size\x18\x03 \x01(\x05" \n\x10GetSignalRequest\x12\x0c\n\x04name\x18\x01 \x01(\t"A\n\x13\x43reateSignalRequest\x12*\n\x06signal\x18\x01 \x01(\x0b\x32\x1a.exabel.api.data.v1.Signal"r\n\x13UpdateSignalRequest\x12*\n\x06signal\x18\x01 \x01(\x0b\x32\x1a.exabel.api.data.v1.Signal\x12/\n\x0bupdate_mask\x18\x02 \x01(\x0b\x32\x1a.google.protobuf.FieldMask"#\n\x13\x44\x65leteSignalRequest\x12\x0c\n\x04name\x18\x01 \x01(\t2\xd5\x04\n\rSignalService\x12s\n\x0bListSignals\x12&.exabel.api.data.v1.ListSignalsRequest\x1a\'.exabel.api.data.v1.ListSignalsResponse"\x13\x82\xd3\xe4\x93\x02\r\x12\x0b/v1/signals\x12k\n\tGetSignal\x12$.exabel.api.data.v1.GetSignalRequest\x1a\x1a.exabel.api.data.v1.Signal"\x1c\x82\xd3\xe4\x93\x02\x16\x12\x14/v1/{name=signals/*}\x12p\n\x0c\x43reateSignal\x12\'.exabel.api.data.v1.CreateSignalRequest\x1a\x1a.exabel.api.data.v1.Signal"\x1b\x82\xd3\xe4\x93\x02\x15"\x0b/v1/signals:\x06signal\x12\x80\x01\n\x0cUpdateSignal\x12\'.exabel.api.data.v1.UpdateSignalRequest\x1a\x1a.exabel.api.data.v1.Signal"+\x82\xd3\xe4\x93\x02%2\x1b/v1/{signal.name=signals/*}:\x06signal\x12m\n\x0c\x44\x65leteSignal\x12\'.exabel.api.data.v1.DeleteSignalRequest\x1a\x16.google.protobuf.Empty"\x1c\x82\xd3\xe4\x93\x02\x16*\x14/v1/{name=signals/*}B.\n\x16\x63om.exabel.api.data.v1B\x12SignalServiceProtoP\x01\x62\x06proto3',
+    serialized_pb=b'\n\'exabel/api/data/v1/signal_service.proto\x12\x12\x65xabel.api.data.v1\x1a(exabel/api/data/v1/signal_messages.proto\x1a\x1cgoogle/api/annotations.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a google/protobuf/field_mask.proto";\n\x12ListSignalsRequest\x12\x11\n\tpage_size\x18\x01 \x01(\x05\x12\x12\n\npage_token\x18\x02 \x01(\t"o\n\x13ListSignalsResponse\x12+\n\x07signals\x18\x01 \x03(\x0b\x32\x1a.exabel.api.data.v1.Signal\x12\x17\n\x0fnext_page_token\x18\x02 \x01(\t\x12\x12\n\ntotal_size\x18\x03 \x01(\x05" \n\x10GetSignalRequest\x12\x0c\n\x04name\x18\x01 \x01(\t"\\\n\x13\x43reateSignalRequest\x12*\n\x06signal\x18\x01 \x01(\x0b\x32\x1a.exabel.api.data.v1.Signal\x12\x19\n\x11no_library_signal\x18\x02 \x01(\x08"r\n\x13UpdateSignalRequest\x12*\n\x06signal\x18\x01 \x01(\x0b\x32\x1a.exabel.api.data.v1.Signal\x12/\n\x0bupdate_mask\x18\x02 \x01(\x0b\x32\x1a.google.protobuf.FieldMask"#\n\x13\x44\x65leteSignalRequest\x12\x0c\n\x04name\x18\x01 \x01(\t2\xd5\x04\n\rSignalService\x12s\n\x0bListSignals\x12&.exabel.api.data.v1.ListSignalsRequest\x1a\'.exabel.api.data.v1.ListSignalsResponse"\x13\x82\xd3\xe4\x93\x02\r\x12\x0b/v1/signals\x12k\n\tGetSignal\x12$.exabel.api.data.v1.GetSignalRequest\x1a\x1a.exabel.api.data.v1.Signal"\x1c\x82\xd3\xe4\x93\x02\x16\x12\x14/v1/{name=signals/*}\x12p\n\x0c\x43reateSignal\x12\'.exabel.api.data.v1.CreateSignalRequest\x1a\x1a.exabel.api.data.v1.Signal"\x1b\x82\xd3\xe4\x93\x02\x15"\x0b/v1/signals:\x06signal\x12\x80\x01\n\x0cUpdateSignal\x12\'.exabel.api.data.v1.UpdateSignalRequest\x1a\x1a.exabel.api.data.v1.Signal"+\x82\xd3\xe4\x93\x02%2\x1b/v1/{signal.name=signals/*}:\x06signal\x12m\n\x0c\x44\x65leteSignal\x12\'.exabel.api.data.v1.DeleteSignalRequest\x1a\x16.google.protobuf.Empty"\x1c\x82\xd3\xe4\x93\x02\x16*\x14/v1/{name=signals/*}B.\n\x16\x63om.exabel.api.data.v1B\x12SignalServiceProtoP\x01\x62\x06proto3',
     dependencies=[
         exabel_dot_api_dot_data_dot_v1_dot_signal__messages__pb2.DESCRIPTOR,
         google_dot_api_dot_annotations__pb2.DESCRIPTOR,
@@ -243,6 +243,25 @@ _CREATESIGNALREQUEST = _descriptor.Descriptor(
             file=DESCRIPTOR,
             create_key=_descriptor._internal_create_key,
         ),
+        _descriptor.FieldDescriptor(
+            name="no_library_signal",
+            full_name="exabel.api.data.v1.CreateSignalRequest.no_library_signal",
+            index=1,
+            number=2,
+            type=8,
+            cpp_type=7,
+            label=1,
+            has_default_value=False,
+            default_value=False,
+            message_type=None,
+            enum_type=None,
+            containing_type=None,
+            is_extension=False,
+            extension_scope=None,
+            serialized_options=None,
+            file=DESCRIPTOR,
+            create_key=_descriptor._internal_create_key,
+        ),
     ],
     extensions=[],
     nested_types=[],
@@ -253,7 +272,7 @@ _CREATESIGNALREQUEST = _descriptor.Descriptor(
     extension_ranges=[],
     oneofs=[],
     serialized_start=406,
-    serialized_end=471,
+    serialized_end=498,
 )
 
 
@@ -312,8 +331,8 @@ _UPDATESIGNALREQUEST = _descriptor.Descriptor(
     syntax="proto3",
     extension_ranges=[],
     oneofs=[],
-    serialized_start=473,
-    serialized_end=587,
+    serialized_start=500,
+    serialized_end=614,
 )
 
 
@@ -353,8 +372,8 @@ _DELETESIGNALREQUEST = _descriptor.Descriptor(
     syntax="proto3",
     extension_ranges=[],
     oneofs=[],
-    serialized_start=589,
-    serialized_end=624,
+    serialized_start=616,
+    serialized_end=651,
 )
 
 _LISTSIGNALSRESPONSE.fields_by_name[
@@ -453,8 +472,8 @@ _SIGNALSERVICE = _descriptor.ServiceDescriptor(
     index=0,
     serialized_options=None,
     create_key=_descriptor._internal_create_key,
-    serialized_start=627,
-    serialized_end=1224,
+    serialized_start=654,
+    serialized_end=1251,
     methods=[
         _descriptor.MethodDescriptor(
             name="ListSignals",

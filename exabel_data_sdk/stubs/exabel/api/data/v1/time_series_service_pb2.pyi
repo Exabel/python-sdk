@@ -120,6 +120,7 @@ type___GetTimeSeriesRequest = GetTimeSeriesRequest
 
 class CreateTimeSeriesRequest(google___protobuf___message___Message):
     DESCRIPTOR: google___protobuf___descriptor___Descriptor = ...
+    no_tag: builtin___bool = ...
     @property
     def time_series(self) -> exabel___api___data___v1___time_series_messages_pb2___TimeSeries: ...
     @property
@@ -140,6 +141,7 @@ class CreateTimeSeriesRequest(google___protobuf___message___Message):
         default_known_time: typing___Optional[
             exabel___api___data___v1___time_series_messages_pb2___DefaultKnownTime
         ] = None,
+        no_tag: typing___Optional[builtin___bool] = None,
     ) -> None: ...
     def HasField(
         self,
@@ -157,6 +159,8 @@ class CreateTimeSeriesRequest(google___protobuf___message___Message):
         field_name: typing_extensions___Literal[
             "default_known_time",
             b"default_known_time",
+            "no_tag",
+            b"no_tag",
             "time_series",
             b"time_series",
             "view",
