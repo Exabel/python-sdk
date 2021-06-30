@@ -34,7 +34,7 @@ class CreateEntityMappingFromCsv(BaseScript):
           and
           market - a market identifier code (MIC) or a literal to support lookup
           on several MICs. Supported literals are:
-              * 'US' - lookup on "XNYS" and "XNAS"
+              * 'US' - lookup on "XNYS", "XNAS" and "XASE"
         * isin - an ISIN
         * factset_identifier - a factset identifier
         * bloomberg_ticker   - a Bloomberg symbol
@@ -214,7 +214,7 @@ class CreateEntityMappingFromCsv(BaseScript):
             market - the market to translate to list of MICs
         """
         if market == "US":
-            markets = ["XNAS", "XNYS"]
+            markets = ["XNAS", "XNYS", "XASE"]
         else:
             markets = [market]
         return markets
