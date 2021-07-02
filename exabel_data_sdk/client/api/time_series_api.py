@@ -79,12 +79,14 @@ class TimeSeriesApi:
 
     def get_time_series(
         self, name: str, start: pd.Timestamp = None, end: pd.Timestamp = None
-    ) -> pd.Series:
+    ) -> Optional[pd.Series]:
         """
         Get one time series.
 
         If start and end are not specified, all data points will be returned.
         If start or end is specified, both must be specified.
+
+        If time series does not exist, None is returned.
 
         Args:
             name:   The resource name of the requested time series, for example
@@ -96,9 +98,16 @@ class TimeSeriesApi:
         if bool(start) != bool(end):
             raise ValueError("Either specify both 'start' and 'end' or none of them.")
         time_range = self._get_time_range(start, end)
-        time_series = self.client.get_time_series(
-            GetTimeSeriesRequest(name=name, view=TimeSeriesView(time_range=time_range)),
-        )
+
+        try:
+            time_series = self.client.get_time_series(
+                GetTimeSeriesRequest(name=name, view=TimeSeriesView(time_range=time_range)),
+            )
+        except RequestError as error:
+            if error.error_type == ErrorType.NOT_FOUND:
+                return None
+            raise
+
         return self._time_series_points_to_series(time_series.points, time_series.name)
 
     def create_time_series(self, name: str, series: pd.Series) -> None:
@@ -205,13 +214,7 @@ class TimeSeriesApi:
             name:   The resource name of the time series, for example
                     "entityTypes/ns.type1/entities/ns.entity1/signals/ns.signal1".
         """
-        try:
-            self.get_time_series(name)
-            return True
-        except RequestError as error:
-            if error.error_type is ErrorType.NOT_FOUND:
-                return False
-            raise
+        return self.get_time_series(name) is not None
 
     @staticmethod
     def _series_to_time_series_points(series: pd.Series) -> Sequence[TimeSeriesPoint]:

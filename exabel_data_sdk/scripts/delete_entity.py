@@ -32,7 +32,9 @@ class DeleteEntity(BaseScript):
             print("Running dry-run...")
 
         entity = client.entity_api.get_entity(args.entity_name)
-        if entity.read_only:
+        if entity is None:
+            print(f"Entity does not exist: {entity}")
+        elif entity.read_only:
             print(f"ERROR: Entity is read-only: {entity}")
         else:
             if args.dry_run:

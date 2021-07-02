@@ -12,6 +12,7 @@ def get_company() -> None:
 
     # Fetch the company.
     microsoft = client.entity_api.get_entity("entityTypes/company/entities/F_000Q07-E")
+    assert microsoft
 
     # Retrieve location of company.
     located_in_relationships = client.relationship_api.get_relationships_from_entity(
@@ -34,6 +35,7 @@ def get_company() -> None:
     primary_security = client.entity_api.get_entity(
         primary_security_relationships.results[0].to_entity
     )
+    assert primary_security
 
     # Retrieve primary regional for company.
     primary_regional_relationships = client.relationship_api.get_relationships_from_entity(
@@ -43,6 +45,7 @@ def get_company() -> None:
     primary_regional = client.entity_api.get_entity(
         primary_regional_relationships.results[0].to_entity
     )
+    assert primary_regional
 
     # Retrieve primary listing for company.
     primary_listing_relationships = client.relationship_api.get_relationships_from_entity(
@@ -61,6 +64,7 @@ def get_company() -> None:
     # Retrieve all regionals.
     regionals = []
     for security in securities:
+        assert security
         regional_relationships = client.relationship_api.get_relationships_from_entity(
             relationship_type="relationshipTypes/HAS_REGIONAL", from_entity=security.name
         )
@@ -71,6 +75,7 @@ def get_company() -> None:
     # Retrieve all listings.
     listings = []
     for regional in regionals:
+        assert regional
         listing_relationships = client.relationship_api.get_relationships_from_entity(
             relationship_type="relationshipTypes/HAS_LISTING", from_entity=regional.name
         )

@@ -46,6 +46,7 @@ def create_time_series() -> None:
 
     # Add a relationship between a company entity and the brand entity.
     company_entity = client.entity_api.get_entity("entityTypes/company/entities/F_000Q07-E")
+    assert company_entity
     relationship = client.relationship_api.create_relationship(
         Relationship(
             description="Relationship between a company and a brand.",
