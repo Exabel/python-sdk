@@ -1,4 +1,4 @@
-from typing import Sequence
+from typing import Optional, Sequence
 
 from exabel_data_sdk.client.api.api_client.grpc.entity_grpc_client import EntityGrpcClient
 from exabel_data_sdk.client.api.api_client.http.entity_http_client import EntityHttpClient
@@ -48,15 +48,22 @@ class EntityApi:
             total_size=response.total_size,
         )
 
-    def get_entity_type(self, name: str) -> EntityType:
+    def get_entity_type(self, name: str) -> Optional[EntityType]:
         """
         Get one entity type.
+
+        Return None if the entity type does not exist.
 
         Args:
             name:   The resource name of the requested entity type, for example
                     "entityTypes/ns.type1".
         """
-        response = self.client.get_entity_type(GetEntityTypeRequest(name=name))
+        try:
+            response = self.client.get_entity_type(GetEntityTypeRequest(name=name))
+        except RequestError as error:
+            if error.error_type == ErrorType.NOT_FOUND:
+                return None
+            raise
         return EntityType.from_proto(response)
 
     def list_entities(
@@ -81,15 +88,22 @@ class EntityApi:
             total_size=response.total_size,
         )
 
-    def get_entity(self, name: str) -> Entity:
+    def get_entity(self, name: str) -> Optional[Entity]:
         """
         Get one entity.
+
+        Return None if the entity does not exist.
 
         Args:
             name:   The resource name of the requested entity, for example
                     "entityTypes/ns.type1/entities/ns.entity1".
         """
-        response = self.client.get_entity(GetEntityRequest(name=name))
+        try:
+            response = self.client.get_entity(GetEntityRequest(name=name))
+        except RequestError as error:
+            if error.error_type == ErrorType.NOT_FOUND:
+                return None
+            raise
         return Entity.from_proto(response)
 
     def create_entity(self, entity: Entity, entity_type: str) -> Entity:
@@ -141,10 +155,4 @@ class EntityApi:
             name:   The resource name of the entity,
                     for example "entityTypes/ns.type1/entities/ns.entity1".
         """
-        try:
-            self.get_entity(name)
-            return True
-        except RequestError as error:
-            if error.error_type is ErrorType.NOT_FOUND:
-                return False
-            raise
+        return self.get_entity(name) is not None
