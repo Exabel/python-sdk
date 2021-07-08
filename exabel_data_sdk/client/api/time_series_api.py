@@ -110,7 +110,7 @@ class TimeSeriesApi:
 
         return self._time_series_points_to_series(time_series.points, time_series.name)
 
-    def create_time_series(self, name: str, series: pd.Series, create_tag=False) -> None:
+    def create_time_series(self, name: str, series: pd.Series, create_tag: bool=False) -> None:
         """
         Create a time series.
 

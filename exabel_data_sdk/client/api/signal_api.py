@@ -59,7 +59,7 @@ class SignalApi:
             raise
         return Signal.from_proto(response)
 
-    def create_signal(self, signal: Signal, create_library_signal=False) -> Signal:
+    def create_signal(self, signal: Signal, create_library_signal: bool=False) -> Signal:
         """
         Create one signal and returns it.
 
