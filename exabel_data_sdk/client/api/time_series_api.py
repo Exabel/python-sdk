@@ -128,8 +128,8 @@ class TimeSeriesApi:
                     and if ns1 is not empty, all three namespaces must be equal.
             series: The time series data
             create_tag: Set to true to create a tag for every entity type a signal has time series
-                        for. If a tag already exists, it will be updated when time series are created
-                        (or deleted) regardless of the value of this flag.
+                    for. If a tag already exists, it will be updated when time series are created
+                    (or deleted) regardless of the value of this flag.
         """
         time_series_points = self._series_to_time_series_points(series)
         self.client.create_time_series(
