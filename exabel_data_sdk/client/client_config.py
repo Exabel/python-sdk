@@ -1,5 +1,5 @@
 import os
-from typing import Optional
+from typing import AnyStr, Optional
 
 
 class DefaultConfig:
@@ -28,7 +28,7 @@ class ClientConfig(DefaultConfig):
         host: str = None,
         port: int = None,
         timeout: int = None,
-        root_certificates: str = None,
+        root_certificates: AnyStr = None,
     ):
         """
         Initialize a new client configuration.

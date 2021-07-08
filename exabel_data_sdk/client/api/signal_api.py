@@ -59,15 +59,16 @@ class SignalApi:
             raise
         return Signal.from_proto(response)
 
-    def create_signal(self, signal: Signal) -> Signal:
+    def create_signal(self, signal: Signal, create_library_signal=False) -> Signal:
         """
         Create one signal and returns it.
 
         Args:
             signal: The signal to create.
+            create_library_signal: Set to true to add the signal to the library when created.
         """
         response = self.client.create_signal(
-            CreateSignalRequest(signal=signal.to_proto()),
+            CreateSignalRequest(signal=signal.to_proto(), create_library_signal=create_library_signal),
         )
         return Signal.from_proto(response)
 

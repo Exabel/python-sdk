@@ -30,6 +30,13 @@ class CreateSignal(BaseScript):
             default="",
             help="One or more paragraphs of text description",
         )
+        self.parser.add_argument(
+            "--create-library-signal",
+            required=False,
+            type=bool,
+            default=False,
+            help="Set to true to create a library signal",
+        )
 
     def run_script(self, client: ExabelClient, args: argparse.Namespace) -> None:
         signal = client.signal_api.create_signal(
@@ -37,7 +44,8 @@ class CreateSignal(BaseScript):
                 name=args.name,
                 display_name=args.display_name,
                 description=args.description,
-            )
+            ),
+            create_library_signal=args.create_library_signal
         )
         print("Successfully created signal:")
         print(signal)

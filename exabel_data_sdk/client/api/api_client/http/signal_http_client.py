@@ -22,7 +22,7 @@ class SignalHttpClient(SignalApiClient, BaseHttpClient):
         return self._request("GET", request.name, Signal())
 
     def create_signal(self, request: CreateSignalRequest) -> Signal:
-        return self._request("POST", "signals", Signal(), request.signal)
+        return self._request("POST", f"signals?createLibrarySignal={request.create_library_signal}", Signal(), request.signal)
 
     def delete_signal(self, request: DeleteSignalRequest) -> None:
         self._request("DELETE", request.name, None)

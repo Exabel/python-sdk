@@ -27,7 +27,7 @@ class TimeSeriesHttpClient(TimeSeriesApiClient, BaseHttpClient):
 
     def create_time_series(self, request: CreateTimeSeriesRequest) -> TimeSeries:
         return self._request(
-            "POST", request.time_series.name, TimeSeries(), body=request.time_series
+            "POST", f"{request.time_series.name}?createTag={request.create_tag}", TimeSeries(), body=request.time_series
         )
 
     def update_time_series(self, request: UpdateTimeSeriesRequest) -> TimeSeries:

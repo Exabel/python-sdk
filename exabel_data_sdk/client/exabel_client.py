@@ -1,3 +1,5 @@
+from typing import AnyStr
+
 from exabel_data_sdk.client.api.entity_api import EntityApi
 from exabel_data_sdk.client.api.relationship_api import RelationshipApi
 from exabel_data_sdk.client.api.signal_api import SignalApi
@@ -17,7 +19,7 @@ class ExabelClient:
         host: str = None,
         port: int = None,
         timeout: int = None,
-        root_certificates: str = None,
+        root_certificates: AnyStr = None,
         use_json: bool = False,
     ):
         """

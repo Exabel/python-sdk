@@ -110,7 +110,7 @@ class TimeSeriesApi:
 
         return self._time_series_points_to_series(time_series.points, time_series.name)
 
-    def create_time_series(self, name: str, series: pd.Series) -> None:
+    def create_time_series(self, name: str, series: pd.Series, create_tag=False) -> None:
         """
         Create a time series.
 
@@ -127,11 +127,15 @@ class TimeSeriesApi:
                     customer has access to. If ns2 is not empty, it must be equals to ns3,
                     and if ns1 is not empty, all three namespaces must be equal.
             series: The time series data
+            create_tag: Set to true to create a tag for every entity type a signal has time series
+                        for. If a tag already exists, it will be updated when time series are created
+                        (or deleted) regardless of the value of this flag.
         """
         time_series_points = self._series_to_time_series_points(series)
         self.client.create_time_series(
             CreateTimeSeriesRequest(
-                time_series=ProtoTimeSeries(name=name, points=time_series_points)
+                time_series=ProtoTimeSeries(name=name, points=time_series_points),
+                create_tag=create_tag
             ),
         )
 
