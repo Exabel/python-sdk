@@ -45,7 +45,7 @@ class CreateSignal(BaseScript):
                 display_name=args.display_name,
                 description=args.description,
             ),
-            create_library_signal=args.create_library_signal
+            create_library_signal=args.create_library_signal,
         )
         print("Successfully created signal:")
         print(signal)
