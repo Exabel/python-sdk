@@ -139,24 +139,28 @@ class TimeSeriesApi:
             ),
         )
 
-    def upsert_time_series(self, name: str, series: pd.Series) -> None:
+    def upsert_time_series(self, name: str, series: pd.Series, create_tag: bool = False) -> None:
         """
         Create or update a time series.
 
         Args:
-            name:   The resource name of the time series, for example
-                    "entityTypes/ns1.type/entities/ns2.entities/signals/ns3.signal".
-                    An alternative name for the same time series is
-                    "signals/ns3.signal/entityTypes/ns1.type/entities/ns2.entity". The namespaces
-                    must be empty (being global) or one of the predetermined namespaces the
-                    customer has access to. If ns2 is not empty, it must be equals to ns3,
-                    and if ns1 is not empty, all three namespaces must be equal.
-            series: The time series data
+            name:       The resource name of the time series, for example
+                        "entityTypes/ns1.type/entities/ns2.entities/signals/ns3.signal".
+                        An alternative name for the same time series is
+                        "signals/ns3.signal/entityTypes/ns1.type/entities/ns2.entity".
+                        The namespaces must be empty (being global) or one of the predetermined
+                        namespaces the customer has access to. If ns2 is not empty, it must be
+                        equals to ns3, and if ns1 is not empty, all three namespaces must be equal.
+            series:     The time series data
+            create_tag: Set to true to create a tag for every entity type a signal has time series
+                        for. If a tag already exists, it will be updated when time series are
+                        created (or deleted) regardless of the value of this flag.
+
         """
         if self.time_series_exists(name):
             self.append_time_series_data(name, series)
         else:
-            self.create_time_series(name, series)
+            self.create_time_series(name, series, create_tag)
 
     def clear_time_series_data(self, name: str, start: pd.Timestamp, end: pd.Timestamp) -> None:
         """
