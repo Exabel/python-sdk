@@ -61,6 +61,8 @@ class SearchEntities(BaseScript):
             terms["bloomberg_ticker"] = args.bloomberg_ticker
         if args.factset_identifier is not None:
             terms["factset_identifier"] = args.factset_identifier
+        if args.isin is not None:
+            terms["isin"] = args.isin
 
         entities = client.entity_api.search_for_entities(entity_type=args.entity_type, **terms)
 
