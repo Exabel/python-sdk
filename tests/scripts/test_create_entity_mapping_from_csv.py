@@ -27,7 +27,7 @@ class TestCreateEntityMappingFromCsv(unittest.TestCase):
         client = mock.create_autospec(ExabelClient(host="host", api_key="123"))
         script.run_script(client, script.parse_arguments())
 
-        # first call - entity = "entityType/company" ticker = "C" / market = "XNYS"
+        # first call - entity = "entityType/company" ticker = "C" / market = "XNAS"
         call_args = client.entity_api.search_for_entities.call_args_list[0]
         _, kwargs = call_args
         self.assertEqual(
@@ -36,7 +36,7 @@ class TestCreateEntityMappingFromCsv(unittest.TestCase):
             "Arguments not as expected",
         )
 
-        # second call - entity = "entityType/company" ticker = "C" / market = "XNAS"
+        # second call - entity = "entityType/company" ticker = "C" / market = "XNYS"
         call_args = client.entity_api.search_for_entities.call_args_list[1]
         _, kwargs = call_args
         self.assertEqual(
@@ -45,8 +45,17 @@ class TestCreateEntityMappingFromCsv(unittest.TestCase):
             "Arguments not as expected",
         )
 
-        # third call - entity = "entityType/company" ticker = "M" / market = "XNYS"
+        # third call - entity = "entityType/company" ticker = "C" / market = "XASE"
         call_args = client.entity_api.search_for_entities.call_args_list[2]
+        _, kwargs = call_args
+        self.assertEqual(
+            {"entity_type": "entityTypes/company", "mic": "XASE", "ticker": "C"},
+            kwargs,
+            "Arguments not as expected",
+        )
+
+        # fourth call - entity = "entityType/company" ticker = "M" / market = "XNYS"
+        call_args = client.entity_api.search_for_entities.call_args_list[3]
         _, kwargs = call_args
         self.assertEqual(
             {"entity_type": "entityTypes/company", "mic": "XNYS", "ticker": "M"},
