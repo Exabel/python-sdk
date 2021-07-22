@@ -1,6 +1,6 @@
 # pylint: disable=unused-import
 
-from exabel_data_sdk.scripts.create_entities_from_csv import CreateEntitiesFromCsv
+from exabel_data_sdk.service.import_service import CsvImportService
 from exabel_data_sdk.scripts.create_relationship_type import CreateRelationshipType
 from exabel_data_sdk.scripts.create_signal import CreateSignal
 from exabel_data_sdk.scripts.delete_entities import DeleteEntities
