@@ -66,8 +66,8 @@ class CsvImportService:
 
         <entity_type>: an entity type defined in the Exabel platform. May be
         prefixed with a namespace.
-        <entity_id>: must match the regex \w[\w-]{0,63}. May be prefixed with a
-        namespace
+        <entity_id>: must match the regex \\w[\\w-]{0,63}. May be prefixed with
+        a namespace
 
         The relationship_type must be previously created in the Exabel platform.
         May be prefixed with a namespace.
