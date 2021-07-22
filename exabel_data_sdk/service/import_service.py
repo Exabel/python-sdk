@@ -8,7 +8,6 @@ from exabel_data_sdk.client.api.data_classes.relationship import Relationship
 
 
 class CsvImportService:
-
     def __init__(self, client: ExabelClient):
         self._client = client
 
@@ -50,7 +49,9 @@ class CsvImportService:
     def _load_relationships(self, relationships_input: pd.DataFrame) -> Mapping[str, Relationship]:
         pass
 
-    def create_relationships_from_csv(self, filename_input: str, separator: str) -> Mapping[str, Relationship]:
+    def create_relationships_from_csv(
+        self, filename_input: str, separator: str
+    ) -> Mapping[str, Relationship]:
         """
         Processes an input CSV file containing entity names and relationship types to create relationships.
 
@@ -74,11 +75,8 @@ class CsvImportService:
 
         """
         relationships_input = pd.read_csv(filename_input, header=0, sep=separator)
-        try:
-            res = self._load_relationships(relationships_input)
-            return res
-        except ValueError as error:
-            print(error)
+        res = self._load_relationships(relationships_input)
+        return res
 
     def create_entities_from_csv(self, filename_input: str, separator: str) -> Mapping[str, Entity]:
         """
@@ -115,9 +113,5 @@ class CsvImportService:
 
         """
         entities_input = pd.read_csv(filename_input, header=0, sep=separator)
-        try:
-            res = self._load_entities(entities_input)
-            return res
-        except ValueError as error:
-            print(error)
-
+        res = self._load_entities(entities_input)
+        return res

@@ -13,7 +13,8 @@ class TestCreateEntitiesFromCsv(unittest.TestCase):
         client.entity_api.entity_exists.return_value = False
         service = CsvImportService(client)
         result = service.create_entities_from_csv(
-            filename_input="./tests/resources/data/entities_with_description.csv", separator=";")
+            filename_input="./tests/resources/data/entities_with_description.csv", separator=";"
+        )
 
         # first row
         # entityTypes/brand/test.brand_y;brand_y;brand_y description
@@ -47,7 +48,8 @@ class TestCreateEntitiesFromCsv(unittest.TestCase):
         client.entity_api.entity_exists.return_value = True
         service = CsvImportService(client)
         result = service.create_entities_from_csv(
-            filename_input="./tests/resources/data/entities_with_description.csv", separator=";")
+            filename_input="./tests/resources/data/entities_with_description.csv", separator=";"
+        )
 
         # first row
         # entityTypes/brand/test.brand_y;brand_y;brand_y description
@@ -72,7 +74,8 @@ class TestCreateEntitiesFromCsv(unittest.TestCase):
         client.entity_api.entity_exists.return_value = False
         service = CsvImportService(client)
         result = service.create_entities_from_csv(
-            filename_input="./tests/resources/data/entities_without_description.csv", separator=";")
+            filename_input="./tests/resources/data/entities_without_description.csv", separator=";"
+        )
 
         # first row
         # entityTypes/brand/entities/test.BRAND_X;BRAND_X
