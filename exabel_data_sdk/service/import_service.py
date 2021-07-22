@@ -4,6 +4,7 @@ import pandas as pd
 
 from exabel_data_sdk import ExabelClient
 from exabel_data_sdk.client.api.data_classes.entity import Entity
+from exabel_data_sdk.client.api.data_classes.relationship import Relationship
 
 
 class CsvImportService:
@@ -46,6 +47,39 @@ class CsvImportService:
                 result[entity_name] = None
         return dict(result)
 
+    def _load_relationships(self, relationships_input: pd.DataFrame) -> Mapping[str, Relationship]:
+        pass
+
+    def create_relationships_from_csv(self, filename_input: str, separator: str) -> Mapping[str, Relationship]:
+        """
+        Processes an input CSV file containing entity names and relationship types to create relationships.
+
+        The CSV file should have a header line with the following fields
+            entity_from;entity_to;relationship_type
+        subsequently followed by rows of values. The separator is configurable using the
+        script argument '--sep' and defaults to ';'.
+
+        The entity_from and entity_to values are on the following format:
+        entityTypes/<entity_type>/entities/<entity_id>
+
+        <entity_type>: an entity type defined in the Exabel platform. May be prefixed with a namespace.
+        <entity_id>: must match the regex \w[\w-]{0,63}. May be prefixed with a namespace
+
+        The relationship_type must be previously created in the Exabel platform. May be prefixed
+        with a namespace.
+
+        Example:
+            entity_from;entity_to;relationship_type
+            entityTypes/company/entities/ ;entityTypes/brand/entities/shazam;relationshipType/HAS_BRAND
+
+        """
+        relationships_input = pd.read_csv(filename_input, header=0, sep=separator)
+        try:
+            res = self._load_relationships(relationships_input)
+            return res
+        except ValueError as error:
+            print(error)
+
     def create_entities_from_csv(self, filename_input: str, separator: str) -> Mapping[str, Entity]:
         """
         Processes an input CSV file containing entity resource names and types
@@ -80,7 +114,6 @@ class CsvImportService:
             entityTypes/test.company_and_brand/entities/test.Apple-Shazam;Apple - Shazam;Apple and Shazam description
 
         """
-
         entities_input = pd.read_csv(filename_input, header=0, sep=separator)
         try:
             res = self._load_entities(entities_input)
