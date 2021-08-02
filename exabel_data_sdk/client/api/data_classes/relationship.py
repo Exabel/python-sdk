@@ -9,18 +9,19 @@ class Relationship:
     A relationship resource in the Data API.
 
     Attributes:
-        relationship_type: The resource name of the relationship type, for example
-                           "relationshipTypes/namespace.relationshipTypeIdentifier". The namespace
-                           must be empty (being global) or one of the predetermined namespaces the
-                           customer has access to. The relationship type identifier must match the
-                           regex [A-Z][A-Z0-9_]{0,63}.
-        from_entity:       The resource name of the start point of the relationship, for example
-                           "entityTypes/ns.type1/entities/ns.entity1".
-        to_entity:         The resource name of the end point of the relationship, for example
-                           "entityTypes/ns.type2/entities/ns.entity2".
-        description:       One or more paragraphs of text description.
-        properties:        The properties of this entity.
-        read_only:         Whether this resource is read only.
+        relationship_type (str):    The resource name of the relationship type, for example
+                                    "relationshipTypes/namespace.relationshipTypeIdentifier". The
+                                    namespace must be empty (being global) or one of the
+                                    predetermined namespaces the customer has access to. The
+                                    relationship type identifier must match the regex
+                                    [A-Z][A-Z0-9_]{0,63}.
+        from_entity (str):          The resource name of the start point of the relationship,
+                                    for example "entityTypes/ns.type1/entities/ns.entity1".
+        to_entity (str):            The resource name of the end point of the relationship,
+                                    for example "entityTypes/ns.type2/entities/ns.entity2".
+        description (str):          One or more paragraphs of text description.
+        properties (dict):          The properties of this entity.
+        read_only (bool):           Whether this resource is read only.
     """
 
     def __init__(
@@ -32,6 +33,23 @@ class Relationship:
         properties: Mapping[str, Union[str, bool, int, float]],
         read_only: bool = False,
     ):
+        """
+        Create a relationship resource in the Data API.
+
+        Args:
+            relationship_type: The resource name of the relationship type, for example
+                               "relationshipTypes/namespace.relationshipTypeIdentifier". The
+                               namespace must be empty (being global) or one of the predetermined
+                               namespaces the customer has access to. The relationship type
+                               identifier must match the regex [A-Z][A-Z0-9_]{0,63}.
+            from_entity:       The resource name of the start point of the relationship, for example
+                               "entityTypes/ns.type1/entities/ns.entity1".
+            to_entity:         The resource name of the end point of the relationship, for example
+                               "entityTypes/ns.type2/entities/ns.entity2".
+            description:       One or more paragraphs of text description.
+            properties:        The properties of this entity.
+            read_only:         Whether this resource is read only.
+        """
         self.relationship_type = relationship_type
         self.from_entity = from_entity
         self.to_entity = to_entity

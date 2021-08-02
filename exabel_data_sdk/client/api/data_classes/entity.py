@@ -30,6 +30,22 @@ class Entity:
         properties: Mapping[str, Union[str, bool, int, float]],
         read_only: bool = False,
     ):
+        r"""
+        Create an entity resource in the Data API.
+
+        Args:
+            name:           The resource name of the entity, for example
+                            "entityTypes/entityTypeIdentifier/entities/entityIdentifier" or
+                            "entityTypes/namespace1.entityTypeIdentifier/entities/
+                            namespace2.entityIdentifier". The namespaces must be empty (being
+                            global) or one of the predetermined namespaces the customer has access
+                            to. If namespace1 is not empty, it must be equal to namespace2. The
+                            entity identifier must match the regex [a-zA-Z][\w-]{0,63}.
+            display_name:   The display name of the entity.
+            description:    One or more paragraphs of text description.
+            properties:     The properties of this entity.
+            read_only:      Whether this resource is read only.
+        """
         self.name = name
         self.display_name = display_name
         self.description = description
