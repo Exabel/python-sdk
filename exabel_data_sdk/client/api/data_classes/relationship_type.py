@@ -11,14 +11,14 @@ class RelationshipType:
     A relationship type resource in the Data API.
 
     Attributes:
-        name:        The resource name of the relationship type, for example
-                     "relationshipTypes/namespace.relationshipTypeIdentifier". The namespace must be
-                     empty (being global) or one of the predetermined namespaces the customer has
-                     access to. The relationship type identifier must match the regex
-                     [A-Z][A-Z0-9_]{0,63}.
-        description: One or more paragraphs of text description.
-        properties:  The properties of this entity.
-        read_only:   Whether this resource is read only.
+        name (str):         The resource name of the relationship type, for example
+                            "relationshipTypes/namespace.relationshipTypeIdentifier". The namespace
+                            must be empty (being global) or one of the predetermined namespaces
+                            the customer has access to. The relationship type identifier must
+                            match the regex [A-Z][A-Z0-9_]{0,63}.
+        description (str):  One or more paragraphs of text description.
+        properties (dict):  The properties of this entity.
+        read_only (bool):   Whether this resource is read only.
     """
 
     def __init__(
@@ -28,6 +28,19 @@ class RelationshipType:
         properties: Mapping[str, Union[str, bool, int, float]],
         read_only: bool = False,
     ):
+        """
+        Create a relationship type resource in the Data API.
+
+        Args:
+            name:        The resource name of the relationship type, for example
+                         "relationshipTypes/namespace.relationshipTypeIdentifier". The namespace
+                         must be empty (being global) or one of the predetermined namespaces the
+                         customer has access to. The relationship type identifier must match the
+                         regex [A-Z][A-Z0-9_]{0,63}.
+            description: One or more paragraphs of text description.
+            properties:  The properties of this entity.
+            read_only:   Whether this resource is read only.
+        """
         self.name = name
         self.description = description
         self.properties = properties
