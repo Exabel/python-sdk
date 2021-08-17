@@ -1,3 +1,5 @@
+from typing import Optional
+
 from exabel_data_sdk.client.api.api_client.grpc.relationship_grpc_client import (
     RelationshipGrpcClient,
 )
@@ -49,15 +51,22 @@ class RelationshipApi:
             total_size=response.total_size,
         )
 
-    def get_relationship_type(self, name: str) -> RelationshipType:
+    def get_relationship_type(self, name: str) -> Optional[RelationshipType]:
         """
         Get one relationship type.
+
+        Return None if the relationship type does not exist.
 
         Args:
             name:   The resource name of the requested relationship type, for example
                     "relationshipTypes/ns.type1"
         """
-        response = self.client.get_relationship_type(GetRelationshipTypeRequest(name=name))
+        try:
+            response = self.client.get_relationship_type(GetRelationshipTypeRequest(name=name))
+        except RequestError as error:
+            if error.error_type == ErrorType.NOT_FOUND:
+                return None
+            raise
         return RelationshipType.from_proto(response)
 
     def create_relationship_type(self, relationship_type: RelationshipType) -> RelationshipType:
@@ -153,9 +162,11 @@ class RelationshipApi:
 
     def get_relationship(
         self, relationship_type: str, from_entity: str, to_entity: str
-    ) -> Relationship:
+    ) -> Optional[Relationship]:
         """
         Get one relationship.
+
+        Return None if the relationship does not exist.
 
         Args:
             relationship_type:  The type of the relationship, for example
@@ -165,11 +176,16 @@ class RelationshipApi:
             to_entity:          The resource name of the end point of the relationship, for example
                                 "entityTypes/ns.type2/entities/ns.entity2".
         """
-        response = self.client.get_relationship(
-            GetRelationshipRequest(
-                parent=relationship_type, from_entity=from_entity, to_entity=to_entity
+        try:
+            response = self.client.get_relationship(
+                GetRelationshipRequest(
+                    parent=relationship_type, from_entity=from_entity, to_entity=to_entity
+                )
             )
-        )
+        except RequestError as error:
+            if error.error_type == ErrorType.NOT_FOUND:
+                return None
+            raise
         return Relationship.from_proto(response)
 
     def create_relationship(self, relationship: Relationship) -> Relationship:
@@ -212,10 +228,4 @@ class RelationshipApi:
             to_entity:          The resource name of the end point of the relationship,
                                 for example "entityTypes/ns.type2/entities/ns.entity2".
         """
-        try:
-            self.get_relationship(relationship_type, from_entity, to_entity)
-            return True
-        except RequestError as error:
-            if error.error_type is ErrorType.NOT_FOUND:
-                return False
-            raise
+        return self.get_relationship(relationship_type, from_entity, to_entity) is not None

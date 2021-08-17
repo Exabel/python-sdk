@@ -56,7 +56,7 @@ class TimeSeriesServiceServicer(object):
     """Manages time series in the Data API."""
 
     def ListTimeSeries(self, request, context):
-        """Lists all time series for one entity. Only the names are returned."""
+        """Lists all time series for one entity or for one signal. Only the names are returned."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details("Method not implemented!")
         raise NotImplementedError("Method not implemented!")

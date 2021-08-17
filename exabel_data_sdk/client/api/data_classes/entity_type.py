@@ -24,6 +24,20 @@ class EntityType:
         description: str,
         read_only: bool = False,
     ):
+        r"""
+        Create an entity type resource in the Data API.
+
+        Args:
+            name:           The resource name of the entity type, for example
+                            "entityTypes/entityTypeIdentifier" or
+                            "entityTypes/namespace.entityTypeIdentifier". The namespace must be
+                            empty (being global) or one of the predetermined namespaces the
+                            customer has access to. The entity type identifier must match the
+                            regex [a-zA-Z][\w-]{0,63}.
+            display_name:   The display name of the entity type.
+            description:    One or more paragraphs of text description.
+            read_only:      Whether this resource is read only.
+        """
         self.name = name
         self.display_name = display_name
         self.description = description

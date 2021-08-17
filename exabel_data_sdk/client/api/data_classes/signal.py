@@ -7,13 +7,14 @@ class Signal:
     A signal resource in the Data API.
 
     Attributes:
-        name:         The resource name of the signal, for example "signals/signalIdentifier" or
-                      "signals/namespace.signalIdentifier". The namespace must be empty (being
-                      global) or one of the predetermined namespaces the customer has access to. The
-                      signal identifier must match the regex [a-zA-Z]\w{0,63}.
-        display_name: The display name of the signal.
-        description:  One or more paragraphs of text description.
-        read_only:    Whether this Signal is read only.
+        name (str):         The resource name of the signal, for example
+                            "signals/signalIdentifier" or "signals/namespace.signalIdentifier".
+                            The namespace must be empty (being global) or one of the
+                            predetermined namespaces the customer has access to. The signal
+                            identifier must match the regex [a-zA-Z]\w{0,63}.
+        display_name (str): The display name of the signal.
+        description (str):  One or more paragraphs of text description.
+        read_only (bool):   Whether this Signal is read only.
     """
 
     def __init__(
@@ -23,6 +24,18 @@ class Signal:
         description: str,
         read_only: bool = False,
     ):
+        r"""
+        Create a signal resource in the Data API.
+
+        Args:
+            name:         The resource name of the signal, for example "signals/signalIdentifier" or
+                          "signals/namespace.signalIdentifier". The namespace must be empty (being
+                          global) or one of the predetermined namespaces the customer has access
+                          to. The signal identifier must match the regex [a-zA-Z]\w{0,63}.
+            display_name: The display name of the signal.
+            description:  One or more paragraphs of text description.
+            read_only:    Whether this Signal is read only.
+        """
         self.name = name
         self.display_name = display_name
         self.description = description

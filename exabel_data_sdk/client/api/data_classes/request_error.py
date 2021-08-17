@@ -26,15 +26,21 @@ class ErrorType(Enum):
 
 
 class RequestError(Exception):
-    """Represents an error returned from the Exabel Api."""
+    """
+    Represents an error returned from the Exabel Api.
+
+    Attributes:
+        error_type (ErrorType): Type of error.
+        message (str):          Exception message.
+    """
 
     def __init__(self, error_type: ErrorType, message: str = None):
         """
         Create a new RequestError.
 
         Args:
-            error_type: type of error
-            message:    exception message
+            error_type: Type of error.
+            message:    Exception message.
         """
         super().__init__(message)
         self.error_type = error_type
