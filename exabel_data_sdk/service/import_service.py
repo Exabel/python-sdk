@@ -87,10 +87,9 @@ class CsvImportService:
                     )
                     result[relationship_key] = relationship
                 except Exception as e:
-                    print(f"Exception e {e}")
                     result[relationship_key] = None
 
-            return dict(result)
+        return dict(result)
 
     def create_relationships_from_csv(
         self, filename_input: str, separator: str
