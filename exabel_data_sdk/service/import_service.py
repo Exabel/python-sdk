@@ -46,8 +46,51 @@ class CsvImportService:
                 result[entity_name] = None
         return dict(result)
 
-    def _load_relationships(self, relationships_input: pd.DataFrame) -> Mapping[str, Relationship]:
-        pass
+    def _load_relationships(
+        self, relationships_input: pd.DataFrame, separator: str
+    ) -> Mapping[str, Relationship]:
+
+        for c in ["entity_from", "entity_to", "relationship_type"]:
+            if c not in relationships_input.columns:
+                raise ValueError(f"Missing required column in input: {c}")
+
+        result = {}
+        for i, relationship_input in relationships_input.iterrows():
+            relationship_type_name = relationship_input["relationship_type"]
+            entity_from_name = relationship_input["entity_from"]
+            entity_to_name = relationship_input["entity_to"]
+            relationship_key = (
+                f"{entity_from_name}{separator}"
+                f"{entity_to_name}{separator}"
+                f"{relationship_type_name}"
+            )
+
+            relationship_type = self._client.relationship_api.get_relationship_type(
+                name=relationship_type_name
+            )
+            if relationship_type is None:
+                result[relationship_key] = None
+            elif not self._client.entity_api.entity_exists(entity_from_name):
+                result[relationship_key] = None
+            elif not self._client.entity_api.entity_exists(entity_to_name):
+                result[relationship_key] = None
+            else:
+                try:
+                    relationship = self._client.relationship_api.create_relationship(
+                        relationship=Relationship(
+                            relationship_type=relationship_type_name,
+                            from_entity=entity_from_name,
+                            to_entity=entity_to_name,
+                            description="",
+                            properties={},
+                        )
+                    )
+                    result[relationship_key] = relationship
+                except Exception as e:
+                    print(f"Exception e {e}")
+                    result[relationship_key] = None
+
+            return dict(result)
 
     def create_relationships_from_csv(
         self, filename_input: str, separator: str
@@ -56,28 +99,28 @@ class CsvImportService:
         Processes an input CSV file containing entity names and relationship
         types to create relationships.
 
+        Returns a Mapping between input values and the Relationship object that
+        was created. If the Relationship exists nothing will be returned for
+        this relationship. If the relationship does not exist but creation
+        fails, None will be returned for this relationship configuration.
+
         The CSV file should have a header line with the following fields
             entity_from;entity_to;relationship_type
         subsequently followed by rows of values. The separator is configurable
         using the script argument '--sep' and defaults to ';'.
 
-        The entity_from and entity_to values are on the following format:
-        entityTypes/<entity_type>/entities/<entity_id>
-
-        <entity_type>: an entity type defined in the Exabel platform. May be
-        prefixed with a namespace.
-        <entity_id>: must match the regex \\w[\\w-]{0,63}. May be prefixed with
-        a namespace
+        entity_from and entity_to are entity resource names and must be
+        previously created in the Exabel platform.
 
         The relationship_type must be previously created in the Exabel platform.
-        May be prefixed with a namespace.
 
         Example:
             entity_from;entity_to;relationship_type
+            entityTypes/company/company_x;entityTypes/brand/test.brand_x;relationshipTypes/test.HAS_BRAND
 
         """
         relationships_input = pd.read_csv(filename_input, header=0, sep=separator)
-        res = self._load_relationships(relationships_input)
+        res = self._load_relationships(relationships_input, separator)
         return res
 
     def create_entities_from_csv(self, filename_input: str, separator: str) -> Mapping[str, Entity]:
@@ -111,8 +154,7 @@ class CsvImportService:
         Example:
             entity_resource_name;display_name;description
             entityTypes/brand/entities/shazam;Shazam;Shazam description
-            entityTypes/test.company_and_brand/entities/test.Apple-Shazam;
-            Apple - Shazam;Apple and Shazam description
+            entityTypes/test.company_and_brand/entities/test.Apple-Shazam;Apple - Shazam;Apple and Shazam description
 
         """
         entities_input = pd.read_csv(filename_input, header=0, sep=separator)

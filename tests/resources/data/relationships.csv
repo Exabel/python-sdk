@@ -1,0 +1,2 @@
+entity_from;entity_to;relationship_type
+entityTypes/company/company_x;entityTypes/brand/test.brand_x;relationshipTypes/test.HAS_BRAND
