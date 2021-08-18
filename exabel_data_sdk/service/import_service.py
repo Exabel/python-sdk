@@ -153,7 +153,8 @@ class CsvImportService:
         Example:
             entity_resource_name;display_name;description
             entityTypes/brand/entities/shazam;Shazam;Shazam description
-            entityTypes/test.company_and_brand/entities/test.Apple-Shazam;Apple - Shazam;Apple and Shazam description
+            entityTypes/test.company_and_brand/entities/test.Apple-Shazam;
+            Apple - Shazam;Apple and Shazam description
 
         """
         entities_input = pd.read_csv(filename_input, header=0, sep=separator)

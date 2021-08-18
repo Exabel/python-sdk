@@ -125,9 +125,9 @@ class TestCsvImportService(unittest.TestCase):
             "Arguments not as expected",
         )
         self.assertTrue(
-            result[
-                "entityTypes/company/company_x;entityTypes/brand/test.brand_x;relationshipTypes/test.HAS_BRAND"
-            ]
+            result["entityTypes/company/company_x;"
+                   "entityTypes/brand/test.brand_x;"
+                   "relationshipTypes/test.HAS_BRAND"]
             is not None,
             "Result not as expected",
         )
@@ -143,9 +143,9 @@ class TestCsvImportService(unittest.TestCase):
 
         # entityTypes/company/company_x;entityTypes/brand/test.brand_x;relationshipTypes/test.HAS_BRAND
         self.assertTrue(
-            result[
-                "entityTypes/company/company_x;entityTypes/brand/test.brand_x;relationshipTypes/test.HAS_BRAND"
-            ]
+            result["entityTypes/company/company_x;"
+                   "entityTypes/brand/test.brand_x;"
+                   "relationshipTypes/test.HAS_BRAND"]
             is None,
             "Result not as expected",
         )
@@ -161,9 +161,9 @@ class TestCsvImportService(unittest.TestCase):
 
         # entityTypes/company/company_x;entityTypes/brand/test.brand_x;relationshipTypes/test.HAS_BRAND
         self.assertTrue(
-            result[
-                "entityTypes/company/company_x;entityTypes/brand/test.brand_x;relationshipTypes/test.HAS_BRAND"
-            ]
+            result["entityTypes/company/company_x;"
+                   "entityTypes/brand/test.brand_x;"
+                   "relationshipTypes/test.HAS_BRAND"]
             is None,
             "Result not as expected",
         )
