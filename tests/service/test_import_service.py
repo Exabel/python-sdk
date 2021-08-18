@@ -108,7 +108,9 @@ class TestCsvImportService(unittest.TestCase):
             filename_input="./tests/resources/data/relationships.csv", separator=";"
         )
 
-        # entityTypes/company/company_x;entityTypes/brand/test.brand_x;relationshipTypes/test.HAS_BRAND
+        # entityTypes/company/company_x;
+        # entityTypes/brand/test.brand_x;
+        # relationshipTypes/test.HAS_BRAND
         call_args = client.relationship_api.create_relationship.call_args_list[0]
         _, kwargs = call_args
         self.assertEqual(
@@ -143,7 +145,9 @@ class TestCsvImportService(unittest.TestCase):
             filename_input="./tests/resources/data/relationships.csv", separator=";"
         )
 
-        # entityTypes/company/company_x;entityTypes/brand/test.brand_x;relationshipTypes/test.HAS_BRAND
+        # entityTypes/company/company_x;
+        # entityTypes/brand/test.brand_x;
+        # relationshipTypes/test.HAS_BRAND
         self.assertTrue(
             result[
                 "entityTypes/company/company_x;"
@@ -163,7 +167,9 @@ class TestCsvImportService(unittest.TestCase):
             filename_input="./tests/resources/data/relationships.csv", separator=";"
         )
 
-        # entityTypes/company/company_x;entityTypes/brand/test.brand_x;relationshipTypes/test.HAS_BRAND
+        # entityTypes/company/company_x;
+        # entityTypes/brand/test.brand_x;
+        # relationshipTypes/test.HAS_BRAND
         self.assertTrue(
             result[
                 "entityTypes/company/company_x;"
