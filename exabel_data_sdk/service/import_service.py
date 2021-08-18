@@ -54,7 +54,7 @@ class CsvImportService:
             if c not in relationships_input.columns:
                 raise ValueError(f"Missing required column in input: {c}")
 
-        result = {}
+        result: dict = {}
         for i, relationship_input in relationships_input.iterrows():
             relationship_type_name = relationship_input["relationship_type"]
             entity_from_name = relationship_input["entity_from"]
