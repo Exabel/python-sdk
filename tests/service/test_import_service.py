@@ -65,11 +65,6 @@ class TestCsvImportService(unittest.TestCase):
         )
 
     def test_create_entities_without_description(self):
-        args = [
-            "script-name",
-            "--filename-input",
-            "./tests/resources/data/entities_without_description.csv",
-        ]
 
         client = mock.create_autospec(ExabelClient(host="host", api_key="123"))
         client.entity_api.entity_exists.return_value = False
