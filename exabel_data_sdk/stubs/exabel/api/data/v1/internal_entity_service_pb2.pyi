@@ -27,58 +27,43 @@ from typing_extensions import (
     Literal as typing_extensions___Literal,
 )
 
+
 builtin___bool = bool
 builtin___bytes = bytes
 builtin___float = float
 builtin___int = int
 
+
 DESCRIPTOR: google___protobuf___descriptor___FileDescriptor = ...
 
 class CreateEntityTypeRequest(google___protobuf___message___Message):
     DESCRIPTOR: google___protobuf___descriptor___Descriptor = ...
+
     @property
     def entity_type(self) -> exabel___api___data___v1___entity_messages_pb2___EntityType: ...
-    def __init__(
-        self,
-        *,
-        entity_type: typing___Optional[
-            exabel___api___data___v1___entity_messages_pb2___EntityType
-        ] = None,
-    ) -> None: ...
-    def HasField(
-        self, field_name: typing_extensions___Literal["entity_type", b"entity_type"]
-    ) -> builtin___bool: ...
-    def ClearField(
-        self, field_name: typing_extensions___Literal["entity_type", b"entity_type"]
-    ) -> None: ...
 
+    def __init__(self,
+        *,
+        entity_type : typing___Optional[exabel___api___data___v1___entity_messages_pb2___EntityType] = None,
+        ) -> None: ...
+    def HasField(self, field_name: typing_extensions___Literal[u"entity_type",b"entity_type"]) -> builtin___bool: ...
+    def ClearField(self, field_name: typing_extensions___Literal[u"entity_type",b"entity_type"]) -> None: ...
 type___CreateEntityTypeRequest = CreateEntityTypeRequest
 
 class UpdateEntityTypeRequest(google___protobuf___message___Message):
     DESCRIPTOR: google___protobuf___descriptor___Descriptor = ...
+
     @property
     def entity_type(self) -> exabel___api___data___v1___entity_messages_pb2___EntityType: ...
+
     @property
     def update_mask(self) -> google___protobuf___field_mask_pb2___FieldMask: ...
-    def __init__(
-        self,
-        *,
-        entity_type: typing___Optional[
-            exabel___api___data___v1___entity_messages_pb2___EntityType
-        ] = None,
-        update_mask: typing___Optional[google___protobuf___field_mask_pb2___FieldMask] = None,
-    ) -> None: ...
-    def HasField(
-        self,
-        field_name: typing_extensions___Literal[
-            "entity_type", b"entity_type", "update_mask", b"update_mask"
-        ],
-    ) -> builtin___bool: ...
-    def ClearField(
-        self,
-        field_name: typing_extensions___Literal[
-            "entity_type", b"entity_type", "update_mask", b"update_mask"
-        ],
-    ) -> None: ...
 
+    def __init__(self,
+        *,
+        entity_type : typing___Optional[exabel___api___data___v1___entity_messages_pb2___EntityType] = None,
+        update_mask : typing___Optional[google___protobuf___field_mask_pb2___FieldMask] = None,
+        ) -> None: ...
+    def HasField(self, field_name: typing_extensions___Literal[u"entity_type",b"entity_type",u"update_mask",b"update_mask"]) -> builtin___bool: ...
+    def ClearField(self, field_name: typing_extensions___Literal[u"entity_type",b"entity_type",u"update_mask",b"update_mask"]) -> None: ...
 type___UpdateEntityTypeRequest = UpdateEntityTypeRequest

@@ -11,6 +11,7 @@ from google.protobuf.message import (
     Message as google___protobuf___message___Message,
 )
 
+
 DESCRIPTOR: google___protobuf___descriptor___FileDescriptor = ...
 
 http: google___protobuf___descriptor___FieldDescriptor = ...

@@ -24,10 +24,12 @@ from typing_extensions import (
     Literal as typing_extensions___Literal,
 )
 
+
 builtin___bool = bool
 builtin___bytes = bytes
 builtin___float = float
 builtin___int = int
+
 
 DESCRIPTOR: google___protobuf___descriptor___FileDescriptor = ...
 
@@ -36,33 +38,19 @@ class RelationshipType(google___protobuf___message___Message):
     name: typing___Text = ...
     description: typing___Text = ...
     read_only: builtin___bool = ...
+
     @property
     def properties(self) -> google___protobuf___struct_pb2___Struct: ...
-    def __init__(
-        self,
-        *,
-        name: typing___Optional[typing___Text] = None,
-        description: typing___Optional[typing___Text] = None,
-        read_only: typing___Optional[builtin___bool] = None,
-        properties: typing___Optional[google___protobuf___struct_pb2___Struct] = None,
-    ) -> None: ...
-    def HasField(
-        self, field_name: typing_extensions___Literal["properties", b"properties"]
-    ) -> builtin___bool: ...
-    def ClearField(
-        self,
-        field_name: typing_extensions___Literal[
-            "description",
-            b"description",
-            "name",
-            b"name",
-            "properties",
-            b"properties",
-            "read_only",
-            b"read_only",
-        ],
-    ) -> None: ...
 
+    def __init__(self,
+        *,
+        name : typing___Optional[typing___Text] = None,
+        description : typing___Optional[typing___Text] = None,
+        read_only : typing___Optional[builtin___bool] = None,
+        properties : typing___Optional[google___protobuf___struct_pb2___Struct] = None,
+        ) -> None: ...
+    def HasField(self, field_name: typing_extensions___Literal[u"properties",b"properties"]) -> builtin___bool: ...
+    def ClearField(self, field_name: typing_extensions___Literal[u"description",b"description",u"name",b"name",u"properties",b"properties",u"read_only",b"read_only"]) -> None: ...
 type___RelationshipType = RelationshipType
 
 class Relationship(google___protobuf___message___Message):
@@ -72,37 +60,19 @@ class Relationship(google___protobuf___message___Message):
     to_entity: typing___Text = ...
     description: typing___Text = ...
     read_only: builtin___bool = ...
+
     @property
     def properties(self) -> google___protobuf___struct_pb2___Struct: ...
-    def __init__(
-        self,
-        *,
-        parent: typing___Optional[typing___Text] = None,
-        from_entity: typing___Optional[typing___Text] = None,
-        to_entity: typing___Optional[typing___Text] = None,
-        description: typing___Optional[typing___Text] = None,
-        read_only: typing___Optional[builtin___bool] = None,
-        properties: typing___Optional[google___protobuf___struct_pb2___Struct] = None,
-    ) -> None: ...
-    def HasField(
-        self, field_name: typing_extensions___Literal["properties", b"properties"]
-    ) -> builtin___bool: ...
-    def ClearField(
-        self,
-        field_name: typing_extensions___Literal[
-            "description",
-            b"description",
-            "from_entity",
-            b"from_entity",
-            "parent",
-            b"parent",
-            "properties",
-            b"properties",
-            "read_only",
-            b"read_only",
-            "to_entity",
-            b"to_entity",
-        ],
-    ) -> None: ...
 
+    def __init__(self,
+        *,
+        parent : typing___Optional[typing___Text] = None,
+        from_entity : typing___Optional[typing___Text] = None,
+        to_entity : typing___Optional[typing___Text] = None,
+        description : typing___Optional[typing___Text] = None,
+        read_only : typing___Optional[builtin___bool] = None,
+        properties : typing___Optional[google___protobuf___struct_pb2___Struct] = None,
+        ) -> None: ...
+    def HasField(self, field_name: typing_extensions___Literal[u"properties",b"properties"]) -> builtin___bool: ...
+    def ClearField(self, field_name: typing_extensions___Literal[u"description",b"description",u"from_entity",b"from_entity",u"parent",b"parent",u"properties",b"properties",u"read_only",b"read_only",u"to_entity",b"to_entity"]) -> None: ...
 type___Relationship = Relationship

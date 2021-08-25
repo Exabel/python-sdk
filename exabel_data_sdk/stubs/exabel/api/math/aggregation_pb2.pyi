@@ -20,17 +20,16 @@ from typing import (
     cast as typing___cast,
 )
 
+
 builtin___int = int
+
 
 DESCRIPTOR: google___protobuf___descriptor___FileDescriptor = ...
 
-AggregationValue = typing___NewType("AggregationValue", builtin___int)
+AggregationValue = typing___NewType('AggregationValue', builtin___int)
 type___AggregationValue = AggregationValue
 Aggregation: _Aggregation
-
-class _Aggregation(
-    google___protobuf___internal___enum_type_wrapper____EnumTypeWrapper[AggregationValue]
-):
+class _Aggregation(google___protobuf___internal___enum_type_wrapper____EnumTypeWrapper[AggregationValue]):
     DESCRIPTOR: google___protobuf___descriptor___EnumDescriptor = ...
     AGGREGATION_INVALID = typing___cast(AggregationValue, 0)
     MEAN = typing___cast(AggregationValue, 1)
@@ -39,7 +38,6 @@ class _Aggregation(
     SUM = typing___cast(AggregationValue, 4)
     MIN = typing___cast(AggregationValue, 5)
     MAX = typing___cast(AggregationValue, 6)
-
 AGGREGATION_INVALID = typing___cast(AggregationValue, 0)
 MEAN = typing___cast(AggregationValue, 1)
 FIRST = typing___cast(AggregationValue, 2)

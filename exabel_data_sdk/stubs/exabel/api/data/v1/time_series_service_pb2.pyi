@@ -35,10 +35,12 @@ from typing_extensions import (
     Literal as typing_extensions___Literal,
 )
 
+
 builtin___bool = bool
 builtin___bytes = bytes
 builtin___float = float
 builtin___int = int
+
 
 DESCRIPTOR: google___protobuf___descriptor___FileDescriptor = ...
 
@@ -47,209 +49,117 @@ class ListTimeSeriesRequest(google___protobuf___message___Message):
     parent: typing___Text = ...
     page_size: builtin___int = ...
     page_token: typing___Text = ...
-    def __init__(
-        self,
-        *,
-        parent: typing___Optional[typing___Text] = None,
-        page_size: typing___Optional[builtin___int] = None,
-        page_token: typing___Optional[typing___Text] = None,
-    ) -> None: ...
-    def ClearField(
-        self,
-        field_name: typing_extensions___Literal[
-            "page_size", b"page_size", "page_token", b"page_token", "parent", b"parent"
-        ],
-    ) -> None: ...
 
+    def __init__(self,
+        *,
+        parent : typing___Optional[typing___Text] = None,
+        page_size : typing___Optional[builtin___int] = None,
+        page_token : typing___Optional[typing___Text] = None,
+        ) -> None: ...
+    def ClearField(self, field_name: typing_extensions___Literal[u"page_size",b"page_size",u"page_token",b"page_token",u"parent",b"parent"]) -> None: ...
 type___ListTimeSeriesRequest = ListTimeSeriesRequest
 
 class ListTimeSeriesResponse(google___protobuf___message___Message):
     DESCRIPTOR: google___protobuf___descriptor___Descriptor = ...
     next_page_token: typing___Text = ...
     total_size: builtin___int = ...
-    @property
-    def time_series(
-        self,
-    ) -> google___protobuf___internal___containers___RepeatedCompositeFieldContainer[
-        exabel___api___data___v1___time_series_messages_pb2___TimeSeries
-    ]: ...
-    def __init__(
-        self,
-        *,
-        time_series: typing___Optional[
-            typing___Iterable[exabel___api___data___v1___time_series_messages_pb2___TimeSeries]
-        ] = None,
-        next_page_token: typing___Optional[typing___Text] = None,
-        total_size: typing___Optional[builtin___int] = None,
-    ) -> None: ...
-    def ClearField(
-        self,
-        field_name: typing_extensions___Literal[
-            "next_page_token",
-            b"next_page_token",
-            "time_series",
-            b"time_series",
-            "total_size",
-            b"total_size",
-        ],
-    ) -> None: ...
 
+    @property
+    def time_series(self) -> google___protobuf___internal___containers___RepeatedCompositeFieldContainer[exabel___api___data___v1___time_series_messages_pb2___TimeSeries]: ...
+
+    def __init__(self,
+        *,
+        time_series : typing___Optional[typing___Iterable[exabel___api___data___v1___time_series_messages_pb2___TimeSeries]] = None,
+        next_page_token : typing___Optional[typing___Text] = None,
+        total_size : typing___Optional[builtin___int] = None,
+        ) -> None: ...
+    def ClearField(self, field_name: typing_extensions___Literal[u"next_page_token",b"next_page_token",u"time_series",b"time_series",u"total_size",b"total_size"]) -> None: ...
 type___ListTimeSeriesResponse = ListTimeSeriesResponse
 
 class GetTimeSeriesRequest(google___protobuf___message___Message):
     DESCRIPTOR: google___protobuf___descriptor___Descriptor = ...
     name: typing___Text = ...
+
     @property
     def view(self) -> exabel___api___data___v1___time_series_messages_pb2___TimeSeriesView: ...
-    def __init__(
-        self,
-        *,
-        name: typing___Optional[typing___Text] = None,
-        view: typing___Optional[
-            exabel___api___data___v1___time_series_messages_pb2___TimeSeriesView
-        ] = None,
-    ) -> None: ...
-    def HasField(
-        self, field_name: typing_extensions___Literal["view", b"view"]
-    ) -> builtin___bool: ...
-    def ClearField(
-        self, field_name: typing_extensions___Literal["name", b"name", "view", b"view"]
-    ) -> None: ...
 
+    def __init__(self,
+        *,
+        name : typing___Optional[typing___Text] = None,
+        view : typing___Optional[exabel___api___data___v1___time_series_messages_pb2___TimeSeriesView] = None,
+        ) -> None: ...
+    def HasField(self, field_name: typing_extensions___Literal[u"view",b"view"]) -> builtin___bool: ...
+    def ClearField(self, field_name: typing_extensions___Literal[u"name",b"name",u"view",b"view"]) -> None: ...
 type___GetTimeSeriesRequest = GetTimeSeriesRequest
 
 class CreateTimeSeriesRequest(google___protobuf___message___Message):
     DESCRIPTOR: google___protobuf___descriptor___Descriptor = ...
     create_tag: builtin___bool = ...
+
     @property
     def time_series(self) -> exabel___api___data___v1___time_series_messages_pb2___TimeSeries: ...
+
     @property
     def view(self) -> exabel___api___data___v1___time_series_messages_pb2___TimeSeriesView: ...
-    @property
-    def default_known_time(
-        self,
-    ) -> exabel___api___data___v1___time_series_messages_pb2___DefaultKnownTime: ...
-    def __init__(
-        self,
-        *,
-        time_series: typing___Optional[
-            exabel___api___data___v1___time_series_messages_pb2___TimeSeries
-        ] = None,
-        view: typing___Optional[
-            exabel___api___data___v1___time_series_messages_pb2___TimeSeriesView
-        ] = None,
-        default_known_time: typing___Optional[
-            exabel___api___data___v1___time_series_messages_pb2___DefaultKnownTime
-        ] = None,
-        create_tag: typing___Optional[builtin___bool] = None,
-    ) -> None: ...
-    def HasField(
-        self,
-        field_name: typing_extensions___Literal[
-            "default_known_time",
-            b"default_known_time",
-            "time_series",
-            b"time_series",
-            "view",
-            b"view",
-        ],
-    ) -> builtin___bool: ...
-    def ClearField(
-        self,
-        field_name: typing_extensions___Literal[
-            "create_tag",
-            b"create_tag",
-            "default_known_time",
-            b"default_known_time",
-            "time_series",
-            b"time_series",
-            "view",
-            b"view",
-        ],
-    ) -> None: ...
 
+    @property
+    def default_known_time(self) -> exabel___api___data___v1___time_series_messages_pb2___DefaultKnownTime: ...
+
+    def __init__(self,
+        *,
+        time_series : typing___Optional[exabel___api___data___v1___time_series_messages_pb2___TimeSeries] = None,
+        view : typing___Optional[exabel___api___data___v1___time_series_messages_pb2___TimeSeriesView] = None,
+        default_known_time : typing___Optional[exabel___api___data___v1___time_series_messages_pb2___DefaultKnownTime] = None,
+        create_tag : typing___Optional[builtin___bool] = None,
+        ) -> None: ...
+    def HasField(self, field_name: typing_extensions___Literal[u"default_known_time",b"default_known_time",u"time_series",b"time_series",u"view",b"view"]) -> builtin___bool: ...
+    def ClearField(self, field_name: typing_extensions___Literal[u"create_tag",b"create_tag",u"default_known_time",b"default_known_time",u"time_series",b"time_series",u"view",b"view"]) -> None: ...
 type___CreateTimeSeriesRequest = CreateTimeSeriesRequest
 
 class UpdateTimeSeriesRequest(google___protobuf___message___Message):
     DESCRIPTOR: google___protobuf___descriptor___Descriptor = ...
+
     @property
     def time_series(self) -> exabel___api___data___v1___time_series_messages_pb2___TimeSeries: ...
+
     @property
     def view(self) -> exabel___api___data___v1___time_series_messages_pb2___TimeSeriesView: ...
-    @property
-    def default_known_time(
-        self,
-    ) -> exabel___api___data___v1___time_series_messages_pb2___DefaultKnownTime: ...
-    def __init__(
-        self,
-        *,
-        time_series: typing___Optional[
-            exabel___api___data___v1___time_series_messages_pb2___TimeSeries
-        ] = None,
-        view: typing___Optional[
-            exabel___api___data___v1___time_series_messages_pb2___TimeSeriesView
-        ] = None,
-        default_known_time: typing___Optional[
-            exabel___api___data___v1___time_series_messages_pb2___DefaultKnownTime
-        ] = None,
-    ) -> None: ...
-    def HasField(
-        self,
-        field_name: typing_extensions___Literal[
-            "default_known_time",
-            b"default_known_time",
-            "time_series",
-            b"time_series",
-            "view",
-            b"view",
-        ],
-    ) -> builtin___bool: ...
-    def ClearField(
-        self,
-        field_name: typing_extensions___Literal[
-            "default_known_time",
-            b"default_known_time",
-            "time_series",
-            b"time_series",
-            "view",
-            b"view",
-        ],
-    ) -> None: ...
 
+    @property
+    def default_known_time(self) -> exabel___api___data___v1___time_series_messages_pb2___DefaultKnownTime: ...
+
+    def __init__(self,
+        *,
+        time_series : typing___Optional[exabel___api___data___v1___time_series_messages_pb2___TimeSeries] = None,
+        view : typing___Optional[exabel___api___data___v1___time_series_messages_pb2___TimeSeriesView] = None,
+        default_known_time : typing___Optional[exabel___api___data___v1___time_series_messages_pb2___DefaultKnownTime] = None,
+        ) -> None: ...
+    def HasField(self, field_name: typing_extensions___Literal[u"default_known_time",b"default_known_time",u"time_series",b"time_series",u"view",b"view"]) -> builtin___bool: ...
+    def ClearField(self, field_name: typing_extensions___Literal[u"default_known_time",b"default_known_time",u"time_series",b"time_series",u"view",b"view"]) -> None: ...
 type___UpdateTimeSeriesRequest = UpdateTimeSeriesRequest
 
 class DeleteTimeSeriesRequest(google___protobuf___message___Message):
     DESCRIPTOR: google___protobuf___descriptor___Descriptor = ...
     name: typing___Text = ...
-    def __init__(
-        self,
-        *,
-        name: typing___Optional[typing___Text] = None,
-    ) -> None: ...
-    def ClearField(self, field_name: typing_extensions___Literal["name", b"name"]) -> None: ...
 
+    def __init__(self,
+        *,
+        name : typing___Optional[typing___Text] = None,
+        ) -> None: ...
+    def ClearField(self, field_name: typing_extensions___Literal[u"name",b"name"]) -> None: ...
 type___DeleteTimeSeriesRequest = DeleteTimeSeriesRequest
 
 class BatchDeleteTimeSeriesPointsRequest(google___protobuf___message___Message):
     DESCRIPTOR: google___protobuf___descriptor___Descriptor = ...
     name: typing___Text = ...
-    @property
-    def time_ranges(
-        self,
-    ) -> google___protobuf___internal___containers___RepeatedCompositeFieldContainer[
-        exabel___api___time___time_range_pb2___TimeRange
-    ]: ...
-    def __init__(
-        self,
-        *,
-        name: typing___Optional[typing___Text] = None,
-        time_ranges: typing___Optional[
-            typing___Iterable[exabel___api___time___time_range_pb2___TimeRange]
-        ] = None,
-    ) -> None: ...
-    def ClearField(
-        self,
-        field_name: typing_extensions___Literal["name", b"name", "time_ranges", b"time_ranges"],
-    ) -> None: ...
 
+    @property
+    def time_ranges(self) -> google___protobuf___internal___containers___RepeatedCompositeFieldContainer[exabel___api___time___time_range_pb2___TimeRange]: ...
+
+    def __init__(self,
+        *,
+        name : typing___Optional[typing___Text] = None,
+        time_ranges : typing___Optional[typing___Iterable[exabel___api___time___time_range_pb2___TimeRange]] = None,
+        ) -> None: ...
+    def ClearField(self, field_name: typing_extensions___Literal[u"name",b"name",u"time_ranges",b"time_ranges"]) -> None: ...
 type___BatchDeleteTimeSeriesPointsRequest = BatchDeleteTimeSeriesPointsRequest

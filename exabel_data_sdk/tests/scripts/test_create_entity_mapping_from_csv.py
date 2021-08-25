@@ -18,7 +18,7 @@ class TestCreateEntityMappingFromCsv(unittest.TestCase):
         args = [
             "script-name",
             "--filename-input",
-            "./tests/resources/data/mapping_ticker.csv",
+            "./exabel_data_sdk/tests/resources/data/mapping_ticker.csv",
             "--filename-output",
             self.temp_file.name,
         ]
@@ -59,7 +59,7 @@ class TestCreateEntityMappingFromCsv(unittest.TestCase):
         args = [
             "script-name",
             "--filename-input",
-            "./tests/resources/data/mapping_isin.csv",
+            "./exabel_data_sdk/tests/resources/data/mapping_isin.csv",
             "--filename-output",
             self.temp_file.name,
         ]
@@ -82,7 +82,7 @@ class TestCreateEntityMappingFromCsv(unittest.TestCase):
         args = [
             "script-name",
             "--filename-input",
-            "./tests/resources/data/mapping_factset_identifier.csv",
+            "./exabel_data_sdk/tests/resources/data/mapping_factset_identifier.csv",
             "--filename-output",
             self.temp_file.name,
         ]
@@ -114,7 +114,7 @@ class TestCreateEntityMappingFromCsv(unittest.TestCase):
         args = [
             "script-name",
             "--filename-input",
-            "./tests/resources/data/mapping_bloomberg_ticker.csv",
+            "./exabel_data_sdk/tests/resources/data/mapping_bloomberg_ticker.csv",
             "--filename-output",
             self.temp_file.name,
         ]
