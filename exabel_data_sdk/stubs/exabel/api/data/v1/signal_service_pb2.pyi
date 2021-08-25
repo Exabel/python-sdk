@@ -33,10 +33,12 @@ from typing_extensions import (
     Literal as typing_extensions___Literal,
 )
 
+
 builtin___bool = bool
 builtin___bytes = bytes
 builtin___float = float
 builtin___int = int
+
 
 DESCRIPTOR: google___protobuf___descriptor___FileDescriptor = ...
 
@@ -44,120 +46,84 @@ class ListSignalsRequest(google___protobuf___message___Message):
     DESCRIPTOR: google___protobuf___descriptor___Descriptor = ...
     page_size: builtin___int = ...
     page_token: typing___Text = ...
-    def __init__(
-        self,
-        *,
-        page_size: typing___Optional[builtin___int] = None,
-        page_token: typing___Optional[typing___Text] = None,
-    ) -> None: ...
-    def ClearField(
-        self,
-        field_name: typing_extensions___Literal[
-            "page_size", b"page_size", "page_token", b"page_token"
-        ],
-    ) -> None: ...
 
+    def __init__(self,
+        *,
+        page_size : typing___Optional[builtin___int] = None,
+        page_token : typing___Optional[typing___Text] = None,
+        ) -> None: ...
+    def ClearField(self, field_name: typing_extensions___Literal[u"page_size",b"page_size",u"page_token",b"page_token"]) -> None: ...
 type___ListSignalsRequest = ListSignalsRequest
 
 class ListSignalsResponse(google___protobuf___message___Message):
     DESCRIPTOR: google___protobuf___descriptor___Descriptor = ...
     next_page_token: typing___Text = ...
     total_size: builtin___int = ...
-    @property
-    def signals(
-        self,
-    ) -> google___protobuf___internal___containers___RepeatedCompositeFieldContainer[
-        exabel___api___data___v1___signal_messages_pb2___Signal
-    ]: ...
-    def __init__(
-        self,
-        *,
-        signals: typing___Optional[
-            typing___Iterable[exabel___api___data___v1___signal_messages_pb2___Signal]
-        ] = None,
-        next_page_token: typing___Optional[typing___Text] = None,
-        total_size: typing___Optional[builtin___int] = None,
-    ) -> None: ...
-    def ClearField(
-        self,
-        field_name: typing_extensions___Literal[
-            "next_page_token",
-            b"next_page_token",
-            "signals",
-            b"signals",
-            "total_size",
-            b"total_size",
-        ],
-    ) -> None: ...
 
+    @property
+    def signals(self) -> google___protobuf___internal___containers___RepeatedCompositeFieldContainer[exabel___api___data___v1___signal_messages_pb2___Signal]: ...
+
+    def __init__(self,
+        *,
+        signals : typing___Optional[typing___Iterable[exabel___api___data___v1___signal_messages_pb2___Signal]] = None,
+        next_page_token : typing___Optional[typing___Text] = None,
+        total_size : typing___Optional[builtin___int] = None,
+        ) -> None: ...
+    def ClearField(self, field_name: typing_extensions___Literal[u"next_page_token",b"next_page_token",u"signals",b"signals",u"total_size",b"total_size"]) -> None: ...
 type___ListSignalsResponse = ListSignalsResponse
 
 class GetSignalRequest(google___protobuf___message___Message):
     DESCRIPTOR: google___protobuf___descriptor___Descriptor = ...
     name: typing___Text = ...
-    def __init__(
-        self,
-        *,
-        name: typing___Optional[typing___Text] = None,
-    ) -> None: ...
-    def ClearField(self, field_name: typing_extensions___Literal["name", b"name"]) -> None: ...
 
+    def __init__(self,
+        *,
+        name : typing___Optional[typing___Text] = None,
+        ) -> None: ...
+    def ClearField(self, field_name: typing_extensions___Literal[u"name",b"name"]) -> None: ...
 type___GetSignalRequest = GetSignalRequest
 
 class CreateSignalRequest(google___protobuf___message___Message):
     DESCRIPTOR: google___protobuf___descriptor___Descriptor = ...
     create_library_signal: builtin___bool = ...
+
     @property
     def signal(self) -> exabel___api___data___v1___signal_messages_pb2___Signal: ...
-    def __init__(
-        self,
-        *,
-        signal: typing___Optional[exabel___api___data___v1___signal_messages_pb2___Signal] = None,
-        create_library_signal: typing___Optional[builtin___bool] = None,
-    ) -> None: ...
-    def HasField(
-        self, field_name: typing_extensions___Literal["signal", b"signal"]
-    ) -> builtin___bool: ...
-    def ClearField(
-        self,
-        field_name: typing_extensions___Literal[
-            "create_library_signal", b"create_library_signal", "signal", b"signal"
-        ],
-    ) -> None: ...
 
+    def __init__(self,
+        *,
+        signal : typing___Optional[exabel___api___data___v1___signal_messages_pb2___Signal] = None,
+        create_library_signal : typing___Optional[builtin___bool] = None,
+        ) -> None: ...
+    def HasField(self, field_name: typing_extensions___Literal[u"signal",b"signal"]) -> builtin___bool: ...
+    def ClearField(self, field_name: typing_extensions___Literal[u"create_library_signal",b"create_library_signal",u"signal",b"signal"]) -> None: ...
 type___CreateSignalRequest = CreateSignalRequest
 
 class UpdateSignalRequest(google___protobuf___message___Message):
     DESCRIPTOR: google___protobuf___descriptor___Descriptor = ...
+
     @property
     def signal(self) -> exabel___api___data___v1___signal_messages_pb2___Signal: ...
+
     @property
     def update_mask(self) -> google___protobuf___field_mask_pb2___FieldMask: ...
-    def __init__(
-        self,
-        *,
-        signal: typing___Optional[exabel___api___data___v1___signal_messages_pb2___Signal] = None,
-        update_mask: typing___Optional[google___protobuf___field_mask_pb2___FieldMask] = None,
-    ) -> None: ...
-    def HasField(
-        self,
-        field_name: typing_extensions___Literal["signal", b"signal", "update_mask", b"update_mask"],
-    ) -> builtin___bool: ...
-    def ClearField(
-        self,
-        field_name: typing_extensions___Literal["signal", b"signal", "update_mask", b"update_mask"],
-    ) -> None: ...
 
+    def __init__(self,
+        *,
+        signal : typing___Optional[exabel___api___data___v1___signal_messages_pb2___Signal] = None,
+        update_mask : typing___Optional[google___protobuf___field_mask_pb2___FieldMask] = None,
+        ) -> None: ...
+    def HasField(self, field_name: typing_extensions___Literal[u"signal",b"signal",u"update_mask",b"update_mask"]) -> builtin___bool: ...
+    def ClearField(self, field_name: typing_extensions___Literal[u"signal",b"signal",u"update_mask",b"update_mask"]) -> None: ...
 type___UpdateSignalRequest = UpdateSignalRequest
 
 class DeleteSignalRequest(google___protobuf___message___Message):
     DESCRIPTOR: google___protobuf___descriptor___Descriptor = ...
     name: typing___Text = ...
-    def __init__(
-        self,
-        *,
-        name: typing___Optional[typing___Text] = None,
-    ) -> None: ...
-    def ClearField(self, field_name: typing_extensions___Literal["name", b"name"]) -> None: ...
 
+    def __init__(self,
+        *,
+        name : typing___Optional[typing___Text] = None,
+        ) -> None: ...
+    def ClearField(self, field_name: typing_extensions___Literal[u"name",b"name"]) -> None: ...
 type___DeleteSignalRequest = DeleteSignalRequest

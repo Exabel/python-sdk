@@ -45,10 +45,22 @@ class SearchEntities(BaseScript):
             help="The Bloomberg ticker",
         )
         self.parser.add_argument(
+            "--bloomberg-symbol",
+            required=False,
+            type=str,
+            help="The Bloomberg symbol",
+        )
+        self.parser.add_argument(
             "--factset-identifier",
             required=False,
             type=str,
             help="The FactSet identifier",
+        )
+        self.parser.add_argument(
+            "--text",
+            required=False,
+            type=str,
+            help="Term for free text search",
         )
 
     def run_script(self, client: ExabelClient, args: argparse.Namespace) -> None:
@@ -57,10 +69,16 @@ class SearchEntities(BaseScript):
             terms["mic"] = args.mic
         if args.ticker is not None:
             terms["ticker"] = args.ticker
+        if args.isin is not None:
+            terms["isin"] = args.isin
         if args.bloomberg_ticker is not None:
             terms["bloomberg_ticker"] = args.bloomberg_ticker
+        if args.bloomberg_symbol is not None:
+            terms["bloomberg_symbol"] = args.bloomberg_symbol
         if args.factset_identifier is not None:
             terms["factset_identifier"] = args.factset_identifier
+        if args.text is not None:
+            terms["text"] = args.text
 
         entities = client.entity_api.search_for_entities(entity_type=args.entity_type, **terms)
 

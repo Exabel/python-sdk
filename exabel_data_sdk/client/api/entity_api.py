@@ -6,6 +6,7 @@ from exabel_data_sdk.client.api.data_classes.entity import Entity
 from exabel_data_sdk.client.api.data_classes.entity_type import EntityType
 from exabel_data_sdk.client.api.data_classes.paging_result import PagingResult
 from exabel_data_sdk.client.api.data_classes.request_error import ErrorType, RequestError
+from exabel_data_sdk.client.api.search_service import SearchService
 from exabel_data_sdk.client.client_config import ClientConfig
 from exabel_data_sdk.stubs.exabel.api.data.v1.all_pb2 import (
     CreateEntityRequest,
@@ -22,10 +23,14 @@ from exabel_data_sdk.stubs.exabel.api.data.v1.all_pb2 import (
 class EntityApi:
     """
     API class for CRUD operations on entities and entity types.
+
+    Attributes:
+        search: a SearchService which contains a number of utility methods for searching
     """
 
     def __init__(self, config: ClientConfig, use_json: bool):
         self.client = (EntityHttpClient if use_json else EntityGrpcClient)(config)
+        self.search = SearchService(self.client)
 
     def list_entity_types(
         self, page_size: int = 1000, page_token: str = None

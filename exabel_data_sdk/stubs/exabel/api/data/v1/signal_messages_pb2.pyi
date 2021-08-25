@@ -29,10 +29,12 @@ from typing_extensions import (
     Literal as typing_extensions___Literal,
 )
 
+
 builtin___bool = bool
 builtin___bytes = bytes
 builtin___float = float
 builtin___int = int
+
 
 DESCRIPTOR: google___protobuf___descriptor___FileDescriptor = ...
 
@@ -44,40 +46,17 @@ class Signal(google___protobuf___message___Message):
     description: typing___Text = ...
     downsampling_method: exabel___api___math___aggregation_pb2___AggregationValue = ...
     read_only: builtin___bool = ...
-    entity_types: google___protobuf___internal___containers___RepeatedScalarFieldContainer[
-        typing___Text
-    ] = ...
-    def __init__(
-        self,
-        *,
-        name: typing___Optional[typing___Text] = None,
-        entity_type: typing___Optional[typing___Text] = None,
-        display_name: typing___Optional[typing___Text] = None,
-        description: typing___Optional[typing___Text] = None,
-        downsampling_method: typing___Optional[
-            exabel___api___math___aggregation_pb2___AggregationValue
-        ] = None,
-        read_only: typing___Optional[builtin___bool] = None,
-        entity_types: typing___Optional[typing___Iterable[typing___Text]] = None,
-    ) -> None: ...
-    def ClearField(
-        self,
-        field_name: typing_extensions___Literal[
-            "description",
-            b"description",
-            "display_name",
-            b"display_name",
-            "downsampling_method",
-            b"downsampling_method",
-            "entity_type",
-            b"entity_type",
-            "entity_types",
-            b"entity_types",
-            "name",
-            b"name",
-            "read_only",
-            b"read_only",
-        ],
-    ) -> None: ...
+    entity_types: google___protobuf___internal___containers___RepeatedScalarFieldContainer[typing___Text] = ...
 
+    def __init__(self,
+        *,
+        name : typing___Optional[typing___Text] = None,
+        entity_type : typing___Optional[typing___Text] = None,
+        display_name : typing___Optional[typing___Text] = None,
+        description : typing___Optional[typing___Text] = None,
+        downsampling_method : typing___Optional[exabel___api___math___aggregation_pb2___AggregationValue] = None,
+        read_only : typing___Optional[builtin___bool] = None,
+        entity_types : typing___Optional[typing___Iterable[typing___Text]] = None,
+        ) -> None: ...
+    def ClearField(self, field_name: typing_extensions___Literal[u"description",b"description",u"display_name",b"display_name",u"downsampling_method",b"downsampling_method",u"entity_type",b"entity_type",u"entity_types",b"entity_types",u"name",b"name",u"read_only",b"read_only"]) -> None: ...
 type___Signal = Signal

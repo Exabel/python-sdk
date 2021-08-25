@@ -34,10 +34,12 @@ from typing_extensions import (
     Literal as typing_extensions___Literal,
 )
 
+
 builtin___bool = bool
 builtin___bytes = bytes
 builtin___float = float
 builtin___int = int
+
 
 DESCRIPTOR: google___protobuf___descriptor___FileDescriptor = ...
 
@@ -45,131 +47,84 @@ class ListRelationshipTypesRequest(google___protobuf___message___Message):
     DESCRIPTOR: google___protobuf___descriptor___Descriptor = ...
     page_size: builtin___int = ...
     page_token: typing___Text = ...
-    def __init__(
-        self,
-        *,
-        page_size: typing___Optional[builtin___int] = None,
-        page_token: typing___Optional[typing___Text] = None,
-    ) -> None: ...
-    def ClearField(
-        self,
-        field_name: typing_extensions___Literal[
-            "page_size", b"page_size", "page_token", b"page_token"
-        ],
-    ) -> None: ...
 
+    def __init__(self,
+        *,
+        page_size : typing___Optional[builtin___int] = None,
+        page_token : typing___Optional[typing___Text] = None,
+        ) -> None: ...
+    def ClearField(self, field_name: typing_extensions___Literal[u"page_size",b"page_size",u"page_token",b"page_token"]) -> None: ...
 type___ListRelationshipTypesRequest = ListRelationshipTypesRequest
 
 class ListRelationshipTypesResponse(google___protobuf___message___Message):
     DESCRIPTOR: google___protobuf___descriptor___Descriptor = ...
     next_page_token: typing___Text = ...
     total_size: builtin___int = ...
-    @property
-    def relationship_types(
-        self,
-    ) -> google___protobuf___internal___containers___RepeatedCompositeFieldContainer[
-        exabel___api___data___v1___relationship_messages_pb2___RelationshipType
-    ]: ...
-    def __init__(
-        self,
-        *,
-        relationship_types: typing___Optional[
-            typing___Iterable[
-                exabel___api___data___v1___relationship_messages_pb2___RelationshipType
-            ]
-        ] = None,
-        next_page_token: typing___Optional[typing___Text] = None,
-        total_size: typing___Optional[builtin___int] = None,
-    ) -> None: ...
-    def ClearField(
-        self,
-        field_name: typing_extensions___Literal[
-            "next_page_token",
-            b"next_page_token",
-            "relationship_types",
-            b"relationship_types",
-            "total_size",
-            b"total_size",
-        ],
-    ) -> None: ...
 
+    @property
+    def relationship_types(self) -> google___protobuf___internal___containers___RepeatedCompositeFieldContainer[exabel___api___data___v1___relationship_messages_pb2___RelationshipType]: ...
+
+    def __init__(self,
+        *,
+        relationship_types : typing___Optional[typing___Iterable[exabel___api___data___v1___relationship_messages_pb2___RelationshipType]] = None,
+        next_page_token : typing___Optional[typing___Text] = None,
+        total_size : typing___Optional[builtin___int] = None,
+        ) -> None: ...
+    def ClearField(self, field_name: typing_extensions___Literal[u"next_page_token",b"next_page_token",u"relationship_types",b"relationship_types",u"total_size",b"total_size"]) -> None: ...
 type___ListRelationshipTypesResponse = ListRelationshipTypesResponse
 
 class CreateRelationshipTypeRequest(google___protobuf___message___Message):
     DESCRIPTOR: google___protobuf___descriptor___Descriptor = ...
-    @property
-    def relationship_type(
-        self,
-    ) -> exabel___api___data___v1___relationship_messages_pb2___RelationshipType: ...
-    def __init__(
-        self,
-        *,
-        relationship_type: typing___Optional[
-            exabel___api___data___v1___relationship_messages_pb2___RelationshipType
-        ] = None,
-    ) -> None: ...
-    def HasField(
-        self, field_name: typing_extensions___Literal["relationship_type", b"relationship_type"]
-    ) -> builtin___bool: ...
-    def ClearField(
-        self, field_name: typing_extensions___Literal["relationship_type", b"relationship_type"]
-    ) -> None: ...
 
+    @property
+    def relationship_type(self) -> exabel___api___data___v1___relationship_messages_pb2___RelationshipType: ...
+
+    def __init__(self,
+        *,
+        relationship_type : typing___Optional[exabel___api___data___v1___relationship_messages_pb2___RelationshipType] = None,
+        ) -> None: ...
+    def HasField(self, field_name: typing_extensions___Literal[u"relationship_type",b"relationship_type"]) -> builtin___bool: ...
+    def ClearField(self, field_name: typing_extensions___Literal[u"relationship_type",b"relationship_type"]) -> None: ...
 type___CreateRelationshipTypeRequest = CreateRelationshipTypeRequest
 
 class UpdateRelationshipTypeRequest(google___protobuf___message___Message):
     DESCRIPTOR: google___protobuf___descriptor___Descriptor = ...
+
     @property
-    def relationship_type(
-        self,
-    ) -> exabel___api___data___v1___relationship_messages_pb2___RelationshipType: ...
+    def relationship_type(self) -> exabel___api___data___v1___relationship_messages_pb2___RelationshipType: ...
+
     @property
     def update_mask(self) -> google___protobuf___field_mask_pb2___FieldMask: ...
-    def __init__(
-        self,
-        *,
-        relationship_type: typing___Optional[
-            exabel___api___data___v1___relationship_messages_pb2___RelationshipType
-        ] = None,
-        update_mask: typing___Optional[google___protobuf___field_mask_pb2___FieldMask] = None,
-    ) -> None: ...
-    def HasField(
-        self,
-        field_name: typing_extensions___Literal[
-            "relationship_type", b"relationship_type", "update_mask", b"update_mask"
-        ],
-    ) -> builtin___bool: ...
-    def ClearField(
-        self,
-        field_name: typing_extensions___Literal[
-            "relationship_type", b"relationship_type", "update_mask", b"update_mask"
-        ],
-    ) -> None: ...
 
+    def __init__(self,
+        *,
+        relationship_type : typing___Optional[exabel___api___data___v1___relationship_messages_pb2___RelationshipType] = None,
+        update_mask : typing___Optional[google___protobuf___field_mask_pb2___FieldMask] = None,
+        ) -> None: ...
+    def HasField(self, field_name: typing_extensions___Literal[u"relationship_type",b"relationship_type",u"update_mask",b"update_mask"]) -> builtin___bool: ...
+    def ClearField(self, field_name: typing_extensions___Literal[u"relationship_type",b"relationship_type",u"update_mask",b"update_mask"]) -> None: ...
 type___UpdateRelationshipTypeRequest = UpdateRelationshipTypeRequest
 
 class DeleteRelationshipTypeRequest(google___protobuf___message___Message):
     DESCRIPTOR: google___protobuf___descriptor___Descriptor = ...
     name: typing___Text = ...
-    def __init__(
-        self,
-        *,
-        name: typing___Optional[typing___Text] = None,
-    ) -> None: ...
-    def ClearField(self, field_name: typing_extensions___Literal["name", b"name"]) -> None: ...
 
+    def __init__(self,
+        *,
+        name : typing___Optional[typing___Text] = None,
+        ) -> None: ...
+    def ClearField(self, field_name: typing_extensions___Literal[u"name",b"name"]) -> None: ...
 type___DeleteRelationshipTypeRequest = DeleteRelationshipTypeRequest
 
 class GetRelationshipTypeRequest(google___protobuf___message___Message):
     DESCRIPTOR: google___protobuf___descriptor___Descriptor = ...
     name: typing___Text = ...
-    def __init__(
-        self,
-        *,
-        name: typing___Optional[typing___Text] = None,
-    ) -> None: ...
-    def ClearField(self, field_name: typing_extensions___Literal["name", b"name"]) -> None: ...
 
+    def __init__(self,
+        *,
+        name : typing___Optional[typing___Text] = None,
+        ) -> None: ...
+    def ClearField(self, field_name: typing_extensions___Literal[u"name",b"name"]) -> None: ...
 type___GetRelationshipTypeRequest = GetRelationshipTypeRequest
 
 class ListRelationshipsRequest(google___protobuf___message___Message):
@@ -179,64 +134,33 @@ class ListRelationshipsRequest(google___protobuf___message___Message):
     to_entity: typing___Text = ...
     page_size: builtin___int = ...
     page_token: typing___Text = ...
-    def __init__(
-        self,
-        *,
-        parent: typing___Optional[typing___Text] = None,
-        from_entity: typing___Optional[typing___Text] = None,
-        to_entity: typing___Optional[typing___Text] = None,
-        page_size: typing___Optional[builtin___int] = None,
-        page_token: typing___Optional[typing___Text] = None,
-    ) -> None: ...
-    def ClearField(
-        self,
-        field_name: typing_extensions___Literal[
-            "from_entity",
-            b"from_entity",
-            "page_size",
-            b"page_size",
-            "page_token",
-            b"page_token",
-            "parent",
-            b"parent",
-            "to_entity",
-            b"to_entity",
-        ],
-    ) -> None: ...
 
+    def __init__(self,
+        *,
+        parent : typing___Optional[typing___Text] = None,
+        from_entity : typing___Optional[typing___Text] = None,
+        to_entity : typing___Optional[typing___Text] = None,
+        page_size : typing___Optional[builtin___int] = None,
+        page_token : typing___Optional[typing___Text] = None,
+        ) -> None: ...
+    def ClearField(self, field_name: typing_extensions___Literal[u"from_entity",b"from_entity",u"page_size",b"page_size",u"page_token",b"page_token",u"parent",b"parent",u"to_entity",b"to_entity"]) -> None: ...
 type___ListRelationshipsRequest = ListRelationshipsRequest
 
 class ListRelationshipsResponse(google___protobuf___message___Message):
     DESCRIPTOR: google___protobuf___descriptor___Descriptor = ...
     next_page_token: typing___Text = ...
     total_size: builtin___int = ...
-    @property
-    def relationships(
-        self,
-    ) -> google___protobuf___internal___containers___RepeatedCompositeFieldContainer[
-        exabel___api___data___v1___relationship_messages_pb2___Relationship
-    ]: ...
-    def __init__(
-        self,
-        *,
-        relationships: typing___Optional[
-            typing___Iterable[exabel___api___data___v1___relationship_messages_pb2___Relationship]
-        ] = None,
-        next_page_token: typing___Optional[typing___Text] = None,
-        total_size: typing___Optional[builtin___int] = None,
-    ) -> None: ...
-    def ClearField(
-        self,
-        field_name: typing_extensions___Literal[
-            "next_page_token",
-            b"next_page_token",
-            "relationships",
-            b"relationships",
-            "total_size",
-            b"total_size",
-        ],
-    ) -> None: ...
 
+    @property
+    def relationships(self) -> google___protobuf___internal___containers___RepeatedCompositeFieldContainer[exabel___api___data___v1___relationship_messages_pb2___Relationship]: ...
+
+    def __init__(self,
+        *,
+        relationships : typing___Optional[typing___Iterable[exabel___api___data___v1___relationship_messages_pb2___Relationship]] = None,
+        next_page_token : typing___Optional[typing___Text] = None,
+        total_size : typing___Optional[builtin___int] = None,
+        ) -> None: ...
+    def ClearField(self, field_name: typing_extensions___Literal[u"next_page_token",b"next_page_token",u"relationships",b"relationships",u"total_size",b"total_size"]) -> None: ...
 type___ListRelationshipsResponse = ListRelationshipsResponse
 
 class GetRelationshipRequest(google___protobuf___message___Message):
@@ -244,73 +168,46 @@ class GetRelationshipRequest(google___protobuf___message___Message):
     parent: typing___Text = ...
     from_entity: typing___Text = ...
     to_entity: typing___Text = ...
-    def __init__(
-        self,
-        *,
-        parent: typing___Optional[typing___Text] = None,
-        from_entity: typing___Optional[typing___Text] = None,
-        to_entity: typing___Optional[typing___Text] = None,
-    ) -> None: ...
-    def ClearField(
-        self,
-        field_name: typing_extensions___Literal[
-            "from_entity", b"from_entity", "parent", b"parent", "to_entity", b"to_entity"
-        ],
-    ) -> None: ...
 
+    def __init__(self,
+        *,
+        parent : typing___Optional[typing___Text] = None,
+        from_entity : typing___Optional[typing___Text] = None,
+        to_entity : typing___Optional[typing___Text] = None,
+        ) -> None: ...
+    def ClearField(self, field_name: typing_extensions___Literal[u"from_entity",b"from_entity",u"parent",b"parent",u"to_entity",b"to_entity"]) -> None: ...
 type___GetRelationshipRequest = GetRelationshipRequest
 
 class CreateRelationshipRequest(google___protobuf___message___Message):
     DESCRIPTOR: google___protobuf___descriptor___Descriptor = ...
-    @property
-    def relationship(
-        self,
-    ) -> exabel___api___data___v1___relationship_messages_pb2___Relationship: ...
-    def __init__(
-        self,
-        *,
-        relationship: typing___Optional[
-            exabel___api___data___v1___relationship_messages_pb2___Relationship
-        ] = None,
-    ) -> None: ...
-    def HasField(
-        self, field_name: typing_extensions___Literal["relationship", b"relationship"]
-    ) -> builtin___bool: ...
-    def ClearField(
-        self, field_name: typing_extensions___Literal["relationship", b"relationship"]
-    ) -> None: ...
 
+    @property
+    def relationship(self) -> exabel___api___data___v1___relationship_messages_pb2___Relationship: ...
+
+    def __init__(self,
+        *,
+        relationship : typing___Optional[exabel___api___data___v1___relationship_messages_pb2___Relationship] = None,
+        ) -> None: ...
+    def HasField(self, field_name: typing_extensions___Literal[u"relationship",b"relationship"]) -> builtin___bool: ...
+    def ClearField(self, field_name: typing_extensions___Literal[u"relationship",b"relationship"]) -> None: ...
 type___CreateRelationshipRequest = CreateRelationshipRequest
 
 class UpdateRelationshipRequest(google___protobuf___message___Message):
     DESCRIPTOR: google___protobuf___descriptor___Descriptor = ...
+
     @property
-    def relationship(
-        self,
-    ) -> exabel___api___data___v1___relationship_messages_pb2___Relationship: ...
+    def relationship(self) -> exabel___api___data___v1___relationship_messages_pb2___Relationship: ...
+
     @property
     def update_mask(self) -> google___protobuf___field_mask_pb2___FieldMask: ...
-    def __init__(
-        self,
-        *,
-        relationship: typing___Optional[
-            exabel___api___data___v1___relationship_messages_pb2___Relationship
-        ] = None,
-        update_mask: typing___Optional[google___protobuf___field_mask_pb2___FieldMask] = None,
-    ) -> None: ...
-    def HasField(
-        self,
-        field_name: typing_extensions___Literal[
-            "relationship", b"relationship", "update_mask", b"update_mask"
-        ],
-    ) -> builtin___bool: ...
-    def ClearField(
-        self,
-        field_name: typing_extensions___Literal[
-            "relationship", b"relationship", "update_mask", b"update_mask"
-        ],
-    ) -> None: ...
 
+    def __init__(self,
+        *,
+        relationship : typing___Optional[exabel___api___data___v1___relationship_messages_pb2___Relationship] = None,
+        update_mask : typing___Optional[google___protobuf___field_mask_pb2___FieldMask] = None,
+        ) -> None: ...
+    def HasField(self, field_name: typing_extensions___Literal[u"relationship",b"relationship",u"update_mask",b"update_mask"]) -> builtin___bool: ...
+    def ClearField(self, field_name: typing_extensions___Literal[u"relationship",b"relationship",u"update_mask",b"update_mask"]) -> None: ...
 type___UpdateRelationshipRequest = UpdateRelationshipRequest
 
 class DeleteRelationshipRequest(google___protobuf___message___Message):
@@ -318,18 +215,12 @@ class DeleteRelationshipRequest(google___protobuf___message___Message):
     parent: typing___Text = ...
     from_entity: typing___Text = ...
     to_entity: typing___Text = ...
-    def __init__(
-        self,
-        *,
-        parent: typing___Optional[typing___Text] = None,
-        from_entity: typing___Optional[typing___Text] = None,
-        to_entity: typing___Optional[typing___Text] = None,
-    ) -> None: ...
-    def ClearField(
-        self,
-        field_name: typing_extensions___Literal[
-            "from_entity", b"from_entity", "parent", b"parent", "to_entity", b"to_entity"
-        ],
-    ) -> None: ...
 
+    def __init__(self,
+        *,
+        parent : typing___Optional[typing___Text] = None,
+        from_entity : typing___Optional[typing___Text] = None,
+        to_entity : typing___Optional[typing___Text] = None,
+        ) -> None: ...
+    def ClearField(self, field_name: typing_extensions___Literal[u"from_entity",b"from_entity",u"parent",b"parent",u"to_entity",b"to_entity"]) -> None: ...
 type___DeleteRelationshipRequest = DeleteRelationshipRequest
