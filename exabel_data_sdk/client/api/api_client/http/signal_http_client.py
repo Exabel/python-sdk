@@ -7,6 +7,7 @@ from exabel_data_sdk.stubs.exabel.api.data.v1.all_pb2 import (
     ListSignalsRequest,
     ListSignalsResponse,
     Signal,
+    UpdateSignalRequest,
 )
 
 
@@ -25,6 +26,14 @@ class SignalHttpClient(SignalApiClient, BaseHttpClient):
         return self._request(
             "POST",
             f"signals?createLibrarySignal={request.create_library_signal}",
+            Signal(),
+            request.signal,
+        )
+
+    def update_signal(self, request: UpdateSignalRequest) -> Signal:
+        return self._request(
+            "PATCH",
+            request.signal.name,
             Signal(),
             request.signal,
         )

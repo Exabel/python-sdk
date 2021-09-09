@@ -9,6 +9,7 @@ from exabel_data_sdk.stubs.exabel.api.data.v1.all_pb2 import (
     ListSignalsRequest,
     ListSignalsResponse,
     Signal,
+    UpdateSignalRequest,
 )
 from exabel_data_sdk.stubs.exabel.api.data.v1.all_pb2_grpc import SignalServiceStub
 
@@ -41,6 +42,14 @@ class SignalGrpcClient(SignalApiClient, BaseGrpcClient):
     @handle_grpc_error
     def create_signal(self, request: CreateSignalRequest) -> Signal:
         return self.stub.CreateSignal(
+            request,
+            metadata=self.metadata,
+            timeout=self.config.timeout,
+        )
+
+    @handle_grpc_error
+    def update_signal(self, request: UpdateSignalRequest) -> Signal:
+        return self.stub.UpdateSignal(
             request,
             metadata=self.metadata,
             timeout=self.config.timeout,

@@ -1,5 +1,7 @@
 from typing import Optional, Sequence
 
+from google.protobuf.field_mask_pb2 import FieldMask
+
 from exabel_data_sdk.client.api.api_client.grpc.entity_grpc_client import EntityGrpcClient
 from exabel_data_sdk.client.api.api_client.http.entity_http_client import EntityHttpClient
 from exabel_data_sdk.client.api.data_classes.entity import Entity
@@ -17,6 +19,7 @@ from exabel_data_sdk.stubs.exabel.api.data.v1.all_pb2 import (
     ListEntityTypesRequest,
     SearchEntitiesRequest,
     SearchTerm,
+    UpdateEntityRequest,
 )
 
 
@@ -121,6 +124,20 @@ class EntityApi:
         """
         response = self.client.create_entity(
             CreateEntityRequest(parent=entity_type, entity=entity.to_proto())
+        )
+        return Entity.from_proto(response)
+
+    def update_entity(self, entity: Entity, update_mask: FieldMask = None) -> Entity:
+        """
+        Update an entity.
+
+        Args:
+            entity:         The entity to update.
+            update_mask:    Fields to update. If not specified, the update behaves as a full update,
+                            overwriting all existing fields and properties.
+        """
+        response = self.client.update_entity(
+            UpdateEntityRequest(entity=entity.to_proto(), update_mask=update_mask)
         )
         return Entity.from_proto(response)
 

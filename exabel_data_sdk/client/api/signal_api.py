@@ -1,5 +1,7 @@
 from typing import Optional
 
+from google.protobuf.field_mask_pb2 import FieldMask
+
 from exabel_data_sdk.client.api.api_client.grpc.signal_grpc_client import SignalGrpcClient
 from exabel_data_sdk.client.api.api_client.http.signal_http_client import SignalHttpClient
 from exabel_data_sdk.client.api.data_classes.paging_result import PagingResult
@@ -11,6 +13,7 @@ from exabel_data_sdk.stubs.exabel.api.data.v1.all_pb2 import (
     DeleteSignalRequest,
     GetSignalRequest,
     ListSignalsRequest,
+    UpdateSignalRequest,
 )
 
 
@@ -71,6 +74,20 @@ class SignalApi:
             CreateSignalRequest(
                 signal=signal.to_proto(), create_library_signal=create_library_signal
             ),
+        )
+        return Signal.from_proto(response)
+
+    def update_signal(self, signal: Signal, update_mask: FieldMask = None) -> Signal:
+        """
+        Update one signal and return it.
+
+        Args:
+            signal: The signal to update.
+            update_mask: The fields to update. If not specified, the update behaves as a
+                         full update, overwriting all existing fields and properties.
+        """
+        response = self.client.update_signal(
+            UpdateSignalRequest(signal=signal.to_proto(), update_mask=update_mask),
         )
         return Signal.from_proto(response)
 
