@@ -30,8 +30,6 @@ class CliLogin:
     login.access_token
     """
 
-    # pylint: disable=too-many-instance-attributes
-
     def __init__(
         self,
         auth0: str,
@@ -72,13 +70,13 @@ class CliLogin:
         """Read the refresh token from the user’s home directory."""
         filename = os.path.expanduser("~/.exabel")
         if os.path.isfile(filename):
-            with open(filename) as file:
+            with open(filename, encoding="utf-8") as file:
                 self.refresh_token = file.read()
 
     def write_refresh_token(self) -> None:
         """Write the refresh token to the user’s home directory."""
         filename = os.path.expanduser("~/.exabel")
-        with open(filename, "w") as file:
+        with open(filename, "w", encoding="utf-8") as file:
             file.write(self.refresh_token)
 
     def get_access_token(self) -> bool:
