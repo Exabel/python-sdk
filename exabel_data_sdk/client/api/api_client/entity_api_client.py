@@ -13,6 +13,7 @@ from exabel_data_sdk.stubs.exabel.api.data.v1.all_pb2 import (
     ListEntityTypesResponse,
     SearchEntitiesRequest,
     SearchEntitiesResponse,
+    UpdateEntityRequest,
 )
 
 
@@ -40,6 +41,10 @@ class EntityApiClient(ABC):
     @abstractmethod
     def create_entity(self, request: CreateEntityRequest) -> Entity:
         """Create an entity."""
+
+    @abstractmethod
+    def update_entity(self, request: UpdateEntityRequest) -> Entity:
+        """Update an entity."""
 
     @abstractmethod
     def delete_entity(self, request: DeleteEntityRequest) -> None:

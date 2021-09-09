@@ -15,6 +15,8 @@ from exabel_data_sdk.stubs.exabel.api.data.v1.all_pb2 import (
     ListRelationshipTypesResponse,
     Relationship,
     RelationshipType,
+    UpdateRelationshipRequest,
+    UpdateRelationshipTypeRequest,
 )
 from exabel_data_sdk.stubs.exabel.api.data.v1.all_pb2_grpc import RelationshipServiceStub
 
@@ -49,6 +51,12 @@ class RelationshipGrpcClient(RelationshipApiClient, BaseGrpcClient):
         )
 
     @handle_grpc_error
+    def update_relationship_type(self, request: UpdateRelationshipTypeRequest) -> RelationshipType:
+        return self.stub.UpdateRelationshipType(
+            request, metadata=self.metadata, timeout=self.config.timeout
+        )
+
+    @handle_grpc_error
     def delete_relationship_type(self, request: DeleteRelationshipTypeRequest) -> None:
         return self.stub.DeleteRelationshipType(
             request, metadata=self.metadata, timeout=self.config.timeout
@@ -69,6 +77,12 @@ class RelationshipGrpcClient(RelationshipApiClient, BaseGrpcClient):
     @handle_grpc_error
     def create_relationship(self, request: CreateRelationshipRequest) -> Relationship:
         return self.stub.CreateRelationship(
+            request, metadata=self.metadata, timeout=self.config.timeout
+        )
+
+    @handle_grpc_error
+    def update_relationship(self, request: UpdateRelationshipRequest) -> Relationship:
+        return self.stub.UpdateRelationship(
             request, metadata=self.metadata, timeout=self.config.timeout
         )
 

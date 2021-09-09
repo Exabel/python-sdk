@@ -13,6 +13,7 @@ from exabel_data_sdk.stubs.exabel.api.data.v1.all_pb2 import (
     ListEntityTypesResponse,
     SearchEntitiesRequest,
     SearchEntitiesResponse,
+    UpdateEntityRequest,
 )
 
 
@@ -37,6 +38,9 @@ class EntityHttpClient(EntityApiClient, BaseHttpClient):
 
     def create_entity(self, request: CreateEntityRequest) -> Entity:
         return self._request("POST", f"{request.parent}/entities", Entity(), body=request.entity)
+
+    def update_entity(self, request: UpdateEntityRequest) -> Entity:
+        return self._request("PATCH", f"{request.entity.name}", Entity(), body=request.entity)
 
     def delete_entity(self, request: DeleteEntityRequest) -> None:
         return self._request("DELETE", f"{request.name}", None)

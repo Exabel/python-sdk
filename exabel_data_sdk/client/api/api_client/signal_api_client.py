@@ -7,6 +7,7 @@ from exabel_data_sdk.stubs.exabel.api.data.v1.all_pb2 import (
     ListSignalsRequest,
     ListSignalsResponse,
     Signal,
+    UpdateSignalRequest,
 )
 
 
@@ -26,6 +27,10 @@ class SignalApiClient(ABC):
     @abstractmethod
     def create_signal(self, request: CreateSignalRequest) -> Signal:
         """Create a signal."""
+
+    @abstractmethod
+    def update_signal(self, request: UpdateSignalRequest) -> Signal:
+        """Update a signal."""
 
     @abstractmethod
     def delete_signal(self, request: DeleteSignalRequest) -> None:

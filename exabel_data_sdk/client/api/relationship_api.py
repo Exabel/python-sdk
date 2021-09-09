@@ -1,5 +1,7 @@
 from typing import Optional
 
+from google.protobuf.field_mask_pb2 import FieldMask
+
 from exabel_data_sdk.client.api.api_client.grpc.relationship_grpc_client import (
     RelationshipGrpcClient,
 )
@@ -20,6 +22,8 @@ from exabel_data_sdk.stubs.exabel.api.data.v1.all_pb2 import (
     GetRelationshipTypeRequest,
     ListRelationshipsRequest,
     ListRelationshipTypesRequest,
+    UpdateRelationshipRequest,
+    UpdateRelationshipTypeRequest,
 )
 
 
@@ -78,6 +82,24 @@ class RelationshipApi:
         """
         response = self.client.create_relationship_type(
             CreateRelationshipTypeRequest(relationship_type=relationship_type.to_proto())
+        )
+        return RelationshipType.from_proto(response)
+
+    def update_relationship_type(
+        self, relationship_type: RelationshipType, update_mask: FieldMask = None
+    ) -> RelationshipType:
+        """
+        Update a relationship type.
+
+        Args:
+            relationship_type: The relationship type to update.
+            update_mask:       The fields to update. If not specified, the update behaves as a
+                               full update, overwriting all existing fields and properties.
+        """
+        response = self.client.update_relationship_type(
+            UpdateRelationshipTypeRequest(
+                relationship_type=relationship_type.to_proto(), update_mask=update_mask
+            )
         )
         return RelationshipType.from_proto(response)
 
@@ -197,6 +219,22 @@ class RelationshipApi:
         """
         response = self.client.create_relationship(
             CreateRelationshipRequest(relationship=relationship.to_proto())
+        )
+        return Relationship.from_proto(response)
+
+    def update_relationship(
+        self, relationship: Relationship, update_mask: FieldMask = None
+    ) -> Relationship:
+        """
+        Update a relationship between two entities.
+
+        Args:
+            relationship:  The relationship to update.
+            update_mask:   The fields to update. If not specified, the update behaves as a
+                           full update, overwriting all existing fields and properties.
+        """
+        response = self.client.update_relationship(
+            UpdateRelationshipRequest(relationship=relationship.to_proto(), update_mask=update_mask)
         )
         return Relationship.from_proto(response)
 

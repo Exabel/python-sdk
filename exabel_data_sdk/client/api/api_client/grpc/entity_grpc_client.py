@@ -15,6 +15,7 @@ from exabel_data_sdk.stubs.exabel.api.data.v1.all_pb2 import (
     ListEntityTypesResponse,
     SearchEntitiesRequest,
     SearchEntitiesResponse,
+    UpdateEntityRequest,
 )
 from exabel_data_sdk.stubs.exabel.api.data.v1.all_pb2_grpc import EntityServiceStub
 
@@ -49,6 +50,10 @@ class EntityGrpcClient(EntityApiClient, BaseGrpcClient):
     @handle_grpc_error
     def create_entity(self, request: CreateEntityRequest) -> Entity:
         return self.stub.CreateEntity(request, metadata=self.metadata, timeout=self.config.timeout)
+
+    @handle_grpc_error
+    def update_entity(self, request: UpdateEntityRequest) -> Entity:
+        return self.stub.UpdateEntity(request, metadata=self.metadata, timeout=self.config.timeout)
 
     @handle_grpc_error
     def delete_entity(self, request: DeleteEntityRequest) -> None:

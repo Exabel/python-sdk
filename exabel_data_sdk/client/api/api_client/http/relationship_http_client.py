@@ -14,6 +14,8 @@ from exabel_data_sdk.stubs.exabel.api.data.v1.all_pb2 import (
     ListRelationshipTypesResponse,
     Relationship,
     RelationshipType,
+    UpdateRelationshipRequest,
+    UpdateRelationshipTypeRequest,
 )
 
 
@@ -33,6 +35,11 @@ class RelationshipHttpClient(RelationshipApiClient, BaseHttpClient):
     def create_relationship_type(self, request: CreateRelationshipTypeRequest) -> RelationshipType:
         return self._request(
             "POST", "relationshipTypes", RelationshipType(), body=request.relationship_type
+        )
+
+    def update_relationship_type(self, request: UpdateRelationshipTypeRequest) -> RelationshipType:
+        return self._request(
+            "PATCH", "relationshipTypes", RelationshipType(), body=request.relationship_type
         )
 
     def delete_relationship_type(self, request: DeleteRelationshipTypeRequest) -> None:
@@ -57,6 +64,14 @@ class RelationshipHttpClient(RelationshipApiClient, BaseHttpClient):
     def create_relationship(self, request: CreateRelationshipRequest) -> Relationship:
         return self._request(
             "POST",
+            f"{request.relationship.parent}/relationships",
+            Relationship(),
+            body=request.relationship,
+        )
+
+    def update_relationship(self, request: UpdateRelationshipRequest) -> Relationship:
+        return self._request(
+            "PATCH",
             f"{request.relationship.parent}/relationships",
             Relationship(),
             body=request.relationship,
