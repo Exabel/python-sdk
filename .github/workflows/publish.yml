@@ -2,7 +2,7 @@ name: Build, test and publish Python Package
 
 on:
   release:
-    types: [created, edited, published]
+    types: [published]
 
 env:
   runner-os: ubuntu-latest
