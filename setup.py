@@ -14,7 +14,13 @@ setuptools.setup(
     long_description_content_type="text/markdown",
     url="https://github.com/Exabel/python-sdk",
     packages=setuptools.find_packages(),
-    install_requires=["grpcio", "pandas", "protobuf", "requests"],
+    install_requires=[
+        'dataclasses == 0.8; python_version <= "3.6"',
+        "grpcio",
+        "pandas",
+        "protobuf",
+        "requests",
+    ],
     python_requires=">=3.6",
     classifiers=[
         "Development Status :: 4 - Beta",
