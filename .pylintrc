@@ -18,3 +18,9 @@ disable=duplicate-code,
 [BASIC]
 
 no-docstring-rgx=^_|^test_|^Test
+
+[FORMAT]
+
+argument-rgx=[a-z][a-z0-9_]*$
+attr-rgx=_{0,2}[A-Za-z_][A-Za-z0-9_]*$
+variable-rgx=[A-Za-z_][A-Za-z0-9_]*$
