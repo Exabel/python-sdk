@@ -3,9 +3,12 @@ import setuptools
 with open("README.md", "r", encoding="utf-8") as fh:
     long_description = fh.read()
 
+with open("VERSION", "r", encoding="utf-8") as fh:
+    version = fh.read()
+
 setuptools.setup(
     name="exabel-data-sdk",
-    version="0.0.21",
+    version=version,
     author="Exabel",
     author_email="support@exabel.com",
     description="Python SDK for the Exabel Data API",
