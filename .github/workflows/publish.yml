@@ -4,12 +4,9 @@ on:
   release:
     types: [published]
 
-env:
-  runner-os: ubuntu-latest
-
 jobs:
   build-package:
-    runs-on: ${{ env.runner-os }}
+    runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v2
@@ -38,7 +35,7 @@ jobs:
 
   test-package:
     needs: build-package
-    runs-on: ${{ env.runner-os }}
+    runs-on: ubuntu-latest
     strategy:
       matrix:
         python-version: ["3.6", "3.7", "3.8", "3.9"]
@@ -70,7 +67,7 @@ jobs:
 
   publish-package-to-pypi:
     needs: test-package
-    runs-on: ${{ env.runner-os }}
+    runs-on: ubuntu-latest
 
     steps:
     - name: Recover cache
