@@ -1,0 +1,86 @@
+name: Build, test and publish Python Package
+
+on:
+  release:
+    types: [published]
+
+env:
+  runner-os: ubuntu-latest
+
+jobs:
+  build-package:
+    runs-on: ${{ env.runner-os }}
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Check git tag against package version and get python version
+      run: |
+        ./check_package_version.sh
+        echo "::set-output name=VERSION::$(<.python-version)"
+      id: python-version
+
+    - uses: actions/setup-python@v2
+      with:
+        python-version: ${{ steps.python-version.outputs.VERSION }}
+
+    - name: Install dependencies and build package
+      run: |
+        pip install pipenv wheel
+        pipenv sync --system
+        ./build.sh
+
+    - name: Cache build
+      uses: actions/cache@v2
+      with:
+        path: ./dist
+        key: build-cache
+
+  test-package:
+    needs: build-package
+    runs-on: ${{ env.runner-os }}
+    strategy:
+      matrix:
+        python-version: ["3.6", "3.7", "3.8", "3.9"]
+      fail-fast: true
+
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.python-version }}
+
+    - name: Recover cache
+      uses: actions/cache@v2
+      with:
+        path: ./dist
+        key: build-cache
+
+    - name: Install SDK from cache
+      run: |
+        PACKAGE=$(ls ./dist/ | grep -P .+\.whl$)
+        pip install ./dist/$PACKAGE
+
+    - name: Run unit tests
+      run: |
+        mkdir -p tests/exabel_data_sdk
+        cp -r ./exabel_data_sdk/tests ./tests/exabel_data_sdk/
+        cd ./tests/
+        python -m unittest discover -s ./exabel_data_sdk/tests
+
+  publish-package-to-pypi:
+    needs: test-package
+    runs-on: ${{ env.runner-os }}
+
+    steps:
+    - name: Recover cache
+      uses: actions/cache@v2
+      with:
+        path: ./dist
+        key: build-cache
+
+    - name: Publish package to PyPI
+      uses: pypa/gh-action-pypi-publish@release/v1
+      with:
+        user: __token__
+        password: ${{ secrets.PYPI_API_TOKEN }}
