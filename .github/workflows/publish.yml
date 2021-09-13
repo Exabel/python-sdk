@@ -60,7 +60,7 @@ jobs:
       run: |
         PACKAGE=$(ls ./dist/ | grep -P .+\.whl$)
         pip install ./dist/$PACKAGE
-    
+
     - name: Run unit tests
       run: |
         mkdir -p tests/exabel_data_sdk
