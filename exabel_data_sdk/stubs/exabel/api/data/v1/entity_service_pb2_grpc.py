@@ -78,7 +78,8 @@ class EntityServiceServicer(object):
         raise NotImplementedError('Method not implemented!')
 
     def ListEntities(self, request, context):
-        """Lists all entities of a given entity type.
+        """Lists all entities of a given entity type. Some entity types are too large
+        and cannot be listed. SearchEntities can be used for those instead.
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')

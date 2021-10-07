@@ -21,7 +21,7 @@ class Signal:
         self,
         name: str,
         display_name: str,
-        description: str,
+        description: str = "",
         read_only: bool = False,
     ):
         r"""

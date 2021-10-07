@@ -1,4 +1,4 @@
-from typing import Optional, Sequence
+from typing import Callable, Optional, Sequence
 
 import pandas as pd
 from dateutil import tz
@@ -9,6 +9,11 @@ from exabel_data_sdk.client.api.api_client.grpc.time_series_grpc_client import T
 from exabel_data_sdk.client.api.api_client.http.time_series_http_client import TimeSeriesHttpClient
 from exabel_data_sdk.client.api.data_classes.paging_result import PagingResult
 from exabel_data_sdk.client.api.data_classes.request_error import ErrorType, RequestError
+from exabel_data_sdk.client.api.resource_creation_result import (
+    ResourceCreationResult,
+    ResourceCreationResults,
+    ResourceCreationStatus,
+)
 from exabel_data_sdk.client.client_config import ClientConfig
 from exabel_data_sdk.stubs.exabel.api.data.v1.all_pb2 import (
     BatchDeleteTimeSeriesPointsRequest,
@@ -139,7 +144,7 @@ class TimeSeriesApi:
             ),
         )
 
-    def upsert_time_series(self, name: str, series: pd.Series, create_tag: bool = False) -> None:
+    def upsert_time_series(self, name: str, series: pd.Series, create_tag: bool = False) -> bool:
         """
         Create or update a time series.
 
@@ -156,11 +161,14 @@ class TimeSeriesApi:
                         for. If a tag already exists, it will be updated when time series are
                         created (or deleted) regardless of the value of this flag.
 
+        Returns:
+            True if the time series already existed, or False if it is created
         """
         if self.time_series_exists(name):
             self.append_time_series_data(name, series)
-        else:
-            self.create_time_series(name, series, create_tag)
+            return True
+        self.create_time_series(name, series, create_tag)
+        return False
 
     def clear_time_series_data(self, name: str, start: pd.Timestamp, end: pd.Timestamp) -> None:
         """
@@ -223,6 +231,40 @@ class TimeSeriesApi:
                     "entityTypes/ns.type1/entities/ns.entity1/signals/ns.signal1".
         """
         return self.get_time_series(name) is not None
+
+    def bulk_upsert_time_series(
+        self,
+        series: Sequence[pd.Series],
+        create_tag: bool = False,
+        status_callback: Callable[[ResourceCreationResults, int], None] = None,
+    ) -> ResourceCreationResults[pd.Series]:
+        """
+        Calls upsert_time_series for each of the provided time series,
+        while catching errors and tracking progress.
+
+        The name attribute of each time series is taken to be the resource name.
+        See the docstring of upsert_time_series regarding required format for this resource name.
+
+        Args:
+            series:     the time series to be inserted
+            create_tag: Set to true to create a tag for every entity type a signal has time series
+                        for. If a tag already exists, it will be updated when time series are
+                        created (or deleted) regardless of the value of this flag.
+            status_callback: Called after every 10th time series is processed, to track progress.
+        """
+        results: ResourceCreationResults[pd.Series] = ResourceCreationResults()
+        for ts in series:
+            try:
+                existed = self.upsert_time_series(str(ts.name), ts, create_tag=create_tag)
+                status = (
+                    ResourceCreationStatus.EXISTS if existed else ResourceCreationStatus.CREATED
+                )
+                results.add(ResourceCreationResult(status, ts))
+            except RequestError as error:
+                results.add(ResourceCreationResult(ResourceCreationStatus.FAILED, ts, error))
+            if status_callback and (results.count() % 10 == 0 or results.count() == len(series)):
+                status_callback(results, len(series))
+        return results
 
     @staticmethod
     def _series_to_time_series_points(series: pd.Series) -> Sequence[TimeSeriesPoint]:

@@ -39,7 +39,6 @@ def create_time_series() -> None:
         RelationshipType(
             name=f"relationshipTypes/{customer_namespace}.BRAND_OWNED_BY",
             description="The owner of a brand, usually a company",
-            properties={},
         )
     )
     print(f"Created relationship type: {relationship_type}")
@@ -53,7 +52,6 @@ def create_time_series() -> None:
             relationship_type=relationship_type.name,
             from_entity=brand_entity.name,
             to_entity=company_entity.name,
-            properties={},
         )
     )
     print(f"Created relationship: {relationship}")

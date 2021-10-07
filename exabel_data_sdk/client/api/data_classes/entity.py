@@ -26,8 +26,8 @@ class Entity:
         self,
         name: str,
         display_name: str,
-        description: str,
-        properties: Mapping[str, Union[str, bool, int, float]],
+        description: str = "",
+        properties: Mapping[str, Union[str, bool, int, float]] = None,
         read_only: bool = False,
     ):
         r"""
@@ -49,7 +49,7 @@ class Entity:
         self.name = name
         self.display_name = display_name
         self.description = description
-        self.properties = properties
+        self.properties = {} if properties is None else properties
         self.read_only = read_only
 
     @staticmethod

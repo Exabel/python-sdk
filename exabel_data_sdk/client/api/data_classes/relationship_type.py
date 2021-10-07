@@ -24,8 +24,8 @@ class RelationshipType:
     def __init__(
         self,
         name: str,
-        description: str,
-        properties: Mapping[str, Union[str, bool, int, float]],
+        description: str = "",
+        properties: Mapping[str, Union[str, bool, int, float]] = None,
         read_only: bool = False,
     ):
         """
@@ -43,7 +43,7 @@ class RelationshipType:
         """
         self.name = name
         self.description = description
-        self.properties = properties
+        self.properties = {} if properties is None else properties
         self.read_only = read_only
 
     @staticmethod
