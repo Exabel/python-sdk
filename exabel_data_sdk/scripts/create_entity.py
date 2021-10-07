@@ -46,7 +46,6 @@ class CreateEntity(BaseScript):
             name=args.name,
             display_name=args.display_name,
             description=args.description,
-            properties={},
         )
         entity = client.entity_api.create_entity(entity=entity, entity_type=entity_type)
         print(entity)

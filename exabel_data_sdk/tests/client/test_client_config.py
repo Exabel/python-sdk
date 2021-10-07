@@ -10,7 +10,7 @@ class TestExabelClient(unittest.TestCase):
         self.assertEqual("Exabel Python SDK", config.client_name)
         self.assertEqual("data.api.exabel.com", config.host)
         self.assertEqual(21443, config.port)
-        self.assertEqual(30, config.timeout)
+        self.assertEqual(60, config.timeout)
 
     def test_non_default_values(self):
         config = ClientConfig(
