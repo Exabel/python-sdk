@@ -12,7 +12,7 @@ class DefaultConfig:
         self.client_name = os.getenv("EXABEL_CLIENT_NAME", "Exabel Python SDK")
         self.host = os.getenv("EXABEL_HOST", "data.api.exabel.com")
         self.port = int(os.getenv("EXABEL_PORT", "21443"))
-        self.timeout = int(os.getenv("EXABEL_TIMEOUT", "30"))
+        self.timeout = int(os.getenv("EXABEL_TIMEOUT", "60"))
         self.root_certificates: Optional[str] = None
 
 

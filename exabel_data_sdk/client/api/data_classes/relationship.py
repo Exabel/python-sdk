@@ -29,8 +29,8 @@ class Relationship:
         relationship_type: str,
         from_entity: str,
         to_entity: str,
-        description: str,
-        properties: Mapping[str, Union[str, bool, int, float]],
+        description: str = "",
+        properties: Mapping[str, Union[str, bool, int, float]] = None,
         read_only: bool = False,
     ):
         """
@@ -54,7 +54,7 @@ class Relationship:
         self.from_entity = from_entity
         self.to_entity = to_entity
         self.description = description
-        self.properties = properties
+        self.properties = {} if properties is None else properties
         self.read_only = read_only
 
     @staticmethod

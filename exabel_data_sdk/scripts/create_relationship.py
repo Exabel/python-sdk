@@ -47,7 +47,6 @@ class CreateRelationship(BaseScript):
                 from_entity=args.from_entity,
                 to_entity=args.to_entity,
                 description=args.description,
-                properties={},
             )
         )
         print("Successfully created relationship:")

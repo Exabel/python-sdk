@@ -30,7 +30,7 @@ class CreateRelationshipType(BaseScript):
 
     def run_script(self, client: ExabelClient, args: argparse.Namespace) -> None:
         relationship_type = client.relationship_api.create_relationship_type(
-            RelationshipType(name=args.name, description=args.description, properties={})
+            RelationshipType(name=args.name, description=args.description)
         )
         print("Successfully created relationship type:")
         print(relationship_type)
