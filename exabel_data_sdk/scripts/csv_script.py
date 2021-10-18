@@ -1,6 +1,6 @@
 import argparse
 import os
-from typing import Sequence
+from typing import Collection, Mapping, Optional, Sequence, Union
 
 import pandas as pd
 
@@ -46,7 +46,21 @@ class CsvScript(BaseScript):
             default=namespace,
             help=help_text,
         )
+        self.parser.add_argument(
+            "--threads",
+            required=False,
+            type=int,
+            choices=range(1, 101),
+            metavar="[1-100]",
+            default=40,
+            help="The number of parallel upload threads to run. Defaults to 40.",
+        )
 
-    def read_csv(self, args: argparse.Namespace) -> pd.DataFrame:
+    def read_csv(
+        self, args: argparse.Namespace, string_columns: Collection[Union[str, int]] = None
+    ) -> pd.DataFrame:
         """Read the CSV file from disk with the filename specified by command line argument."""
-        return pd.read_csv(args.filename, header=0, sep=args.sep)
+        dtype: Optional[Mapping[Union[str, int], type]] = None
+        if string_columns:
+            dtype = {column: str for column in string_columns}
+        return pd.read_csv(args.filename, header=0, sep=args.sep, dtype=dtype)

@@ -1,4 +1,4 @@
-from typing import Callable, Optional, Sequence
+from typing import Optional, Sequence
 
 import pandas as pd
 from dateutil import tz
@@ -7,10 +7,10 @@ from google.protobuf.wrappers_pb2 import DoubleValue
 
 from exabel_data_sdk.client.api.api_client.grpc.time_series_grpc_client import TimeSeriesGrpcClient
 from exabel_data_sdk.client.api.api_client.http.time_series_http_client import TimeSeriesHttpClient
+from exabel_data_sdk.client.api.bulk_insert import bulk_insert
 from exabel_data_sdk.client.api.data_classes.paging_result import PagingResult
 from exabel_data_sdk.client.api.data_classes.request_error import ErrorType, RequestError
 from exabel_data_sdk.client.api.resource_creation_result import (
-    ResourceCreationResult,
     ResourceCreationResults,
     ResourceCreationStatus,
 )
@@ -164,11 +164,16 @@ class TimeSeriesApi:
         Returns:
             True if the time series already existed, or False if it is created
         """
-        if self.time_series_exists(name):
+        try:
+            # Optimistically assume that the time series exists, and append to it.
+            # If it doesn't exist, we catch the error below and create the time series instead.
             self.append_time_series_data(name, series)
             return True
-        self.create_time_series(name, series, create_tag)
-        return False
+        except RequestError as error:
+            if error.error_type == ErrorType.NOT_FOUND:
+                self.create_time_series(name, series, create_tag)
+                return False
+            raise
 
     def clear_time_series_data(self, name: str, start: pd.Timestamp, end: pd.Timestamp) -> None:
         """
@@ -184,9 +189,28 @@ class TimeSeriesApi:
             BatchDeleteTimeSeriesPointsRequest(name=name, time_ranges=[time_range]),
         )
 
-    def append_time_series_data(self, name: str, series: pd.Series) -> pd.Series:
+    def append_time_series_data(self, name: str, series: pd.Series) -> None:
         """
         Append data to the given time series.
+
+        If the given series contains data points that already exist, these data points will be
+        overwritten.
+
+        Args:
+            name:   The resource name of the time series.
+            series: Series with data to append.
+        """
+        self.client.update_time_series(
+            UpdateTimeSeriesRequest(
+                time_series=ProtoTimeSeries(
+                    name=name, points=self._series_to_time_series_points(series)
+                ),
+            ),
+        )
+
+    def append_time_series_data_and_return(self, name: str, series: pd.Series) -> pd.Series:
+        """
+        Append data to the given time series, and return the full series.
 
         If the given series contains data points that already exist, these data points will be
         overwritten.
@@ -198,14 +222,12 @@ class TimeSeriesApi:
         Returns:
             A series with all data for the given time series.
         """
-        proto_time_series = ProtoTimeSeries(
-            name=name, points=self._series_to_time_series_points(series)
-        )
-
         # Set empty TimeRange() in request to get back entire time series.
         time_series = self.client.update_time_series(
             UpdateTimeSeriesRequest(
-                time_series=proto_time_series,
+                time_series=ProtoTimeSeries(
+                    name=name, points=self._series_to_time_series_points(series)
+                ),
                 view=TimeSeriesView(time_range=TimeRange()),
             ),
         )
@@ -236,7 +258,7 @@ class TimeSeriesApi:
         self,
         series: Sequence[pd.Series],
         create_tag: bool = False,
-        status_callback: Callable[[ResourceCreationResults, int], None] = None,
+        threads: int = 40,
     ) -> ResourceCreationResults[pd.Series]:
         """
         Calls upsert_time_series for each of the provided time series,
@@ -246,25 +268,18 @@ class TimeSeriesApi:
         See the docstring of upsert_time_series regarding required format for this resource name.
 
         Args:
-            series:     the time series to be inserted
-            create_tag: Set to true to create a tag for every entity type a signal has time series
-                        for. If a tag already exists, it will be updated when time series are
-                        created (or deleted) regardless of the value of this flag.
-            status_callback: Called after every 10th time series is processed, to track progress.
+            series:          The time series to be inserted
+            create_tag:      Set to true to create a tag for every entity type a signal has time
+                             series for. If a tag already exists, it will be updated when time
+                             series are created (or deleted) regardless of the value of this flag.
+            threads:         The number of parallel upload threads to use.
         """
-        results: ResourceCreationResults[pd.Series] = ResourceCreationResults()
-        for ts in series:
-            try:
-                existed = self.upsert_time_series(str(ts.name), ts, create_tag=create_tag)
-                status = (
-                    ResourceCreationStatus.EXISTS if existed else ResourceCreationStatus.CREATED
-                )
-                results.add(ResourceCreationResult(status, ts))
-            except RequestError as error:
-                results.add(ResourceCreationResult(ResourceCreationStatus.FAILED, ts, error))
-            if status_callback and (results.count() % 10 == 0 or results.count() == len(series)):
-                status_callback(results, len(series))
-        return results
+
+        def insert(ts: pd.Series) -> ResourceCreationStatus:
+            existed = self.upsert_time_series(str(ts.name), ts, create_tag=create_tag)
+            return ResourceCreationStatus.EXISTS if existed else ResourceCreationStatus.CREATED
+
+        return bulk_insert(series, insert, threads=threads)
 
     @staticmethod
     def _series_to_time_series_points(series: pd.Series) -> Sequence[TimeSeriesPoint]:

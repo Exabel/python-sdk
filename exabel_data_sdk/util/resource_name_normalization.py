@@ -1,4 +1,6 @@
 import re
+import sys
+from typing import Mapping
 
 import pandas as pd
 
@@ -28,6 +30,31 @@ def normalize_resource_name(name: str) -> str:
     return name
 
 
+def _assert_no_collision(mapping: Mapping[str, str]) -> None:
+    """
+    Verify that the normalization of identifiers hasn't introduced any name collisions.
+    If there are collisions, a message is printed informing about the collisions,
+    and the script exits with an error code of 1.
+
+    Args:
+        mapping: a map from external identifier to a normalized resource name
+
+    Raises:
+        SystemExit if there are two identifiers that map to the same resource name
+    """
+    series = pd.Series(mapping)
+    duplicates = series[series.duplicated(keep=False)]
+    if duplicates.empty:
+        # No duplicates, all good
+        return
+    print("The normalization of identifiers have introduced resource name collisions.")
+    print("The collisions are shown below.")
+    print("Please fix these duplicates, and then re-run the script.")
+    pd.set_option("max_colwidth", 1000)
+    print(duplicates.sort_values().to_string())
+    sys.exit(1)
+
+
 def to_entity_resource_names(
     entity_api: EntityApi, identifiers: pd.Series, namespace: str = None
 ) -> pd.Series:
@@ -37,24 +64,35 @@ def to_entity_resource_names(
     The name of the given series is used to determine what kind of identifier it is.
     These are the legal series names, and how each case is handled:
 
-     - entity (or entity_from or entity_to):
+     - entity (or entity_from or entity_to)
         The given identifiers are the entity resource names.
         The identifiers are returned unaltered.
 
-     - isin:
+     - isin
         The given identifiers are ISIN numbers.
         The ISIN numbers are looked up with the Exabel API, and the Exabel resource identifiers
         for the associated companies are returned.
 
-     - factset_identifier:
+     - factset_identifier
         The given identifiers are FactSet IDs.
         The identifiers are looked up with the Exabel API, and the Exabel resource identifiers
         are returned.
 
-     - bloomberg_ticker:
+     - bloomberg_ticker
         The given identifiers are Bloomberg tickers.
         The tickers are looked up with the Exabel API, and the Exabel resource identifiers
         are returned.
+
+     - mic:ticker
+        The given identifiers are the combination of MIC and stock ticker, separated by a colon.
+        MIC is the Market Identifier Code of the stock exchange where the stock is traded under
+        the given ticker.
+        The MIC/ticker combinations are looked up with the Exabel API, and the Exabel resource
+        identifiers are returned.
+        Examples:
+            XNAS:AAPL refers to Apple, Inc. on NASDAQ
+            XNYS:GE refers to General Electric Co. on the New York Stock Exchange
+            XOSL:TEL refers to Telenor ASA on the Oslo Stock Exchange
 
      - any known entity type, e.g. "brand" or "product_type":
         The given identifiers are customer provided names.
@@ -75,7 +113,7 @@ def to_entity_resource_names(
 
     unique_ids = identifiers.unique()
 
-    if name in ("isin", "factset_identifier", "bloomberg_ticker"):
+    if name in ("isin", "factset_identifier", "bloomberg_ticker", "mic:ticker"):
         # A company identifier
         print(f"Looking up {len(unique_ids)} {name}s...")
         mapping = {}
@@ -83,7 +121,14 @@ def to_entity_resource_names(
             if not identifier:
                 # Skip empty identifiers
                 continue
-            search_terms = {name: identifier}
+            if name == "mic:ticker":
+                parts = identifier.split(":")
+                if len(parts) != 2:
+                    print("mic:ticker must contain exactly one colon (:), but got:", identifier)
+                    continue
+                search_terms = {"mic": parts[0], "ticker": parts[1]}
+            else:
+                search_terms = {name: identifier}
             entities = entity_api.search_for_entities(
                 entity_type="entityTypes/company", **search_terms
             )
@@ -118,6 +163,7 @@ def to_entity_resource_names(
             for identifier in unique_ids
             if identifier
         }
+        _assert_no_collision(mapping)
 
     result = identifiers.map(mapping)
     result.name = "entity"

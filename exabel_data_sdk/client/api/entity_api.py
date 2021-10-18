@@ -1,15 +1,15 @@
-from typing import Callable, Optional, Sequence
+from typing import Optional, Sequence
 
 from google.protobuf.field_mask_pb2 import FieldMask
 
 from exabel_data_sdk.client.api.api_client.grpc.entity_grpc_client import EntityGrpcClient
 from exabel_data_sdk.client.api.api_client.http.entity_http_client import EntityHttpClient
+from exabel_data_sdk.client.api.bulk_insert import bulk_insert
 from exabel_data_sdk.client.api.data_classes.entity import Entity
 from exabel_data_sdk.client.api.data_classes.entity_type import EntityType
 from exabel_data_sdk.client.api.data_classes.paging_result import PagingResult
 from exabel_data_sdk.client.api.data_classes.request_error import ErrorType, RequestError
 from exabel_data_sdk.client.api.resource_creation_result import (
-    ResourceCreationResult,
     ResourceCreationResults,
     ResourceCreationStatus,
 )
@@ -188,29 +188,19 @@ class EntityApi:
         self,
         entities: Sequence[Entity],
         entity_type: str,
-        status_callback: Callable[[ResourceCreationResults, int], None] = None,
+        threads: int = 40,
     ) -> ResourceCreationResults[Entity]:
         """
         Check if the provided entities exist, and create them if they don't.
         All entities must be of the given entity_type.
         If an entity with the given name already exists, it is not updated.
-
-        Optionally, a callback can be provided to track the progress.
-        The callback is called after every 10th entity is processed.
         """
-        results: ResourceCreationResults[Entity] = ResourceCreationResults()
-        for entity in entities:
-            try:
-                existing_entity = self.get_entity(entity.name)
-                if existing_entity is None:
-                    new_entity = self.create_entity(entity=entity, entity_type=entity_type)
-                    results.add(ResourceCreationResult(ResourceCreationStatus.CREATED, new_entity))
-                else:
-                    results.add(
-                        ResourceCreationResult(ResourceCreationStatus.EXISTS, existing_entity)
-                    )
-            except RequestError as error:
-                results.add(ResourceCreationResult(ResourceCreationStatus.FAILED, entity, error))
-            if status_callback and (results.count() % 10 == 0 or results.count() == len(entities)):
-                status_callback(results, len(entities))
-        return results
+
+        def insert(entity: Entity) -> ResourceCreationStatus:
+            # Optimistically insert the entity.
+            # If the entity already exists, we'll get an ALREADY_EXISTS error from the backend,
+            # which is handled appropriately by the bulk_insert function.
+            self.create_entity(entity=entity, entity_type=entity_type)
+            return ResourceCreationStatus.CREATED
+
+        return bulk_insert(entities, insert, threads=threads)

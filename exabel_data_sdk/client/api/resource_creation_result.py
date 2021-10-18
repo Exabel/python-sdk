@@ -48,14 +48,29 @@ class ResourceCreationResults(Generic[TResource]):
     Class for returning resource creation results.
     """
 
-    def __init__(self) -> None:
+    def __init__(
+        self, total_count: int, print_status: bool = True, abort_threshold: float = 0.5
+    ) -> None:
+        """
+        Args:
+            total_count:     The total number of resources expected to be loaded.
+            print_status:    Whether to print status of the upload during processing.
+            abort_threshold: If the fraction of failed requests exceeds this threshold,
+                             the upload is aborted, and the script exits.
+                             Note that this only happens if print_status is set to True.
+        """
         self.results: List[ResourceCreationResult[TResource]] = []
         self.counter: Counter = Counter()
+        self.total_count = total_count
+        self.do_print_status = print_status
+        self.abort_threshold = abort_threshold
 
     def add(self, result: ResourceCreationResult[TResource]) -> None:
         """Add the result for a resource."""
         self.results.append(result)
         self.counter.update([result.status])
+        if self.do_print_status and (self.count() % 20 == 0 or self.count() == self.total_count):
+            self.print_status()
 
     def count(self, status: ResourceCreationStatus = None) -> int:
         """
@@ -64,37 +79,62 @@ class ResourceCreationResults(Generic[TResource]):
         """
         return len(self.results) if status is None else self.counter[status]
 
+    def extract_retryable_failures(self) -> List[ResourceCreationResult[TResource]]:
+        """
+        Remove all retryable failures from this result set,
+        and return them.
+        """
+        failed = []
+        rest = []
+        for result in self.results:
+            if (
+                result.status == ResourceCreationStatus.FAILED
+                and result.error
+                and result.error.error_type.retryable()
+            ):
+                failed.append(result)
+            else:
+                rest.append(result)
+        self.counter.subtract([result.status for result in failed])
+        self.results = rest
+        return failed
+
     def print_summary(self) -> None:
         """Prints a human legible summary of the resource creation results to screen."""
         print(self.counter[ResourceCreationStatus.CREATED], "new resources created")
-        print(self.counter[ResourceCreationStatus.EXISTS], "resources already existed")
+        if self.counter[ResourceCreationStatus.EXISTS]:
+            print(self.counter[ResourceCreationStatus.EXISTS], "resources already existed")
         if self.counter[ResourceCreationStatus.FAILED]:
             print(self.counter[ResourceCreationStatus.FAILED], "resources failed:")
             for result in self.results:
                 if result.status == ResourceCreationStatus.FAILED:
                     print("   ", result.resource, ":\n      ", result.error)
 
+    def print_status(self) -> None:
+        """
+        Prints a status update on the progress of the data loading, showing the percentage complete
+        and how many objects were created, already existed or failed.
 
-def status_callback(results: ResourceCreationResults, total_count: int) -> None:
-    """
-    Prints a status update on the progress of the data loading, showing the percentage complete
-    and how many objects were created, already existed or failed.
-
-    Note that the previous status message is overwritten (by writing '\r'),
-    but this only works if nothing else has been printed to stdout since the last update.
-    """
-    fraction_complete = results.count() / total_count
-    sys.stdout.write(
-        f"\r{fraction_complete:.0%} - "
-        f"{results.count(ResourceCreationStatus.CREATED)} created, "
-        f"{results.count(ResourceCreationStatus.EXISTS)} exists, "
-        f"{results.count(ResourceCreationStatus.FAILED)} failed"
-    )
-    if fraction_complete == 1:
-        sys.stdout.write("\n")
-    fraction_error = results.count(ResourceCreationStatus.FAILED) / results.count()
-    if fraction_error > 0.5:
-        sys.stdout.write("\nAborting - more than half the requests are failing.\n")
-        results.print_summary()
-        sys.exit(-1)
-    sys.stdout.flush()
+        Note that the previous status message is overwritten (by writing '\r'),
+        but this only works if nothing else has been printed to stdout since the last update.
+        """
+        fraction_complete = self.count() / self.total_count
+        sys.stdout.write(
+            f"\r{fraction_complete:.0%} - "
+            f"{self.count(ResourceCreationStatus.CREATED)} created, "
+            f"{self.count(ResourceCreationStatus.EXISTS)} exists, "
+            f"{self.count(ResourceCreationStatus.FAILED)} failed"
+        )
+        if fraction_complete == 1:
+            sys.stdout.write("\n")
+        else:
+            fraction_error = self.count(ResourceCreationStatus.FAILED) / self.count()
+            if fraction_error > self.abort_threshold:
+                sys.stdout.write(
+                    f"\nAborting - more than {self.abort_threshold:.0%} "
+                    "of the requests are failing.\n"
+                )
+                self.print_summary()
+                sys.stdout.flush()
+                sys.exit(1)
+        sys.stdout.flush()

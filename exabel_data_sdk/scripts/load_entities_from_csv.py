@@ -4,7 +4,6 @@ from typing import Sequence
 
 from exabel_data_sdk import ExabelClient
 from exabel_data_sdk.client.api.data_classes.entity import Entity
-from exabel_data_sdk.client.api.resource_creation_result import status_callback
 from exabel_data_sdk.scripts.csv_script import CsvScript
 from exabel_data_sdk.util.resource_name_normalization import normalize_resource_name
 
@@ -64,7 +63,14 @@ class LoadEntitiesFromCsv(CsvScript):
             print("Running dry-run...")
 
         print("Loading entities from", args.filename)
-        entities_df = self.read_csv(args)
+        name_col_ref = args.name_column or 0
+        string_columns = {
+            name_col_ref,
+            args.display_name_column or name_col_ref,
+        }
+        if args.description_column:
+            string_columns.add(args.description_column)
+        entities_df = self.read_csv(args, string_columns=string_columns)
 
         name_col = args.name_column or entities_df.columns[0]
         display_name_col = args.display_name_column or name_col
@@ -93,10 +99,7 @@ class LoadEntitiesFromCsv(CsvScript):
             print(entities)
             return
 
-        results = client.entity_api.bulk_create_entities(
-            entities, entity_type_name, status_callback
-        )
-        results.print_summary()
+        client.entity_api.bulk_create_entities(entities, entity_type_name, threads=args.threads)
 
 
 if __name__ == "__main__":
