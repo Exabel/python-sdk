@@ -7,7 +7,6 @@ from dateutil import tz
 
 from exabel_data_sdk import ExabelClient
 from exabel_data_sdk.client.api.data_classes.signal import Signal
-from exabel_data_sdk.client.api.resource_creation_result import status_callback
 from exabel_data_sdk.scripts.csv_script import CsvScript
 from exabel_data_sdk.util.resource_name_normalization import to_entity_resource_names
 
@@ -61,7 +60,7 @@ class LoadTimeSeriesFromCsv(CsvScript):
         if args.dry_run:
             print("Running dry-run...")
 
-        ts_data = self.read_csv(args)
+        ts_data = self.read_csv(args, string_columns=[0])
 
         ts_data.iloc[:, 0] = to_entity_resource_names(
             client.entity_api, ts_data.iloc[:, 0], namespace=args.namespace
@@ -109,10 +108,9 @@ class LoadTimeSeriesFromCsv(CsvScript):
                 print(f"    {ts.name}")
             return
 
-        results = client.time_series_api.bulk_upsert_time_series(
-            series, create_tag=True, status_callback=status_callback
+        client.time_series_api.bulk_upsert_time_series(
+            series, create_tag=True, threads=args.threads
         )
-        results.print_summary()
 
 
 if __name__ == "__main__":

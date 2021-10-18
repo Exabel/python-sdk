@@ -5,7 +5,6 @@ from typing import Sequence
 from exabel_data_sdk import ExabelClient
 from exabel_data_sdk.client.api.data_classes.relationship import Relationship
 from exabel_data_sdk.client.api.data_classes.relationship_type import RelationshipType
-from exabel_data_sdk.client.api.resource_creation_result import status_callback
 from exabel_data_sdk.scripts.csv_script import CsvScript
 from exabel_data_sdk.util.resource_name_normalization import to_entity_resource_names
 
@@ -76,13 +75,20 @@ class LoadRelationshipsFromCsv(CsvScript):
             f"to {args.entity_to_column} from {args.filename}"
         )
 
-        relationships_df = self.read_csv(args)
+        string_columns = {
+            args.entity_from_column,
+            args.entity_to_column,
+        }
+        if args.description_column:
+            string_columns.add(args.description_column)
+
+        relationships_df = self.read_csv(args, string_columns=string_columns)
 
         entity_from_col = args.entity_from_column
         entity_to_col = args.entity_to_column
         description_col = args.description_column
 
-        relationship_type_name = f"relationshipTypes/{args.relationship_type}"
+        relationship_type_name = f"relationshipTypes/{args.namespace}.{args.relationship_type}"
         relationship_type = client.relationship_api.get_relationship_type(relationship_type_name)
 
         if not relationship_type:
@@ -90,7 +96,8 @@ class LoadRelationshipsFromCsv(CsvScript):
             relationship_type = RelationshipType(name=relationship_type_name)
             client.relationship_api.create_relationship_type(relationship_type)
             print("Available relationship types are:")
-            print(client.relationship_api.list_relationship_types())
+            for rel_type in client.relationship_api.list_relationship_types().results:
+                print("   ", rel_type)
 
         relationships_df[entity_from_col] = to_entity_resource_names(
             client.entity_api, relationships_df[entity_from_col], namespace=args.namespace
@@ -117,8 +124,7 @@ class LoadRelationshipsFromCsv(CsvScript):
             print(relationships)
             return
 
-        results = client.relationship_api.bulk_create_relationships(relationships, status_callback)
-        results.print_summary()
+        client.relationship_api.bulk_create_relationships(relationships, threads=args.threads)
 
 
 if __name__ == "__main__":

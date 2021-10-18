@@ -1,3 +1,4 @@
+import re
 from typing import Mapping, Union
 
 from exabel_data_sdk.client.api.proto_utils import from_struct, to_struct
@@ -89,3 +90,16 @@ class Entity:
             f"description='{self.description}', properties={self.properties}, "
             f"read_only={self.read_only})"
         )
+
+    def __lt__(self, other: object) -> bool:
+        if not isinstance(other, Entity):
+            raise ValueError(f"Cannot compare Entity to non-Entity: {other}")
+        return self.name < other.name
+
+    def get_entity_type(self) -> str:
+        """Extracts the entity type name from the entity's resource name."""
+        p = re.compile(r"(entityTypes/[a-zA-Z0-9_\-.]+)/entities/[a-zA-Z0-9_\-.]+")
+        m = p.match(self.name)
+        if m:
+            return m.group(1)
+        raise ValueError(f"Could not parse entity resource name: {self.name}")

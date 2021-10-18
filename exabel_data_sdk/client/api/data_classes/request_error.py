@@ -1,6 +1,7 @@
-from enum import Enum
+from enum import Enum, unique
 
 
+@unique
 class ErrorType(Enum):
     """
     Error types.
@@ -23,6 +24,10 @@ class ErrorType(Enum):
     TIMEOUT = 6
     # Any internal error.
     INTERNAL = 10
+
+    def retryable(self) -> bool:
+        """Return whether it makes sense to retry the request if this error is given."""
+        return self in (ErrorType.UNAVAILABLE, ErrorType.TIMEOUT, ErrorType.INTERNAL)
 
 
 class RequestError(Exception):

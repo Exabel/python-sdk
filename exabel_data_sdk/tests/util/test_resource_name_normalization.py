@@ -7,6 +7,7 @@ from exabel_data_sdk.client.api.data_classes.entity import Entity
 from exabel_data_sdk.client.api.entity_api import EntityApi
 from exabel_data_sdk.client.client_config import ClientConfig
 from exabel_data_sdk.util.resource_name_normalization import (
+    _assert_no_collision,
     normalize_resource_name,
     to_entity_resource_names,
 )
@@ -65,3 +66,66 @@ class TestResourceNameNormalization(unittest.TestCase):
             "Arguments not as expected",
         )
         pd.testing.assert_series_equal(expected, result)
+
+    def test_micticker_mapping(self):
+        # Note that "NO?COLON" and "TOO:MANY:COLONS" are illegal mic:ticker identifiers,
+        # since any legal identifier must contain exactly one colon.
+        # The to_entity_resource_names function will print a warning for such illegal identifiers,
+        # and they will not result in any searches towards the Exabel API.
+        data = pd.Series(
+            [
+                "XOSL:TEL",
+                "XNAS:AAPL",
+                "NO?COLON",
+                "TOO:MANY:COLONS",
+                "XOSL:ORK",
+                "MANY:HITS",
+                "NO:HITS",
+            ],
+            name="mic:ticker",
+        )
+        expected = pd.Series(
+            [
+                "entityTypes/company/entities/telenor_asa",
+                "entityTypes/company/entities/apple_inc",
+                None,
+                None,
+                "entityTypes/company/entities/orkla_asa",
+                None,
+                None,
+            ],
+            name="entity",
+        )
+        entity_api = mock.create_autospec(EntityApi(ClientConfig(api_key="123"), use_json=True))
+        entity_api.search_for_entities.side_effect = [
+            [Entity("entityTypes/company/entities/telenor_asa", "Telenor ASA")],
+            [Entity("entityTypes/company/entities/apple_inc", "Apple, Inc.")],
+            [Entity("entityTypes/company/entities/orkla_asa", "Orkla ASA")],
+            # Result for "MANY:HITS"
+            [
+                Entity("entityTypes/company/entities/orkla_asa", "Orkla ASA"),
+                Entity("entityTypes/company/entities/telenor_asa", "Telenor ASA"),
+            ],
+            # Result for "NO:HITS"
+            [],
+        ]
+        result = to_entity_resource_names(entity_api, data, namespace="acme")
+        pd.testing.assert_series_equal(expected, result)
+
+        # Check that the expected searches were performed
+        call_args_list = entity_api.search_for_entities.call_args_list
+        expected_searches = ["XOSL:TEL", "XNAS:AAPL", "XOSL:ORK", "MANY:HITS", "NO:HITS"]
+        self.assertEqual(len(expected_searches), len(call_args_list))
+        for i, identifier in enumerate(expected_searches):
+            mic, ticker = identifier.split(":")
+            self.assertEqual(
+                {"entity_type": "entityTypes/company", "mic": mic, "ticker": ticker},
+                call_args_list[i][1],
+                "Arguments not as expected",
+            )
+
+    def test_name_collision(self):
+        bad_mapping = {"Abc!": "Abc_", "Abcd": "Abcd", "Abc?": "Abc_"}
+        self.assertRaises(SystemExit, _assert_no_collision, bad_mapping)
+        good_mapping = {"Abc!": "Abc_1", "Abcd": "Abcd", "Abc?": "Abc_2"}
+        _assert_no_collision(good_mapping)

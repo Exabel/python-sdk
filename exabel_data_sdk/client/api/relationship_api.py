@@ -1,4 +1,4 @@
-from typing import Callable, Optional, Sequence
+from typing import Optional, Sequence
 
 from google.protobuf.field_mask_pb2 import FieldMask
 
@@ -8,12 +8,12 @@ from exabel_data_sdk.client.api.api_client.grpc.relationship_grpc_client import 
 from exabel_data_sdk.client.api.api_client.http.relationship_http_client import (
     RelationshipHttpClient,
 )
+from exabel_data_sdk.client.api.bulk_insert import bulk_insert
 from exabel_data_sdk.client.api.data_classes.paging_result import PagingResult
 from exabel_data_sdk.client.api.data_classes.relationship import Relationship
 from exabel_data_sdk.client.api.data_classes.relationship_type import RelationshipType
 from exabel_data_sdk.client.api.data_classes.request_error import ErrorType, RequestError
 from exabel_data_sdk.client.api.resource_creation_result import (
-    ResourceCreationResult,
     ResourceCreationResults,
     ResourceCreationStatus,
 )
@@ -276,37 +276,18 @@ class RelationshipApi:
     def bulk_create_relationships(
         self,
         relationships: Sequence[Relationship],
-        status_callback: Callable[[ResourceCreationResults, int], None] = None,
+        threads: int = 40,
     ) -> ResourceCreationResults[Relationship]:
         """
         Check if the provided relationships exist, and create them if they don't.
         If the relationship already exists, it is not updated.
-
-        Optionally, a callback can be provided to track the progress.
-        The callback is called after every 10th relationship is processed.
         """
-        total = len(relationships)
-        results: ResourceCreationResults[Relationship] = ResourceCreationResults()
-        for relationship in relationships:
-            try:
-                existing_relationship = self.get_relationship(
-                    relationship_type=relationship.relationship_type,
-                    from_entity=relationship.from_entity,
-                    to_entity=relationship.to_entity,
-                )
-                if existing_relationship is None:
-                    new_relationship = self.create_relationship(relationship=relationship)
-                    results.add(
-                        ResourceCreationResult(ResourceCreationStatus.CREATED, new_relationship)
-                    )
-                else:
-                    results.add(
-                        ResourceCreationResult(ResourceCreationStatus.EXISTS, existing_relationship)
-                    )
-            except RequestError as error:
-                results.add(
-                    ResourceCreationResult(ResourceCreationStatus.FAILED, relationship, error)
-                )
-            if status_callback and (results.count() % 10 == 0 or results.count() == total):
-                status_callback(results, total)
-        return results
+
+        def insert(relationship: Relationship) -> ResourceCreationStatus:
+            # Optimistically insert the relationship.
+            # If the relationship already exists, we'll get an ALREADY_EXISTS error from the
+            # backend, which is handled appropriately by the bulk_insert function.
+            self.create_relationship(relationship=relationship)
+            return ResourceCreationStatus.CREATED
+
+        return bulk_insert(relationships, insert, threads=threads)

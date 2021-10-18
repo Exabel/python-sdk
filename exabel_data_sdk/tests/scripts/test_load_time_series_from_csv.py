@@ -8,6 +8,14 @@ from dateutil import tz
 from exabel_data_sdk import ExabelClient
 from exabel_data_sdk.scripts.load_time_series_from_csv import LoadTimeSeriesFromCsv
 
+common_args = [
+    "script-name",
+    "--sep",
+    ";",
+    "--api-key",
+    "123",
+]
+
 
 class TestUploadTimeSeries(unittest.TestCase):
     def test_one_signal(self):
@@ -80,16 +88,11 @@ class TestUploadTimeSeries(unittest.TestCase):
         )
 
     def test_read_file_use_header_for_signal(self):
-        args = [
-            "script-name",
+        args = common_args + [
             "--filename",
             "./exabel_data_sdk/tests/resources/data/timeseries.csv",
-            "--sep",
-            ";",
             "--namespace",
             "",
-            "--api-key",
-            "123",
         ]
 
         script = LoadTimeSeriesFromCsv(args, "LoadTest1")
@@ -121,16 +124,11 @@ class TestUploadTimeSeries(unittest.TestCase):
         )
 
     def test_read_file_with_multiple_signals(self):
-        args = [
-            "script-name",
+        args = common_args + [
             "--filename",
             "./exabel_data_sdk/tests/resources/data/timeseries_multiple_signals.csv",
-            "--sep",
-            ";",
             "--namespace",
             "acme",
-            "--api-key",
-            "123",
         ]
         script = LoadTimeSeriesFromCsv(args, "LoadTest3")
         client = mock.create_autospec(ExabelClient(host="host", api_key="123"))
@@ -171,6 +169,42 @@ class TestUploadTimeSeries(unittest.TestCase):
                 name="entityTypes/company/entities/company_B/signals/acme.signal2",
             ),
             series[3],
+        )
+
+    def test_read_file_with_integer_identifiers(self):
+        args = common_args + [
+            "--filename",
+            "./exabel_data_sdk/tests/resources/data/timeseries_with_integer_identifiers.csv",
+            "--namespace",
+            "acme",
+        ]
+
+        script = LoadTimeSeriesFromCsv(args, "LoadTest4")
+        client = mock.create_autospec(ExabelClient(host="host", api_key="123"))
+        script.run_script(client, script.parse_arguments())
+
+        call_args_list = client.time_series_api.bulk_upsert_time_series.call_args_list
+        self.assertEqual(1, len(call_args_list))
+        series = call_args_list[0][0][0]
+        self.assertEqual(2, len(series))
+
+        pd.testing.assert_series_equal(
+            pd.Series(
+                range(1, 6),
+                pd.date_range("2021-01-01", periods=5, tz=tz.tzutc()),
+                name="entityTypes/brand/entities/acme.0001/signals/acme.signal1",
+            ),
+            series[0],
+            check_freq=False,
+        )
+        pd.testing.assert_series_equal(
+            pd.Series(
+                [4, 5],
+                pd.DatetimeIndex(["2021-01-01", "2021-01-03"], tz=tz.tzutc()),
+                name="entityTypes/brand/entities/acme.0002/signals/acme.signal1",
+            ),
+            series[1],
+            check_freq=False,
         )
 
 
