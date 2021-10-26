@@ -168,3 +168,19 @@ def to_entity_resource_names(
     result = identifiers.map(mapping)
     result.name = "entity"
     return result
+
+
+def validate_signal_name(name: str) -> None:
+    """
+    Validate that the given signal name is a legal signal name. A signal name is a string that
+    starts with a letter, and can contain letters, numbers, and underscores.
+    """
+    if not name:
+        raise ValueError("Signal name cannot be empty")
+    if len(name) > 64:
+        raise ValueError(f'Signal name cannot be longer than 64 characters, but got "{name}"')
+    if not re.match(r"^[a-zA-Z]\w{0,63}$", name):
+        raise ValueError(
+            f"Signal name must start with a letter, contain only letters, "
+            f'numbers, and underscores, but got "{name}"'
+        )
