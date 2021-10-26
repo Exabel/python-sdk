@@ -7,14 +7,9 @@ from dateutil import tz
 
 from exabel_data_sdk import ExabelClient
 from exabel_data_sdk.scripts.load_time_series_from_csv import LoadTimeSeriesFromCsv
+from exabel_data_sdk.util.resource_name_normalization import validate_signal_name
 
-common_args = [
-    "script-name",
-    "--sep",
-    ";",
-    "--api-key",
-    "123",
-]
+common_args = ["script-name", "--sep", ";", "--api-key", "123"]
 
 
 class TestUploadTimeSeries(unittest.TestCase):
@@ -206,6 +201,35 @@ class TestUploadTimeSeries(unittest.TestCase):
             series[1],
             check_freq=False,
         )
+
+    def test_should_fail_with_invalid_signal_names(self):
+        signals_errors = {
+            "0_starts_with_0": "Signal name must start with a letter, "
+            'contain only letters, numbers, and underscores, but got "0_starts_with_0"',
+            "contains_!llegal_chars": "Signal name must start with a letter, "
+            'contain only letters, numbers, and underscores, but got "contains_!llegal_chars"',
+            "": "Signal name cannot be empty",
+            "signal_with_sixty_five_characters_in_length_which_more_than_max__": "Signal name "
+            "cannot be longer than 64 characters, but got "
+            '"signal_with_sixty_five_characters_in_length_which_more_than_max__"',
+        }
+
+        for signal, error in signals_errors.items():
+            with self.assertRaises(ValueError) as cm:
+                validate_signal_name(signal)
+            self.assertEqual(str(cm.exception), error)
+
+    def test_valid_signal_names(self):
+        valid_signals = [
+            "signal",
+            "SIGNAL",
+            "signal_with_underscores",
+            "signal_1_with_underscores_and_numbers",
+            "signal_with_sixty_four_characters_in_length_which_is_the_maximum",
+        ]
+
+        for signal in valid_signals:
+            validate_signal_name(signal)
 
 
 if __name__ == "__main__":

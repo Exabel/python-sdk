@@ -1,6 +1,7 @@
 import argparse
+import re
 import sys
-from typing import Sequence
+from typing import List, Sequence
 
 import pandas as pd
 from dateutil import tz
@@ -8,7 +9,10 @@ from dateutil import tz
 from exabel_data_sdk import ExabelClient
 from exabel_data_sdk.client.api.data_classes.signal import Signal
 from exabel_data_sdk.scripts.csv_script import CsvScript
-from exabel_data_sdk.util.resource_name_normalization import to_entity_resource_names
+from exabel_data_sdk.util.resource_name_normalization import (
+    to_entity_resource_names,
+    validate_signal_name,
+)
 
 
 class LoadTimeSeriesFromCsv(CsvScript):
@@ -73,6 +77,34 @@ class LoadTimeSeriesFromCsv(CsvScript):
         signals = list(ts_data.columns[2:])
 
         print("Loading signals", ", ".join(str(s) for s in signals), "...")
+
+        # validate signal names
+        missing_header_pattern = re.compile(r"^Unnamed: ([0-9]+)$")
+        missing_headers: List[str] = []
+        invalid_signals: List[str] = []
+        for signal in signals:
+            try:
+                validate_signal_name(signal)
+            except ValueError:
+                # Pandas eats up any blank column names and replaces them with "Unnamed: N". Since
+                # this is invalid but not the actual column name, we give the end user a more
+                # precise error message
+                missing_header_match = missing_header_pattern.match(signal)
+                if missing_header_match:
+                    missing_headers.append(missing_header_match.group(1))
+                else:
+                    invalid_signals.append(signal)
+        if invalid_signals or missing_headers:
+            print(
+                "Encountered invalid signal names. Signal names must start with a letter, "
+                "and can only consist of letters, numbers, and underscore (_), and be "
+                "at most 64 characters"
+            )
+            if invalid_signals:
+                print(f"Invalid signal names: {', '.join(invalid_signals)}")
+            if missing_headers:
+                print(f"The following column(s) are missing headers: {', '.join(missing_headers)}")
+            sys.exit(1)
 
         prefix = "signals/"
         if args.namespace:
