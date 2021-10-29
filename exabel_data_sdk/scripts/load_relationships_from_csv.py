@@ -3,6 +3,7 @@ import sys
 from typing import Sequence
 
 from exabel_data_sdk import ExabelClient
+from exabel_data_sdk.client.api.bulk_insert import BulkInsertFailedError
 from exabel_data_sdk.client.api.data_classes.relationship import Relationship
 from exabel_data_sdk.client.api.data_classes.relationship_type import RelationshipType
 from exabel_data_sdk.scripts.csv_script import CsvScript
@@ -124,7 +125,11 @@ class LoadRelationshipsFromCsv(CsvScript):
             print(relationships)
             return
 
-        client.relationship_api.bulk_create_relationships(relationships, threads=args.threads)
+        try:
+            client.relationship_api.bulk_create_relationships(relationships, threads=args.threads)
+        except BulkInsertFailedError:
+            # An error summary has already been printed.
+            pass
 
 
 if __name__ == "__main__":

@@ -56,14 +56,14 @@ class ResourceCreationResults(Generic[TResource]):
             total_count:     The total number of resources expected to be loaded.
             print_status:    Whether to print status of the upload during processing.
             abort_threshold: If the fraction of failed requests exceeds this threshold,
-                             the upload is aborted, and the script exits.
-                             Note that this only happens if print_status is set to True.
+                             the upload is aborted.
         """
         self.results: List[ResourceCreationResult[TResource]] = []
         self.counter: Counter = Counter()
         self.total_count = total_count
         self.do_print_status = print_status
         self.abort_threshold = abort_threshold
+        self.abort = False
 
     def add(self, result: ResourceCreationResult[TResource]) -> None:
         """Add the result for a resource."""
@@ -71,6 +71,8 @@ class ResourceCreationResults(Generic[TResource]):
         self.counter.update([result.status])
         if self.do_print_status and (self.count() % 20 == 0 or self.count() == self.total_count):
             self.print_status()
+        if self.count() % 20 == 0 and self.count() != self.total_count:
+            self.check_failures()
 
     def count(self, status: ResourceCreationStatus = None) -> int:
         """
@@ -98,6 +100,20 @@ class ResourceCreationResults(Generic[TResource]):
         self.counter.subtract([result.status for result in failed])
         self.results = rest
         return failed
+
+    def check_failures(self) -> None:
+        """
+        Set the member field 'abort' to True if the fraction of errors exceeds the abort threshold.
+        """
+        fraction_error = self.count(ResourceCreationStatus.FAILED) / self.count()
+        if fraction_error > self.abort_threshold and not self.abort:
+            self.abort = True
+            if self.do_print_status:
+                sys.stdout.write(
+                    f"\nAborting - more than {self.abort_threshold:.0%} "
+                    "of the requests are failing.\n"
+                )
+                sys.stdout.flush()
 
     def print_summary(self) -> None:
         """Prints a human legible summary of the resource creation results to screen."""
@@ -127,14 +143,4 @@ class ResourceCreationResults(Generic[TResource]):
         )
         if fraction_complete == 1:
             sys.stdout.write("\n")
-        else:
-            fraction_error = self.count(ResourceCreationStatus.FAILED) / self.count()
-            if fraction_error > self.abort_threshold:
-                sys.stdout.write(
-                    f"\nAborting - more than {self.abort_threshold:.0%} "
-                    "of the requests are failing.\n"
-                )
-                self.print_summary()
-                sys.stdout.flush()
-                sys.exit(1)
         sys.stdout.flush()

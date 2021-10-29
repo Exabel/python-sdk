@@ -11,10 +11,15 @@ from exabel_data_sdk.client.api.resource_creation_result import (
 )
 
 
+class BulkInsertFailedError(Exception):
+    """Error indicating that the bulk insert failed."""
+
+
 def _process(
     results: ResourceCreationResults[TResource],
     resource: TResource,
     insert_func: Callable[[TResource], ResourceCreationStatus],
+    abort: Callable,
 ) -> None:
     """
     Insert the given resource using the provided function.
@@ -24,6 +29,7 @@ def _process(
         results:     the result set to append to
         resource:    the resource to be inserted
         insert_func: the function to use to insert the resource
+        abort:       the function to call when the insert is aborted
     """
     try:
         status = insert_func(resource)
@@ -35,6 +41,14 @@ def _process(
             else ResourceCreationStatus.FAILED
         )
         results.add(ResourceCreationResult(status, resource, error))
+
+    if results.abort:
+        abort()
+
+
+def _raise_error() -> None:
+    """Raise a BulkInsertFailedError."""
+    raise BulkInsertFailedError()
 
 
 def _bulk_insert(
@@ -55,11 +69,21 @@ def _bulk_insert(
     """
     if threads == 1:
         for resource in resources:
-            _process(results, resource, insert_func)
+            _process(results, resource, insert_func, _raise_error)
+
     else:
         with ThreadPoolExecutor(max_workers=threads) as executor:
             for resource in resources:
-                executor.submit(_process, results, resource, insert_func)
+                if not results.abort:
+                    executor.submit(
+                        _process,
+                        results,
+                        resource,
+                        insert_func,
+                        lambda: executor.shutdown(wait=False, cancel_futures=True),
+                    )
+        if results.abort:
+            raise BulkInsertFailedError()
 
 
 def bulk_insert(
@@ -72,6 +96,8 @@ def bulk_insert(
     Calls the provided insert function with each of the provided resources,
     while catching errors and tracking progress.
 
+    Raises a BulkInsertFailedError if more than 50% of the resources fail to insert.
+
     Args:
         resources:       the resources to be inserted
         insert_func:     the function to call for each insert.
@@ -83,15 +109,17 @@ def bulk_insert(
     """
     start_time = time()
     results: ResourceCreationResults[TResource] = ResourceCreationResults(len(resources))
-    for trial in range(retries + 1):
-        if trial > 0:
-            failures = results.extract_retryable_failures()
-            if not failures:
-                break
-            resources = [result.resource for result in failures]
-            print(f"Retry #{trial} with {len(resources)} resources:")
-        _bulk_insert(results, resources, insert_func, threads=threads)
-    spent_time = int(time() - start_time)
-    print(f"Spent {spent_time} seconds loading {len(resources)} resources ({threads} threads)")
-    results.print_summary()
+    try:
+        for trial in range(retries + 1):
+            if trial > 0:
+                failures = results.extract_retryable_failures()
+                if not failures:
+                    break
+                resources = [result.resource for result in failures]
+                print(f"Retry #{trial} with {len(resources)} resources:")
+            _bulk_insert(results, resources, insert_func, threads=threads)
+    finally:
+        spent_time = int(time() - start_time)
+        print(f"Spent {spent_time} seconds loading {len(resources)} resources ({threads} threads)")
+        results.print_summary()
     return results
