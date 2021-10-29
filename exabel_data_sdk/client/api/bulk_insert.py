@@ -31,6 +31,10 @@ def _process(
         insert_func: the function to use to insert the resource
         abort:       the function to call when the insert is aborted
     """
+    if results.abort:
+        abort()
+        return
+
     try:
         status = insert_func(resource)
         results.add(ResourceCreationResult(status, resource))
@@ -41,9 +45,6 @@ def _process(
             else ResourceCreationStatus.FAILED
         )
         results.add(ResourceCreationResult(status, resource, error))
-
-    if results.abort:
-        abort()
 
 
 def _raise_error() -> None:
@@ -80,7 +81,10 @@ def _bulk_insert(
                         results,
                         resource,
                         insert_func,
-                        lambda: executor.shutdown(wait=False, cancel_futures=True),
+                        # Python 3.9 added support for the shutdown argument 'cancel_futures'.
+                        # We should set this argument to True once we have moved to this python
+                        # version.
+                        lambda: executor.shutdown(wait=False),
                     )
         if results.abort:
             raise BulkInsertFailedError()
