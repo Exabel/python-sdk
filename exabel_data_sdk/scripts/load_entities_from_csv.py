@@ -3,6 +3,7 @@ import sys
 from typing import Sequence
 
 from exabel_data_sdk import ExabelClient
+from exabel_data_sdk.client.api.bulk_insert import BulkInsertFailedError
 from exabel_data_sdk.client.api.data_classes.entity import Entity
 from exabel_data_sdk.scripts.csv_script import CsvScript
 from exabel_data_sdk.util.resource_name_normalization import normalize_resource_name
@@ -99,7 +100,11 @@ class LoadEntitiesFromCsv(CsvScript):
             print(entities)
             return
 
-        client.entity_api.bulk_create_entities(entities, entity_type_name, threads=args.threads)
+        try:
+            client.entity_api.bulk_create_entities(entities, entity_type_name, threads=args.threads)
+        except BulkInsertFailedError:
+            # An error summary has already been printed.
+            pass
 
 
 if __name__ == "__main__":

@@ -7,6 +7,7 @@ import pandas as pd
 from dateutil import tz
 
 from exabel_data_sdk import ExabelClient
+from exabel_data_sdk.client.api.bulk_insert import BulkInsertFailedError
 from exabel_data_sdk.client.api.data_classes.signal import Signal
 from exabel_data_sdk.scripts.csv_script import CsvScript
 from exabel_data_sdk.util.resource_name_normalization import (
@@ -140,9 +141,13 @@ class LoadTimeSeriesFromCsv(CsvScript):
                 print(f"    {ts.name}")
             return
 
-        client.time_series_api.bulk_upsert_time_series(
-            series, create_tag=True, threads=args.threads
-        )
+        try:
+            client.time_series_api.bulk_upsert_time_series(
+                series, create_tag=True, threads=args.threads
+            )
+        except BulkInsertFailedError:
+            # An error summary has already been printed.
+            pass
 
 
 if __name__ == "__main__":

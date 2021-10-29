@@ -15,6 +15,7 @@ disable=duplicate-code,
         too-many-locals,
         too-many-return-statements,
         too-many-instance-attributes,
+        too-many-statements,
 
 [BASIC]
 
