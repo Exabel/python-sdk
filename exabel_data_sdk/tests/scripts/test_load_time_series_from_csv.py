@@ -231,6 +231,19 @@ class TestUploadTimeSeries(unittest.TestCase):
         for signal in valid_signals:
             validate_signal_name(signal)
 
+    def test_should_fail_with_invalid_data_points(self):
+        args = common_args + [
+            "--filename",
+            "./exabel_data_sdk/tests/resources/data/time_series_with_invalid_data_points.csv",
+            "--namespace",
+            "acme",
+        ]
+
+        script = LoadTimeSeriesFromCsv(args, "LoadTest5")
+        client = mock.create_autospec(ExabelClient(host="host", api_key="123"))
+        with self.assertRaises(SystemExit):
+            script.run_script(client, script.parse_arguments())
+
 
 if __name__ == "__main__":
     unittest.main()

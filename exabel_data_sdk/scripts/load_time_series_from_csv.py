@@ -5,6 +5,7 @@ from typing import List, Sequence
 
 import pandas as pd
 from dateutil import tz
+from pandas.api.types import is_numeric_dtype
 
 from exabel_data_sdk import ExabelClient
 from exabel_data_sdk.client.api.bulk_insert import BulkInsertFailedError
@@ -73,6 +74,29 @@ class LoadTimeSeriesFromCsv(CsvScript):
         ts_data.rename(columns={0: "entity"}, inplace=True)
         if ts_data.columns[1] != "date":
             print("Expected first column to be named 'date', got", ts_data.columns[1])
+
+        # validate all data points are numeric
+        columns_with_invalid_data_points = {}
+        for col in ts_data.columns[2:]:
+            if not is_numeric_dtype(ts_data[col]):
+                examples = {
+                    index: ts_data[col][index]
+                    for index in ts_data[col][~ts_data[col].str.isnumeric()][:5].index
+                }
+                columns_with_invalid_data_points[col] = examples
+
+        if columns_with_invalid_data_points:
+            print(
+                "Signal column(s) contain non-numeric values. Please ensure all values "
+                "can be parsed to numeric values."
+            )
+            print("Columns with non-numeric values (with up to 5 examples):")
+            for col, examples in columns_with_invalid_data_points.items():
+                pretty_examples = ", ".join(
+                    f"'{value}' at index {index}" for index, value in examples.items()
+                )
+                print(f"  {col}: {pretty_examples}")
+            sys.exit(1)
 
         # signals to produce from this csv file
         signals = list(ts_data.columns[2:])
