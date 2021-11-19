@@ -18,6 +18,7 @@ from exabel_data_sdk.client.client_config import ClientConfig
 from exabel_data_sdk.stubs.exabel.api.data.v1.all_pb2 import (
     BatchDeleteTimeSeriesPointsRequest,
     CreateTimeSeriesRequest,
+    DefaultKnownTime,
     DeleteTimeSeriesRequest,
     GetTimeSeriesRequest,
     ListTimeSeriesRequest,
@@ -83,7 +84,11 @@ class TimeSeriesApi:
         )
 
     def get_time_series(
-        self, name: str, start: pd.Timestamp = None, end: pd.Timestamp = None
+        self,
+        name: str,
+        start: pd.Timestamp = None,
+        end: pd.Timestamp = None,
+        known_time: pd.Timestamp = None,
     ) -> Optional[pd.Series]:
         """
         Get one time series.
@@ -91,22 +96,31 @@ class TimeSeriesApi:
         If start and end are not specified, all data points will be returned.
         If start or end is specified, both must be specified.
 
+        If known_time is specified, the data will be returned as if it was requested at the given
+        time (in the past). Values inserted after this known time are disregarded.
+        If not set, the newest values are returned.
+
         If time series does not exist, None is returned.
 
         Args:
-            name:   The resource name of the requested time series, for example
-                    "entityTypes/ns.type1/entities/ns.entity1/signals/ns.signal1" or
-                    "signals/ns.signal1/entityTypes/ns.type1/entities/ns.entity1".
-            start:  Start of the period to get data for.
-            end:    End of the period to get data for.
+            name:       The resource name of the requested time series, for example
+                        "entityTypes/ns.type1/entities/ns.entity1/signals/ns.signal1" or
+                        "signals/ns.signal1/entityTypes/ns.type1/entities/ns.entity1".
+            start:      Start of the period to get data for.
+            end:        End of the period to get data for.
+            known_time: The point-in-time at which to request the time series.
         """
-        if bool(start) != bool(end):
-            raise ValueError("Either specify both 'start' and 'end' or none of them.")
         time_range = self._get_time_range(start, end)
 
         try:
             time_series = self.client.get_time_series(
-                GetTimeSeriesRequest(name=name, view=TimeSeriesView(time_range=time_range)),
+                GetTimeSeriesRequest(
+                    name=name,
+                    view=TimeSeriesView(
+                        time_range=time_range,
+                        known_time=TimeSeriesApi._pandas_timestamp_to_proto(known_time),
+                    ),
+                ),
             )
         except RequestError as error:
             if error.error_type == ErrorType.NOT_FOUND:
@@ -115,7 +129,13 @@ class TimeSeriesApi:
 
         return self._time_series_points_to_series(time_series.points, time_series.name)
 
-    def create_time_series(self, name: str, series: pd.Series, create_tag: bool = False) -> None:
+    def create_time_series(
+        self,
+        name: str,
+        series: pd.Series,
+        create_tag: bool = False,
+        default_known_time: DefaultKnownTime = None,
+    ) -> None:
         """
         Create a time series.
 
@@ -135,16 +155,28 @@ class TimeSeriesApi:
             create_tag: Set to true to create a tag for every entity type a signal has time series
                         for. If a tag already exists, it will be updated when time series are
                         created (or deleted) regardless of the value of this flag.
+            default_known_time:
+                        Specify a default known time policy. This is used to determine
+                        the Known Time for data points where a specific known time timestamp
+                        has not been given. If not provided, the Exabel API defaults to the
+                        current time (upload time) as the Known Time.
         """
         time_series_points = self._series_to_time_series_points(series)
         self.client.create_time_series(
             CreateTimeSeriesRequest(
                 time_series=ProtoTimeSeries(name=name, points=time_series_points),
                 create_tag=create_tag,
+                default_known_time=default_known_time,
             ),
         )
 
-    def upsert_time_series(self, name: str, series: pd.Series, create_tag: bool = False) -> bool:
+    def upsert_time_series(
+        self,
+        name: str,
+        series: pd.Series,
+        create_tag: bool = False,
+        default_known_time: DefaultKnownTime = None,
+    ) -> bool:
         """
         Create or update a time series.
 
@@ -160,6 +192,11 @@ class TimeSeriesApi:
             create_tag: Set to true to create a tag for every entity type a signal has time series
                         for. If a tag already exists, it will be updated when time series are
                         created (or deleted) regardless of the value of this flag.
+            default_known_time:
+                        Specify a default known time policy. This is used to determine
+                        the Known Time for data points where a specific known time timestamp
+                        has not been given. If not provided, the Exabel API defaults to the
+                        current time (upload time) as the Known Time.
 
         Returns:
             True if the time series already existed, or False if it is created
@@ -167,11 +204,11 @@ class TimeSeriesApi:
         try:
             # Optimistically assume that the time series exists, and append to it.
             # If it doesn't exist, we catch the error below and create the time series instead.
-            self.append_time_series_data(name, series)
+            self.append_time_series_data(name, series, default_known_time)
             return True
         except RequestError as error:
             if error.error_type == ErrorType.NOT_FOUND:
-                self.create_time_series(name, series, create_tag)
+                self.create_time_series(name, series, create_tag, default_known_time)
                 return False
             raise
 
@@ -189,7 +226,9 @@ class TimeSeriesApi:
             BatchDeleteTimeSeriesPointsRequest(name=name, time_ranges=[time_range]),
         )
 
-    def append_time_series_data(self, name: str, series: pd.Series) -> None:
+    def append_time_series_data(
+        self, name: str, series: pd.Series, default_known_time: DefaultKnownTime = None
+    ) -> None:
         """
         Append data to the given time series.
 
@@ -199,16 +238,24 @@ class TimeSeriesApi:
         Args:
             name:   The resource name of the time series.
             series: Series with data to append.
+            default_known_time:
+                        Specify a default known time policy. This is used to determine
+                        the Known Time for data points where a specific known time timestamp
+                        has not been given. If not provided, the Exabel API defaults to the
+                        current time (upload time) as the Known Time.
         """
         self.client.update_time_series(
             UpdateTimeSeriesRequest(
                 time_series=ProtoTimeSeries(
                     name=name, points=self._series_to_time_series_points(series)
                 ),
+                default_known_time=default_known_time,
             ),
         )
 
-    def append_time_series_data_and_return(self, name: str, series: pd.Series) -> pd.Series:
+    def append_time_series_data_and_return(
+        self, name: str, series: pd.Series, default_known_time: DefaultKnownTime = None
+    ) -> pd.Series:
         """
         Append data to the given time series, and return the full series.
 
@@ -218,6 +265,11 @@ class TimeSeriesApi:
         Args:
             name:   The resource name of the time series.
             series: Series with data to append.
+            default_known_time:
+                        Specify a default known time policy. This is used to determine
+                        the Known Time for data points where a specific known time timestamp
+                        has not been given. If not provided, the Exabel API defaults to the
+                        current time (upload time) as the Known Time.
 
         Returns:
             A series with all data for the given time series.
@@ -229,6 +281,7 @@ class TimeSeriesApi:
                     name=name, points=self._series_to_time_series_points(series)
                 ),
                 view=TimeSeriesView(time_range=TimeRange()),
+                default_known_time=default_known_time,
             ),
         )
         return self._time_series_points_to_series(time_series.points, time_series.name)
@@ -259,6 +312,7 @@ class TimeSeriesApi:
         series: Sequence[pd.Series],
         create_tag: bool = False,
         threads: int = 40,
+        default_known_time: DefaultKnownTime = None,
     ) -> ResourceCreationResults[pd.Series]:
         """
         Calls upsert_time_series for each of the provided time series,
@@ -273,10 +327,17 @@ class TimeSeriesApi:
                              series for. If a tag already exists, it will be updated when time
                              series are created (or deleted) regardless of the value of this flag.
             threads:         The number of parallel upload threads to use.
+            default_known_time:
+                        Specify a default known time policy. This is used to determine
+                        the Known Time for data points where a specific known time timestamp
+                        has not been given. If not provided, the Exabel API defaults to the
+                        current time (upload time) as the Known Time.
         """
 
         def insert(ts: pd.Series) -> ResourceCreationStatus:
-            existed = self.upsert_time_series(str(ts.name), ts, create_tag=create_tag)
+            existed = self.upsert_time_series(
+                str(ts.name), ts, create_tag=create_tag, default_known_time=default_known_time
+            )
             return ResourceCreationStatus.EXISTS if existed else ResourceCreationStatus.CREATED
 
         return bulk_insert(series, insert, threads=threads)
@@ -285,13 +346,26 @@ class TimeSeriesApi:
     def _series_to_time_series_points(series: pd.Series) -> Sequence[TimeSeriesPoint]:
         """Convert a pandas Series to a sequence of TimeSeriesPoint."""
         points = []
-        for timestamp, value in series.iteritems():
-            proto_timestamp = timestamp_pb2.Timestamp()
-            if not timestamp.tz:
-                timestamp = timestamp.tz_localize(tz=tz.tzutc())
-            proto_timestamp.FromJsonString(timestamp.isoformat())
-            proto_value = DoubleValue(value=value)
-            points.append(TimeSeriesPoint(time=proto_timestamp, value=proto_value))
+        for index, value in series.iteritems():
+            if isinstance(index, tuple):
+                # (timestamp, known_time)
+                if len(index) != 2:
+                    raise ValueError(
+                        "A time series with a MultiIndex is expected to have exactly "
+                        f"two elements: (timestamp, known_time), but got {index}"
+                    )
+                timestamp = index[0]
+                known_time = index[1]
+            else:
+                timestamp = index
+                known_time = None
+            points.append(
+                TimeSeriesPoint(
+                    time=TimeSeriesApi._pandas_timestamp_to_proto(timestamp),
+                    value=DoubleValue(value=value),
+                    known_time=TimeSeriesApi._pandas_timestamp_to_proto(known_time),
+                )
+            )
         return points
 
     @staticmethod
@@ -321,26 +395,33 @@ class TimeSeriesApi:
             include_start:  Whether to include the start timestamp.
             include_end:    Whether to include the end timestamp.
         """
+        if bool(start) != bool(end):
+            raise ValueError("Either specify both 'start' and 'end' or none of them.")
         if start is None:
             return TimeRange()
 
-        start_timestamp = timestamp_pb2.Timestamp()
-        start_timestamp.FromJsonString(TimeSeriesApi._convert_utc(start).isoformat())
-
-        end_timestamp = timestamp_pb2.Timestamp()
-        end_timestamp.FromJsonString(TimeSeriesApi._convert_utc(end).isoformat())
-
         return TimeRange(
-            from_time=start_timestamp,
-            to_time=end_timestamp,
+            from_time=TimeSeriesApi._pandas_timestamp_to_proto(start),
+            to_time=TimeSeriesApi._pandas_timestamp_to_proto(end),
             exclude_from=not include_start,
             include_to=include_end,
         )
 
     @staticmethod
-    def _proto_timestamp_to_pandas_time(
-        timestamp: timestamp_pb2.Timestamp,
-    ) -> pd.Timestamp:
+    def _pandas_timestamp_to_proto(
+        timestamp: Optional[pd.Timestamp],
+    ) -> Optional[timestamp_pb2.Timestamp]:
+        """
+        Convert a pandas Timestamp to a protobuf Timestamp.
+        Note that second time resolution is used, and any fraction of a second is discarded.
+        If the input is None, the result is None.
+        """
+        if timestamp is None:
+            return None
+        return timestamp_pb2.Timestamp(seconds=timestamp.value // 1000000000)
+
+    @staticmethod
+    def _proto_timestamp_to_pandas_time(timestamp: timestamp_pb2.Timestamp) -> pd.Timestamp:
         """Convert a protobuf Timestamp to a pandas Timestamp."""
         pts = pd.Timestamp(timestamp.ToJsonString())
         return TimeSeriesApi._convert_utc(pts)

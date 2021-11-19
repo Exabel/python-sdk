@@ -11,6 +11,10 @@ from google.protobuf.descriptor import (
     FileDescriptor as google___protobuf___descriptor___FileDescriptor,
 )
 
+from google.protobuf.duration_pb2 import (
+    Duration as google___protobuf___duration_pb2___Duration,
+)
+
 from google.protobuf.internal.containers import (
     RepeatedCompositeFieldContainer as google___protobuf___internal___containers___RepeatedCompositeFieldContainer,
 )
@@ -110,12 +114,16 @@ class DefaultKnownTime(google___protobuf___message___Message):
     @property
     def known_time(self) -> google___protobuf___timestamp_pb2___Timestamp: ...
 
+    @property
+    def time_offset(self) -> google___protobuf___duration_pb2___Duration: ...
+
     def __init__(self,
         *,
         current_time : typing___Optional[builtin___bool] = None,
         known_time : typing___Optional[google___protobuf___timestamp_pb2___Timestamp] = None,
+        time_offset : typing___Optional[google___protobuf___duration_pb2___Duration] = None,
         ) -> None: ...
-    def HasField(self, field_name: typing_extensions___Literal[u"current_time",b"current_time",u"known_time",b"known_time",u"specification",b"specification"]) -> builtin___bool: ...
-    def ClearField(self, field_name: typing_extensions___Literal[u"current_time",b"current_time",u"known_time",b"known_time",u"specification",b"specification"]) -> None: ...
-    def WhichOneof(self, oneof_group: typing_extensions___Literal[u"specification",b"specification"]) -> typing_extensions___Literal["current_time","known_time"]: ...
+    def HasField(self, field_name: typing_extensions___Literal[u"current_time",b"current_time",u"known_time",b"known_time",u"specification",b"specification",u"time_offset",b"time_offset"]) -> builtin___bool: ...
+    def ClearField(self, field_name: typing_extensions___Literal[u"current_time",b"current_time",u"known_time",b"known_time",u"specification",b"specification",u"time_offset",b"time_offset"]) -> None: ...
+    def WhichOneof(self, oneof_group: typing_extensions___Literal[u"specification",b"specification"]) -> typing_extensions___Literal["current_time","known_time","time_offset"]: ...
 type___DefaultKnownTime = DefaultKnownTime
