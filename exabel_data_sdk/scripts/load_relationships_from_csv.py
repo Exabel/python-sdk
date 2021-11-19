@@ -6,11 +6,11 @@ from exabel_data_sdk import ExabelClient
 from exabel_data_sdk.client.api.bulk_insert import BulkInsertFailedError
 from exabel_data_sdk.client.api.data_classes.relationship import Relationship
 from exabel_data_sdk.client.api.data_classes.relationship_type import RelationshipType
-from exabel_data_sdk.scripts.csv_script import CsvScript
+from exabel_data_sdk.scripts.csv_script_with_entity_mapping import CsvScriptWithEntityMapping
 from exabel_data_sdk.util.resource_name_normalization import to_entity_resource_names
 
 
-class LoadRelationshipsFromCsv(CsvScript):
+class LoadRelationshipsFromCsv(CsvScriptWithEntityMapping):
     """
     Processes a CSV file with relationships and creates them in the Exabel API.
 
@@ -76,10 +76,7 @@ class LoadRelationshipsFromCsv(CsvScript):
             f"to {args.entity_to_column} from {args.filename}"
         )
 
-        string_columns = {
-            args.entity_from_column,
-            args.entity_to_column,
-        }
+        string_columns = {args.entity_from_column, args.entity_to_column}
         if args.description_column:
             string_columns.add(args.description_column)
 
@@ -100,11 +97,18 @@ class LoadRelationshipsFromCsv(CsvScript):
             for rel_type in client.relationship_api.list_relationship_types().results:
                 print("   ", rel_type)
 
+        entity_mapping = self.read_entity_mapping_file(args)
         relationships_df[entity_from_col] = to_entity_resource_names(
-            client.entity_api, relationships_df[entity_from_col], namespace=args.namespace
+            client.entity_api,
+            relationships_df[entity_from_col],
+            namespace=args.namespace,
+            entity_mapping=entity_mapping,
         )
         relationships_df[entity_to_col] = to_entity_resource_names(
-            client.entity_api, relationships_df[entity_to_col], namespace=args.namespace
+            client.entity_api,
+            relationships_df[entity_to_col],
+            namespace=args.namespace,
+            entity_mapping=entity_mapping,
         )
 
         # Drop rows where either the from or to entity is missing

@@ -12,6 +12,7 @@ _sym_db = _symbol_database.Default()
 
 
 from exabel_data_sdk.stubs.exabel.api.time import time_range_pb2 as exabel_dot_api_dot_time_dot_time__range__pb2
+from google.protobuf import duration_pb2 as google_dot_protobuf_dot_duration__pb2
 from google.protobuf import timestamp_pb2 as google_dot_protobuf_dot_timestamp__pb2
 from google.protobuf import wrappers_pb2 as google_dot_protobuf_dot_wrappers__pb2
 
@@ -22,9 +23,9 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   syntax='proto3',
   serialized_options=b'\n\026com.exabel.api.data.v1B\027TimeSeriesMessagesProtoP\001',
   create_key=_descriptor._internal_create_key,
-  serialized_pb=b'\n-exabel/api/data/v1/time_series_messages.proto\x12\x12\x65xabel.api.data.v1\x1a exabel/api/time/time_range.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x1egoogle/protobuf/wrappers.proto\"b\n\nTimeSeries\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x33\n\x06points\x18\x02 \x03(\x0b\x32#.exabel.api.data.v1.TimeSeriesPoint\x12\x11\n\tread_only\x18\x03 \x01(\x08\"\x98\x01\n\x0fTimeSeriesPoint\x12(\n\x04time\x18\x01 \x01(\x0b\x32\x1a.google.protobuf.Timestamp\x12+\n\x05value\x18\x02 \x01(\x0b\x32\x1c.google.protobuf.DoubleValue\x12.\n\nknown_time\x18\x03 \x01(\x0b\x32\x1a.google.protobuf.Timestamp\"p\n\x0eTimeSeriesView\x12.\n\ntime_range\x18\x01 \x01(\x0b\x32\x1a.exabel.api.time.TimeRange\x12.\n\nknown_time\x18\x02 \x01(\x0b\x32\x1a.google.protobuf.Timestamp\"m\n\x10\x44\x65\x66\x61ultKnownTime\x12\x16\n\x0c\x63urrent_time\x18\x01 \x01(\x08H\x00\x12\x30\n\nknown_time\x18\x02 \x01(\x0b\x32\x1a.google.protobuf.TimestampH\x00\x42\x0f\n\rspecificationB3\n\x16\x63om.exabel.api.data.v1B\x17TimeSeriesMessagesProtoP\x01\x62\x06proto3'
+  serialized_pb=b'\n-exabel/api/data/v1/time_series_messages.proto\x12\x12\x65xabel.api.data.v1\x1a exabel/api/time/time_range.proto\x1a\x1egoogle/protobuf/duration.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x1egoogle/protobuf/wrappers.proto\"b\n\nTimeSeries\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x33\n\x06points\x18\x02 \x03(\x0b\x32#.exabel.api.data.v1.TimeSeriesPoint\x12\x11\n\tread_only\x18\x03 \x01(\x08\"\x98\x01\n\x0fTimeSeriesPoint\x12(\n\x04time\x18\x01 \x01(\x0b\x32\x1a.google.protobuf.Timestamp\x12+\n\x05value\x18\x02 \x01(\x0b\x32\x1c.google.protobuf.DoubleValue\x12.\n\nknown_time\x18\x03 \x01(\x0b\x32\x1a.google.protobuf.Timestamp\"p\n\x0eTimeSeriesView\x12.\n\ntime_range\x18\x01 \x01(\x0b\x32\x1a.exabel.api.time.TimeRange\x12.\n\nknown_time\x18\x02 \x01(\x0b\x32\x1a.google.protobuf.Timestamp\"\x9f\x01\n\x10\x44\x65\x66\x61ultKnownTime\x12\x16\n\x0c\x63urrent_time\x18\x01 \x01(\x08H\x00\x12\x30\n\nknown_time\x18\x02 \x01(\x0b\x32\x1a.google.protobuf.TimestampH\x00\x12\x30\n\x0btime_offset\x18\x03 \x01(\x0b\x32\x19.google.protobuf.DurationH\x00\x42\x0f\n\rspecificationB3\n\x16\x63om.exabel.api.data.v1B\x17TimeSeriesMessagesProtoP\x01\x62\x06proto3'
   ,
-  dependencies=[exabel_dot_api_dot_time_dot_time__range__pb2.DESCRIPTOR,google_dot_protobuf_dot_timestamp__pb2.DESCRIPTOR,google_dot_protobuf_dot_wrappers__pb2.DESCRIPTOR,])
+  dependencies=[exabel_dot_api_dot_time_dot_time__range__pb2.DESCRIPTOR,google_dot_protobuf_dot_duration__pb2.DESCRIPTOR,google_dot_protobuf_dot_timestamp__pb2.DESCRIPTOR,google_dot_protobuf_dot_wrappers__pb2.DESCRIPTOR,])
 
 
 
@@ -70,8 +71,8 @@ _TIMESERIES = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=168,
-  serialized_end=266,
+  serialized_start=200,
+  serialized_end=298,
 )
 
 
@@ -116,8 +117,8 @@ _TIMESERIESPOINT = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=269,
-  serialized_end=421,
+  serialized_start=301,
+  serialized_end=453,
 )
 
 
@@ -155,8 +156,8 @@ _TIMESERIESVIEW = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=423,
-  serialized_end=535,
+  serialized_start=455,
+  serialized_end=567,
 )
 
 
@@ -182,6 +183,13 @@ _DEFAULTKNOWNTIME = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+    _descriptor.FieldDescriptor(
+      name='time_offset', full_name='exabel.api.data.v1.DefaultKnownTime.time_offset', index=2,
+      number=3, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
   ],
   extensions=[
   ],
@@ -199,8 +207,8 @@ _DEFAULTKNOWNTIME = _descriptor.Descriptor(
       create_key=_descriptor._internal_create_key,
     fields=[]),
   ],
-  serialized_start=537,
-  serialized_end=646,
+  serialized_start=570,
+  serialized_end=729,
 )
 
 _TIMESERIES.fields_by_name['points'].message_type = _TIMESERIESPOINT
@@ -210,12 +218,16 @@ _TIMESERIESPOINT.fields_by_name['known_time'].message_type = google_dot_protobuf
 _TIMESERIESVIEW.fields_by_name['time_range'].message_type = exabel_dot_api_dot_time_dot_time__range__pb2._TIMERANGE
 _TIMESERIESVIEW.fields_by_name['known_time'].message_type = google_dot_protobuf_dot_timestamp__pb2._TIMESTAMP
 _DEFAULTKNOWNTIME.fields_by_name['known_time'].message_type = google_dot_protobuf_dot_timestamp__pb2._TIMESTAMP
+_DEFAULTKNOWNTIME.fields_by_name['time_offset'].message_type = google_dot_protobuf_dot_duration__pb2._DURATION
 _DEFAULTKNOWNTIME.oneofs_by_name['specification'].fields.append(
   _DEFAULTKNOWNTIME.fields_by_name['current_time'])
 _DEFAULTKNOWNTIME.fields_by_name['current_time'].containing_oneof = _DEFAULTKNOWNTIME.oneofs_by_name['specification']
 _DEFAULTKNOWNTIME.oneofs_by_name['specification'].fields.append(
   _DEFAULTKNOWNTIME.fields_by_name['known_time'])
 _DEFAULTKNOWNTIME.fields_by_name['known_time'].containing_oneof = _DEFAULTKNOWNTIME.oneofs_by_name['specification']
+_DEFAULTKNOWNTIME.oneofs_by_name['specification'].fields.append(
+  _DEFAULTKNOWNTIME.fields_by_name['time_offset'])
+_DEFAULTKNOWNTIME.fields_by_name['time_offset'].containing_oneof = _DEFAULTKNOWNTIME.oneofs_by_name['specification']
 DESCRIPTOR.message_types_by_name['TimeSeries'] = _TIMESERIES
 DESCRIPTOR.message_types_by_name['TimeSeriesPoint'] = _TIMESERIESPOINT
 DESCRIPTOR.message_types_by_name['TimeSeriesView'] = _TIMESERIESVIEW

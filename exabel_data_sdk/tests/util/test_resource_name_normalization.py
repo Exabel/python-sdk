@@ -4,6 +4,7 @@ from unittest import mock
 import pandas as pd
 
 from exabel_data_sdk.client.api.data_classes.entity import Entity
+from exabel_data_sdk.client.api.data_classes.entity_type import EntityType
 from exabel_data_sdk.client.api.entity_api import EntityApi
 from exabel_data_sdk.client.client_config import ClientConfig
 from exabel_data_sdk.util.resource_name_normalization import (
@@ -37,6 +38,24 @@ class TestResourceNameNormalization(unittest.TestCase):
         result = to_entity_resource_names(entity_api, data, namespace="acme")
         pd.testing.assert_series_equal(expected, result)
 
+    def test_global_entity_type_mapping(self):
+        data = pd.Series(["I_DE", "I_US", "", "abcXYZ0189"], name="country")
+        expected = pd.Series(
+            [
+                "entityTypes/country/entities/I_DE",
+                "entityTypes/country/entities/I_US",
+                None,
+                "entityTypes/country/entities/abcXYZ0189",
+            ],
+            name="entity",
+        )
+        entity_api = mock.create_autospec(EntityApi(ClientConfig(api_key="123"), use_json=True))
+        entity_api.list_entity_types.side_effect = [
+            [EntityType("entityTypes/country", "Countries", "Countries", True)]
+        ]
+        result = to_entity_resource_names(entity_api, data, namespace="acme")
+        pd.testing.assert_series_equal(expected, result)
+
     def test_isin_mapping(self):
         data = pd.Series(["US87612E1064", "DE000A1EWWW0", "US87612E1064"], name="isin")
         expected = pd.Series(
@@ -66,6 +85,79 @@ class TestResourceNameNormalization(unittest.TestCase):
             "Arguments not as expected",
         )
         pd.testing.assert_series_equal(expected, result)
+
+    def test_isin_mapping_with_entity_mapping(self):
+        data = pd.Series(["US87612E1064", "do_not_search_for"], name="isin")
+        entity_mapping = {
+            "isin": {"do_not_search_for": "entityTypes/company/entities/was_not_searched_for"}
+        }
+        expected = pd.Series(
+            [
+                "entityTypes/company/entities/target_inc",
+                "entityTypes/company/entities/was_not_searched_for",
+            ],
+            name="entity",
+        )
+        entity_api = mock.create_autospec(EntityApi(ClientConfig(api_key="123"), use_json=True))
+        entity_api.search_for_entities.side_effect = [
+            [Entity("entityTypes/company/entities/target_inc", "Target, Inc.")]
+        ]
+        result = to_entity_resource_names(
+            entity_api, data, namespace="acme", entity_mapping=entity_mapping
+        )
+        call_args_list = entity_api.search_for_entities.call_args_list
+        self.assertEqual(1, len(call_args_list))
+        self.assertEqual(
+            {"entity_type": "entityTypes/company", "isin": "US87612E1064"},
+            call_args_list[0][1],
+            "Arguments not as expected",
+        )
+        pd.testing.assert_series_equal(expected, result)
+
+    def test_entity_mapping(self):
+        company_data = pd.Series(["TGT US", "ADI GE"], name="bloomberg_ticker")
+        brand_data = pd.Series(
+            [
+                "should_be_mapped_not_normalized",
+                "should be mapped not normalized",
+                "should#be#mapped#not#normalized",
+            ],
+            name="brand",
+        )
+        entity_mapping = {
+            "bloomberg_ticker": {
+                "TGT US": "entityTypes/company/entities/target_inc",
+                "ADI GE": "entityTypes/company/entities/adidas_ag",
+            },
+            "brand": {
+                "should_be_mapped_not_normalized": "entityTypes/company/entities/brand",
+                "should be mapped not normalized": "entityTypes/company/entities/other_brand",
+                "should#be#mapped#not#normalized": "entityTypes/company/entities/another_brand",
+            },
+        }
+        expected_companies = pd.Series(
+            ["entityTypes/company/entities/target_inc", "entityTypes/company/entities/adidas_ag"],
+            name="entity",
+        )
+        expected_brands = pd.Series(
+            [
+                "entityTypes/company/entities/brand",
+                "entityTypes/company/entities/other_brand",
+                "entityTypes/company/entities/another_brand",
+            ],
+            name="entity",
+        )
+        entity_api = mock.create_autospec(EntityApi(ClientConfig(api_key="123"), use_json=True))
+        company_result = to_entity_resource_names(
+            entity_api, company_data, namespace="acme", entity_mapping=entity_mapping
+        )
+        self.assertFalse(entity_api.search_for_entities.called)
+        pd.testing.assert_series_equal(expected_companies, company_result)
+
+        brand_result = to_entity_resource_names(
+            entity_api, brand_data, namespace="acme", entity_mapping=entity_mapping
+        )
+        pd.testing.assert_series_equal(expected_brands, brand_result)
 
     def test_micticker_mapping(self):
         # Note that "NO?COLON" and "TOO:MANY:COLONS" are illegal mic:ticker identifiers,

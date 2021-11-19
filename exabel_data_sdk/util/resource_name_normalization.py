@@ -1,6 +1,6 @@
 import re
 import sys
-from typing import Mapping
+from typing import Mapping, MutableMapping
 
 import pandas as pd
 
@@ -56,7 +56,10 @@ def _assert_no_collision(mapping: Mapping[str, str]) -> None:
 
 
 def to_entity_resource_names(
-    entity_api: EntityApi, identifiers: pd.Series, namespace: str = None
+    entity_api: EntityApi,
+    identifiers: pd.Series,
+    namespace: str = None,
+    entity_mapping: Mapping[str, Mapping[str, str]] = None,
 ) -> pd.Series:
     """
     Turns the given identifiers into entity resource names.
@@ -98,9 +101,17 @@ def to_entity_resource_names(
         The given identifiers are customer provided names.
         The names are first normalized (using the normalize_resource_name method)
         and then a full resource identifier is constructed on this form:
-            entityTypes/{entityType}/entity/{namespace}.{normalized_name}
+            entityTypes/{entityType}/entities/{namespace}.{normalized_name}
         for example:
-            entityTypes/brand/entity/acme.Spring_Vine
+            entityTypes/brand/entities/acme.Spring_Vine
+        If the entity type is read-only, e.g. "country" or "currency", the namespace is
+        not added to the resource identifier.
+        For example:
+            entityTypes/country/entities/I_DE
+
+    It is also possible to override the normalisation and search with the provided
+    `entity_mapping`. This is useful when the Exabel API is not able to find the corresponding
+    entity for an identifier, or one wants to hard map an identifier to a specific entity.
 
     Returns:
         a Series with the same index as the input Series
@@ -111,12 +122,15 @@ def to_entity_resource_names(
         # Already resource identifiers, nothing to be done
         return identifiers
 
-    unique_ids = identifiers.unique()
+    unique_ids = identifiers.unique().tolist()
+    mapping: MutableMapping[str, str] = {}
+    if entity_mapping and entity_mapping.get(name):
+        mapping.update(entity_mapping[name])
+        unique_ids = [unique_id for unique_id in unique_ids if unique_id not in mapping]
 
     if name in ("isin", "factset_identifier", "bloomberg_ticker", "mic:ticker"):
         # A company identifier
         print(f"Looking up {len(unique_ids)} {name}s...")
-        mapping = {}
         for identifier in unique_ids:
             if not identifier:
                 # Skip empty identifiers
@@ -144,6 +158,10 @@ def to_entity_resource_names(
         # Should be a known entity type
         entity_type_name = f"entityTypes/{name}"
         entity_type = entity_api.get_entity_type(entity_type_name)
+        entity_types = entity_api.list_entity_types()
+        read_only_entity_type_names = [
+            entity_type.name for entity_type in entity_types if entity_type.read_only
+        ]
         if not entity_type:
             message = f"Failure: Did not find entity type {entity_type_name}"
             print(message)
@@ -153,16 +171,22 @@ def to_entity_resource_names(
 
         if namespace is None:
             prefix = ""
+        elif entity_type_name in read_only_entity_type_names:
+            prefix = ""
         else:
             if "." in namespace:
                 raise ValueError(f"Namespace cannot contain periods (.), got {namespace}")
             prefix = f"{namespace}."
 
-        mapping = {
-            identifier: f"{entity_type_name}/entities/{prefix}{normalize_resource_name(identifier)}"
-            for identifier in unique_ids
-            if identifier
-        }
+        mapping.update(
+            {
+                identifier: (
+                    f"{entity_type_name}/entities/{prefix}{normalize_resource_name(identifier)}"
+                )
+                for identifier in unique_ids
+                if identifier
+            }
+        )
         _assert_no_collision(mapping)
 
     result = identifiers.map(mapping)

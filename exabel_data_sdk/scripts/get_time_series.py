@@ -13,7 +13,8 @@ class GetTimeSeries(BaseScript):
     Gets a time series.
     """
 
-    def __init__(self, argv: Sequence[str], description: str):
+    def __init__(self, argv: Sequence[str]):
+        description = "Gets a time series."
         super().__init__(argv, description)
         self.parser.add_argument(
             "--name",
@@ -36,13 +37,22 @@ class GetTimeSeries(BaseScript):
             type=str,
             help="The last date of the time series",
         )
+        self.parser.add_argument(
+            "--known_time",
+            required=False,
+            type=str,
+            help="The point-in-time to retrieve the time series at",
+        )
 
     def run_script(self, client: ExabelClient, args: argparse.Namespace) -> None:
         start = pd.Timestamp(args.start) if args.start is not None else None
         end = pd.Timestamp(args.end) if args.end is not None else None
-        result = client.time_series_api.get_time_series(args.name, start=start, end=end)
+        known_time = pd.Timestamp(args.known_time) if args.known_time is not None else None
+        result = client.time_series_api.get_time_series(
+            args.name, start=start, end=end, known_time=known_time
+        )
         print(result)
 
 
 if __name__ == "__main__":
-    GetTimeSeries(sys.argv, "Gets a time series.").run()
+    GetTimeSeries(sys.argv).run()
