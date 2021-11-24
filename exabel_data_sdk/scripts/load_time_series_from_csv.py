@@ -42,14 +42,14 @@ class LoadTimeSeriesFromCsv(CsvScriptWithEntityMapping):
         description = "Upload timeseries file."
         super().__init__(argv, description)
         self.parser.add_argument(
-            "--create_missing_signals",
+            "--create-missing-signals",
             required=False,
             action="store_true",
             default=False,
             help="Automatically create signals that are not already present in the API.",
         )
         self.parser.add_argument(
-            "--pit_current_time",
+            "--pit-current-time",
             required=False,
             action="store_true",
             default=False,
@@ -57,14 +57,14 @@ class LoadTimeSeriesFromCsv(CsvScriptWithEntityMapping):
             "the time at which it is inserted into the Exabel system.",
         )
         self.parser.add_argument(
-            "--pit_offset",
+            "--pit-offset",
             required=False,
             type=int,
             choices=range(31),
             metavar="[0-30]",
             help="Set the Known-Time of the uploaded data to be the timestamp of each data point, "
             "plus the specified number of days as an offset. For instance, if the data is "
-            "available to the user the day after, one would set --pit_offset 1",
+            "available to the user the day after, one would set --pit-offset 1",
         )
 
     @staticmethod

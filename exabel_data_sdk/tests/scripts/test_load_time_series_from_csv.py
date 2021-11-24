@@ -101,7 +101,7 @@ class TestUploadTimeSeries(unittest.TestCase):
             "./exabel_data_sdk/tests/resources/data/timeseries.csv",
             "--namespace",
             "",
-            "--pit_current_time",
+            "--pit-current-time",
         ]
 
         script = LoadTimeSeriesFromCsv(args)
@@ -138,7 +138,7 @@ class TestUploadTimeSeries(unittest.TestCase):
             "./exabel_data_sdk/tests/resources/data/timeseries_multiple_signals.csv",
             "--namespace",
             "acme",
-            "--pit_offset",
+            "--pit-offset",
             "0",
         ]
         script = LoadTimeSeriesFromCsv(args)
@@ -249,7 +249,7 @@ class TestUploadTimeSeries(unittest.TestCase):
             "./exabel_data_sdk/tests/resources/data/timeseries_with_integer_identifiers.csv",
             "--namespace",
             "acme",
-            "--pit_offset",
+            "--pit-offset",
             "30",
         ]
 

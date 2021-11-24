@@ -19,7 +19,7 @@ class TestLoadEntities(unittest.TestCase):
         args = common_args + [
             "--filename",
             "./exabel_data_sdk/tests/resources/data/entities.csv",
-            "--description_col",
+            "--description-col",
             "description",
         ]
         client = load_test_data_from_csv(LoadEntitiesFromCsv, args)
@@ -42,7 +42,7 @@ class TestLoadEntities(unittest.TestCase):
             "--filename",
             "./exabel_data_sdk/tests/resources/data/entities_with_integer_identifiers.csv",
         ]
-        extra_args = [[], ["--name_column", "brand"]]
+        extra_args = [[], ["--name-column", "brand"]]
         expected_entities = [
             Entity(name="entityTypes/brand/entities/test.0001", display_name="0001"),
             Entity(name="entityTypes/brand/entities/test.0002", display_name="0002"),

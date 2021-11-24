@@ -38,7 +38,7 @@ class GetTimeSeries(BaseScript):
             help="The last date of the time series",
         )
         self.parser.add_argument(
-            "--known_time",
+            "--known-time",
             required=False,
             type=str,
             help="The point-in-time to retrieve the time series at",

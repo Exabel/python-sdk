@@ -15,7 +15,7 @@ class LoadEntitiesFromCsv(CsvScript):
 
     The CSV file should have a header line specifying the column names.
 
-    The command line argument --name_column specifies the column from which to read
+    The command line argument --name-column specifies the column from which to read
     the entity names. The entity names are automatically normalized to create a valid
     resource name for the entity.
 
@@ -30,28 +30,28 @@ class LoadEntitiesFromCsv(CsvScript):
     def __init__(self, argv: Sequence[str], description: str):
         super().__init__(argv, description)
         self.parser.add_argument(
-            "--entity_type",
+            "--entity-type",
             required=False,
             type=str,
             help="The type of the entities to be loaded. Must already exist in the data model. "
             "If not specified, defaults to the same value as the name_column argument.",
         )
         self.parser.add_argument(
-            "--name_column",
+            "--name-column",
             required=False,
             type=str,
             help="The column name for the entity name. "
             "If not specified, defaults to the first column in the file.",
         )
         self.parser.add_argument(
-            "--display_name_column",
+            "--display-name-column",
             required=False,
             type=str,
             help="The column name for the entity's display name. "
             "If not specified, uses the entity name",
         )
         self.parser.add_argument(
-            "--description_column",
+            "--description-column",
             required=False,
             type=str,
             help="The column name for the entity description. "

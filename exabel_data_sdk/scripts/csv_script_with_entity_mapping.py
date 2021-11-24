@@ -48,7 +48,7 @@ class CsvScriptWithEntityMapping(CsvScript):
             "Supports *.json and *.csv extensions only."
         )
         self.parser.add_argument(
-            "--entity_mapping_filename", required=False, type=str, help=help_text
+            "--entity-mapping-filename", required=False, type=str, help=help_text
         )
 
     def read_entity_mapping_file(
