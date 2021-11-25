@@ -25,7 +25,7 @@ class ConcreteCsvScriptWithEntitySearch(CsvScriptWithEntityMapping):
 class TestCsvScriptWithEntitySearch(unittest.TestCase):
     def test_read_entity_mapping_file_json(self):
         args = common_args + [
-            "--entity_mapping_filename",
+            "--entity-mapping-filename",
             "./exabel_data_sdk/tests/resources/data/entity_mapping.json",
         ]
 
@@ -39,7 +39,7 @@ class TestCsvScriptWithEntitySearch(unittest.TestCase):
 
     def test_read_entity_mapping_file_csv(self):
         args = common_args + [
-            "--entity_mapping_filename",
+            "--entity-mapping-filename",
             "./exabel_data_sdk/tests/resources/data/entity_mapping.csv",
         ]
 
@@ -53,7 +53,7 @@ class TestCsvScriptWithEntitySearch(unittest.TestCase):
 
     def test_should_fail_read_entity_mapping_file_invalid_csv(self):
         args = common_args + [
-            "--entity_mapping_filename",
+            "--entity-mapping-filename",
             "./exabel_data_sdk/tests/resources/data/entity_mapping_invalid.csv",
         ]
 
@@ -68,7 +68,7 @@ class TestCsvScriptWithEntitySearch(unittest.TestCase):
         ]
 
         for file in files:
-            args = common_args + ["--entity_mapping_filename", file]
+            args = common_args + ["--entity-mapping-filename", file]
             loader = ConcreteCsvScriptWithEntitySearch(args, "Load")
             with self.assertRaises(SystemExit):
                 loader.read_entity_mapping_file(loader.parse_arguments())
@@ -81,7 +81,7 @@ class TestCsvScriptWithEntitySearch(unittest.TestCase):
         ]
 
         for file in files:
-            args = common_args + ["--entity_mapping_filename", file]
+            args = common_args + ["--entity-mapping-filename", file]
             loader = ConcreteCsvScriptWithEntitySearch(args, "Load")
             with self.assertRaises(SystemExit):
                 loader.read_entity_mapping_file(loader.parse_arguments())

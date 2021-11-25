@@ -16,7 +16,7 @@ class LoadRelationshipsFromCsv(CsvScriptWithEntityMapping):
 
     The CSV file should have a header line specifying the column names.
 
-    The command line arguments --entity_from_column and --entity_to_column specify the columns
+    The command line arguments --entity-from-column and --entity-to-column specify the columns
     in which the related entities are given. The entity names are automatically normalized to
     form the corresponding resource names (consistently with the load_entities_from_csv script).
 
@@ -32,34 +32,34 @@ class LoadRelationshipsFromCsv(CsvScriptWithEntityMapping):
         Beyond Meat,Beyond Burger,Plant-based patties
 
     which would be loaded by specifying:
-        --relationship_type my_namespace.HAS_PRODUCT
-        --entity_from_column brand
-        --entity_to_column product
-        --description_column description
+        --relationship-type my_namespace.HAS_PRODUCT
+        --entity-from-column brand
+        --entity-to-column product
+        --description-column description
     """
 
     def __init__(self, argv: Sequence[str], description: str):
         super().__init__(argv, description)
         self.parser.add_argument(
-            "--relationship_type",
+            "--relationship-type",
             required=True,
             type=str,
             help="The type of the relationships to be loaded. Created if it doesn't already exist.",
         )
         self.parser.add_argument(
-            "--entity_from_column",
+            "--entity-from-column",
             required=True,
             type=str,
             help="The column name for the entity from which the relationship originates.",
         )
         self.parser.add_argument(
-            "--entity_to_column",
+            "--entity-to-column",
             required=True,
             type=str,
             help="The column name for the entity name to which the relationship goes.",
         )
         self.parser.add_argument(
-            "--description_column",
+            "--description-column",
             required=False,
             type=str,
             help="The column name for the relationship description. "

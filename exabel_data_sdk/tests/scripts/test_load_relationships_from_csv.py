@@ -11,9 +11,9 @@ common_args = [
     "acme",
     "--api-key",
     "123",
-    "--relationship_type",
+    "--relationship-type",
     "PART_OF",
-    "--entity_to_column",
+    "--entity-to-column",
     "brand",
 ]
 
@@ -23,9 +23,9 @@ class TestLoadRelationships(unittest.TestCase):
         args = common_args + [
             "--filename",
             "./exabel_data_sdk/tests/resources/data/relationships.csv",
-            "--entity_from_column",
+            "--entity-from-column",
             "entity_from",
-            "--description_column",
+            "--description-column",
             "description",
         ]
         client = load_test_data_from_csv(LoadRelationshipsFromCsv, args)
@@ -54,7 +54,7 @@ class TestLoadRelationships(unittest.TestCase):
         args = common_args + [
             "--filename",
             "./exabel_data_sdk/tests/resources/data/relationships_with_integer_identifiers.csv",
-            "--entity_from_column",
+            "--entity-from-column",
             "company",
         ]
         client = load_test_data_from_csv(LoadRelationshipsFromCsv, args)
