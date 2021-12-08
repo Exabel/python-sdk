@@ -19,7 +19,7 @@ setuptools.setup(
     packages=setuptools.find_packages(),
     install_requires=[
         'dataclasses == 0.8; python_version <= "3.6"',
-        'google-api-core==1.31.2',
+        "google-api-core==1.31.2",
         "grpcio",
         "pandas",
         "protobuf",
