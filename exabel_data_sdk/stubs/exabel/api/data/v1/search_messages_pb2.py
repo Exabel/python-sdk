@@ -11,6 +11,7 @@ from google.protobuf import symbol_database as _symbol_database
 _sym_db = _symbol_database.Default()
 
 
+from google.api import field_behavior_pb2 as google_dot_api_dot_field__behavior__pb2
 
 
 DESCRIPTOR = _descriptor.FileDescriptor(
@@ -19,8 +20,9 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   syntax='proto3',
   serialized_options=b'\n\026com.exabel.api.data.v1B\023SearchMessagesProtoP\001',
   create_key=_descriptor._internal_create_key,
-  serialized_pb=b'\n(exabel/api/data/v1/search_messages.proto\x12\x12\x65xabel.api.data.v1\"*\n\nSearchTerm\x12\r\n\x05\x66ield\x18\x01 \x01(\t\x12\r\n\x05query\x18\x02 \x01(\tB/\n\x16\x63om.exabel.api.data.v1B\x13SearchMessagesProtoP\x01\x62\x06proto3'
-)
+  serialized_pb=b'\n(exabel/api/data/v1/search_messages.proto\x12\x12\x65xabel.api.data.v1\x1a\x1fgoogle/api/field_behavior.proto\"4\n\nSearchTerm\x12\x12\n\x05\x66ield\x18\x01 \x01(\tB\x03\xe0\x41\x02\x12\x12\n\x05query\x18\x02 \x01(\tB\x03\xe0\x41\x02\x42/\n\x16\x63om.exabel.api.data.v1B\x13SearchMessagesProtoP\x01\x62\x06proto3'
+  ,
+  dependencies=[google_dot_api_dot_field__behavior__pb2.DESCRIPTOR,])
 
 
 
@@ -39,14 +41,14 @@ _SEARCHTERM = _descriptor.Descriptor(
       has_default_value=False, default_value=b"".decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+      serialized_options=b'\340A\002', file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
       name='query', full_name='exabel.api.data.v1.SearchTerm.query', index=1,
       number=2, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=b"".decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+      serialized_options=b'\340A\002', file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
   ],
   extensions=[
   ],
@@ -59,8 +61,8 @@ _SEARCHTERM = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=64,
-  serialized_end=106,
+  serialized_start=97,
+  serialized_end=149,
 )
 
 DESCRIPTOR.message_types_by_name['SearchTerm'] = _SEARCHTERM
@@ -75,4 +77,6 @@ _sym_db.RegisterMessage(SearchTerm)
 
 
 DESCRIPTOR._options = None
+_SEARCHTERM.fields_by_name['field']._options = None
+_SEARCHTERM.fields_by_name['query']._options = None
 # @@protoc_insertion_point(module_scope)

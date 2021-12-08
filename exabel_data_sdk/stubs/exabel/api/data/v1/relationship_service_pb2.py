@@ -12,7 +12,8 @@ _sym_db = _symbol_database.Default()
 
 
 from exabel_data_sdk.stubs.exabel.api.data.v1 import relationship_messages_pb2 as exabel_dot_api_dot_data_dot_v1_dot_relationship__messages__pb2
-from exabel_data_sdk.stubs.google.api import annotations_pb2 as google_dot_api_dot_annotations__pb2
+from google.api import annotations_pb2 as google_dot_api_dot_annotations__pb2
+from google.api import field_behavior_pb2 as google_dot_api_dot_field__behavior__pb2
 from google.protobuf import empty_pb2 as google_dot_protobuf_dot_empty__pb2
 from google.protobuf import field_mask_pb2 as google_dot_protobuf_dot_field__mask__pb2
 
@@ -23,9 +24,9 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   syntax='proto3',
   serialized_options=b'\n\026com.exabel.api.data.v1B\030RelationshipServiceProtoP\001',
   create_key=_descriptor._internal_create_key,
-  serialized_pb=b'\n-exabel/api/data/v1/relationship_service.proto\x12\x12\x65xabel.api.data.v1\x1a.exabel/api/data/v1/relationship_messages.proto\x1a\x1cgoogle/api/annotations.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a google/protobuf/field_mask.proto\"E\n\x1cListRelationshipTypesRequest\x12\x11\n\tpage_size\x18\x01 \x01(\x05\x12\x12\n\npage_token\x18\x02 \x01(\t\"\x8e\x01\n\x1dListRelationshipTypesResponse\x12@\n\x12relationship_types\x18\x01 \x03(\x0b\x32$.exabel.api.data.v1.RelationshipType\x12\x17\n\x0fnext_page_token\x18\x02 \x01(\t\x12\x12\n\ntotal_size\x18\x03 \x01(\x05\"`\n\x1d\x43reateRelationshipTypeRequest\x12?\n\x11relationship_type\x18\x01 \x01(\x0b\x32$.exabel.api.data.v1.RelationshipType\"\x91\x01\n\x1dUpdateRelationshipTypeRequest\x12?\n\x11relationship_type\x18\x01 \x01(\x0b\x32$.exabel.api.data.v1.RelationshipType\x12/\n\x0bupdate_mask\x18\x02 \x01(\x0b\x32\x1a.google.protobuf.FieldMask\"-\n\x1d\x44\x65leteRelationshipTypeRequest\x12\x0c\n\x04name\x18\x01 \x01(\t\"*\n\x1aGetRelationshipTypeRequest\x12\x0c\n\x04name\x18\x01 \x01(\t\"y\n\x18ListRelationshipsRequest\x12\x0e\n\x06parent\x18\x01 \x01(\t\x12\x13\n\x0b\x66rom_entity\x18\x02 \x01(\t\x12\x11\n\tto_entity\x18\x03 \x01(\t\x12\x11\n\tpage_size\x18\x04 \x01(\x05\x12\x12\n\npage_token\x18\x05 \x01(\t\"\x81\x01\n\x19ListRelationshipsResponse\x12\x37\n\rrelationships\x18\x01 \x03(\x0b\x32 .exabel.api.data.v1.Relationship\x12\x17\n\x0fnext_page_token\x18\x02 \x01(\t\x12\x12\n\ntotal_size\x18\x03 \x01(\x05\"P\n\x16GetRelationshipRequest\x12\x0e\n\x06parent\x18\x01 \x01(\t\x12\x13\n\x0b\x66rom_entity\x18\x02 \x01(\t\x12\x11\n\tto_entity\x18\x03 \x01(\t\"S\n\x19\x43reateRelationshipRequest\x12\x36\n\x0crelationship\x18\x01 \x01(\x0b\x32 .exabel.api.data.v1.Relationship\"\x84\x01\n\x19UpdateRelationshipRequest\x12\x36\n\x0crelationship\x18\x01 \x01(\x0b\x32 .exabel.api.data.v1.Relationship\x12/\n\x0bupdate_mask\x18\x02 \x01(\x0b\x32\x1a.google.protobuf.FieldMask\"S\n\x19\x44\x65leteRelationshipRequest\x12\x0e\n\x06parent\x18\x01 \x01(\t\x12\x13\n\x0b\x66rom_entity\x18\x02 \x01(\t\x12\x11\n\tto_entity\x18\x03 \x01(\t2\x8f\r\n\x13RelationshipService\x12\x9b\x01\n\x15ListRelationshipTypes\x12\x30.exabel.api.data.v1.ListRelationshipTypesRequest\x1a\x31.exabel.api.data.v1.ListRelationshipTypesResponse\"\x1d\x82\xd3\xe4\x93\x02\x17\x12\x15/v1/relationshipTypes\x12\x93\x01\n\x13GetRelationshipType\x12..exabel.api.data.v1.GetRelationshipTypeRequest\x1a$.exabel.api.data.v1.RelationshipType\"&\x82\xd3\xe4\x93\x02 \x12\x1e/v1/{name=relationshipTypes/*}\x12\xa3\x01\n\x16\x43reateRelationshipType\x12\x31.exabel.api.data.v1.CreateRelationshipTypeRequest\x1a$.exabel.api.data.v1.RelationshipType\"0\x82\xd3\xe4\x93\x02*\"\x15/v1/relationshipTypes:\x11relationship_type\x12\xbe\x01\n\x16UpdateRelationshipType\x12\x31.exabel.api.data.v1.UpdateRelationshipTypeRequest\x1a$.exabel.api.data.v1.RelationshipType\"K\x82\xd3\xe4\x93\x02\x45\x32\x30/v1/{relationship_type.name=relationshipTypes/*}:\x11relationship_type\x12\x8b\x01\n\x16\x44\x65leteRelationshipType\x12\x31.exabel.api.data.v1.DeleteRelationshipTypeRequest\x1a\x16.google.protobuf.Empty\"&\x82\xd3\xe4\x93\x02 *\x1e/v1/{name=relationshipTypes/*}\x12\xa8\x01\n\x11ListRelationships\x12,.exabel.api.data.v1.ListRelationshipsRequest\x1a-.exabel.api.data.v1.ListRelationshipsResponse\"6\x82\xd3\xe4\x93\x02\x30\x12./v1/{parent=relationshipTypes/*}/relationships\x12\x97\x01\n\x0fGetRelationship\x12*.exabel.api.data.v1.GetRelationshipRequest\x1a .exabel.api.data.v1.Relationship\"6\x82\xd3\xe4\x93\x02\x30\x12./v1/{parent=relationshipTypes/*}/relationships\x12\xb8\x01\n\x12\x43reateRelationship\x12-.exabel.api.data.v1.CreateRelationshipRequest\x1a .exabel.api.data.v1.Relationship\"Q\x82\xd3\xe4\x93\x02K\";/v1/{relationship.parent=relationshipTypes/*}/relationships:\x0crelationship\x12\xb8\x01\n\x12UpdateRelationship\x12-.exabel.api.data.v1.UpdateRelationshipRequest\x1a .exabel.api.data.v1.Relationship\"Q\x82\xd3\xe4\x93\x02K2;/v1/{relationship.parent=relationshipTypes/*}/relationships:\x0crelationship\x12\x93\x01\n\x12\x44\x65leteRelationship\x12-.exabel.api.data.v1.DeleteRelationshipRequest\x1a\x16.google.protobuf.Empty\"6\x82\xd3\xe4\x93\x02\x30*./v1/{parent=relationshipTypes/*}/relationshipsB4\n\x16\x63om.exabel.api.data.v1B\x18RelationshipServiceProtoP\x01\x62\x06proto3'
+  serialized_pb=b'\n-exabel/api/data/v1/relationship_service.proto\x12\x12\x65xabel.api.data.v1\x1a.exabel/api/data/v1/relationship_messages.proto\x1a\x1cgoogle/api/annotations.proto\x1a\x1fgoogle/api/field_behavior.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a google/protobuf/field_mask.proto\"E\n\x1cListRelationshipTypesRequest\x12\x11\n\tpage_size\x18\x01 \x01(\x05\x12\x12\n\npage_token\x18\x02 \x01(\t\"\x8e\x01\n\x1dListRelationshipTypesResponse\x12@\n\x12relationship_types\x18\x01 \x03(\x0b\x32$.exabel.api.data.v1.RelationshipType\x12\x17\n\x0fnext_page_token\x18\x02 \x01(\t\x12\x12\n\ntotal_size\x18\x03 \x01(\x05\"e\n\x1d\x43reateRelationshipTypeRequest\x12\x44\n\x11relationship_type\x18\x01 \x01(\x0b\x32$.exabel.api.data.v1.RelationshipTypeB\x03\xe0\x41\x02\"\x96\x01\n\x1dUpdateRelationshipTypeRequest\x12\x44\n\x11relationship_type\x18\x01 \x01(\x0b\x32$.exabel.api.data.v1.RelationshipTypeB\x03\xe0\x41\x02\x12/\n\x0bupdate_mask\x18\x02 \x01(\x0b\x32\x1a.google.protobuf.FieldMask\"2\n\x1d\x44\x65leteRelationshipTypeRequest\x12\x11\n\x04name\x18\x01 \x01(\tB\x03\xe0\x41\x02\"/\n\x1aGetRelationshipTypeRequest\x12\x11\n\x04name\x18\x01 \x01(\tB\x03\xe0\x41\x02\"~\n\x18ListRelationshipsRequest\x12\x13\n\x06parent\x18\x01 \x01(\tB\x03\xe0\x41\x02\x12\x13\n\x0b\x66rom_entity\x18\x02 \x01(\t\x12\x11\n\tto_entity\x18\x03 \x01(\t\x12\x11\n\tpage_size\x18\x04 \x01(\x05\x12\x12\n\npage_token\x18\x05 \x01(\t\"\x81\x01\n\x19ListRelationshipsResponse\x12\x37\n\rrelationships\x18\x01 \x03(\x0b\x32 .exabel.api.data.v1.Relationship\x12\x17\n\x0fnext_page_token\x18\x02 \x01(\t\x12\x12\n\ntotal_size\x18\x03 \x01(\x05\"_\n\x16GetRelationshipRequest\x12\x13\n\x06parent\x18\x01 \x01(\tB\x03\xe0\x41\x02\x12\x18\n\x0b\x66rom_entity\x18\x02 \x01(\tB\x03\xe0\x41\x02\x12\x16\n\tto_entity\x18\x03 \x01(\tB\x03\xe0\x41\x02\"X\n\x19\x43reateRelationshipRequest\x12;\n\x0crelationship\x18\x01 \x01(\x0b\x32 .exabel.api.data.v1.RelationshipB\x03\xe0\x41\x02\"\x89\x01\n\x19UpdateRelationshipRequest\x12;\n\x0crelationship\x18\x01 \x01(\x0b\x32 .exabel.api.data.v1.RelationshipB\x03\xe0\x41\x02\x12/\n\x0bupdate_mask\x18\x02 \x01(\x0b\x32\x1a.google.protobuf.FieldMask\"b\n\x19\x44\x65leteRelationshipRequest\x12\x13\n\x06parent\x18\x01 \x01(\tB\x03\xe0\x41\x02\x12\x18\n\x0b\x66rom_entity\x18\x02 \x01(\tB\x03\xe0\x41\x02\x12\x16\n\tto_entity\x18\x03 \x01(\tB\x03\xe0\x41\x02\x32\x8f\r\n\x13RelationshipService\x12\x9b\x01\n\x15ListRelationshipTypes\x12\x30.exabel.api.data.v1.ListRelationshipTypesRequest\x1a\x31.exabel.api.data.v1.ListRelationshipTypesResponse\"\x1d\x82\xd3\xe4\x93\x02\x17\x12\x15/v1/relationshipTypes\x12\x93\x01\n\x13GetRelationshipType\x12..exabel.api.data.v1.GetRelationshipTypeRequest\x1a$.exabel.api.data.v1.RelationshipType\"&\x82\xd3\xe4\x93\x02 \x12\x1e/v1/{name=relationshipTypes/*}\x12\xa3\x01\n\x16\x43reateRelationshipType\x12\x31.exabel.api.data.v1.CreateRelationshipTypeRequest\x1a$.exabel.api.data.v1.RelationshipType\"0\x82\xd3\xe4\x93\x02*\"\x15/v1/relationshipTypes:\x11relationship_type\x12\xbe\x01\n\x16UpdateRelationshipType\x12\x31.exabel.api.data.v1.UpdateRelationshipTypeRequest\x1a$.exabel.api.data.v1.RelationshipType\"K\x82\xd3\xe4\x93\x02\x45\x32\x30/v1/{relationship_type.name=relationshipTypes/*}:\x11relationship_type\x12\x8b\x01\n\x16\x44\x65leteRelationshipType\x12\x31.exabel.api.data.v1.DeleteRelationshipTypeRequest\x1a\x16.google.protobuf.Empty\"&\x82\xd3\xe4\x93\x02 *\x1e/v1/{name=relationshipTypes/*}\x12\xa8\x01\n\x11ListRelationships\x12,.exabel.api.data.v1.ListRelationshipsRequest\x1a-.exabel.api.data.v1.ListRelationshipsResponse\"6\x82\xd3\xe4\x93\x02\x30\x12./v1/{parent=relationshipTypes/*}/relationships\x12\x97\x01\n\x0fGetRelationship\x12*.exabel.api.data.v1.GetRelationshipRequest\x1a .exabel.api.data.v1.Relationship\"6\x82\xd3\xe4\x93\x02\x30\x12./v1/{parent=relationshipTypes/*}/relationships\x12\xb8\x01\n\x12\x43reateRelationship\x12-.exabel.api.data.v1.CreateRelationshipRequest\x1a .exabel.api.data.v1.Relationship\"Q\x82\xd3\xe4\x93\x02K\";/v1/{relationship.parent=relationshipTypes/*}/relationships:\x0crelationship\x12\xb8\x01\n\x12UpdateRelationship\x12-.exabel.api.data.v1.UpdateRelationshipRequest\x1a .exabel.api.data.v1.Relationship\"Q\x82\xd3\xe4\x93\x02K2;/v1/{relationship.parent=relationshipTypes/*}/relationships:\x0crelationship\x12\x93\x01\n\x12\x44\x65leteRelationship\x12-.exabel.api.data.v1.DeleteRelationshipRequest\x1a\x16.google.protobuf.Empty\"6\x82\xd3\xe4\x93\x02\x30*./v1/{parent=relationshipTypes/*}/relationshipsB4\n\x16\x63om.exabel.api.data.v1B\x18RelationshipServiceProtoP\x01\x62\x06proto3'
   ,
-  dependencies=[exabel_dot_api_dot_data_dot_v1_dot_relationship__messages__pb2.DESCRIPTOR,google_dot_api_dot_annotations__pb2.DESCRIPTOR,google_dot_protobuf_dot_empty__pb2.DESCRIPTOR,google_dot_protobuf_dot_field__mask__pb2.DESCRIPTOR,])
+  dependencies=[exabel_dot_api_dot_data_dot_v1_dot_relationship__messages__pb2.DESCRIPTOR,google_dot_api_dot_annotations__pb2.DESCRIPTOR,google_dot_api_dot_field__behavior__pb2.DESCRIPTOR,google_dot_protobuf_dot_empty__pb2.DESCRIPTOR,google_dot_protobuf_dot_field__mask__pb2.DESCRIPTOR,])
 
 
 
@@ -64,8 +65,8 @@ _LISTRELATIONSHIPTYPESREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=210,
-  serialized_end=279,
+  serialized_start=243,
+  serialized_end=312,
 )
 
 
@@ -110,8 +111,8 @@ _LISTRELATIONSHIPTYPESRESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=282,
-  serialized_end=424,
+  serialized_start=315,
+  serialized_end=457,
 )
 
 
@@ -129,7 +130,7 @@ _CREATERELATIONSHIPTYPEREQUEST = _descriptor.Descriptor(
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+      serialized_options=b'\340A\002', file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
   ],
   extensions=[
   ],
@@ -142,8 +143,8 @@ _CREATERELATIONSHIPTYPEREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=426,
-  serialized_end=522,
+  serialized_start=459,
+  serialized_end=560,
 )
 
 
@@ -161,7 +162,7 @@ _UPDATERELATIONSHIPTYPEREQUEST = _descriptor.Descriptor(
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+      serialized_options=b'\340A\002', file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
       name='update_mask', full_name='exabel.api.data.v1.UpdateRelationshipTypeRequest.update_mask', index=1,
       number=2, type=11, cpp_type=10, label=1,
@@ -181,8 +182,8 @@ _UPDATERELATIONSHIPTYPEREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=525,
-  serialized_end=670,
+  serialized_start=563,
+  serialized_end=713,
 )
 
 
@@ -200,7 +201,7 @@ _DELETERELATIONSHIPTYPEREQUEST = _descriptor.Descriptor(
       has_default_value=False, default_value=b"".decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+      serialized_options=b'\340A\002', file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
   ],
   extensions=[
   ],
@@ -213,8 +214,8 @@ _DELETERELATIONSHIPTYPEREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=672,
-  serialized_end=717,
+  serialized_start=715,
+  serialized_end=765,
 )
 
 
@@ -232,7 +233,7 @@ _GETRELATIONSHIPTYPEREQUEST = _descriptor.Descriptor(
       has_default_value=False, default_value=b"".decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+      serialized_options=b'\340A\002', file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
   ],
   extensions=[
   ],
@@ -245,8 +246,8 @@ _GETRELATIONSHIPTYPEREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=719,
-  serialized_end=761,
+  serialized_start=767,
+  serialized_end=814,
 )
 
 
@@ -264,7 +265,7 @@ _LISTRELATIONSHIPSREQUEST = _descriptor.Descriptor(
       has_default_value=False, default_value=b"".decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+      serialized_options=b'\340A\002', file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
       name='from_entity', full_name='exabel.api.data.v1.ListRelationshipsRequest.from_entity', index=1,
       number=2, type=9, cpp_type=9, label=1,
@@ -305,8 +306,8 @@ _LISTRELATIONSHIPSREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=763,
-  serialized_end=884,
+  serialized_start=816,
+  serialized_end=942,
 )
 
 
@@ -351,8 +352,8 @@ _LISTRELATIONSHIPSRESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=887,
-  serialized_end=1016,
+  serialized_start=945,
+  serialized_end=1074,
 )
 
 
@@ -370,21 +371,21 @@ _GETRELATIONSHIPREQUEST = _descriptor.Descriptor(
       has_default_value=False, default_value=b"".decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+      serialized_options=b'\340A\002', file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
       name='from_entity', full_name='exabel.api.data.v1.GetRelationshipRequest.from_entity', index=1,
       number=2, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=b"".decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+      serialized_options=b'\340A\002', file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
       name='to_entity', full_name='exabel.api.data.v1.GetRelationshipRequest.to_entity', index=2,
       number=3, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=b"".decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+      serialized_options=b'\340A\002', file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
   ],
   extensions=[
   ],
@@ -397,8 +398,8 @@ _GETRELATIONSHIPREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1018,
-  serialized_end=1098,
+  serialized_start=1076,
+  serialized_end=1171,
 )
 
 
@@ -416,7 +417,7 @@ _CREATERELATIONSHIPREQUEST = _descriptor.Descriptor(
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+      serialized_options=b'\340A\002', file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
   ],
   extensions=[
   ],
@@ -429,8 +430,8 @@ _CREATERELATIONSHIPREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1100,
-  serialized_end=1183,
+  serialized_start=1173,
+  serialized_end=1261,
 )
 
 
@@ -448,7 +449,7 @@ _UPDATERELATIONSHIPREQUEST = _descriptor.Descriptor(
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+      serialized_options=b'\340A\002', file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
       name='update_mask', full_name='exabel.api.data.v1.UpdateRelationshipRequest.update_mask', index=1,
       number=2, type=11, cpp_type=10, label=1,
@@ -468,8 +469,8 @@ _UPDATERELATIONSHIPREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1186,
-  serialized_end=1318,
+  serialized_start=1264,
+  serialized_end=1401,
 )
 
 
@@ -487,21 +488,21 @@ _DELETERELATIONSHIPREQUEST = _descriptor.Descriptor(
       has_default_value=False, default_value=b"".decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+      serialized_options=b'\340A\002', file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
       name='from_entity', full_name='exabel.api.data.v1.DeleteRelationshipRequest.from_entity', index=1,
       number=2, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=b"".decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+      serialized_options=b'\340A\002', file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
       name='to_entity', full_name='exabel.api.data.v1.DeleteRelationshipRequest.to_entity', index=2,
       number=3, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=b"".decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+      serialized_options=b'\340A\002', file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
   ],
   extensions=[
   ],
@@ -514,8 +515,8 @@ _DELETERELATIONSHIPREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1320,
-  serialized_end=1403,
+  serialized_start=1403,
+  serialized_end=1501,
 )
 
 _LISTRELATIONSHIPTYPESRESPONSE.fields_by_name['relationship_types'].message_type = exabel_dot_api_dot_data_dot_v1_dot_relationship__messages__pb2._RELATIONSHIPTYPE
@@ -626,6 +627,19 @@ _sym_db.RegisterMessage(DeleteRelationshipRequest)
 
 
 DESCRIPTOR._options = None
+_CREATERELATIONSHIPTYPEREQUEST.fields_by_name['relationship_type']._options = None
+_UPDATERELATIONSHIPTYPEREQUEST.fields_by_name['relationship_type']._options = None
+_DELETERELATIONSHIPTYPEREQUEST.fields_by_name['name']._options = None
+_GETRELATIONSHIPTYPEREQUEST.fields_by_name['name']._options = None
+_LISTRELATIONSHIPSREQUEST.fields_by_name['parent']._options = None
+_GETRELATIONSHIPREQUEST.fields_by_name['parent']._options = None
+_GETRELATIONSHIPREQUEST.fields_by_name['from_entity']._options = None
+_GETRELATIONSHIPREQUEST.fields_by_name['to_entity']._options = None
+_CREATERELATIONSHIPREQUEST.fields_by_name['relationship']._options = None
+_UPDATERELATIONSHIPREQUEST.fields_by_name['relationship']._options = None
+_DELETERELATIONSHIPREQUEST.fields_by_name['parent']._options = None
+_DELETERELATIONSHIPREQUEST.fields_by_name['from_entity']._options = None
+_DELETERELATIONSHIPREQUEST.fields_by_name['to_entity']._options = None
 
 _RELATIONSHIPSERVICE = _descriptor.ServiceDescriptor(
   name='RelationshipService',
@@ -634,8 +648,8 @@ _RELATIONSHIPSERVICE = _descriptor.ServiceDescriptor(
   index=0,
   serialized_options=None,
   create_key=_descriptor._internal_create_key,
-  serialized_start=1406,
-  serialized_end=3085,
+  serialized_start=1504,
+  serialized_end=3183,
   methods=[
   _descriptor.MethodDescriptor(
     name='ListRelationshipTypes',
