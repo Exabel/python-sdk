@@ -11,6 +11,7 @@ from google.protobuf import symbol_database as _symbol_database
 _sym_db = _symbol_database.Default()
 
 
+from google.api import field_behavior_pb2 as google_dot_api_dot_field__behavior__pb2
 from google.protobuf import struct_pb2 as google_dot_protobuf_dot_struct__pb2
 
 
@@ -20,9 +21,9 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   syntax='proto3',
   serialized_options=b'\n\026com.exabel.api.data.v1B\023EntityMessagesProtoP\001',
   create_key=_descriptor._internal_create_key,
-  serialized_pb=b'\n(exabel/api/data/v1/entity_messages.proto\x12\x12\x65xabel.api.data.v1\x1a\x1cgoogle/protobuf/struct.proto\"X\n\nEntityType\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x14\n\x0c\x64isplay_name\x18\x02 \x01(\t\x12\x13\n\x0b\x64\x65scription\x18\x03 \x01(\t\x12\x11\n\tread_only\x18\x04 \x01(\x08\"\x81\x01\n\x06\x45ntity\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x14\n\x0c\x64isplay_name\x18\x02 \x01(\t\x12\x13\n\x0b\x64\x65scription\x18\x03 \x01(\t\x12\x11\n\tread_only\x18\x04 \x01(\x08\x12+\n\nproperties\x18\x64 \x01(\x0b\x32\x17.google.protobuf.StructB/\n\x16\x63om.exabel.api.data.v1B\x13\x45ntityMessagesProtoP\x01\x62\x06proto3'
+  serialized_pb=b'\n(exabel/api/data/v1/entity_messages.proto\x12\x12\x65xabel.api.data.v1\x1a\x1fgoogle/api/field_behavior.proto\x1a\x1cgoogle/protobuf/struct.proto\"\x82\x01\n\nEntityType\x12\x14\n\x04name\x18\x01 \x01(\tB\x06\xe0\x41\x05\xe0\x41\x02\x12\x19\n\x0c\x64isplay_name\x18\x02 \x01(\tB\x03\xe0\x41\x02\x12\x13\n\x0b\x64\x65scription\x18\x03 \x01(\t\x12\x16\n\tread_only\x18\x04 \x01(\x08\x42\x03\xe0\x41\x03\x12\x16\n\x0eis_associative\x18\x05 \x01(\x08\"\x93\x01\n\x06\x45ntity\x12\x14\n\x04name\x18\x01 \x01(\tB\x06\xe0\x41\x05\xe0\x41\x02\x12\x19\n\x0c\x64isplay_name\x18\x02 \x01(\tB\x03\xe0\x41\x02\x12\x13\n\x0b\x64\x65scription\x18\x03 \x01(\t\x12\x16\n\tread_only\x18\x04 \x01(\x08\x42\x03\xe0\x41\x03\x12+\n\nproperties\x18\x64 \x01(\x0b\x32\x17.google.protobuf.StructB/\n\x16\x63om.exabel.api.data.v1B\x13\x45ntityMessagesProtoP\x01\x62\x06proto3'
   ,
-  dependencies=[google_dot_protobuf_dot_struct__pb2.DESCRIPTOR,])
+  dependencies=[google_dot_api_dot_field__behavior__pb2.DESCRIPTOR,google_dot_protobuf_dot_struct__pb2.DESCRIPTOR,])
 
 
 
@@ -41,14 +42,14 @@ _ENTITYTYPE = _descriptor.Descriptor(
       has_default_value=False, default_value=b"".decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+      serialized_options=b'\340A\005\340A\002', file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
       name='display_name', full_name='exabel.api.data.v1.EntityType.display_name', index=1,
       number=2, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=b"".decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+      serialized_options=b'\340A\002', file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
       name='description', full_name='exabel.api.data.v1.EntityType.description', index=2,
       number=3, type=9, cpp_type=9, label=1,
@@ -59,6 +60,13 @@ _ENTITYTYPE = _descriptor.Descriptor(
     _descriptor.FieldDescriptor(
       name='read_only', full_name='exabel.api.data.v1.EntityType.read_only', index=3,
       number=4, type=8, cpp_type=7, label=1,
+      has_default_value=False, default_value=False,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=b'\340A\003', file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+    _descriptor.FieldDescriptor(
+      name='is_associative', full_name='exabel.api.data.v1.EntityType.is_associative', index=4,
+      number=5, type=8, cpp_type=7, label=1,
       has_default_value=False, default_value=False,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
@@ -75,8 +83,8 @@ _ENTITYTYPE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=94,
-  serialized_end=182,
+  serialized_start=128,
+  serialized_end=258,
 )
 
 
@@ -94,14 +102,14 @@ _ENTITY = _descriptor.Descriptor(
       has_default_value=False, default_value=b"".decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+      serialized_options=b'\340A\005\340A\002', file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
       name='display_name', full_name='exabel.api.data.v1.Entity.display_name', index=1,
       number=2, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=b"".decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+      serialized_options=b'\340A\002', file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
       name='description', full_name='exabel.api.data.v1.Entity.description', index=2,
       number=3, type=9, cpp_type=9, label=1,
@@ -115,7 +123,7 @@ _ENTITY = _descriptor.Descriptor(
       has_default_value=False, default_value=False,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+      serialized_options=b'\340A\003', file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
       name='properties', full_name='exabel.api.data.v1.Entity.properties', index=4,
       number=100, type=11, cpp_type=10, label=1,
@@ -135,8 +143,8 @@ _ENTITY = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=185,
-  serialized_end=314,
+  serialized_start=261,
+  serialized_end=408,
 )
 
 _ENTITY.fields_by_name['properties'].message_type = google_dot_protobuf_dot_struct__pb2._STRUCT
@@ -160,4 +168,10 @@ _sym_db.RegisterMessage(Entity)
 
 
 DESCRIPTOR._options = None
+_ENTITYTYPE.fields_by_name['name']._options = None
+_ENTITYTYPE.fields_by_name['display_name']._options = None
+_ENTITYTYPE.fields_by_name['read_only']._options = None
+_ENTITY.fields_by_name['name']._options = None
+_ENTITY.fields_by_name['display_name']._options = None
+_ENTITY.fields_by_name['read_only']._options = None
 # @@protoc_insertion_point(module_scope)
