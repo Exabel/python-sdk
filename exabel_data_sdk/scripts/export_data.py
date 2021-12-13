@@ -1,5 +1,6 @@
 import argparse
 import sys
+from time import time
 from typing import Sequence
 
 import requests
@@ -58,10 +59,11 @@ class ExportData:
         args = self.parse_arguments()
         login = CliLogin(args.auth0, args.client_id, args.backend)
         login.log_in()
-        query = requests.utils.quote(args.query)  # type: ignore[attr-defined]
         headers = {"Authorization": f"Bearer {login.access_token}"}
-        url = f"https://{args.backend}/v1/export/file?format={args.format}&query={query}"
-        response = requests.get(url, headers=headers)
+        data = {"format": args.format, "query": args.query}
+        url = f"https://{args.backend}/v1/export/file"
+        start_time = time()
+        response = requests.post(url, headers=headers, data=data)
         if response.status_code == 200:
             with open(args.filename, "wb") as file:
                 file.write(response.content)
@@ -70,6 +72,8 @@ class ExportData:
             if error_message.startswith('"') and error_message.endswith('"'):
                 error_message = error_message[1:-1]
             print(f"{response.status_code}: {error_message}")
+        spent_time = time() - start_time
+        print(f"Query completed in {int(spent_time)} seconds")
 
 
 if __name__ == "__main__":
