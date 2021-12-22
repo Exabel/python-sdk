@@ -18,16 +18,6 @@ class ExportData:
         """Parse the command-line input arguments."""
         parser = argparse.ArgumentParser(description="Export data")
         parser.add_argument(
-            "--auth0",
-            default="auth.exabel.com",
-            help="The domain of the Auth0 log-in page",
-        )
-        parser.add_argument(
-            "--client-id",
-            default="6OoAPIEgqz1CQokkBuwtBcYKgNiLKsMF",
-            help="The Auth0 client id for the Python SDK",
-        )
-        parser.add_argument(
             "--query",
             required=True,
             type=str,
@@ -50,7 +40,17 @@ class ExportData:
             required=False,
             type=str,
             default="endpoints.exabel.com",
-            help="The domain of the Exabel back-end API",
+            help=argparse.SUPPRESS,
+        )
+        parser.add_argument(
+            "--auth0",
+            default="auth.exabel.com",
+            help=argparse.SUPPRESS,
+        )
+        parser.add_argument(
+            "--client-id",
+            default="6OoAPIEgqz1CQokkBuwtBcYKgNiLKsMF",
+            help=argparse.SUPPRESS,
         )
         return parser.parse_args(self.argv[1:])
 
