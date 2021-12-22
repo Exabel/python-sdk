@@ -20,7 +20,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   syntax='proto3',
   serialized_options=b'\n\026com.exabel.api.data.v1B\024DataSetMessagesProtoP\001',
   create_key=_descriptor._internal_create_key,
-  serialized_pb=b'\n*exabel/api/data/v1/data_set_messages.proto\x12\x12\x65xabel.api.data.v1\x1a\x1fgoogle/api/field_behavior.proto\"e\n\x07\x44\x61taSet\x12\x14\n\x04name\x18\x01 \x01(\tB\x06\xe0\x41\x05\xe0\x41\x02\x12\x19\n\x0c\x64isplay_name\x18\x02 \x01(\tB\x03\xe0\x41\x02\x12\x13\n\x0b\x64\x65scription\x18\x03 \x01(\t\x12\x14\n\x07signals\x18\x04 \x03(\tB\x03\xe0\x41\x06\x42\x30\n\x16\x63om.exabel.api.data.v1B\x14\x44\x61taSetMessagesProtoP\x01\x62\x06proto3'
+  serialized_pb=b'\n*exabel/api/data/v1/data_set_messages.proto\x12\x12\x65xabel.api.data.v1\x1a\x1fgoogle/api/field_behavior.proto\"}\n\x07\x44\x61taSet\x12\x14\n\x04name\x18\x01 \x01(\tB\x06\xe0\x41\x05\xe0\x41\x02\x12\x19\n\x0c\x64isplay_name\x18\x02 \x01(\tB\x03\xe0\x41\x02\x12\x13\n\x0b\x64\x65scription\x18\x03 \x01(\t\x12\x14\n\x07signals\x18\x04 \x03(\tB\x03\xe0\x41\x06\x12\x16\n\tread_only\x18\x05 \x01(\x08\x42\x03\xe0\x41\x03\x42\x30\n\x16\x63om.exabel.api.data.v1B\x14\x44\x61taSetMessagesProtoP\x01\x62\x06proto3'
   ,
   dependencies=[google_dot_api_dot_field__behavior__pb2.DESCRIPTOR,])
 
@@ -63,6 +63,13 @@ _DATASET = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=b'\340A\006', file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+    _descriptor.FieldDescriptor(
+      name='read_only', full_name='exabel.api.data.v1.DataSet.read_only', index=4,
+      number=5, type=8, cpp_type=7, label=1,
+      has_default_value=False, default_value=False,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=b'\340A\003', file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
   ],
   extensions=[
   ],
@@ -76,7 +83,7 @@ _DATASET = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=99,
-  serialized_end=200,
+  serialized_end=224,
 )
 
 DESCRIPTOR.message_types_by_name['DataSet'] = _DATASET
@@ -94,4 +101,5 @@ DESCRIPTOR._options = None
 _DATASET.fields_by_name['name']._options = None
 _DATASET.fields_by_name['display_name']._options = None
 _DATASET.fields_by_name['signals']._options = None
+_DATASET.fields_by_name['read_only']._options = None
 # @@protoc_insertion_point(module_scope)
