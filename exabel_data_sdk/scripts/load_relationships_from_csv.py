@@ -65,6 +65,13 @@ class LoadRelationshipsFromCsv(CsvScriptWithEntityMapping):
             help="The column name for the relationship description. "
             "If not specified, no description is provided.",
         )
+        self.parser.add_argument(
+            "--upsert",
+            required=False,
+            action="store_true",
+            default=False,
+            help="Update relationships if they already exist.",
+        )
 
     def run_script(self, client: ExabelClient, args: argparse.Namespace) -> None:
 
@@ -130,7 +137,9 @@ class LoadRelationshipsFromCsv(CsvScriptWithEntityMapping):
             return
 
         try:
-            client.relationship_api.bulk_create_relationships(relationships, threads=args.threads)
+            client.relationship_api.bulk_create_relationships(
+                relationships, threads=args.threads, upsert=args.upsert
+            )
         except BulkInsertFailedError:
             # An error summary has already been printed.
             pass

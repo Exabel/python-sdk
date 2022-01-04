@@ -76,3 +76,28 @@ class TestLoadEntities(unittest.TestCase):
             for letter in "ABCDEFGHIJ"
         ]
         self.check_entities(client, expected_entities)
+
+    def test_read_file_with_upsert(self):
+        args = common_args + [
+            "--filename",
+            "./exabel_data_sdk/tests/resources/data/entities.csv",
+            "--description-col",
+            "description",
+            "--upsert",
+        ]
+        client = load_test_data_from_csv(LoadEntitiesFromCsv, args)
+        expected_entities = [
+            Entity(
+                name="entityTypes/brand/entities/test.Spring_Vine",
+                display_name="Spring & Vine",
+                description="This entry might be ignored because it's a duplicate",
+            ),
+            Entity(
+                name="entityTypes/brand/entities/test.The_Coconut_Tree",
+                display_name="The Coconut Tree",
+                description="Sri Lankan street food",
+            ),
+        ]
+        self.check_entities(client, expected_entities)
+        client = load_test_data_from_csv(LoadEntitiesFromCsv, args, client)
+        self.check_entities(client, expected_entities)

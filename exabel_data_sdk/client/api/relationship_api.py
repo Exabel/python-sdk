@@ -243,6 +243,38 @@ class RelationshipApi:
         )
         return Relationship.from_proto(response)
 
+    def upsert_relationship(
+        self, relationship: Relationship, assume_exists: bool = True
+    ) -> Relationship:
+        """
+        Upsert a relationship between two entities.
+
+        If the relationship already exists, update it by replacement. Otherwise, create it.
+
+        Args:
+            relationship:   The relationship to upsert.
+            assume_exists:  If True, the relationship is assumed to exist. Will try to to update
+                            the relationship, and fall back to creating it if it does not exist,
+                            and vice versa.
+        """
+        if assume_exists:
+            try:
+                relationship = self.update_relationship(relationship)
+            except RequestError as error:
+                if error.error_type == ErrorType.NOT_FOUND:
+                    relationship = self.create_relationship(relationship)
+                else:
+                    raise error
+        else:
+            try:
+                relationship = self.create_relationship(relationship)
+            except RequestError as error:
+                if error.error_type == ErrorType.ALREADY_EXISTS:
+                    relationship = self.update_relationship(relationship)
+                else:
+                    raise error
+        return relationship
+
     def delete_relationship(self, relationship_type: str, from_entity: str, to_entity: str) -> None:
         """
         Delete a relationship.
@@ -277,6 +309,7 @@ class RelationshipApi:
         self,
         relationships: Sequence[Relationship],
         threads: int = 40,
+        upsert: bool = False,
     ) -> ResourceCreationResults[Relationship]:
         """
         Check if the provided relationships exist, and create them if they don't.
@@ -284,6 +317,10 @@ class RelationshipApi:
         """
 
         def insert(relationship: Relationship) -> ResourceCreationStatus:
+            if upsert:
+                # Upsert relationships assuming they already exist.
+                self.upsert_relationship(relationship=relationship, assume_exists=True)
+                return ResourceCreationStatus.UPSERTED
             # Optimistically insert the relationship.
             # If the relationship already exists, we'll get an ALREADY_EXISTS error from the
             # backend, which is handled appropriately by the bulk_insert function.

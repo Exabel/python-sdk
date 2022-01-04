@@ -64,6 +64,26 @@ class MockResourceStore(Generic[TResource]):
         self.resources[key] = resource
         return resource
 
+    @failure_prone
+    def update(self, resource: TResource, key: object = None) -> TResource:
+        """
+        Update the given resource in the store.
+
+        Typically, resources have a resource name, which should be used as the key.
+        In this case, the key parameter should not be set.
+        If not, as in the case of Relationship resources, an explicit key must be provided.
+
+        Args:
+            resource: the resource to create in the store
+            key:      the key of the resource. Defaults to the resource's name.
+        """
+        if key is None:
+            key = resource.name  # type: ignore[attr-defined]
+        if key not in self.resources:
+            raise RequestError(ErrorType.NOT_FOUND, f"Does not exist: {key}")
+        self.resources[key] = resource
+        return resource
+
     def delete(self, key: object):
         """Delete the resource with the given key."""
         if key in self.resources:
