@@ -57,6 +57,13 @@ class LoadEntitiesFromCsv(CsvScript):
             help="The column name for the entity description. "
             "If not specified, no description is provided.",
         )
+        self.parser.add_argument(
+            "--upsert",
+            required=False,
+            action="store_true",
+            default=False,
+            help="Update entities if they already exist.",
+        )
 
     def run_script(self, client: ExabelClient, args: argparse.Namespace) -> None:
 
@@ -101,7 +108,9 @@ class LoadEntitiesFromCsv(CsvScript):
             return
 
         try:
-            client.entity_api.bulk_create_entities(entities, entity_type_name, threads=args.threads)
+            client.entity_api.bulk_create_entities(
+                entities, entity_type_name, threads=args.threads, upsert=args.upsert
+            )
         except BulkInsertFailedError:
             # An error summary has already been printed.
             pass

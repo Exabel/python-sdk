@@ -26,6 +26,9 @@ class ResourceCreationStatus(Enum):
     # Denotes that creation failed.
     FAILED = 3
 
+    # Denotes that a resource was upserted.
+    UPSERTED = 4
+
 
 class ResourceCreationResult(Generic[TResource]):
     """
@@ -57,6 +60,7 @@ class ResourceCreationResults(Generic[TResource]):
             print_status:    Whether to print status of the upload during processing.
             abort_threshold: If the fraction of failed requests exceeds this threshold,
                              the upload is aborted.
+            upsert:          Update resources that already exist.
         """
         self.results: List[ResourceCreationResult[TResource]] = []
         self.counter: Counter = Counter()
@@ -117,9 +121,12 @@ class ResourceCreationResults(Generic[TResource]):
 
     def print_summary(self) -> None:
         """Prints a human legible summary of the resource creation results to screen."""
-        print(self.counter[ResourceCreationStatus.CREATED], "new resources created")
+        if self.counter[ResourceCreationStatus.CREATED]:
+            print(self.counter[ResourceCreationStatus.CREATED], "new resources created")
         if self.counter[ResourceCreationStatus.EXISTS]:
             print(self.counter[ResourceCreationStatus.EXISTS], "resources already existed")
+        if self.counter[ResourceCreationStatus.UPSERTED]:
+            print(self.counter[ResourceCreationStatus.UPSERTED], "resources upserted")
         if self.counter[ResourceCreationStatus.FAILED]:
             print(self.counter[ResourceCreationStatus.FAILED], "resources failed:")
             for result in self.results:
@@ -134,13 +141,17 @@ class ResourceCreationResults(Generic[TResource]):
         Note that the previous status message is overwritten (by writing '\r'),
         but this only works if nothing else has been printed to stdout since the last update.
         """
+        message_parts = []
         fraction_complete = self.count() / self.total_count
-        sys.stdout.write(
-            f"\r{fraction_complete:.0%} - "
-            f"{self.count(ResourceCreationStatus.CREATED)} created, "
-            f"{self.count(ResourceCreationStatus.EXISTS)} exists, "
-            f"{self.count(ResourceCreationStatus.FAILED)} failed"
-        )
+        message_parts.append(f"\r{fraction_complete:.0%} - ")
+        if self.counter[ResourceCreationStatus.CREATED]:
+            message_parts.append(f"{self.count(ResourceCreationStatus.CREATED)} created, ")
+        if self.counter[ResourceCreationStatus.UPSERTED]:
+            message_parts.append(f"{self.count(ResourceCreationStatus.UPSERTED)} upserted, ")
+        if self.counter[ResourceCreationStatus.EXISTS]:
+            message_parts.append(f"{self.count(ResourceCreationStatus.EXISTS)} exists, ")
+        message_parts.append(f"{self.count(ResourceCreationStatus.FAILED)} failed")
+        sys.stdout.write("".join(message_parts))
         if fraction_complete == 1:
             sys.stdout.write("\n")
         sys.stdout.flush()

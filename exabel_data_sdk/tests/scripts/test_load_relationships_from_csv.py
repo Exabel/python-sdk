@@ -83,3 +83,37 @@ class TestLoadRelationships(unittest.TestCase):
                 expected_relationship.to_entity,
             )
             self.assertEqual(expected_relationship, relationship)
+
+    def test_read_file_with_upsert(self):
+        args = common_args + [
+            "--filename",
+            "./exabel_data_sdk/tests/resources/data/relationships.csv",
+            "--entity-from-column",
+            "entity_from",
+            "--description-column",
+            "description",
+            "--upsert",
+        ]
+        client = load_test_data_from_csv(LoadRelationshipsFromCsv, args)
+        # Check that the relationship type was created
+        self.assertEqual(
+            RelationshipType("relationshipTypes/acme.PART_OF"),
+            client.relationship_api.get_relationship_type("relationshipTypes/acme.PART_OF"),
+        )
+        expected_relationships = [
+            Relationship(
+                relationship_type="relationshipTypes/acme.PART_OF",
+                from_entity="entityTypes/company/company_x",
+                to_entity="entityTypes/brand/entities/acme.Spring_Vine",
+                description="This entry might be ignored because it's a duplicate",
+            ),
+            Relationship(
+                relationship_type="relationshipTypes/acme.PART_OF",
+                from_entity="entityTypes/company/company_y",
+                to_entity="entityTypes/brand/entities/acme.The_Coconut_Tree",
+                description="Acquired for $200M",
+            ),
+        ]
+        self.check_relationships(client, expected_relationships)
+        client = load_test_data_from_csv(LoadRelationshipsFromCsv, args, client)
+        self.check_relationships(client, expected_relationships)

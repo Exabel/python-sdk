@@ -76,7 +76,8 @@ class MockRelationshipApi(RelationshipApi):
     def update_relationship(
         self, relationship: Relationship, update_mask: FieldMask = None
     ) -> Relationship:
-        raise NotImplementedError()
+        # Note: The mock implementation ignores update_mask
+        return self.relationships.update(relationship, self._key(relationship))
 
     def delete_relationship(self, relationship_type: str, from_entity: str, to_entity: str) -> None:
         self.relationships.delete((relationship_type, from_entity, to_entity))

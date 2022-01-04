@@ -338,7 +338,7 @@ class TimeSeriesApi:
             existed = self.upsert_time_series(
                 str(ts.name), ts, create_tag=create_tag, default_known_time=default_known_time
             )
-            return ResourceCreationStatus.EXISTS if existed else ResourceCreationStatus.CREATED
+            return ResourceCreationStatus.UPSERTED if existed else ResourceCreationStatus.CREATED
 
         return bulk_insert(series, insert, threads=threads)
 

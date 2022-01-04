@@ -146,6 +146,36 @@ class EntityApi:
         )
         return Entity.from_proto(response)
 
+    def upsert_entity(self, entity: Entity, assume_exists: bool = True) -> Entity:
+        """
+        Upsert an entity.
+
+        If the entity already exists, update it by replacement. Otherwise, create it.
+
+        Args:
+            entity:         The entity to upsert.
+            assume_exists:  If True, the entity is assumed to exist. Will try to to update
+                            the entity, and fall back to creating it if it does not exist,
+                            and vice versa.
+        """
+        if assume_exists:
+            try:
+                entity = self.update_entity(entity)
+            except RequestError as error:
+                if error.error_type == ErrorType.NOT_FOUND:
+                    entity = self.create_entity(entity, entity.get_entity_type())
+                else:
+                    raise error
+        else:
+            try:
+                entity = self.create_entity(entity, entity.get_entity_type())
+            except RequestError as error:
+                if error.error_type == ErrorType.ALREADY_EXISTS:
+                    entity = self.update_entity(entity)
+                else:
+                    raise error
+        return entity
+
     def delete_entity(self, name: str) -> None:
         """
         Delete one entity.
@@ -189,6 +219,7 @@ class EntityApi:
         entities: Sequence[Entity],
         entity_type: str,
         threads: int = 40,
+        upsert: bool = False,
     ) -> ResourceCreationResults[Entity]:
         """
         Check if the provided entities exist, and create them if they don't.
@@ -197,6 +228,10 @@ class EntityApi:
         """
 
         def insert(entity: Entity) -> ResourceCreationStatus:
+            if upsert:
+                # Upsert entities assuming they already exist.
+                self.upsert_entity(entity=entity, assume_exists=True)
+                return ResourceCreationStatus.UPSERTED
             # Optimistically insert the entity.
             # If the entity already exists, we'll get an ALREADY_EXISTS error from the backend,
             # which is handled appropriately by the bulk_insert function.
