@@ -27,10 +27,20 @@ class CreateRelationshipType(BaseScript):
             type=str,
             help="One or more paragraphs of text description",
         )
+        self.parser.add_argument(
+            "--is-ownership",
+            required=False,
+            action="store_true",
+            help="Whether this relationship type is a data set ownership",
+        )
 
     def run_script(self, client: ExabelClient, args: argparse.Namespace) -> None:
         relationship_type = client.relationship_api.create_relationship_type(
-            RelationshipType(name=args.name, description=args.description)
+            RelationshipType(
+                name=args.name,
+                description=args.description,
+                is_ownership=args.is_ownership,
+            )
         )
         print("Successfully created relationship type:")
         print(relationship_type)

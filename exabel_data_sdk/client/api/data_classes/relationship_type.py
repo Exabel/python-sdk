@@ -11,14 +11,16 @@ class RelationshipType:
     A relationship type resource in the Data API.
 
     Attributes:
-        name (str):         The resource name of the relationship type, for example
-                            "relationshipTypes/namespace.relationshipTypeIdentifier". The namespace
-                            must be empty (being global) or one of the predetermined namespaces
-                            the customer has access to. The relationship type identifier must
-                            match the regex [A-Z][A-Z0-9_]{0,63}.
-        description (str):  One or more paragraphs of text description.
-        properties (dict):  The properties of this entity.
-        read_only (bool):   Whether this resource is read only.
+        name (str):             The resource name of the relationship type, for example
+                                "relationshipTypes/namespace.relationshipTypeIdentifier".
+                                The namespace must be empty (being global) or one of the
+                                predetermined namespaces the customer has access to. The
+                                relationship type identifier must match the regex
+                                [A-Z][A-Z0-9_]{0,63}.
+        description (str):      One or more paragraphs of text description.
+        properties (dict):      The properties of this entity.
+        read_only (bool):       Whether this resource is read only.
+        is_ownership (bool):    Whether this relationship type is a data set ownership.
     """
 
     def __init__(
@@ -27,6 +29,7 @@ class RelationshipType:
         description: str = "",
         properties: Mapping[str, Union[str, bool, int, float]] = None,
         read_only: bool = False,
+        is_ownership: bool = False,
     ):
         """
         Create a relationship type resource in the Data API.
@@ -40,11 +43,13 @@ class RelationshipType:
             description: One or more paragraphs of text description.
             properties:  The properties of this entity.
             read_only:   Whether this resource is read only.
+            read_only:   Whether this relationship type is a data set ownership.
         """
         self.name = name
         self.description = description
         self.properties = {} if properties is None else properties
         self.read_only = read_only
+        self.is_ownership = is_ownership
 
     @staticmethod
     def from_proto(relationship_type: ProtoRelationshipType) -> "RelationshipType":
@@ -54,6 +59,7 @@ class RelationshipType:
             description=relationship_type.description,
             properties=from_struct(relationship_type.properties),
             read_only=relationship_type.read_only,
+            is_ownership=relationship_type.is_ownership,
         )
 
     def to_proto(self) -> ProtoRelationshipType:
@@ -62,6 +68,7 @@ class RelationshipType:
             name=self.name,
             description=self.description,
             properties=to_struct(self.properties),
+            is_ownership=self.is_ownership,
         )
 
     def __eq__(self, other: object) -> bool:
@@ -72,10 +79,12 @@ class RelationshipType:
             and self.description == other.description
             and self.properties == other.properties
             and self.read_only == other.read_only
+            and self.is_ownership == other.is_ownership
         )
 
     def __repr__(self) -> str:
         return (
             f"RelationshipType(name='{self.name}', description='{self.description}', "
-            f"properties={self.properties}, read_only={self.read_only})"
+            f"properties={self.properties}, read_only={self.read_only}, "
+            f"is_ownership={self.is_ownership})"
         )
