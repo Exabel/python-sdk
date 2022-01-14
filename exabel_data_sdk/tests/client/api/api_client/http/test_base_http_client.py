@@ -11,7 +11,7 @@ from exabel_data_sdk.stubs.exabel.api.data.v1.all_pb2 import Signal
 # pylint: disable=protected-access
 
 
-class BaseHttpClientTest(unittest.TestCase):
+class TestBaseHttpClient(unittest.TestCase):
     def setUp(self) -> None:
         self.client = BaseHttpClient(ClientConfig(host="the-host", api_key="something"))
 
