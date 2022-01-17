@@ -47,4 +47,4 @@ class BaseHttpClient:
             raise RequestError(http_status_to_error_type(response.status_code), values["message"])
         if response_proto is None:
             return None
-        return Parse(response.content, response_proto)
+        return Parse(response.content, response_proto, ignore_unknown_fields=True)
