@@ -1,4 +1,3 @@
-import sys
 import unittest
 from unittest import mock
 
@@ -7,6 +6,7 @@ from dateutil import tz
 
 from exabel_data_sdk import ExabelClient
 from exabel_data_sdk.scripts.load_time_series_from_csv import LoadTimeSeriesFromCsv
+from exabel_data_sdk.services.csv_time_series_loader import CsvTimeSeriesLoader
 from exabel_data_sdk.util.resource_name_normalization import validate_signal_name
 
 common_args = ["script-name", "--sep", ";", "--api-key", "123"]
@@ -14,12 +14,11 @@ common_args = ["script-name", "--sep", ";", "--api-key", "123"]
 
 class TestUploadTimeSeries(unittest.TestCase):
     def test_one_signal(self):
-        loader = LoadTimeSeriesFromCsv(sys.argv)
         data = [["a", "2021-01-01", 1], ["a", "2021-01-02", 2], ["b", "2021-01-01", 3]]
 
         ts_data = pd.DataFrame(data, columns=["entity", "date", "signal1"])
-        LoadTimeSeriesFromCsv.set_time_index(ts_data)
-        time_series = loader.get_time_series(ts_data, "signals/acme.")
+        CsvTimeSeriesLoader.set_time_index(ts_data)
+        time_series = CsvTimeSeriesLoader.get_time_series(ts_data, "signals/acme.")
         pd.testing.assert_series_equal(
             pd.Series(
                 [1, 2],
@@ -38,8 +37,6 @@ class TestUploadTimeSeries(unittest.TestCase):
         )
 
     def test_two_signals(self):
-        loader = LoadTimeSeriesFromCsv(sys.argv)
-
         data = [
             ["a", "2021-01-01", 1, 100],
             ["a", "2021-01-02", 2, 200],
@@ -47,8 +44,8 @@ class TestUploadTimeSeries(unittest.TestCase):
         ]
         ts_data = pd.DataFrame(data, columns=["entity", "date", "signal1", "signal2"])
 
-        LoadTimeSeriesFromCsv.set_time_index(ts_data)
-        time_series = loader.get_time_series(ts_data, "signals/acme.")
+        CsvTimeSeriesLoader.set_time_index(ts_data)
+        time_series = CsvTimeSeriesLoader.get_time_series(ts_data, "signals/acme.")
 
         pd.testing.assert_series_equal(
             pd.Series(
