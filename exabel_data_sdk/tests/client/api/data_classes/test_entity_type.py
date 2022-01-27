@@ -11,6 +11,7 @@ class TestEntityType(unittest.TestCase):
             display_name="Country entity type",
             description="description",
             read_only=True,
+            is_associative=True,
         )
 
         entity_type = EntityType(
@@ -18,5 +19,6 @@ class TestEntityType(unittest.TestCase):
             display_name="Country entity type",
             description="description",
             read_only=True,
+            is_associative=True,
         )
         self.assertEqual(entity_type, EntityType.from_proto(proto_entity_type))
