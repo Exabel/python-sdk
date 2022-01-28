@@ -24,7 +24,11 @@ class CsvScript(BaseScript):
             help="The URL of the file to parse.",
         )
         self.parser.add_argument(
-            "--sep", required=False, type=str, default=",", help="Delimiter to use between cells."
+            "--sep",
+            required=False,
+            type=str,
+            default=",",
+            help="Delimiter to use between cells.",
         )
         self.parser.add_argument(
             "--dry-run",

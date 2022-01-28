@@ -60,7 +60,6 @@ class ResourceCreationResults(Generic[TResource]):
             print_status:    Whether to print status of the upload during processing.
             abort_threshold: If the fraction of failed requests exceeds this threshold,
                              the upload is aborted.
-            upsert:          Update resources that already exist.
         """
         self.results: List[ResourceCreationResult[TResource]] = []
         self.counter: Counter = Counter()
@@ -84,6 +83,10 @@ class ResourceCreationResults(Generic[TResource]):
         or total number of results if no status is specified.
         """
         return len(self.results) if status is None else self.counter[status]
+
+    def has_failure(self) -> bool:
+        """Whether this result contains failures."""
+        return self.count(ResourceCreationStatus.FAILED) > 0
 
     def extract_retryable_failures(self) -> List[ResourceCreationResult[TResource]]:
         """
