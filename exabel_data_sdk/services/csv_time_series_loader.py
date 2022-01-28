@@ -10,16 +10,19 @@ from exabel_data_sdk import ExabelClient
 from exabel_data_sdk.client.api.bulk_insert import BulkInsertFailedError
 from exabel_data_sdk.client.api.data_classes.signal import Signal
 from exabel_data_sdk.services.csv_exception import CsvLoadingException
-from exabel_data_sdk.services.csv_loader_with_entity_mapping import CsvLoaderWithEntityMapping
 from exabel_data_sdk.services.csv_loading_constants import DEFAULT_NUMBER_OF_THREADS
+from exabel_data_sdk.services.csv_reader import CsvReader
+from exabel_data_sdk.services.entity_mapping_file_reader import EntityMappingFileReader
 from exabel_data_sdk.stubs.exabel.api.data.v1.time_series_messages_pb2 import DefaultKnownTime
 from exabel_data_sdk.util.resource_name_normalization import (
     to_entity_resource_names,
     validate_signal_name,
 )
 
+# pylint: disable=unsubscriptable-object
 
-class CsvTimeSeriesLoader(CsvLoaderWithEntityMapping):
+
+class CsvTimeSeriesLoader:
     """
     Processes CSV file with time series and uploads the time series to the Exabel Data API.
     """
@@ -76,9 +79,9 @@ class CsvTimeSeriesLoader(CsvLoaderWithEntityMapping):
             time_offset = Duration(seconds=86400 * pit_offset)
             default_known_time = DefaultKnownTime(time_offset=time_offset)
 
-        ts_data = self.read_csv(filename, separator=separator, string_columns=[0])
-        entity_mapping = self.read_entity_mapping_file(
-            entity_mapping_filename=entity_mapping_filename, separator=separator
+        ts_data = CsvReader.read_csv(filename, separator=separator, string_columns=[0])
+        entity_mapping = EntityMappingFileReader.read_entity_mapping_file(
+            entity_mapping_filename, separator=separator
         )
         if ts_data.columns[1] != "date":
             print("Expected second column to be named 'date', got", ts_data.columns[1])

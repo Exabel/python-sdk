@@ -2,12 +2,12 @@ from exabel_data_sdk import ExabelClient
 from exabel_data_sdk.client.api.bulk_insert import BulkInsertFailedError
 from exabel_data_sdk.client.api.data_classes.entity import Entity
 from exabel_data_sdk.services.csv_exception import CsvLoadingException
-from exabel_data_sdk.services.csv_loader import CsvLoader
 from exabel_data_sdk.services.csv_loading_constants import DEFAULT_NUMBER_OF_THREADS
+from exabel_data_sdk.services.csv_reader import CsvReader
 from exabel_data_sdk.util.resource_name_normalization import normalize_resource_name
 
 
-class CsvEntityLoader(CsvLoader):
+class CsvEntityLoader:
     """
     Processes a CSV file with entities and creates them in the Exabel Data API.
     """
@@ -61,7 +61,7 @@ class CsvEntityLoader(CsvLoader):
         }
         if description_column:
             string_columns.add(description_column)
-        entities_df = self.read_csv(filename, separator, string_columns=string_columns)
+        entities_df = CsvReader.read_csv(filename, separator, string_columns=string_columns)
 
         name_col = name_column or entities_df.columns[0]
         display_name_col = display_name_column or name_col

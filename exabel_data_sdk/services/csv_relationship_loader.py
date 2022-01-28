@@ -3,12 +3,13 @@ from exabel_data_sdk.client.api.bulk_insert import BulkInsertFailedError
 from exabel_data_sdk.client.api.data_classes.relationship import Relationship
 from exabel_data_sdk.client.api.data_classes.relationship_type import RelationshipType
 from exabel_data_sdk.services.csv_exception import CsvLoadingException
-from exabel_data_sdk.services.csv_loader_with_entity_mapping import CsvLoaderWithEntityMapping
 from exabel_data_sdk.services.csv_loading_constants import DEFAULT_NUMBER_OF_THREADS
+from exabel_data_sdk.services.csv_reader import CsvReader
+from exabel_data_sdk.services.entity_mapping_file_reader import EntityMappingFileReader
 from exabel_data_sdk.util.resource_name_normalization import to_entity_resource_names
 
 
-class CsvRelationshipLoader(CsvLoaderWithEntityMapping):
+class CsvRelationshipLoader:
     """
     Processes a CSV file with relationships and creates them in the Exabel Data API.
     """
@@ -65,7 +66,7 @@ class CsvRelationshipLoader(CsvLoaderWithEntityMapping):
         if description_column:
             string_columns.add(description_column)
 
-        relationships_df = self.read_csv(filename, separator, string_columns=string_columns)
+        relationships_df = CsvReader.read_csv(filename, separator, string_columns=string_columns)
 
         entity_from_col = entity_from_column
         entity_to_col = entity_to_column
@@ -82,8 +83,8 @@ class CsvRelationshipLoader(CsvLoaderWithEntityMapping):
             for rel_type in self._client.relationship_api.list_relationship_types().results:
                 print("   ", rel_type)
 
-        entity_mapping = self.read_entity_mapping_file(
-            entity_mapping_filename=entity_mapping_filename, separator=separator
+        entity_mapping = EntityMappingFileReader.read_entity_mapping_file(
+            filename=entity_mapping_filename, separator=separator
         )
         relationships_df[entity_from_col] = to_entity_resource_names(
             self._client.entity_api,
