@@ -66,7 +66,9 @@ class CsvRelationshipLoader:
         if description_column:
             string_columns.add(description_column)
 
-        relationships_df = CsvReader.read_csv(filename, separator, string_columns=string_columns)
+        relationships_df = CsvReader.read_csv(
+            filename, separator, string_columns=string_columns, keep_default_na=False
+        )
 
         entity_from_col = entity_from_column
         entity_to_col = entity_to_column

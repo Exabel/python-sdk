@@ -61,7 +61,9 @@ class CsvEntityLoader:
         }
         if description_column:
             string_columns.add(description_column)
-        entities_df = CsvReader.read_csv(filename, separator, string_columns=string_columns)
+        entities_df = CsvReader.read_csv(
+            filename, separator, string_columns=string_columns, keep_default_na=False
+        )
 
         name_col = name_column or entities_df.columns[0]
         display_name_col = display_name_column or name_col
