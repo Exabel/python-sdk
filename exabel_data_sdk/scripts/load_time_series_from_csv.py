@@ -13,16 +13,18 @@ class LoadTimeSeriesFromCsv(CsvScriptWithEntityMapping):
     Processes a timeseries CSV file and uploads the time series to Exabel.
 
     The CSV file should have a header line on the format
-        entity;date;`signal_1`; ... ;`signal_n`
+        entityType;date;`signal_1`; ... ;`signal_n`
+
+    For example
+        brand;date;revenue;sales
 
     Each subsequent row consists of the following elements:
-      * the entity referred to by the entity’s resource name, e.g.,
-            entityTypes/company/entities/company_code
+      * the entity referred to by the entity’s identifier
       * the date on ISO format, e.g. 2020-12-31
       * one numerical value for each of the signals `signal_1` to `signal_n`
 
     Thus, a typical row would look like:
-        entityTypes/company/entities/company_code;2020-12-31;12;1234.56;1.23e6
+        brand_1;2020-12-31;12;1234.56;1.23e6
 
     The rows do not have to be sorted in any particular order.
     """
@@ -59,6 +61,22 @@ class LoadTimeSeriesFromCsv(CsvScriptWithEntityMapping):
                 "available to the user the day after, one would set --pit-offset 1"
             ),
         )
+        self.parser.add_argument(
+            "--no-create-library-signal",
+            dest="create_library_signal",
+            required=False,
+            action="store_false",
+            default=True,
+            help="Set to not create library signal DSL expressions.",
+        )
+        self.parser.add_argument(
+            "--no-create-tag",
+            dest="create_tag",
+            required=False,
+            action="store_false",
+            default=True,
+            help="Set to not create a tag for every entity type a signal has time series for.",
+        )
 
     def run_script(self, client: ExabelClient, args: argparse.Namespace) -> None:
         try:
@@ -70,8 +88,11 @@ class LoadTimeSeriesFromCsv(CsvScriptWithEntityMapping):
                 pit_current_time=args.pit_current_time,
                 pit_offset=args.pit_offset,
                 create_missing_signals=args.create_missing_signals,
+                create_tag=args.create_tag,
+                create_library_signal=args.create_library_signal,
                 threads=args.threads,
                 dry_run=args.dry_run,
+                retries=args.retries,
             )
         except CsvLoadingException as e:
             print(e)

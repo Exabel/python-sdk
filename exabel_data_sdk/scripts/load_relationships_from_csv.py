@@ -87,6 +87,7 @@ class LoadRelationshipsFromCsv(CsvScriptWithEntityMapping):
                 threads=args.threads,
                 upsert=args.upsert,
                 dry_run=args.dry_run,
+                retries=args.retries,
             )
         except CsvLoadingException as e:
             print(e)

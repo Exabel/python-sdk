@@ -3,7 +3,10 @@ from exabel_data_sdk.client.api.bulk_insert import BulkInsertFailedError
 from exabel_data_sdk.client.api.data_classes.relationship import Relationship
 from exabel_data_sdk.client.api.data_classes.relationship_type import RelationshipType
 from exabel_data_sdk.services.csv_exception import CsvLoadingException
-from exabel_data_sdk.services.csv_loading_constants import DEFAULT_NUMBER_OF_THREADS
+from exabel_data_sdk.services.csv_loading_constants import (
+    DEFAULT_NUMBER_OF_RETRIES,
+    DEFAULT_NUMBER_OF_THREADS,
+)
 from exabel_data_sdk.services.csv_reader import CsvReader
 from exabel_data_sdk.services.entity_mapping_file_reader import EntityMappingFileReader
 from exabel_data_sdk.util.resource_name_normalization import to_entity_resource_names
@@ -32,6 +35,7 @@ class CsvRelationshipLoader:
         upsert: bool = False,
         dry_run: bool = False,
         error_on_any_failure: bool = False,
+        retries: int = DEFAULT_NUMBER_OF_RETRIES,
     ) -> None:
         """
         Load a CSV file and upload the relationships specified therein to the Exabel Data API.
@@ -53,6 +57,7 @@ class CsvRelationshipLoader:
             dry_run: if True, the file is processed, but no relationships are actually uploaded
             error_on_any_failure: if True, an exception is raised if any relationship failed to be
                 created
+            retries: the maximum number of retries to make for each failed request
         """
         if dry_run:
             print("Running dry-run...")
@@ -66,7 +71,9 @@ class CsvRelationshipLoader:
         if description_column:
             string_columns.add(description_column)
 
-        relationships_df = CsvReader.read_csv(filename, separator, string_columns=string_columns)
+        relationships_df = CsvReader.read_csv(
+            filename, separator, string_columns=string_columns, keep_default_na=False
+        )
 
         entity_from_col = entity_from_column
         entity_to_col = entity_to_column
@@ -119,7 +126,7 @@ class CsvRelationshipLoader:
 
         try:
             result = self._client.relationship_api.bulk_create_relationships(
-                relationships, threads=threads, upsert=upsert
+                relationships, threads=threads, upsert=upsert, retries=retries
             )
             if error_on_any_failure and result.has_failure():
                 raise CsvLoadingException("An error occurred while uploading relationships.")

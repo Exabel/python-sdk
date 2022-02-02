@@ -320,6 +320,72 @@ class TestUploadTimeSeries(unittest.TestCase):
         with self.assertRaises(SystemExit):
             script.run_script(client, script.parse_arguments())
 
+    def test_valid_no_create_tag(self):
+        args = common_args + [
+            "--filename",
+            "./exabel_data_sdk/tests/resources/data/timeseries_known_time.csv",
+            "--namespace",
+            "acme",
+            "--no-create-tag",
+        ]
+        script = LoadTimeSeriesFromCsv(args)
+        client = mock.create_autospec(ExabelClient(host="host", api_key="123"))
+        script.run_script(client, script.parse_arguments())
+
+        call_args_list = client.time_series_api.bulk_upsert_time_series.call_args_list
+        create_tag_status = call_args_list[0][1]["create_tag"]
+        self.assertEqual(False, create_tag_status)
+
+    def test_valid_create_tag(self):
+        args = common_args + [
+            "--filename",
+            "./exabel_data_sdk/tests/resources/data/timeseries_known_time.csv",
+            "--namespace",
+            "acme",
+        ]
+        script = LoadTimeSeriesFromCsv(args)
+        client = mock.create_autospec(ExabelClient(host="host", api_key="123"))
+        script.run_script(client, script.parse_arguments())
+
+        call_args_list = client.time_series_api.bulk_upsert_time_series.call_args_list
+        create_tag_status = call_args_list[0][1]["create_tag"]
+        self.assertEqual(True, create_tag_status)
+
+    def test_valid_no_create_library_signal(self):
+        args = common_args + [
+            "--filename",
+            "./exabel_data_sdk/tests/resources/data/timeseries_known_time.csv",
+            "--namespace",
+            "acme",
+            "--create-missing-signals",
+            "--no-create-library-signal",
+        ]
+        script = LoadTimeSeriesFromCsv(args)
+        client = mock.create_autospec(ExabelClient(host="host", api_key="123"))
+        client.signal_api.get_signal.return_value = None
+        script.run_script(client, script.parse_arguments())
+
+        call_args_list = client.signal_api.create_signal.call_args_list
+        create_library_signal_status = call_args_list[0][1]["create_library_signal"]
+        self.assertEqual(False, create_library_signal_status)
+
+    def test_valid_create_library_signal(self):
+        args = common_args + [
+            "--filename",
+            "./exabel_data_sdk/tests/resources/data/timeseries_known_time.csv",
+            "--namespace",
+            "acme",
+            "--create-missing-signals",
+        ]
+        script = LoadTimeSeriesFromCsv(args)
+        client = mock.create_autospec(ExabelClient(host="host", api_key="123"))
+        client.signal_api.get_signal.return_value = None
+        script.run_script(client, script.parse_arguments())
+
+        call_args_list = client.signal_api.create_signal.call_args_list
+        create_library_signal_status = call_args_list[0][1]["create_library_signal"]
+        self.assertEqual(True, create_library_signal_status)
+
 
 if __name__ == "__main__":
     unittest.main()

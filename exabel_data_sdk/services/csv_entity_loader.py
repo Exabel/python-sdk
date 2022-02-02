@@ -2,7 +2,10 @@ from exabel_data_sdk import ExabelClient
 from exabel_data_sdk.client.api.bulk_insert import BulkInsertFailedError
 from exabel_data_sdk.client.api.data_classes.entity import Entity
 from exabel_data_sdk.services.csv_exception import CsvLoadingException
-from exabel_data_sdk.services.csv_loading_constants import DEFAULT_NUMBER_OF_THREADS
+from exabel_data_sdk.services.csv_loading_constants import (
+    DEFAULT_NUMBER_OF_RETRIES,
+    DEFAULT_NUMBER_OF_THREADS,
+)
 from exabel_data_sdk.services.csv_reader import CsvReader
 from exabel_data_sdk.util.resource_name_normalization import normalize_resource_name
 
@@ -29,6 +32,7 @@ class CsvEntityLoader:
         upsert: bool,
         dry_run: bool = False,
         error_on_any_failure: bool = False,
+        retries: int = DEFAULT_NUMBER_OF_RETRIES,
     ) -> None:
         """
         Load a CSV file and upload the entities specified therein to the Exabel Data API.
@@ -49,6 +53,7 @@ class CsvEntityLoader:
             upsert: whether entities should be updated if they already exist
             dry_run: if True, the file is processed, but no entities are actually uploaded
             error_on_any_failure: if True, an exception is raised if any entity failed to be created
+            retries: the maximum number of retries to make for each failed request
         """
         if dry_run:
             print("Running dry-run...")
@@ -61,7 +66,9 @@ class CsvEntityLoader:
         }
         if description_column:
             string_columns.add(description_column)
-        entities_df = CsvReader.read_csv(filename, separator, string_columns=string_columns)
+        entities_df = CsvReader.read_csv(
+            filename, separator, string_columns=string_columns, keep_default_na=False
+        )
 
         name_col = name_column or entities_df.columns[0]
         display_name_col = display_name_column or name_col
@@ -91,7 +98,7 @@ class CsvEntityLoader:
 
         try:
             result = self._client.entity_api.bulk_create_entities(
-                entities, entity_type_name, threads=threads, upsert=upsert
+                entities, entity_type_name, threads=threads, upsert=upsert, retries=retries
             )
             if error_on_any_failure and result.has_failure():
                 raise CsvLoadingException("An error occurred while uploading entities.")

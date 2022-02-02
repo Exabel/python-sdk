@@ -313,6 +313,7 @@ class TimeSeriesApi:
         create_tag: bool = False,
         threads: int = 40,
         default_known_time: DefaultKnownTime = None,
+        retries: int = 5,
     ) -> ResourceCreationResults[pd.Series]:
         """
         Calls upsert_time_series for each of the provided time series,
@@ -332,6 +333,7 @@ class TimeSeriesApi:
                         the Known Time for data points where a specific known time timestamp
                         has not been given. If not provided, the Exabel API defaults to the
                         current time (upload time) as the Known Time.
+            retries:         Maximum number of retries to make for each failed request.
         """
 
         def insert(ts: pd.Series) -> ResourceCreationStatus:
@@ -340,7 +342,7 @@ class TimeSeriesApi:
             )
             return ResourceCreationStatus.UPSERTED if existed else ResourceCreationStatus.CREATED
 
-        return bulk_insert(series, insert, threads=threads)
+        return bulk_insert(series, insert, threads=threads, retries=retries)
 
     @staticmethod
     def _series_to_time_series_points(series: pd.Series) -> Sequence[TimeSeriesPoint]:
