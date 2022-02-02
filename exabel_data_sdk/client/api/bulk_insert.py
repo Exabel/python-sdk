@@ -1,5 +1,5 @@
 from concurrent.futures.thread import ThreadPoolExecutor
-from time import time
+from time import sleep, time
 from typing import Callable, Sequence
 
 from exabel_data_sdk.client.api.data_classes.request_error import ErrorType, RequestError
@@ -90,10 +90,15 @@ def _bulk_insert(
             raise BulkInsertFailedError()
 
 
+def _get_backoff(trial: int, min_sleep: float = 1.0, max_sleep: float = 60.0) -> float:
+    """Return the backoff in seconds for the given trial."""
+    return min(min_sleep * 2 ** trial, max_sleep)
+
+
 def bulk_insert(
     resources: Sequence[TResource],
     insert_func: Callable[[TResource], ResourceCreationStatus],
-    retries: int = 2,
+    retries: int = 5,
     threads: int = 40,
 ) -> ResourceCreationResults[TResource]:
     """
@@ -119,6 +124,9 @@ def bulk_insert(
                 failures = results.extract_retryable_failures()
                 if not failures:
                     break
+                backoff = _get_backoff(trial)
+                print(f"Sleeping {backoff:.2f} seconds before retrying failed requests...")
+                sleep(backoff)
                 resources = [result.resource for result in failures]
                 print(f"Retry #{trial} with {len(resources)} resources:")
             _bulk_insert(results, resources, insert_func, threads=threads)

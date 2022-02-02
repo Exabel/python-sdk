@@ -10,7 +10,10 @@ from exabel_data_sdk import ExabelClient
 from exabel_data_sdk.client.api.bulk_insert import BulkInsertFailedError
 from exabel_data_sdk.client.api.data_classes.signal import Signal
 from exabel_data_sdk.services.csv_exception import CsvLoadingException
-from exabel_data_sdk.services.csv_loading_constants import DEFAULT_NUMBER_OF_THREADS
+from exabel_data_sdk.services.csv_loading_constants import (
+    DEFAULT_NUMBER_OF_RETRIES,
+    DEFAULT_NUMBER_OF_THREADS,
+)
 from exabel_data_sdk.services.csv_reader import CsvReader
 from exabel_data_sdk.services.entity_mapping_file_reader import EntityMappingFileReader
 from exabel_data_sdk.stubs.exabel.api.data.v1.time_series_messages_pb2 import DefaultKnownTime
@@ -40,9 +43,12 @@ class CsvTimeSeriesLoader:
         pit_current_time: bool = False,
         pit_offset: int = False,
         create_missing_signals: bool = False,
+        create_tag: bool = True,
+        create_library_signal: bool = True,
         threads: int = DEFAULT_NUMBER_OF_THREADS,
         dry_run: bool = False,
         error_on_any_failure: bool = False,
+        retries: int = DEFAULT_NUMBER_OF_RETRIES,
     ) -> None:
         """
         Load a CSV file and upload the time series to the Exabel Data API
@@ -64,6 +70,7 @@ class CsvTimeSeriesLoader:
             dry_run: if True, the file is processed, but no time series are actually uploaded
             error_on_any_failure: if True, an  exception is raised if any time series failed to be
                 created
+            retries: the maximum number of retries to make for each failed request
         """
         if dry_run:
             print("Running dry-run...")
@@ -79,7 +86,9 @@ class CsvTimeSeriesLoader:
             time_offset = Duration(seconds=86400 * pit_offset)
             default_known_time = DefaultKnownTime(time_offset=time_offset)
 
-        ts_data = CsvReader.read_csv(filename, separator=separator, string_columns=[0])
+        ts_data = CsvReader.read_csv(
+            filename, separator=separator, string_columns=[0], keep_default_na=True
+        )
         entity_mapping = EntityMappingFileReader.read_entity_mapping_file(
             entity_mapping_filename, separator=separator
         )
@@ -194,7 +203,7 @@ class CsvTimeSeriesLoader:
                     for signal in missing_signals:
                         self._client.signal_api.create_signal(
                             Signal(name=prefix + signal, display_name=signal),
-                            create_library_signal=True,
+                            create_library_signal=create_library_signal,
                         )
             else:
                 raise CsvLoadingException(
@@ -212,7 +221,11 @@ class CsvTimeSeriesLoader:
 
         try:
             result = self._client.time_series_api.bulk_upsert_time_series(
-                series, create_tag=True, threads=threads, default_known_time=default_known_time
+                series,
+                create_tag=create_tag,
+                threads=threads,
+                default_known_time=default_known_time,
+                retries=retries,
             )
             if error_on_any_failure and result.has_failure():
                 raise CsvLoadingException("An error occurred while uploading time series.")

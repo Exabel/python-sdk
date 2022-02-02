@@ -5,6 +5,10 @@ from typing import Collection, Mapping, Optional, Sequence, Union
 import pandas as pd
 
 from exabel_data_sdk.scripts.base_script import BaseScript
+from exabel_data_sdk.services.csv_loading_constants import (
+    DEFAULT_NUMBER_OF_RETRIES,
+    DEFAULT_NUMBER_OF_THREADS,
+)
 
 
 class CsvScript(BaseScript):
@@ -56,8 +60,19 @@ class CsvScript(BaseScript):
             type=int,
             choices=range(1, 101),
             metavar="[1-100]",
-            default=40,
-            help="The number of parallel upload threads to run. Defaults to 40.",
+            default=DEFAULT_NUMBER_OF_THREADS,
+            help=f"The number of parallel upload threads to run. "
+            f"Defaults to {DEFAULT_NUMBER_OF_THREADS}.",
+        )
+        self.parser.add_argument(
+            "--retries",
+            required=False,
+            type=int,
+            choices=range(1, 51),
+            metavar="[1-50]",
+            default=DEFAULT_NUMBER_OF_RETRIES,
+            help=f"The maximum number of retries to make for each failed request. Defaults to "
+            f"{DEFAULT_NUMBER_OF_RETRIES}.",
         )
 
     def read_csv(
