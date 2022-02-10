@@ -65,7 +65,9 @@ class MockResourceStore(Generic[TResource]):
         return resource
 
     @failure_prone
-    def update(self, resource: TResource, key: object = None) -> TResource:
+    def update(
+        self, resource: TResource, key: object = None, allow_missing: bool = None
+    ) -> TResource:
         """
         Update the given resource in the store.
 
@@ -79,7 +81,7 @@ class MockResourceStore(Generic[TResource]):
         """
         if key is None:
             key = resource.name  # type: ignore[attr-defined]
-        if key not in self.resources:
+        if not allow_missing and key not in self.resources:
             raise RequestError(ErrorType.NOT_FOUND, f"Does not exist: {key}")
         self.resources[key] = resource
         return resource

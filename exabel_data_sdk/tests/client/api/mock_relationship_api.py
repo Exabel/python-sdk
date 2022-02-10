@@ -40,7 +40,10 @@ class MockRelationshipApi(RelationshipApi):
         return self.types.create(relationship_type)
 
     def update_relationship_type(
-        self, relationship_type: RelationshipType, update_mask: FieldMask = None
+        self,
+        relationship_type: RelationshipType,
+        update_mask: FieldMask = None,
+        allow_missing: bool = None,
     ) -> RelationshipType:
         raise NotImplementedError()
 
@@ -74,10 +77,10 @@ class MockRelationshipApi(RelationshipApi):
         return self.relationships.create(relationship, self._key(relationship))
 
     def update_relationship(
-        self, relationship: Relationship, update_mask: FieldMask = None
+        self, relationship: Relationship, update_mask: FieldMask = None, allow_missing: bool = None
     ) -> Relationship:
         # Note: The mock implementation ignores update_mask
-        return self.relationships.update(relationship, self._key(relationship))
+        return self.relationships.update(relationship, self._key(relationship), allow_missing)
 
     def delete_relationship(self, relationship_type: str, from_entity: str, to_entity: str) -> None:
         self.relationships.delete((relationship_type, from_entity, to_entity))

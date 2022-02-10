@@ -24,7 +24,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   syntax='proto3',
   serialized_options=b'\n\026com.exabel.api.data.v1B\023DataSetServiceProtoP\001',
   create_key=_descriptor._internal_create_key,
-  serialized_pb=b'\n)exabel/api/data/v1/data_set_service.proto\x12\x12\x65xabel.api.data.v1\x1a*exabel/api/data/v1/data_set_messages.proto\x1a\x1cgoogle/api/annotations.proto\x1a\x1fgoogle/api/field_behavior.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a google/protobuf/field_mask.proto\"\x15\n\x13ListDataSetsRequest\"F\n\x14ListDataSetsResponse\x12.\n\tdata_sets\x18\x01 \x03(\x0b\x32\x1b.exabel.api.data.v1.DataSet\"&\n\x11GetDataSetRequest\x12\x11\n\x04name\x18\x01 \x01(\tB\x03\xe0\x41\x02\"J\n\x14\x43reateDataSetRequest\x12\x32\n\x08\x64\x61ta_set\x18\x01 \x01(\x0b\x32\x1b.exabel.api.data.v1.DataSetB\x03\xe0\x41\x02\"{\n\x14UpdateDataSetRequest\x12\x32\n\x08\x64\x61ta_set\x18\x01 \x01(\x0b\x32\x1b.exabel.api.data.v1.DataSetB\x03\xe0\x41\x02\x12/\n\x0bupdate_mask\x18\x02 \x01(\x0b\x32\x1a.google.protobuf.FieldMask\")\n\x14\x44\x65leteDataSetRequest\x12\x11\n\x04name\x18\x01 \x01(\tB\x03\xe0\x41\x02\x32\xef\x04\n\x0e\x44\x61taSetService\x12w\n\x0cListDataSets\x12\'.exabel.api.data.v1.ListDataSetsRequest\x1a(.exabel.api.data.v1.ListDataSetsResponse\"\x14\x82\xd3\xe4\x93\x02\x0e\x12\x0c/v1/dataSets\x12o\n\nGetDataSet\x12%.exabel.api.data.v1.GetDataSetRequest\x1a\x1b.exabel.api.data.v1.DataSet\"\x1d\x82\xd3\xe4\x93\x02\x17\x12\x15/v1/{name=dataSets/*}\x12v\n\rCreateDataSet\x12(.exabel.api.data.v1.CreateDataSetRequest\x1a\x1b.exabel.api.data.v1.DataSet\"\x1e\x82\xd3\xe4\x93\x02\x18\"\x0c/v1/dataSets:\x08\x64\x61ta_set\x12\x88\x01\n\rUpdateDataSet\x12(.exabel.api.data.v1.UpdateDataSetRequest\x1a\x1b.exabel.api.data.v1.DataSet\"0\x82\xd3\xe4\x93\x02*2\x1e/v1/{data_set.name=dataSets/*}:\x08\x64\x61ta_set\x12p\n\rDeleteDataSet\x12(.exabel.api.data.v1.DeleteDataSetRequest\x1a\x16.google.protobuf.Empty\"\x1d\x82\xd3\xe4\x93\x02\x17*\x15/v1/{name=dataSets/*}B/\n\x16\x63om.exabel.api.data.v1B\x13\x44\x61taSetServiceProtoP\x01\x62\x06proto3'
+  serialized_pb=b'\n)exabel/api/data/v1/data_set_service.proto\x12\x12\x65xabel.api.data.v1\x1a*exabel/api/data/v1/data_set_messages.proto\x1a\x1cgoogle/api/annotations.proto\x1a\x1fgoogle/api/field_behavior.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a google/protobuf/field_mask.proto\"\x15\n\x13ListDataSetsRequest\"F\n\x14ListDataSetsResponse\x12.\n\tdata_sets\x18\x01 \x03(\x0b\x32\x1b.exabel.api.data.v1.DataSet\"&\n\x11GetDataSetRequest\x12\x11\n\x04name\x18\x01 \x01(\tB\x03\xe0\x41\x02\"J\n\x14\x43reateDataSetRequest\x12\x32\n\x08\x64\x61ta_set\x18\x01 \x01(\x0b\x32\x1b.exabel.api.data.v1.DataSetB\x03\xe0\x41\x02\"\x92\x01\n\x14UpdateDataSetRequest\x12\x32\n\x08\x64\x61ta_set\x18\x01 \x01(\x0b\x32\x1b.exabel.api.data.v1.DataSetB\x03\xe0\x41\x02\x12/\n\x0bupdate_mask\x18\x02 \x01(\x0b\x32\x1a.google.protobuf.FieldMask\x12\x15\n\rallow_missing\x18\x03 \x01(\x08\")\n\x14\x44\x65leteDataSetRequest\x12\x11\n\x04name\x18\x01 \x01(\tB\x03\xe0\x41\x02\x32\xef\x04\n\x0e\x44\x61taSetService\x12w\n\x0cListDataSets\x12\'.exabel.api.data.v1.ListDataSetsRequest\x1a(.exabel.api.data.v1.ListDataSetsResponse\"\x14\x82\xd3\xe4\x93\x02\x0e\x12\x0c/v1/dataSets\x12o\n\nGetDataSet\x12%.exabel.api.data.v1.GetDataSetRequest\x1a\x1b.exabel.api.data.v1.DataSet\"\x1d\x82\xd3\xe4\x93\x02\x17\x12\x15/v1/{name=dataSets/*}\x12v\n\rCreateDataSet\x12(.exabel.api.data.v1.CreateDataSetRequest\x1a\x1b.exabel.api.data.v1.DataSet\"\x1e\x82\xd3\xe4\x93\x02\x18\"\x0c/v1/dataSets:\x08\x64\x61ta_set\x12\x88\x01\n\rUpdateDataSet\x12(.exabel.api.data.v1.UpdateDataSetRequest\x1a\x1b.exabel.api.data.v1.DataSet\"0\x82\xd3\xe4\x93\x02*2\x1e/v1/{data_set.name=dataSets/*}:\x08\x64\x61ta_set\x12p\n\rDeleteDataSet\x12(.exabel.api.data.v1.DeleteDataSetRequest\x1a\x16.google.protobuf.Empty\"\x1d\x82\xd3\xe4\x93\x02\x17*\x15/v1/{name=dataSets/*}B/\n\x16\x63om.exabel.api.data.v1B\x13\x44\x61taSetServiceProtoP\x01\x62\x06proto3'
   ,
   dependencies=[exabel_dot_api_dot_data_dot_v1_dot_data__set__messages__pb2.DESCRIPTOR,google_dot_api_dot_annotations__pb2.DESCRIPTOR,google_dot_api_dot_field__behavior__pb2.DESCRIPTOR,google_dot_protobuf_dot_empty__pb2.DESCRIPTOR,google_dot_protobuf_dot_field__mask__pb2.DESCRIPTOR,])
 
@@ -174,6 +174,13 @@ _UPDATEDATASETREQUEST = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+    _descriptor.FieldDescriptor(
+      name='allow_missing', full_name='exabel.api.data.v1.UpdateDataSetRequest.allow_missing', index=2,
+      number=3, type=8, cpp_type=7, label=1,
+      has_default_value=False, default_value=False,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
   ],
   extensions=[
   ],
@@ -186,8 +193,8 @@ _UPDATEDATASETREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=446,
-  serialized_end=569,
+  serialized_start=447,
+  serialized_end=593,
 )
 
 
@@ -218,8 +225,8 @@ _DELETEDATASETREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=571,
-  serialized_end=612,
+  serialized_start=595,
+  serialized_end=636,
 )
 
 _LISTDATASETSRESPONSE.fields_by_name['data_sets'].message_type = exabel_dot_api_dot_data_dot_v1_dot_data__set__messages__pb2._DATASET
@@ -290,8 +297,8 @@ _DATASETSERVICE = _descriptor.ServiceDescriptor(
   index=0,
   serialized_options=None,
   create_key=_descriptor._internal_create_key,
-  serialized_start=615,
-  serialized_end=1238,
+  serialized_start=639,
+  serialized_end=1262,
   methods=[
   _descriptor.MethodDescriptor(
     name='ListDataSets',

@@ -24,7 +24,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   syntax='proto3',
   serialized_options=b'\n\026com.exabel.api.data.v1B\026TimeSeriesServiceProtoP\001',
   create_key=_descriptor._internal_create_key,
-  serialized_pb=b'\n,exabel/api/data/v1/time_series_service.proto\x12\x12\x65xabel.api.data.v1\x1a-exabel/api/data/v1/time_series_messages.proto\x1a exabel/api/time/time_range.proto\x1a\x1cgoogle/api/annotations.proto\x1a\x1fgoogle/api/field_behavior.proto\x1a\x1bgoogle/protobuf/empty.proto\"S\n\x15ListTimeSeriesRequest\x12\x13\n\x06parent\x18\x01 \x01(\tB\x03\xe0\x41\x02\x12\x11\n\tpage_size\x18\x02 \x01(\x05\x12\x12\n\npage_token\x18\x03 \x01(\t\"z\n\x16ListTimeSeriesResponse\x12\x33\n\x0btime_series\x18\x01 \x03(\x0b\x32\x1e.exabel.api.data.v1.TimeSeries\x12\x17\n\x0fnext_page_token\x18\x02 \x01(\t\x12\x12\n\ntotal_size\x18\x03 \x01(\x05\"[\n\x14GetTimeSeriesRequest\x12\x11\n\x04name\x18\x01 \x01(\tB\x03\xe0\x41\x02\x12\x30\n\x04view\x18\x02 \x01(\x0b\x32\".exabel.api.data.v1.TimeSeriesView\"\xdb\x01\n\x17\x43reateTimeSeriesRequest\x12\x38\n\x0btime_series\x18\x01 \x01(\x0b\x32\x1e.exabel.api.data.v1.TimeSeriesB\x03\xe0\x41\x02\x12\x30\n\x04view\x18\x02 \x01(\x0b\x32\".exabel.api.data.v1.TimeSeriesView\x12@\n\x12\x64\x65\x66\x61ult_known_time\x18\x03 \x01(\x0b\x32$.exabel.api.data.v1.DefaultKnownTime\x12\x12\n\ncreate_tag\x18\x04 \x01(\x08\"\xc7\x01\n\x17UpdateTimeSeriesRequest\x12\x38\n\x0btime_series\x18\x01 \x01(\x0b\x32\x1e.exabel.api.data.v1.TimeSeriesB\x03\xe0\x41\x02\x12\x30\n\x04view\x18\x02 \x01(\x0b\x32\".exabel.api.data.v1.TimeSeriesView\x12@\n\x12\x64\x65\x66\x61ult_known_time\x18\x03 \x01(\x0b\x32$.exabel.api.data.v1.DefaultKnownTime\",\n\x17\x44\x65leteTimeSeriesRequest\x12\x11\n\x04name\x18\x01 \x01(\tB\x03\xe0\x41\x02\"h\n\"BatchDeleteTimeSeriesPointsRequest\x12\x11\n\x04name\x18\x01 \x01(\tB\x03\xe0\x41\x02\x12/\n\x0btime_ranges\x18\x02 \x03(\x0b\x32\x1a.exabel.api.time.TimeRange2\xe4\n\n\x11TimeSeriesService\x12\xc6\x01\n\x0eListTimeSeries\x12).exabel.api.data.v1.ListTimeSeriesRequest\x1a*.exabel.api.data.v1.ListTimeSeriesResponse\"]\x82\xd3\xe4\x93\x02W\x12\x30/v1/{parent=entityTypes/*/entities/*}/timeSeriesZ#\x12!/v1/{parent=signals/*}/timeSeries\x12\xc1\x01\n\rGetTimeSeries\x12(.exabel.api.data.v1.GetTimeSeriesRequest\x1a\x1e.exabel.api.data.v1.TimeSeries\"f\x82\xd3\xe4\x93\x02`\x12-/v1/{name=entityTypes/*/entities/*/signals/*}Z/\x12-/v1/{name=signals/*/entityTypes/*/entities/*}\x12\xfb\x01\n\x10\x43reateTimeSeries\x12+.exabel.api.data.v1.CreateTimeSeriesRequest\x1a\x1e.exabel.api.data.v1.TimeSeries\"\x99\x01\x82\xd3\xe4\x93\x02\x92\x01\"9/v1/{time_series.name=entityTypes/*/entities/*/signals/*}:\x0btime_seriesZH\"9/v1/{time_series.name=signals/*/entityTypes/*/entities/*}:\x0btime_series\x12\xfb\x01\n\x10UpdateTimeSeries\x12+.exabel.api.data.v1.UpdateTimeSeriesRequest\x1a\x1e.exabel.api.data.v1.TimeSeries\"\x99\x01\x82\xd3\xe4\x93\x02\x92\x01\x32\x39/v1/{time_series.name=entityTypes/*/entities/*/signals/*}:\x0btime_seriesZH\"9/v1/{time_series.name=signals/*/entityTypes/*/entities/*}:\x0btime_series\x12\xbf\x01\n\x10\x44\x65leteTimeSeries\x12+.exabel.api.data.v1.DeleteTimeSeriesRequest\x1a\x16.google.protobuf.Empty\"f\x82\xd3\xe4\x93\x02`*-/v1/{name=entityTypes/*/entities/*/signals/*}Z/*-/v1/{name=signals/*/entityTypes/*/entities/*}\x12\x83\x02\n\x1b\x42\x61tchDeleteTimeSeriesPoints\x12\x36.exabel.api.data.v1.BatchDeleteTimeSeriesPointsRequest\x1a\x16.google.protobuf.Empty\"\x93\x01\x82\xd3\xe4\x93\x02\x8c\x01\"@/v1/{name=entityTypes/*/entities/*/signals/*}/points:batchDelete:\x01*ZE\"@/v1/{name=signals/*/entityTypes/*/entities/*}/points:batchDelete:\x01*B2\n\x16\x63om.exabel.api.data.v1B\x16TimeSeriesServiceProtoP\x01\x62\x06proto3'
+  serialized_pb=b'\n,exabel/api/data/v1/time_series_service.proto\x12\x12\x65xabel.api.data.v1\x1a-exabel/api/data/v1/time_series_messages.proto\x1a exabel/api/time/time_range.proto\x1a\x1cgoogle/api/annotations.proto\x1a\x1fgoogle/api/field_behavior.proto\x1a\x1bgoogle/protobuf/empty.proto\"S\n\x15ListTimeSeriesRequest\x12\x13\n\x06parent\x18\x01 \x01(\tB\x03\xe0\x41\x02\x12\x11\n\tpage_size\x18\x02 \x01(\x05\x12\x12\n\npage_token\x18\x03 \x01(\t\"z\n\x16ListTimeSeriesResponse\x12\x33\n\x0btime_series\x18\x01 \x03(\x0b\x32\x1e.exabel.api.data.v1.TimeSeries\x12\x17\n\x0fnext_page_token\x18\x02 \x01(\t\x12\x12\n\ntotal_size\x18\x03 \x01(\x05\"[\n\x14GetTimeSeriesRequest\x12\x11\n\x04name\x18\x01 \x01(\tB\x03\xe0\x41\x02\x12\x30\n\x04view\x18\x02 \x01(\x0b\x32\".exabel.api.data.v1.TimeSeriesView\"\xdb\x01\n\x17\x43reateTimeSeriesRequest\x12\x38\n\x0btime_series\x18\x01 \x01(\x0b\x32\x1e.exabel.api.data.v1.TimeSeriesB\x03\xe0\x41\x02\x12\x30\n\x04view\x18\x02 \x01(\x0b\x32\".exabel.api.data.v1.TimeSeriesView\x12@\n\x12\x64\x65\x66\x61ult_known_time\x18\x03 \x01(\x0b\x32$.exabel.api.data.v1.DefaultKnownTime\x12\x12\n\ncreate_tag\x18\x04 \x01(\x08\"\xf2\x01\n\x17UpdateTimeSeriesRequest\x12\x38\n\x0btime_series\x18\x01 \x01(\x0b\x32\x1e.exabel.api.data.v1.TimeSeriesB\x03\xe0\x41\x02\x12\x30\n\x04view\x18\x02 \x01(\x0b\x32\".exabel.api.data.v1.TimeSeriesView\x12@\n\x12\x64\x65\x66\x61ult_known_time\x18\x03 \x01(\x0b\x32$.exabel.api.data.v1.DefaultKnownTime\x12\x15\n\rallow_missing\x18\x04 \x01(\x08\x12\x12\n\ncreate_tag\x18\x05 \x01(\x08\",\n\x17\x44\x65leteTimeSeriesRequest\x12\x11\n\x04name\x18\x01 \x01(\tB\x03\xe0\x41\x02\"h\n\"BatchDeleteTimeSeriesPointsRequest\x12\x11\n\x04name\x18\x01 \x01(\tB\x03\xe0\x41\x02\x12/\n\x0btime_ranges\x18\x02 \x03(\x0b\x32\x1a.exabel.api.time.TimeRange2\xe4\n\n\x11TimeSeriesService\x12\xc6\x01\n\x0eListTimeSeries\x12).exabel.api.data.v1.ListTimeSeriesRequest\x1a*.exabel.api.data.v1.ListTimeSeriesResponse\"]\x82\xd3\xe4\x93\x02W\x12\x30/v1/{parent=entityTypes/*/entities/*}/timeSeriesZ#\x12!/v1/{parent=signals/*}/timeSeries\x12\xc1\x01\n\rGetTimeSeries\x12(.exabel.api.data.v1.GetTimeSeriesRequest\x1a\x1e.exabel.api.data.v1.TimeSeries\"f\x82\xd3\xe4\x93\x02`\x12-/v1/{name=entityTypes/*/entities/*/signals/*}Z/\x12-/v1/{name=signals/*/entityTypes/*/entities/*}\x12\xfb\x01\n\x10\x43reateTimeSeries\x12+.exabel.api.data.v1.CreateTimeSeriesRequest\x1a\x1e.exabel.api.data.v1.TimeSeries\"\x99\x01\x82\xd3\xe4\x93\x02\x92\x01\"9/v1/{time_series.name=entityTypes/*/entities/*/signals/*}:\x0btime_seriesZH\"9/v1/{time_series.name=signals/*/entityTypes/*/entities/*}:\x0btime_series\x12\xfb\x01\n\x10UpdateTimeSeries\x12+.exabel.api.data.v1.UpdateTimeSeriesRequest\x1a\x1e.exabel.api.data.v1.TimeSeries\"\x99\x01\x82\xd3\xe4\x93\x02\x92\x01\x32\x39/v1/{time_series.name=entityTypes/*/entities/*/signals/*}:\x0btime_seriesZH\"9/v1/{time_series.name=signals/*/entityTypes/*/entities/*}:\x0btime_series\x12\xbf\x01\n\x10\x44\x65leteTimeSeries\x12+.exabel.api.data.v1.DeleteTimeSeriesRequest\x1a\x16.google.protobuf.Empty\"f\x82\xd3\xe4\x93\x02`*-/v1/{name=entityTypes/*/entities/*/signals/*}Z/*-/v1/{name=signals/*/entityTypes/*/entities/*}\x12\x83\x02\n\x1b\x42\x61tchDeleteTimeSeriesPoints\x12\x36.exabel.api.data.v1.BatchDeleteTimeSeriesPointsRequest\x1a\x16.google.protobuf.Empty\"\x93\x01\x82\xd3\xe4\x93\x02\x8c\x01\"@/v1/{name=entityTypes/*/entities/*/signals/*}/points:batchDelete:\x01*ZE\"@/v1/{name=signals/*/entityTypes/*/entities/*}/points:batchDelete:\x01*B2\n\x16\x63om.exabel.api.data.v1B\x16TimeSeriesServiceProtoP\x01\x62\x06proto3'
   ,
   dependencies=[exabel_dot_api_dot_data_dot_v1_dot_time__series__messages__pb2.DESCRIPTOR,exabel_dot_api_dot_time_dot_time__range__pb2.DESCRIPTOR,google_dot_api_dot_annotations__pb2.DESCRIPTOR,google_dot_api_dot_field__behavior__pb2.DESCRIPTOR,google_dot_protobuf_dot_empty__pb2.DESCRIPTOR,])
 
@@ -244,6 +244,20 @@ _UPDATETIMESERIESREQUEST = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+    _descriptor.FieldDescriptor(
+      name='allow_missing', full_name='exabel.api.data.v1.UpdateTimeSeriesRequest.allow_missing', index=3,
+      number=4, type=8, cpp_type=7, label=1,
+      has_default_value=False, default_value=False,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+    _descriptor.FieldDescriptor(
+      name='create_tag', full_name='exabel.api.data.v1.UpdateTimeSeriesRequest.create_tag', index=4,
+      number=5, type=8, cpp_type=7, label=1,
+      has_default_value=False, default_value=False,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
   ],
   extensions=[
   ],
@@ -257,7 +271,7 @@ _UPDATETIMESERIESREQUEST = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=766,
-  serialized_end=965,
+  serialized_end=1008,
 )
 
 
@@ -288,8 +302,8 @@ _DELETETIMESERIESREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=967,
-  serialized_end=1011,
+  serialized_start=1010,
+  serialized_end=1054,
 )
 
 
@@ -327,8 +341,8 @@ _BATCHDELETETIMESERIESPOINTSREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1013,
-  serialized_end=1117,
+  serialized_start=1056,
+  serialized_end=1160,
 )
 
 _LISTTIMESERIESRESPONSE.fields_by_name['time_series'].message_type = exabel_dot_api_dot_data_dot_v1_dot_time__series__messages__pb2._TIMESERIES
@@ -414,8 +428,8 @@ _TIMESERIESSERVICE = _descriptor.ServiceDescriptor(
   index=0,
   serialized_options=None,
   create_key=_descriptor._internal_create_key,
-  serialized_start=1120,
-  serialized_end=2500,
+  serialized_start=1163,
+  serialized_end=2543,
   methods=[
   _descriptor.MethodDescriptor(
     name='ListTimeSeries',

@@ -132,7 +132,9 @@ class EntityApi:
         )
         return Entity.from_proto(response)
 
-    def update_entity(self, entity: Entity, update_mask: FieldMask = None) -> Entity:
+    def update_entity(
+        self, entity: Entity, update_mask: FieldMask = None, allow_missing: bool = False
+    ) -> Entity:
         """
         Update an entity.
 
@@ -140,41 +142,28 @@ class EntityApi:
             entity:         The entity to update.
             update_mask:    Fields to update. If not specified, the update behaves as a full update,
                             overwriting all existing fields and properties.
+            allow_missing:  If set to true, and the resource is not found, a new resource will be
+                            created. In this situation, the "update_mask" is ignored.
         """
         response = self.client.update_entity(
-            UpdateEntityRequest(entity=entity.to_proto(), update_mask=update_mask)
+            UpdateEntityRequest(
+                entity=entity.to_proto(),
+                update_mask=update_mask,
+                allow_missing=allow_missing,
+            )
         )
         return Entity.from_proto(response)
 
-    def upsert_entity(self, entity: Entity, assume_exists: bool = True) -> Entity:
+    def upsert_entity(self, entity: Entity) -> Entity:
         """
         Upsert an entity.
 
         If the entity already exists, update it by replacement. Otherwise, create it.
 
         Args:
-            entity:         The entity to upsert.
-            assume_exists:  If True, the entity is assumed to exist. Will try to to update
-                            the entity, and fall back to creating it if it does not exist,
-                            and vice versa.
+            entity: The entity to upsert.
         """
-        if assume_exists:
-            try:
-                entity = self.update_entity(entity)
-            except RequestError as error:
-                if error.error_type == ErrorType.NOT_FOUND:
-                    entity = self.create_entity(entity, entity.get_entity_type())
-                else:
-                    raise error
-        else:
-            try:
-                entity = self.create_entity(entity, entity.get_entity_type())
-            except RequestError as error:
-                if error.error_type == ErrorType.ALREADY_EXISTS:
-                    entity = self.update_entity(entity)
-                else:
-                    raise error
-        return entity
+        return self.update_entity(entity, allow_missing=True)
 
     def delete_entity(self, name: str) -> None:
         """
@@ -230,8 +219,7 @@ class EntityApi:
 
         def insert(entity: Entity) -> ResourceCreationStatus:
             if upsert:
-                # Upsert entities assuming they already exist.
-                self.upsert_entity(entity=entity, assume_exists=True)
+                self.upsert_entity(entity=entity)
                 return ResourceCreationStatus.UPSERTED
             # Optimistically insert the entity.
             # If the entity already exists, we'll get an ALREADY_EXISTS error from the backend,

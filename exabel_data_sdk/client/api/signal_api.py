@@ -77,17 +77,33 @@ class SignalApi:
         )
         return Signal.from_proto(response)
 
-    def update_signal(self, signal: Signal, update_mask: FieldMask = None) -> Signal:
+    def update_signal(
+        self,
+        signal: Signal,
+        update_mask: FieldMask = None,
+        allow_missing: bool = False,
+        create_library_signal: bool = False,
+    ) -> Signal:
         """
         Update one signal and return it.
 
         Args:
-            signal: The signal to update.
-            update_mask: The fields to update. If not specified, the update behaves as a
-                         full update, overwriting all existing fields and properties.
+            signal:         The signal to update.
+            update_mask:    The fields to update. If not specified, the update behaves as a
+                            full update, overwriting all existing fields and properties.
+            allow_missing:  If set to true, and the resource is not found, a new resource will be
+                            created. In this situation, the "update_mask" is ignored.
+            create_library_signal:
+                            If allow_missing is set to true and the signal does not exist, also add
+                            it to the library.
         """
         response = self.client.update_signal(
-            UpdateSignalRequest(signal=signal.to_proto(), update_mask=update_mask),
+            UpdateSignalRequest(
+                signal=signal.to_proto(),
+                update_mask=update_mask,
+                allow_missing=allow_missing,
+                create_library_signal=create_library_signal,
+            ),
         )
         return Signal.from_proto(response)
 

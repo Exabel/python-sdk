@@ -176,7 +176,7 @@ class TimeSeriesApi:
         series: pd.Series,
         create_tag: bool = False,
         default_known_time: DefaultKnownTime = None,
-    ) -> bool:
+    ) -> None:
         """
         Create or update a time series.
 
@@ -197,20 +197,10 @@ class TimeSeriesApi:
                         the Known Time for data points where a specific known time timestamp
                         has not been given. If not provided, the Exabel API defaults to the
                         current time (upload time) as the Known Time.
-
-        Returns:
-            True if the time series already existed, or False if it is created
         """
-        try:
-            # Optimistically assume that the time series exists, and append to it.
-            # If it doesn't exist, we catch the error below and create the time series instead.
-            self.append_time_series_data(name, series, default_known_time)
-            return True
-        except RequestError as error:
-            if error.error_type == ErrorType.NOT_FOUND:
-                self.create_time_series(name, series, create_tag, default_known_time)
-                return False
-            raise
+        self.append_time_series_data(
+            name, series, default_known_time, allow_missing=True, create_tag=create_tag
+        )
 
     def clear_time_series_data(self, name: str, start: pd.Timestamp, end: pd.Timestamp) -> None:
         """
@@ -227,7 +217,12 @@ class TimeSeriesApi:
         )
 
     def append_time_series_data(
-        self, name: str, series: pd.Series, default_known_time: DefaultKnownTime = None
+        self,
+        name: str,
+        series: pd.Series,
+        default_known_time: DefaultKnownTime = None,
+        allow_missing: bool = False,
+        create_tag: bool = False,
     ) -> None:
         """
         Append data to the given time series.
@@ -236,13 +231,17 @@ class TimeSeriesApi:
         overwritten.
 
         Args:
-            name:   The resource name of the time series.
-            series: Series with data to append.
+            name:           The resource name of the time series.
+            series:         Series with data to append.
             default_known_time:
-                        Specify a default known time policy. This is used to determine
-                        the Known Time for data points where a specific known time timestamp
-                        has not been given. If not provided, the Exabel API defaults to the
-                        current time (upload time) as the Known Time.
+                            Specify a default known time policy. This is used to determine
+                            the Known Time for data points where a specific known time timestamp
+                            has not been given. If not provided, the Exabel API defaults to the
+                            current time (upload time) as the Known Time.
+            allow_missing:  If set to true, and the resource is not found, a new resource will be
+                            created. In this situation, the "update_mask" is ignored.
+            create_tag:     If allow_missing is set to true and the time series does not exist, also
+                            create a tag for every entity type the signal has time series for.
         """
         self.client.update_time_series(
             UpdateTimeSeriesRequest(
@@ -250,11 +249,18 @@ class TimeSeriesApi:
                     name=name, points=self._series_to_time_series_points(series)
                 ),
                 default_known_time=default_known_time,
+                allow_missing=allow_missing,
+                create_tag=create_tag,
             ),
         )
 
     def append_time_series_data_and_return(
-        self, name: str, series: pd.Series, default_known_time: DefaultKnownTime = None
+        self,
+        name: str,
+        series: pd.Series,
+        default_known_time: DefaultKnownTime = None,
+        allow_missing: Optional[bool] = False,
+        create_tag: Optional[bool] = False,
     ) -> pd.Series:
         """
         Append data to the given time series, and return the full series.
@@ -263,13 +269,17 @@ class TimeSeriesApi:
         overwritten.
 
         Args:
-            name:   The resource name of the time series.
-            series: Series with data to append.
+            name:           The resource name of the time series.
+            series:         Series with data to append.
             default_known_time:
-                        Specify a default known time policy. This is used to determine
-                        the Known Time for data points where a specific known time timestamp
-                        has not been given. If not provided, the Exabel API defaults to the
-                        current time (upload time) as the Known Time.
+                            Specify a default known time policy. This is used to determine
+                            the Known Time for data points where a specific known time timestamp
+                            has not been given. If not provided, the Exabel API defaults to the
+                            current time (upload time) as the Known Time.
+            allow_missing:  If set to true, and the resource is not found, a new resource will be
+                            created. In this situation, the "update_mask" is ignored.
+            create_tag:     If allow_missing is set to true and the time series does not exist, also
+                            create a tag for every entity type the signal has time series for.
 
         Returns:
             A series with all data for the given time series.
@@ -282,6 +292,8 @@ class TimeSeriesApi:
                 ),
                 view=TimeSeriesView(time_range=TimeRange()),
                 default_known_time=default_known_time,
+                allow_missing=allow_missing,
+                create_tag=create_tag,
             ),
         )
         return self._time_series_points_to_series(time_series.points, time_series.name)
@@ -337,10 +349,10 @@ class TimeSeriesApi:
         """
 
         def insert(ts: pd.Series) -> ResourceCreationStatus:
-            existed = self.upsert_time_series(
+            self.upsert_time_series(
                 str(ts.name), ts, create_tag=create_tag, default_known_time=default_known_time
             )
-            return ResourceCreationStatus.UPSERTED if existed else ResourceCreationStatus.CREATED
+            return ResourceCreationStatus.UPSERTED
 
         return bulk_insert(series, insert, threads=threads, retries=retries)
 

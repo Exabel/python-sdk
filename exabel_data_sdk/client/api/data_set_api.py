@@ -59,17 +59,28 @@ class DataSetApi:
         response = self.client.create_data_set(CreateDataSetRequest(data_set=data_set.to_proto()))
         return DataSet.from_proto(response)
 
-    def update_data_set(self, data_set: DataSet, update_mask: FieldMask = None) -> DataSet:
+    def update_data_set(
+        self,
+        data_set: DataSet,
+        update_mask: FieldMask = None,
+        allow_missing: bool = False,
+    ) -> DataSet:
         """
         Update a data set.
 
         Args:
-            data_set:     The data set to update.
-            update_mask:  The fields to update. If not specified, the update behaves as a
-                          full update, overwriting all existing fields and properties.
+            data_set:       The data set to update.
+            update_mask:    The fields to update. If not specified, the update behaves as a
+                            full update, overwriting all existing fields and properties.
+            allow_missing:  If set to true, and the resource is not found, a new resource will be
+                            created. In this situation, the "update_mask" is ignored.
         """
         response = self.client.update_data_set(
-            UpdateDataSetRequest(data_set=data_set.to_proto(), update_mask=update_mask)
+            UpdateDataSetRequest(
+                data_set=data_set.to_proto(),
+                update_mask=update_mask,
+                allow_missing=allow_missing,
+            )
         )
         return DataSet.from_proto(response)
 

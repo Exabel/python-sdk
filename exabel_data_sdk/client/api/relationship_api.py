@@ -91,7 +91,10 @@ class RelationshipApi:
         return RelationshipType.from_proto(response)
 
     def update_relationship_type(
-        self, relationship_type: RelationshipType, update_mask: FieldMask = None
+        self,
+        relationship_type: RelationshipType,
+        update_mask: FieldMask = None,
+        allow_missing: bool = False,
     ) -> RelationshipType:
         """
         Update a relationship type.
@@ -100,10 +103,14 @@ class RelationshipApi:
             relationship_type: The relationship type to update.
             update_mask:       The fields to update. If not specified, the update behaves as a
                                full update, overwriting all existing fields and properties.
+            allow_missing:     If set to true, and the resource is not found, a new resource will
+                               be created. In this situation, the "update_mask" is ignored.
         """
         response = self.client.update_relationship_type(
             UpdateRelationshipTypeRequest(
-                relationship_type=relationship_type.to_proto(), update_mask=update_mask
+                relationship_type=relationship_type.to_proto(),
+                update_mask=update_mask,
+                allow_missing=allow_missing,
             )
         )
         return RelationshipType.from_proto(response)
@@ -228,24 +235,28 @@ class RelationshipApi:
         return Relationship.from_proto(response)
 
     def update_relationship(
-        self, relationship: Relationship, update_mask: FieldMask = None
+        self, relationship: Relationship, update_mask: FieldMask = None, allow_missing: bool = False
     ) -> Relationship:
         """
         Update a relationship between two entities.
 
         Args:
-            relationship:  The relationship to update.
-            update_mask:   The fields to update. If not specified, the update behaves as a
-                           full update, overwriting all existing fields and properties.
+            relationship:   The relationship to update.
+            update_mask:    The fields to update. If not specified, the update behaves as a
+                            full update, overwriting all existing fields and properties.
+            allow_missing:  If set to true, and the resource is not found, a new resource will
+                            be created. In this situation, the "update_mask" is ignored.
         """
         response = self.client.update_relationship(
-            UpdateRelationshipRequest(relationship=relationship.to_proto(), update_mask=update_mask)
+            UpdateRelationshipRequest(
+                relationship=relationship.to_proto(),
+                update_mask=update_mask,
+                allow_missing=allow_missing,
+            )
         )
         return Relationship.from_proto(response)
 
-    def upsert_relationship(
-        self, relationship: Relationship, assume_exists: bool = True
-    ) -> Relationship:
+    def upsert_relationship(self, relationship: Relationship) -> Relationship:
         """
         Upsert a relationship between two entities.
 
@@ -253,27 +264,8 @@ class RelationshipApi:
 
         Args:
             relationship:   The relationship to upsert.
-            assume_exists:  If True, the relationship is assumed to exist. Will try to to update
-                            the relationship, and fall back to creating it if it does not exist,
-                            and vice versa.
         """
-        if assume_exists:
-            try:
-                relationship = self.update_relationship(relationship)
-            except RequestError as error:
-                if error.error_type == ErrorType.NOT_FOUND:
-                    relationship = self.create_relationship(relationship)
-                else:
-                    raise error
-        else:
-            try:
-                relationship = self.create_relationship(relationship)
-            except RequestError as error:
-                if error.error_type == ErrorType.ALREADY_EXISTS:
-                    relationship = self.update_relationship(relationship)
-                else:
-                    raise error
-        return relationship
+        return self.update_relationship(relationship, allow_missing=True)
 
     def delete_relationship(self, relationship_type: str, from_entity: str, to_entity: str) -> None:
         """
@@ -319,8 +311,7 @@ class RelationshipApi:
 
         def insert(relationship: Relationship) -> ResourceCreationStatus:
             if upsert:
-                # Upsert relationships assuming they already exist.
-                self.upsert_relationship(relationship=relationship, assume_exists=True)
+                self.upsert_relationship(relationship=relationship)
                 return ResourceCreationStatus.UPSERTED
             # Optimistically insert the relationship.
             # If the relationship already exists, we'll get an ALREADY_EXISTS error from the
