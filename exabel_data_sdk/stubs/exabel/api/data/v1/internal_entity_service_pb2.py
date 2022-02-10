@@ -23,7 +23,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   syntax='proto3',
   serialized_options=b'\n\026com.exabel.api.data.v1B\032InternalEntityServiceProtoP\001',
   create_key=_descriptor._internal_create_key,
-  serialized_pb=b'\n0exabel/api/data/v1/internal_entity_service.proto\x12\x12\x65xabel.api.data.v1\x1a(exabel/api/data/v1/entity_messages.proto\x1a\x1cgoogle/api/annotations.proto\x1a\x1fgoogle/api/field_behavior.proto\x1a google/protobuf/field_mask.proto\"S\n\x17\x43reateEntityTypeRequest\x12\x38\n\x0b\x65ntity_type\x18\x01 \x01(\x0b\x32\x1e.exabel.api.data.v1.EntityTypeB\x03\xe0\x41\x02\"\x84\x01\n\x17UpdateEntityTypeRequest\x12\x38\n\x0b\x65ntity_type\x18\x01 \x01(\x0b\x32\x1e.exabel.api.data.v1.EntityTypeB\x03\xe0\x41\x02\x12/\n\x0bupdate_mask\x18\x02 \x01(\x0b\x32\x1a.google.protobuf.FieldMask2\xbc\x02\n\x15InternalEntityService\x12\x85\x01\n\x10\x43reateEntityType\x12+.exabel.api.data.v1.CreateEntityTypeRequest\x1a\x1e.exabel.api.data.v1.EntityType\"$\x82\xd3\xe4\x93\x02\x1e\"\x0f/v1/entityTypes:\x0b\x65ntity_type\x12\x9a\x01\n\x10UpdateEntityType\x12+.exabel.api.data.v1.UpdateEntityTypeRequest\x1a\x1e.exabel.api.data.v1.EntityType\"9\x82\xd3\xe4\x93\x02\x33\x32$/v1/{entity_type.name=entityTypes/*}:\x0b\x65ntity_typeB6\n\x16\x63om.exabel.api.data.v1B\x1aInternalEntityServiceProtoP\x01\x62\x06proto3'
+  serialized_pb=b'\n0exabel/api/data/v1/internal_entity_service.proto\x12\x12\x65xabel.api.data.v1\x1a(exabel/api/data/v1/entity_messages.proto\x1a\x1cgoogle/api/annotations.proto\x1a\x1fgoogle/api/field_behavior.proto\x1a google/protobuf/field_mask.proto\"S\n\x17\x43reateEntityTypeRequest\x12\x38\n\x0b\x65ntity_type\x18\x01 \x01(\x0b\x32\x1e.exabel.api.data.v1.EntityTypeB\x03\xe0\x41\x02\"\x9b\x01\n\x17UpdateEntityTypeRequest\x12\x38\n\x0b\x65ntity_type\x18\x01 \x01(\x0b\x32\x1e.exabel.api.data.v1.EntityTypeB\x03\xe0\x41\x02\x12/\n\x0bupdate_mask\x18\x02 \x01(\x0b\x32\x1a.google.protobuf.FieldMask\x12\x15\n\rallow_missing\x18\x03 \x01(\x08\x32\xbc\x02\n\x15InternalEntityService\x12\x85\x01\n\x10\x43reateEntityType\x12+.exabel.api.data.v1.CreateEntityTypeRequest\x1a\x1e.exabel.api.data.v1.EntityType\"$\x82\xd3\xe4\x93\x02\x1e\"\x0f/v1/entityTypes:\x0b\x65ntity_type\x12\x9a\x01\n\x10UpdateEntityType\x12+.exabel.api.data.v1.UpdateEntityTypeRequest\x1a\x1e.exabel.api.data.v1.EntityType\"9\x82\xd3\xe4\x93\x02\x33\x32$/v1/{entity_type.name=entityTypes/*}:\x0b\x65ntity_typeB6\n\x16\x63om.exabel.api.data.v1B\x1aInternalEntityServiceProtoP\x01\x62\x06proto3'
   ,
   dependencies=[exabel_dot_api_dot_data_dot_v1_dot_entity__messages__pb2.DESCRIPTOR,google_dot_api_dot_annotations__pb2.DESCRIPTOR,google_dot_api_dot_field__behavior__pb2.DESCRIPTOR,google_dot_protobuf_dot_field__mask__pb2.DESCRIPTOR,])
 
@@ -84,6 +84,13 @@ _UPDATEENTITYTYPEREQUEST = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+    _descriptor.FieldDescriptor(
+      name='allow_missing', full_name='exabel.api.data.v1.UpdateEntityTypeRequest.allow_missing', index=2,
+      number=3, type=8, cpp_type=7, label=1,
+      has_default_value=False, default_value=False,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
   ],
   extensions=[
   ],
@@ -97,7 +104,7 @@ _UPDATEENTITYTYPEREQUEST = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=297,
-  serialized_end=429,
+  serialized_end=452,
 )
 
 _CREATEENTITYTYPEREQUEST.fields_by_name['entity_type'].message_type = exabel_dot_api_dot_data_dot_v1_dot_entity__messages__pb2._ENTITYTYPE
@@ -133,8 +140,8 @@ _INTERNALENTITYSERVICE = _descriptor.ServiceDescriptor(
   index=0,
   serialized_options=None,
   create_key=_descriptor._internal_create_key,
-  serialized_start=432,
-  serialized_end=748,
+  serialized_start=455,
+  serialized_end=771,
   methods=[
   _descriptor.MethodDescriptor(
     name='CreateEntityType',

@@ -43,9 +43,11 @@ class MockEntityApi(EntityApi):
     def create_entity(self, entity: Entity, entity_type: str) -> Entity:
         return self.entities.create(entity)
 
-    def update_entity(self, entity: Entity, update_mask: FieldMask = None) -> Entity:
+    def update_entity(
+        self, entity: Entity, update_mask: FieldMask = None, allow_missing: bool = False
+    ) -> Entity:
         # Note: The mock implementation ignores update_mask
-        return self.entities.update(entity)
+        return self.entities.update(entity, allow_missing=allow_missing)
 
     def delete_entity(self, name: str) -> None:
         # Note: The mock implementation does not delete associated time series and relationships
