@@ -1,6 +1,6 @@
 from concurrent.futures.thread import ThreadPoolExecutor
 from time import sleep, time
-from typing import Callable, Sequence
+from typing import Callable, Optional, Sequence
 
 from exabel_data_sdk.client.api.data_classes.request_error import ErrorType, RequestError
 from exabel_data_sdk.client.api.resource_creation_result import (
@@ -100,6 +100,7 @@ def bulk_insert(
     insert_func: Callable[[TResource], ResourceCreationStatus],
     retries: int = 5,
     threads: int = 40,
+    abort_threshold: Optional[float] = 0.5,
 ) -> ResourceCreationResults[TResource]:
     """
     Calls the provided insert function with each of the provided resources,
@@ -112,12 +113,16 @@ def bulk_insert(
         insert_func:     the function to call for each insert.
         retries:         the maximum number of retries to make for each failed request
         threads:         the number of parallel upload threads to use
+        abort_threshold: the threshold for the proportion of failed requests that will cause the
+                         upload to be aborted; if it is `None`, the upload is never aborted
 
     Returns:
         the result set showing the current status for each insert
     """
     start_time = time()
-    results: ResourceCreationResults[TResource] = ResourceCreationResults(len(resources))
+    results: ResourceCreationResults[TResource] = ResourceCreationResults(
+        len(resources), abort_threshold=abort_threshold
+    )
     try:
         for trial in range(retries + 1):
             if trial > 0:

@@ -1,7 +1,7 @@
 import sys
 from collections import Counter
 from enum import Enum
-from typing import Generic, List, TypeVar
+from typing import Generic, List, Optional, TypeVar
 
 import pandas as pd
 
@@ -52,20 +52,21 @@ class ResourceCreationResults(Generic[TResource]):
     """
 
     def __init__(
-        self, total_count: int, print_status: bool = True, abort_threshold: float = 0.5
+        self, total_count: int, print_status: bool = True, abort_threshold: Optional[float] = 0.5
     ) -> None:
         """
         Args:
             total_count:     The total number of resources expected to be loaded.
             print_status:    Whether to print status of the upload during processing.
             abort_threshold: If the fraction of failed requests exceeds this threshold,
-                             the upload is aborted.
+                             the upload is aborted; if it is `None`, the upload is not aborted,
+                             regardless of how many errors there are.
         """
         self.results: List[ResourceCreationResult[TResource]] = []
         self.counter: Counter = Counter()
         self.total_count = total_count
         self.do_print_status = print_status
-        self.abort_threshold = abort_threshold
+        self.abort_threshold = abort_threshold if abort_threshold is not None else 2
         self.abort = False
 
     def add(self, result: ResourceCreationResult[TResource]) -> None:

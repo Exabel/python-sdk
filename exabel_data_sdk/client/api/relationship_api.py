@@ -303,6 +303,7 @@ class RelationshipApi:
         threads: int = 40,
         upsert: bool = False,
         retries: int = 5,
+        abort_threshold: Optional[float] = 0.5,
     ) -> ResourceCreationResults[Relationship]:
         """
         Check if the provided relationships exist, and create them if they don't.
@@ -319,4 +320,6 @@ class RelationshipApi:
             self.create_relationship(relationship=relationship)
             return ResourceCreationStatus.CREATED
 
-        return bulk_insert(relationships, insert, threads=threads, retries=retries)
+        return bulk_insert(
+            relationships, insert, threads=threads, retries=retries, abort_threshold=abort_threshold
+        )

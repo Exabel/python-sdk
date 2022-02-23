@@ -210,6 +210,7 @@ class EntityApi:
         threads: int = 40,
         upsert: bool = False,
         retries: int = 5,
+        abort_threshold: Optional[float] = 0.5,
     ) -> ResourceCreationResults[Entity]:
         """
         Check if the provided entities exist, and create them if they don't.
@@ -227,4 +228,6 @@ class EntityApi:
             self.create_entity(entity=entity, entity_type=entity_type)
             return ResourceCreationStatus.CREATED
 
-        return bulk_insert(entities, insert, threads=threads, retries=retries)
+        return bulk_insert(
+            entities, insert, threads=threads, retries=retries, abort_threshold=abort_threshold
+        )

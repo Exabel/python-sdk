@@ -1,4 +1,4 @@
-from typing import Mapping
+from typing import Mapping, Optional
 
 from exabel_data_sdk import ExabelClient
 from exabel_data_sdk.client.api.bulk_insert import BulkInsertFailedError
@@ -41,6 +41,7 @@ class CsvRelationshipLoader:
         dry_run: bool = False,
         error_on_any_failure: bool = False,
         retries: int = DEFAULT_NUMBER_OF_RETRIES,
+        abort_threshold: Optional[float] = 0.5,
     ) -> None:
         """
         Load a CSV file and upload the relationships specified therein to the Exabel Data API.
@@ -65,6 +66,8 @@ class CsvRelationshipLoader:
             error_on_any_failure: if True, an exception is raised if any relationship failed to be
                 created
             retries: the maximum number of retries to make for each failed request
+            abort_threshold: the threshold for the proportion of failed requests that will cause the
+                 upload to be aborted; if it is `None`, the upload is never aborted
         """
         if dry_run:
             print("Running dry-run...")
@@ -149,7 +152,11 @@ class CsvRelationshipLoader:
 
         try:
             result = self._client.relationship_api.bulk_create_relationships(
-                relationships, threads=threads, upsert=upsert, retries=retries
+                relationships,
+                threads=threads,
+                upsert=upsert,
+                retries=retries,
+                abort_threshold=abort_threshold,
             )
             if error_on_any_failure and result.has_failure():
                 raise CsvLoadingException("An error occurred while uploading relationships.")
