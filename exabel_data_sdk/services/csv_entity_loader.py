@@ -1,3 +1,5 @@
+from typing import Mapping
+
 from exabel_data_sdk import ExabelClient
 from exabel_data_sdk.client.api.bulk_insert import BulkInsertFailedError
 from exabel_data_sdk.client.api.data_classes.entity import Entity
@@ -7,7 +9,9 @@ from exabel_data_sdk.services.csv_loading_constants import (
     DEFAULT_NUMBER_OF_THREADS,
 )
 from exabel_data_sdk.services.csv_reader import CsvReader
+from exabel_data_sdk.util.exceptions import TypeConvertionError
 from exabel_data_sdk.util.resource_name_normalization import normalize_resource_name
+from exabel_data_sdk.util.type_converter import type_converter
 
 
 class CsvEntityLoader:
@@ -28,6 +32,7 @@ class CsvEntityLoader:
         name_column: str = None,
         display_name_column: str = None,
         description_column: str = None,
+        property_columns: Mapping[str, type] = None,
         threads: int = DEFAULT_NUMBER_OF_THREADS,
         upsert: bool,
         dry_run: bool = False,
@@ -49,6 +54,8 @@ class CsvEntityLoader:
                 the entity name is used
             description_column: the column name for the entity description; if not specified, no
                 description is provided
+            property_columns: a mapping of column names to data types for the entity properties;
+                if not specified, no properties are provided
             threads: the number of parallel upload threads to run
             upsert: whether entities should be updated if they already exist
             dry_run: if True, the file is processed, but no entities are actually uploaded
@@ -60,10 +67,13 @@ class CsvEntityLoader:
 
         print("Loading entities from", filename)
         name_col_ref = name_column or 0
+        if property_columns is None:
+            property_columns = {}
         string_columns = {
             name_col_ref,
             display_name_column or name_col_ref,
         }
+        string_columns.update(property_columns)
         if description_column:
             string_columns.add(description_column)
         entities_df = CsvReader.read_csv(
@@ -81,15 +91,28 @@ class CsvEntityLoader:
                 f"The available entity types are: {self._client.entity_api.list_entity_types()}"
             )
 
-        entities = [
-            Entity(
-                name=f"{entity_type_name}/entities/{namespace}."
-                f"{normalize_resource_name(row[name_col])}",
-                display_name=row[display_name_col],
-                description=row[description_col] if description_col else "",
+        if not set(property_columns).issubset(entities_df.columns):
+            raise CsvLoadingException(
+                "Property columns must be a subset of columns present in the file. Columns "
+                f"missing in the file: {set(property_columns) - set(entities_df.columns)}"
             )
-            for _, row in entities_df.iterrows()
-        ]
+        try:
+            entities = [
+                Entity(
+                    name=f"{entity_type_name}/entities/{namespace}."
+                    f"{normalize_resource_name(row[name_col])}",
+                    display_name=row[display_name_col],
+                    description=row[description_col] if description_col else "",
+                    properties={
+                        property_key: type_converter(row[property_key], property_type)
+                        for property_key, property_type in property_columns.items()
+                        if row[property_key]
+                    },
+                )
+                for _, row in entities_df.iterrows()
+            ]
+        except TypeConvertionError as e:
+            raise CsvLoadingException("An error occurred while converting property types.") from e
 
         if dry_run:
             print("Loading", len(entities), "entities")
