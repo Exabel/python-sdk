@@ -1,7 +1,7 @@
 import sys
 from collections import Counter
 from enum import Enum
-from typing import Generic, List, Optional, TypeVar
+from typing import Generic, List, Optional, Sequence, TypeVar
 
 import pandas as pd
 
@@ -88,6 +88,10 @@ class ResourceCreationResults(Generic[TResource]):
     def has_failure(self) -> bool:
         """Whether this result contains failures."""
         return self.count(ResourceCreationStatus.FAILED) > 0
+
+    def get_failures(self) -> Sequence[ResourceCreationResult[TResource]]:
+        """Return all the failed results."""
+        return list(filter(lambda r: r.status == ResourceCreationStatus.FAILED, self.results))
 
     def extract_retryable_failures(self) -> List[ResourceCreationResult[TResource]]:
         """
