@@ -92,6 +92,9 @@ class CsvTimeSeriesLoader:
         ts_data = CsvReader.read_csv(
             filename, separator=separator, string_columns=[0], keep_default_na=True
         )
+        if ts_data.empty:
+            print("No data in time series file.")
+            return
         entity_mapping = EntityMappingFileReader.read_entity_mapping_file(
             entity_mapping_filename, separator=separator
         )
