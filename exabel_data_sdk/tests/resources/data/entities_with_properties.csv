@@ -1,0 +1,5 @@
+brand,boolean_prop,string_prop,integer_prop,float_prop,all_null_prop
+1,true,string,1,1,
+2,tRuE,STRING,2,2.3,
+3,False,string,3,3.0,
+4,,,,,

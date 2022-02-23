@@ -6,6 +6,7 @@ from exabel_data_sdk import ExabelClient
 from exabel_data_sdk.scripts.csv_script_with_entity_mapping import CsvScriptWithEntityMapping
 from exabel_data_sdk.services.csv_exception import CsvLoadingException
 from exabel_data_sdk.services.csv_relationship_loader import CsvRelationshipLoader
+from exabel_data_sdk.util.parse_property_columns import parse_property_columns
 
 
 class LoadRelationshipsFromCsv(CsvScriptWithEntityMapping):
@@ -66,6 +67,18 @@ class LoadRelationshipsFromCsv(CsvScriptWithEntityMapping):
             ),
         )
         self.parser.add_argument(
+            "--property-columns",
+            nargs="+",
+            required=False,
+            type=str,
+            default=[],
+            help=(
+                "Mappings of column name to data type for the relationship properties. If not "
+                "specified, no properties are provided. Should be specified in the following "
+                "format: 'column_name:type'. Supported types are bool, str, int, float."
+            ),
+        )
+        self.parser.add_argument(
             "--upsert",
             required=False,
             action="store_true",
@@ -84,6 +97,7 @@ class LoadRelationshipsFromCsv(CsvScriptWithEntityMapping):
                 entity_from_column=args.entity_from_column,
                 entity_to_column=args.entity_to_column,
                 description_column=args.description_column,
+                property_columns=parse_property_columns(*args.property_columns),
                 threads=args.threads,
                 upsert=args.upsert,
                 dry_run=args.dry_run,

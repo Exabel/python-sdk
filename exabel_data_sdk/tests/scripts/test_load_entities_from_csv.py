@@ -1,5 +1,6 @@
 import random
 import unittest
+from unittest.mock import MagicMock, patch
 
 from exabel_data_sdk.client.api.data_classes.entity import Entity
 from exabel_data_sdk.scripts.load_entities_from_csv import LoadEntitiesFromCsv
@@ -101,3 +102,19 @@ class TestLoadEntities(unittest.TestCase):
         self.check_entities(client, expected_entities)
         client = load_test_data_from_csv(LoadEntitiesFromCsv, args, client)
         self.check_entities(client, expected_entities)
+
+    @patch("exabel_data_sdk.scripts.load_entities_from_csv.parse_property_columns")
+    def test_property_columns(self, mock_parser):
+        args = common_args + [
+            "--filename",
+            "the-filename",
+            "--property-columns",
+            "the-property-column",
+            "the-other-property-column",
+        ]
+        client = MagicMock()
+        with patch("exabel_data_sdk.scripts.load_entities_from_csv.CsvEntityLoader"):
+            csv_loader = LoadEntitiesFromCsv(args, "the-description")
+            parsed_args = csv_loader.parse_arguments()
+            csv_loader.run_script(client, parsed_args)
+        mock_parser.assert_called_once_with("the-property-column", "the-other-property-column")

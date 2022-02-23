@@ -1,3 +1,5 @@
+from typing import Mapping
+
 from exabel_data_sdk import ExabelClient
 from exabel_data_sdk.client.api.bulk_insert import BulkInsertFailedError
 from exabel_data_sdk.client.api.data_classes.relationship import Relationship
@@ -9,7 +11,9 @@ from exabel_data_sdk.services.csv_loading_constants import (
 )
 from exabel_data_sdk.services.csv_reader import CsvReader
 from exabel_data_sdk.services.entity_mapping_file_reader import EntityMappingFileReader
+from exabel_data_sdk.util.exceptions import TypeConvertionError
 from exabel_data_sdk.util.resource_name_normalization import to_entity_resource_names
+from exabel_data_sdk.util.type_converter import type_converter
 
 
 class CsvRelationshipLoader:
@@ -31,6 +35,7 @@ class CsvRelationshipLoader:
         entity_from_column: str,
         entity_to_column: str,
         description_column: str = None,
+        property_columns: Mapping[str, type] = None,
         threads: int = DEFAULT_NUMBER_OF_THREADS,
         upsert: bool = False,
         dry_run: bool = False,
@@ -52,6 +57,8 @@ class CsvRelationshipLoader:
             entity_to_column: the column name for the destination entity of the relationship
             description_column: the column name for the relationship description; if not specified,
                 no description is provided
+            property_columns: a mapping of column names to data types for the relationship
+                properties; if not specified, no properties are provided
             threads: the number of parallel upload threads to run
             upsert: whether relationships should be updated if they already exist
             dry_run: if True, the file is processed, but no relationships are actually uploaded
@@ -67,9 +74,12 @@ class CsvRelationshipLoader:
             f"to {entity_to_column} from {filename}"
         )
 
+        if property_columns is None:
+            property_columns = {}
         string_columns = {entity_from_column, entity_to_column}
         if description_column:
             string_columns.add(description_column)
+        string_columns.update(property_columns)
 
         relationships_df = CsvReader.read_csv(
             filename, separator, string_columns=string_columns, keep_default_na=False
@@ -109,15 +119,28 @@ class CsvRelationshipLoader:
         # Drop rows where either the from or to entity is missing
         relationships_df.dropna(subset=[entity_from_col, entity_to_col], inplace=True)
 
-        relationships = [
-            Relationship(
-                relationship_type=relationship_type_name,
-                from_entity=row[entity_from_col],
-                to_entity=row[entity_to_col],
-                description=row[description_col] if description_col else "",
+        if not set(property_columns).issubset(relationships_df.columns):
+            raise CsvLoadingException(
+                "Property columns must be a subset of columns present in the file. Columns "
+                f"missing in the file: {set(property_columns) - set(relationships_df.columns)}"
             )
-            for _, row in relationships_df.iterrows()
-        ]
+        try:
+            relationships = [
+                Relationship(
+                    relationship_type=relationship_type_name,
+                    from_entity=row[entity_from_col],
+                    to_entity=row[entity_to_col],
+                    description=row[description_col] if description_col else "",
+                    properties={
+                        property_key: type_converter(row[property_key], property_type)
+                        for property_key, property_type in property_columns.items()
+                        if row[property_key]
+                    },
+                )
+                for _, row in relationships_df.iterrows()
+            ]
+        except TypeConvertionError as e:
+            raise CsvLoadingException("An error occurred while converting property types.") from e
 
         if dry_run:
             print("Loading", len(relationships), "relationships")

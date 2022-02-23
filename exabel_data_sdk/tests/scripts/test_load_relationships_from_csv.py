@@ -1,4 +1,5 @@
 import unittest
+from unittest.mock import MagicMock, patch
 
 from exabel_data_sdk.client.api.data_classes.relationship import Relationship
 from exabel_data_sdk.client.api.data_classes.relationship_type import RelationshipType
@@ -117,3 +118,23 @@ class TestLoadRelationships(unittest.TestCase):
         self.check_relationships(client, expected_relationships)
         client = load_test_data_from_csv(LoadRelationshipsFromCsv, args, client)
         self.check_relationships(client, expected_relationships)
+
+    @patch("exabel_data_sdk.scripts.load_relationships_from_csv.parse_property_columns")
+    def test_property_columns(self, mock_parser):
+        args = common_args + [
+            "--filename",
+            "the-filename",
+            "--entity-from-column",
+            "the-entity-from-column",
+            "--entity-to-column",
+            "the-entity-to-column",
+            "--property-columns",
+            "the-property-column",
+            "the-other-property-column",
+        ]
+        client = MagicMock()
+        with patch("exabel_data_sdk.scripts.load_relationships_from_csv.CsvRelationshipLoader"):
+            csv_loader = LoadRelationshipsFromCsv(args, "the-description")
+            parsed_args = csv_loader.parse_arguments()
+            csv_loader.run_script(client, parsed_args)
+        mock_parser.assert_called_once_with("the-property-column", "the-other-property-column")

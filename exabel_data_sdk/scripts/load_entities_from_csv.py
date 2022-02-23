@@ -6,6 +6,8 @@ from exabel_data_sdk import ExabelClient
 from exabel_data_sdk.scripts.csv_script import CsvScript
 from exabel_data_sdk.services.csv_entity_loader import CsvEntityLoader
 from exabel_data_sdk.services.csv_exception import CsvLoadingException
+from exabel_data_sdk.util.exceptions import ParsePropertyColumnsError
+from exabel_data_sdk.util.parse_property_columns import parse_property_columns
 
 
 class LoadEntitiesFromCsv(CsvScript):
@@ -65,6 +67,18 @@ class LoadEntitiesFromCsv(CsvScript):
             ),
         )
         self.parser.add_argument(
+            "--property-columns",
+            nargs="+",
+            required=False,
+            type=str,
+            default=[],
+            help=(
+                "Mappings of column name to data type for the entity properties. If not "
+                "specified, no properties are provided. Should be specified in the following "
+                "format: 'column_name:type'. Supported types are bool, str, int, float."
+            ),
+        )
+        self.parser.add_argument(
             "--upsert",
             required=False,
             action="store_true",
@@ -82,12 +96,13 @@ class LoadEntitiesFromCsv(CsvScript):
                 name_column=args.name_column,
                 display_name_column=args.display_name_column,
                 description_column=args.description_column,
+                property_columns=parse_property_columns(*args.property_columns),
                 threads=args.threads,
                 upsert=args.upsert,
                 dry_run=args.dry_run,
                 retries=args.retries,
             )
-        except CsvLoadingException as e:
+        except (CsvLoadingException, ParsePropertyColumnsError) as e:
             print(e)
             sys.exit(1)
 
