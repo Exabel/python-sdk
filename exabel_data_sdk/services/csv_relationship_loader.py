@@ -159,7 +159,10 @@ class CsvRelationshipLoader:
                 abort_threshold=abort_threshold,
             )
             if error_on_any_failure and result.has_failure():
-                raise CsvLoadingException("An error occurred while uploading relationships.")
+                raise CsvLoadingException(
+                    "An error occurred while uploading relationships.",
+                    failures=result.get_failures(),
+                )
         except BulkInsertFailedError as e:
             # An error summary has already been printed.
             if error_on_any_failure:
