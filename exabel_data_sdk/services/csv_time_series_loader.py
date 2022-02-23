@@ -1,5 +1,5 @@
 import re
-from typing import List, Sequence
+from typing import List, Optional, Sequence
 
 import pandas as pd
 from dateutil import tz
@@ -49,6 +49,7 @@ class CsvTimeSeriesLoader:
         dry_run: bool = False,
         error_on_any_failure: bool = False,
         retries: int = DEFAULT_NUMBER_OF_RETRIES,
+        abort_threshold: Optional[float] = 0.5,
     ) -> None:
         """
         Load a CSV file and upload the time series to the Exabel Data API
@@ -71,6 +72,8 @@ class CsvTimeSeriesLoader:
             error_on_any_failure: if True, an  exception is raised if any time series failed to be
                 created
             retries: the maximum number of retries to make for each failed request
+            abort_threshold: the threshold for the proportion of failed requests that will cause the
+                 upload to be aborted; if it is `None`, the upload is never aborted
         """
         if dry_run:
             print("Running dry-run...")
@@ -226,6 +229,7 @@ class CsvTimeSeriesLoader:
                 threads=threads,
                 default_known_time=default_known_time,
                 retries=retries,
+                abort_threshold=abort_threshold,
             )
             if error_on_any_failure and result.has_failure():
                 raise CsvLoadingException("An error occurred while uploading time series.")
