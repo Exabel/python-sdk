@@ -35,7 +35,7 @@ class TestResourceNameNormalization(unittest.TestCase):
             name="entity",
         )
         entity_api = mock.create_autospec(EntityApi(ClientConfig(api_key="123"), use_json=True))
-        result = to_entity_resource_names(entity_api, data, namespace="acme")
+        result, _ = to_entity_resource_names(entity_api, data, namespace="acme")
         pd.testing.assert_series_equal(expected, result)
 
     def test_global_entity_type_mapping(self):
@@ -53,7 +53,7 @@ class TestResourceNameNormalization(unittest.TestCase):
         entity_api.list_entity_types.side_effect = [
             [EntityType("entityTypes/country", "Countries", "Countries", True)]
         ]
-        result = to_entity_resource_names(entity_api, data, namespace="acme")
+        result, _ = to_entity_resource_names(entity_api, data, namespace="acme")
         pd.testing.assert_series_equal(expected, result)
 
     def test_isin_mapping(self):
@@ -71,7 +71,7 @@ class TestResourceNameNormalization(unittest.TestCase):
             [Entity("entityTypes/company/entities/target_inc", "Target, Inc.")],
             [Entity("entityTypes/company/entities/adidas_ag", "Adidas Ag")],
         ]
-        result = to_entity_resource_names(entity_api, data, namespace="acme")
+        result, _ = to_entity_resource_names(entity_api, data, namespace="acme")
         call_args_list = entity_api.search_for_entities.call_args_list
         self.assertEqual(2, len(call_args_list))
         self.assertEqual(
@@ -102,7 +102,7 @@ class TestResourceNameNormalization(unittest.TestCase):
         entity_api.search_for_entities.side_effect = [
             [Entity("entityTypes/company/entities/target_inc", "Target, Inc.")]
         ]
-        result = to_entity_resource_names(
+        result, _ = to_entity_resource_names(
             entity_api, data, namespace="acme", entity_mapping=entity_mapping
         )
         call_args_list = entity_api.search_for_entities.call_args_list
@@ -148,13 +148,13 @@ class TestResourceNameNormalization(unittest.TestCase):
             name="entity",
         )
         entity_api = mock.create_autospec(EntityApi(ClientConfig(api_key="123"), use_json=True))
-        company_result = to_entity_resource_names(
+        company_result, _ = to_entity_resource_names(
             entity_api, company_data, namespace="acme", entity_mapping=entity_mapping
         )
         self.assertFalse(entity_api.search_for_entities.called)
         pd.testing.assert_series_equal(expected_companies, company_result)
 
-        brand_result = to_entity_resource_names(
+        brand_result, _ = to_entity_resource_names(
             entity_api, brand_data, namespace="acme", entity_mapping=entity_mapping
         )
         pd.testing.assert_series_equal(expected_brands, brand_result)
@@ -201,7 +201,7 @@ class TestResourceNameNormalization(unittest.TestCase):
             # Result for "NO:HITS"
             [],
         ]
-        result = to_entity_resource_names(entity_api, data, namespace="acme")
+        result, _ = to_entity_resource_names(entity_api, data, namespace="acme")
         pd.testing.assert_series_equal(expected, result)
 
         # Check that the expected searches were performed

@@ -1,6 +1,6 @@
 import re
 import sys
-from typing import Mapping, MutableMapping
+from typing import List, Mapping, MutableMapping, NamedTuple, Sequence
 
 import pandas as pd
 
@@ -55,12 +55,22 @@ def _assert_no_collision(mapping: Mapping[str, str]) -> None:
     sys.exit(1)
 
 
+class EntityResourceNames(NamedTuple):
+    """
+    Identified resource names along with warnings regarding entities that could not be uniquely
+    identified.
+    """
+
+    names: pd.Series
+    warnings: Sequence[str]
+
+
 def to_entity_resource_names(
     entity_api: EntityApi,
     identifiers: pd.Series,
     namespace: str = None,
     entity_mapping: Mapping[str, Mapping[str, str]] = None,
-) -> pd.Series:
+) -> EntityResourceNames:
     """
     Turns the given identifiers into entity resource names.
 
@@ -114,13 +124,16 @@ def to_entity_resource_names(
     entity for an identifier, or one wants to hard map an identifier to a specific entity.
 
     Returns:
-        a Series with the same index as the input Series
-          Any identifier that could not be mapped, will be set to None.
+        a tuple containing:
+            * a Series with the same index as the input Series, where any identifier that could not
+              be mapped is set to None
+            * a sequence of warnings for entities that could not be uniquely identified
     """
+    warnings: List[str] = []
     name = identifiers.name
     if name in ("entity", "entity_from", "entity_to"):
         # Already resource identifiers, nothing to be done
-        return identifiers
+        return EntityResourceNames(identifiers, warnings)
 
     unique_ids = identifiers.unique().tolist()
     mapping: MutableMapping[str, str] = {}
@@ -147,9 +160,13 @@ def to_entity_resource_names(
                 entity_type="entityTypes/company", **search_terms
             )
             if not entities:
-                print("Did not find any match for", search_terms)
+                warning = f"Did not find any match for {search_terms}"
+                print(warning)
+                warnings.append(warning)
             elif len(entities) > 1:
-                print(f"Found {len(entities)} matches for {search_terms}:\n  {entities}")
+                warning = f"Found {len(entities)} matches for {search_terms}:\n  {entities}"
+                print(warning)
+                warnings.append(warning)
             else:
                 mapping[identifier] = entities[0].name
         print(f"Found a match for {len(mapping)} {name}s.")
@@ -191,7 +208,7 @@ def to_entity_resource_names(
 
     result = identifiers.map(mapping)
     result.name = "entity"
-    return result
+    return EntityResourceNames(result, warnings)
 
 
 def validate_signal_name(name: str) -> None:
