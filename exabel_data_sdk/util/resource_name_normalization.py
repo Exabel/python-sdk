@@ -1,10 +1,15 @@
 import re
 import sys
-from typing import List, Mapping, MutableMapping, NamedTuple, Sequence
+from collections import deque
+from typing import Deque, Iterator, List, Mapping, MutableMapping, NamedTuple, Sequence
 
 import pandas as pd
 
 from exabel_data_sdk.client.api.entity_api import EntityApi
+from exabel_data_sdk.stubs.exabel.api.data.v1.all_pb2 import SearchTerm
+from exabel_data_sdk.util.batcher import batcher
+
+MAX_SEARCH_TERMS = 1000
 
 
 def normalize_resource_name(name: str) -> str:
@@ -63,6 +68,23 @@ class EntityResourceNames(NamedTuple):
 
     names: pd.Series
     warnings: Sequence[str]
+
+
+def _validate_mic_ticker(mic_ticker: str) -> bool:
+    """
+    Validate MIC and ticker by the presence of a single colon (:) character.
+
+    Returns:
+        `True` if the given MIC and ticker are valid, `False` otherwise
+    """
+    valid = len(mic_ticker) >= 3 and mic_ticker[1:-1].count(":") == 1
+    if not valid:
+        print(
+            "mic:ticker must contain exactly one colon (:), and both 'mic' and 'ticker' must "
+            "contain at least one character, but got:",
+            mic_ticker,
+        )
+    return valid
 
 
 def to_entity_resource_names(
@@ -144,31 +166,46 @@ def to_entity_resource_names(
     if name in ("isin", "factset_identifier", "bloomberg_ticker", "mic:ticker"):
         # A company identifier
         print(f"Looking up {len(unique_ids)} {name}s...")
-        for identifier in unique_ids:
-            if not identifier:
-                # Skip empty identifiers
-                continue
-            if name == "mic:ticker":
-                parts = identifier.split(":")
-                if len(parts) != 2:
-                    print("mic:ticker must contain exactly one colon (:), but got:", identifier)
-                    continue
-                search_terms = {"mic": parts[0], "ticker": parts[1]}
-            else:
-                search_terms = {name: identifier}
-            entities = entity_api.search_for_entities(
-                entity_type="entityTypes/company", **search_terms
+        # Skip empty identifiers
+        non_empty_identifiers: Iterator[str] = (
+            identifier for identifier in unique_ids if identifier
+        )
+        no_search_terms = MAX_SEARCH_TERMS
+        if name == "mic:ticker":
+            # mic and ticker takes up to two search terms
+            no_search_terms = no_search_terms // 2
+            non_empty_identifiers = filter(_validate_mic_ticker, non_empty_identifiers)
+        for identifier_batch in batcher(non_empty_identifiers, no_search_terms):
+            search_terms: Deque[SearchTerm] = deque()
+            for identifier in identifier_batch:
+                if name == "mic:ticker":
+                    parts = identifier.split(":")
+                    search_terms.extend(
+                        [
+                            SearchTerm(field="mic", query=parts[0]),
+                            SearchTerm(field="ticker", query=parts[1]),
+                        ]
+                    )
+                else:
+                    search_terms.append(SearchTerm(field=name, query=identifier))
+            search_results = entity_api.search.entities_by_terms(
+                entity_type="entityTypes/company", terms=search_terms
             )
-            if not entities:
-                warning = f"Did not find any match for {search_terms}"
-                print(warning)
-                warnings.append(warning)
-            elif len(entities) > 1:
-                warning = f"Found {len(entities)} matches for {search_terms}:\n  {entities}"
-                print(warning)
-                warnings.append(warning)
-            else:
-                mapping[identifier] = entities[0].name
+            for identifier, search_result in zip(identifier_batch, search_results):
+                entities = search_result.entities
+                pretty_terms = {
+                    search_term.field: search_term.query for search_term in search_result.terms
+                }
+                if not entities:
+                    warning = f"Did not find any match for {pretty_terms}"
+                    print(warning)
+                    warnings.append(warning)
+                elif len(entities) > 1:
+                    warning = f"Found {len(entities)} matches for {pretty_terms}:\n  {entities}"
+                    print(warning)
+                    warnings.append(warning)
+                else:
+                    mapping[identifier] = entities[0].name
         print(f"Found a match for {len(mapping)} {name}s.")
 
     else:

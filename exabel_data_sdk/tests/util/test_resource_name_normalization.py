@@ -7,8 +7,10 @@ from exabel_data_sdk.client.api.data_classes.entity import Entity
 from exabel_data_sdk.client.api.data_classes.entity_type import EntityType
 from exabel_data_sdk.client.api.entity_api import EntityApi
 from exabel_data_sdk.client.client_config import ClientConfig
+from exabel_data_sdk.stubs.exabel.api.data.v1.all_pb2 import SearchEntitiesResponse, SearchTerm
 from exabel_data_sdk.util.resource_name_normalization import (
     _assert_no_collision,
+    _validate_mic_ticker,
     normalize_resource_name,
     to_entity_resource_names,
 )
@@ -56,6 +58,15 @@ class TestResourceNameNormalization(unittest.TestCase):
         result, _ = to_entity_resource_names(entity_api, data, namespace="acme")
         pd.testing.assert_series_equal(expected, result)
 
+    def test_validate_mic_ticker(self):
+        self.assertTrue(_validate_mic_ticker("A:A"))
+
+        self.assertFalse(_validate_mic_ticker(":A"))
+        self.assertFalse(_validate_mic_ticker("A:"))
+        self.assertFalse(_validate_mic_ticker("A:A:A"))
+        self.assertFalse(_validate_mic_ticker("A::A"))
+        self.assertFalse(_validate_mic_ticker("A"))
+
     def test_isin_mapping(self):
         data = pd.Series(["US87612E1064", "DE000A1EWWW0", "US87612E1064"], name="isin")
         expected = pd.Series(
@@ -66,22 +77,37 @@ class TestResourceNameNormalization(unittest.TestCase):
             ],
             name="entity",
         )
+        search_terms = [
+            SearchTerm(field="isin", query="US87612E1064"),
+            SearchTerm(field="isin", query="DE000A1EWWW0"),
+        ]
         entity_api = mock.create_autospec(EntityApi(ClientConfig(api_key="123"), use_json=True))
-        entity_api.search_for_entities.side_effect = [
-            [Entity("entityTypes/company/entities/target_inc", "Target, Inc.")],
-            [Entity("entityTypes/company/entities/adidas_ag", "Adidas Ag")],
+        entity_api.search.entities_by_terms.return_value = [
+            SearchEntitiesResponse.SearchResult(
+                terms=[search_terms[0]],
+                entities=[
+                    Entity("entityTypes/company/entities/target_inc", "Target, Inc.").to_proto(),
+                ],
+            ),
+            SearchEntitiesResponse.SearchResult(
+                terms=[search_terms[1]],
+                entities=[
+                    Entity("entityTypes/company/entities/adidas_ag", "Adidas Ag").to_proto(),
+                ],
+            ),
         ]
         result, _ = to_entity_resource_names(entity_api, data, namespace="acme")
-        call_args_list = entity_api.search_for_entities.call_args_list
-        self.assertEqual(2, len(call_args_list))
+        call_args_list = entity_api.search.entities_by_terms.call_args_list
+        self.assertEqual(1, len(call_args_list))
+
         self.assertEqual(
-            {"entity_type": "entityTypes/company", "isin": "US87612E1064"},
-            call_args_list[0][1],
+            "entityTypes/company",
+            call_args_list[0][1]["entity_type"],
             "Arguments not as expected",
         )
-        self.assertEqual(
-            {"entity_type": "entityTypes/company", "isin": "DE000A1EWWW0"},
-            call_args_list[1][1],
+        self.assertSequenceEqual(
+            search_terms,
+            call_args_list[0][1]["terms"],
             "Arguments not as expected",
         )
         pd.testing.assert_series_equal(expected, result)
@@ -98,18 +124,31 @@ class TestResourceNameNormalization(unittest.TestCase):
             ],
             name="entity",
         )
+        search_terms = [
+            SearchTerm(field="isin", query="US87612E1064"),
+        ]
         entity_api = mock.create_autospec(EntityApi(ClientConfig(api_key="123"), use_json=True))
-        entity_api.search_for_entities.side_effect = [
-            [Entity("entityTypes/company/entities/target_inc", "Target, Inc.")]
+        entity_api.search.entities_by_terms.return_value = [
+            SearchEntitiesResponse.SearchResult(
+                terms=[search_terms[0]],
+                entities=[
+                    Entity("entityTypes/company/entities/target_inc", "Target, Inc.").to_proto(),
+                ],
+            ),
         ]
         result, _ = to_entity_resource_names(
             entity_api, data, namespace="acme", entity_mapping=entity_mapping
         )
-        call_args_list = entity_api.search_for_entities.call_args_list
+        call_args_list = entity_api.search.entities_by_terms.call_args_list
         self.assertEqual(1, len(call_args_list))
         self.assertEqual(
-            {"entity_type": "entityTypes/company", "isin": "US87612E1064"},
-            call_args_list[0][1],
+            "entityTypes/company",
+            call_args_list[0][1]["entity_type"],
+            "Arguments not as expected",
+        )
+        self.assertSequenceEqual(
+            search_terms,
+            call_args_list[0][1]["terms"],
             "Arguments not as expected",
         )
         pd.testing.assert_series_equal(expected, result)
@@ -164,16 +203,17 @@ class TestResourceNameNormalization(unittest.TestCase):
         # since any legal identifier must contain exactly one colon.
         # The to_entity_resource_names function will print a warning for such illegal identifiers,
         # and they will not result in any searches towards the Exabel API.
+        mic_tickers = [
+            "XOSL:TEL",
+            "XNAS:AAPL",
+            "NO?COLON",
+            "TOO:MANY:COLONS",
+            "XOSL:ORK",
+            "MANY:HITS",
+            "NO:HITS",
+        ]
         data = pd.Series(
-            [
-                "XOSL:TEL",
-                "XNAS:AAPL",
-                "NO?COLON",
-                "TOO:MANY:COLONS",
-                "XOSL:ORK",
-                "MANY:HITS",
-                "NO:HITS",
-            ],
+            mic_tickers,
             name="mic:ticker",
         )
         expected = pd.Series(
@@ -188,33 +228,60 @@ class TestResourceNameNormalization(unittest.TestCase):
             ],
             name="entity",
         )
+        search_terms = []
+        for mic, ticker in map(lambda x: x.split(":"), mic_tickers[:2] + mic_tickers[4:]):
+            search_terms.append(SearchTerm(field="mic", query=mic))
+            search_terms.append(SearchTerm(field="ticker", query=ticker))
         entity_api = mock.create_autospec(EntityApi(ClientConfig(api_key="123"), use_json=True))
-        entity_api.search_for_entities.side_effect = [
-            [Entity("entityTypes/company/entities/telenor_asa", "Telenor ASA")],
-            [Entity("entityTypes/company/entities/apple_inc", "Apple, Inc.")],
-            [Entity("entityTypes/company/entities/orkla_asa", "Orkla ASA")],
+        entity_api.search.entities_by_terms.return_value = [
+            SearchEntitiesResponse.SearchResult(
+                terms=[search_terms[0]],
+                entities=[
+                    Entity("entityTypes/company/entities/telenor_asa", "Telenor ASA").to_proto(),
+                ],
+            ),
+            SearchEntitiesResponse.SearchResult(
+                terms=[search_terms[1]],
+                entities=[
+                    Entity("entityTypes/company/entities/apple_inc", "Apple, Inc.").to_proto(),
+                ],
+            ),
+            SearchEntitiesResponse.SearchResult(
+                terms=[search_terms[4]],
+                entities=[
+                    Entity("entityTypes/company/entities/orkla_asa", "Orkla ASA").to_proto(),
+                ],
+            ),
             # Result for "MANY:HITS"
-            [
-                Entity("entityTypes/company/entities/orkla_asa", "Orkla ASA"),
-                Entity("entityTypes/company/entities/telenor_asa", "Telenor ASA"),
-            ],
+            SearchEntitiesResponse.SearchResult(
+                terms=[search_terms[5]],
+                entities=[
+                    Entity("entityTypes/company/entities/orkla_asa", "Orkla ASA").to_proto(),
+                    Entity("entityTypes/company/entities/telenor_asa", "Telenor ASA").to_proto(),
+                ],
+            ),
             # Result for "NO:HITS"
-            [],
+            SearchEntitiesResponse.SearchResult(
+                terms=[search_terms[6]],
+                entities=[],
+            ),
         ]
         result, _ = to_entity_resource_names(entity_api, data, namespace="acme")
         pd.testing.assert_series_equal(expected, result)
 
         # Check that the expected searches were performed
-        call_args_list = entity_api.search_for_entities.call_args_list
-        expected_searches = ["XOSL:TEL", "XNAS:AAPL", "XOSL:ORK", "MANY:HITS", "NO:HITS"]
-        self.assertEqual(len(expected_searches), len(call_args_list))
-        for i, identifier in enumerate(expected_searches):
-            mic, ticker = identifier.split(":")
-            self.assertEqual(
-                {"entity_type": "entityTypes/company", "mic": mic, "ticker": ticker},
-                call_args_list[i][1],
-                "Arguments not as expected",
-            )
+        call_args_list = entity_api.search.entities_by_terms.call_args_list
+        self.assertEqual(1, len(call_args_list))
+        self.assertEqual(
+            "entityTypes/company",
+            call_args_list[0][1]["entity_type"],
+            "Arguments not as expected",
+        )
+        self.assertSequenceEqual(
+            search_terms,
+            call_args_list[0][1]["terms"],
+            "Arguments not as expected",
+        )
 
     def test_name_collision(self):
         bad_mapping = {"Abc!": "Abc_", "Abcd": "Abcd", "Abc?": "Abc_"}
