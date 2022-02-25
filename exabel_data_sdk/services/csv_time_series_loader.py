@@ -14,6 +14,7 @@ from exabel_data_sdk.services.csv_loading_constants import (
     DEFAULT_NUMBER_OF_RETRIES,
     DEFAULT_NUMBER_OF_THREADS,
 )
+from exabel_data_sdk.services.csv_loading_result import CsvLoadingResult
 from exabel_data_sdk.services.csv_reader import CsvReader
 from exabel_data_sdk.services.entity_mapping_file_reader import EntityMappingFileReader
 from exabel_data_sdk.stubs.exabel.api.data.v1.time_series_messages_pb2 import DefaultKnownTime
@@ -50,7 +51,7 @@ class CsvTimeSeriesLoader:
         error_on_any_failure: bool = False,
         retries: int = DEFAULT_NUMBER_OF_RETRIES,
         abort_threshold: Optional[float] = 0.5,
-    ) -> None:
+    ) -> CsvLoadingResult:
         """
         Load a CSV file and upload the time series to the Exabel Data API
 
@@ -94,7 +95,7 @@ class CsvTimeSeriesLoader:
         )
         if ts_data.empty:
             print("No data in time series file.")
-            return
+            return CsvLoadingResult()
         entity_mapping = EntityMappingFileReader.read_entity_mapping_file(
             entity_mapping_filename, separator=separator
         )
@@ -127,8 +128,7 @@ class CsvTimeSeriesLoader:
                     "default policy with the pit_current_time or pit_offset command line "
                     "arguments."
                 )
-
-        ts_data.iloc[:, 0] = to_entity_resource_names(
+        ts_data.iloc[:, 0], warnings = to_entity_resource_names(
             self._client.entity_api,
             ts_data.iloc[:, 0],
             namespace=namespace,
@@ -223,7 +223,7 @@ class CsvTimeSeriesLoader:
             print("Running the script would create the following time series:")
             for ts in series:
                 print(f"    {ts.name}")
-            return
+            return CsvLoadingResult(warnings=warnings)
 
         try:
             result = self._client.time_series_api.bulk_upsert_time_series(
@@ -239,10 +239,12 @@ class CsvTimeSeriesLoader:
                     "An error occurred while uploading time series.",
                     failures=result.get_failures(),
                 )
+            return CsvLoadingResult(result, warnings=warnings)
         except BulkInsertFailedError as e:
             # An error summary has already been printed.
             if error_on_any_failure:
                 raise CsvLoadingException("An error occurred while uploading time series.") from e
+            return CsvLoadingResult(warnings=warnings, aborted=True)
 
     @staticmethod
     def get_time_series(ts_data: pd.DataFrame, prefix: str) -> Sequence[pd.Series]:

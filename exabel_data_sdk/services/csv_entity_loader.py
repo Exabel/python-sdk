@@ -8,6 +8,7 @@ from exabel_data_sdk.services.csv_loading_constants import (
     DEFAULT_NUMBER_OF_RETRIES,
     DEFAULT_NUMBER_OF_THREADS,
 )
+from exabel_data_sdk.services.csv_loading_result import CsvLoadingResult
 from exabel_data_sdk.services.csv_reader import CsvReader
 from exabel_data_sdk.util.exceptions import TypeConvertionError
 from exabel_data_sdk.util.resource_name_normalization import normalize_resource_name
@@ -39,7 +40,7 @@ class CsvEntityLoader:
         error_on_any_failure: bool = False,
         retries: int = DEFAULT_NUMBER_OF_RETRIES,
         abort_threshold: Optional[float] = 0.5,
-    ) -> None:
+    ) -> CsvLoadingResult:
         """
         Load a CSV file and upload the entities specified therein to the Exabel Data API.
 
@@ -120,7 +121,7 @@ class CsvEntityLoader:
         if dry_run:
             print("Loading", len(entities), "entities")
             print(entities)
-            return
+            return CsvLoadingResult()
 
         try:
             result = self._client.entity_api.bulk_create_entities(
@@ -136,7 +137,9 @@ class CsvEntityLoader:
                     "An error occurred while uploading entities.",
                     failures=result.get_failures(),
                 )
+            return CsvLoadingResult(result)
         except BulkInsertFailedError as e:
             # An error summary has already been printed.
             if error_on_any_failure:
                 raise CsvLoadingException("An error occurred while uploading entities.") from e
+            return CsvLoadingResult(aborted=True)

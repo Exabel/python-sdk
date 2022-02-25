@@ -1,3 +1,4 @@
+from itertools import chain
 from typing import Mapping, Optional
 
 from exabel_data_sdk import ExabelClient
@@ -9,6 +10,7 @@ from exabel_data_sdk.services.csv_loading_constants import (
     DEFAULT_NUMBER_OF_RETRIES,
     DEFAULT_NUMBER_OF_THREADS,
 )
+from exabel_data_sdk.services.csv_loading_result import CsvLoadingResult
 from exabel_data_sdk.services.csv_reader import CsvReader
 from exabel_data_sdk.services.entity_mapping_file_reader import EntityMappingFileReader
 from exabel_data_sdk.util.exceptions import TypeConvertionError
@@ -42,7 +44,7 @@ class CsvRelationshipLoader:
         error_on_any_failure: bool = False,
         retries: int = DEFAULT_NUMBER_OF_RETRIES,
         abort_threshold: Optional[float] = 0.5,
-    ) -> None:
+    ) -> CsvLoadingResult:
         """
         Load a CSV file and upload the relationships specified therein to the Exabel Data API.
 
@@ -106,18 +108,19 @@ class CsvRelationshipLoader:
         entity_mapping = EntityMappingFileReader.read_entity_mapping_file(
             filename=entity_mapping_filename, separator=separator
         )
-        relationships_df[entity_from_col] = to_entity_resource_names(
+        relationships_df[entity_from_col], from_warnings = to_entity_resource_names(
             self._client.entity_api,
             relationships_df[entity_from_col],
             namespace=namespace,
             entity_mapping=entity_mapping,
         )
-        relationships_df[entity_to_col] = to_entity_resource_names(
+        relationships_df[entity_to_col], to_warnings = to_entity_resource_names(
             self._client.entity_api,
             relationships_df[entity_to_col],
             namespace=namespace,
             entity_mapping=entity_mapping,
         )
+        warnings = list(chain(from_warnings, to_warnings))
 
         # Drop rows where either the from or to entity is missing
         relationships_df.dropna(subset=[entity_from_col, entity_to_col], inplace=True)
@@ -148,7 +151,7 @@ class CsvRelationshipLoader:
         if dry_run:
             print("Loading", len(relationships), "relationships")
             print(relationships)
-            return
+            return CsvLoadingResult(warnings=warnings)
 
         try:
             result = self._client.relationship_api.bulk_create_relationships(
@@ -163,7 +166,9 @@ class CsvRelationshipLoader:
                     "An error occurred while uploading relationships.",
                     failures=result.get_failures(),
                 )
+            return CsvLoadingResult(result, warnings=warnings)
         except BulkInsertFailedError as e:
             # An error summary has already been printed.
             if error_on_any_failure:
                 raise CsvLoadingException("An error occurred while uploading relationships.") from e
+            return CsvLoadingResult(warnings=warnings, aborted=True)
