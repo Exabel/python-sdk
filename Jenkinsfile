@@ -69,7 +69,22 @@ Collection<String> getChangedFilesList() {
 podTemplate(label: label, yaml: """
 apiVersion: v1
 kind: Pod
+metadata:
+  labels:
+    app: worker
 spec:
+  affinity:
+    podAntiAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+      - labelSelector:
+          matchLabels:
+            app: worker
+        topologyKey: "kubernetes.io/hostname"
+  tolerations:
+  - key: worker-node
+    operator: Equal
+    value: true
+    effect: NoSchedule
   containers:
     - name: jnlp
       env:
