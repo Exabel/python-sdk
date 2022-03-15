@@ -4,7 +4,6 @@ from typing import Mapping, Optional
 from exabel_data_sdk import ExabelClient
 from exabel_data_sdk.client.api.bulk_insert import BulkInsertFailedError
 from exabel_data_sdk.client.api.data_classes.relationship import Relationship
-from exabel_data_sdk.client.api.data_classes.relationship_type import RelationshipType
 from exabel_data_sdk.services.csv_exception import CsvLoadingException
 from exabel_data_sdk.services.csv_loading_constants import (
     DEFAULT_NUMBER_OF_RETRIES,
@@ -54,8 +53,7 @@ class CsvRelationshipLoader:
                 *.csv extensions are supported
             separator: the separator used in the CSV file
             namespace: an Exabel namespace
-            relationship_type: the type of relationships to be loaded; relationship types that don’t
-                already exist are created
+            relationship_type: the type of relationships to be loaded
             entity_from_column: the column name for the origin entity of the relationship
             entity_to_column: the column name for the destination entity of the relationship
             description_column: the column name for the relationship description; if not specified,
@@ -97,13 +95,16 @@ class CsvRelationshipLoader:
         relationship_type_name = f"relationshipTypes/{namespace}.{relationship_type}"
 
         if not self._client.relationship_api.get_relationship_type(relationship_type_name):
-            print(f"Did not find relationship type {relationship_type_name}, creating it...")
-            self._client.relationship_api.create_relationship_type(
-                RelationshipType(name=relationship_type_name)
-            )
             print("Available relationship types are:")
             for rel_type in self._client.relationship_api.list_relationship_types().results:
                 print("   ", rel_type)
+
+            raise CsvLoadingException(
+                f"Did not find relationship type {relationship_type_name}, "
+                "please create it by running:\n"
+                "python -m exabel_data_sdk.scripts.create_relationship_type "
+                f"--name={relationship_type_name} [args]"
+            )
 
         entity_mapping = EntityMappingFileReader.read_entity_mapping_file(
             filename=entity_mapping_filename, separator=separator

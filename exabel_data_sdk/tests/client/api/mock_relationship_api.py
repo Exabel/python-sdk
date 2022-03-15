@@ -21,7 +21,7 @@ class MockRelationshipApi(RelationshipApi):
         self._insert_standard_relationship_types()
 
     def _insert_standard_relationship_types(self):
-        for rel_type in ("LOCATED_IN", "WEB_DOMAIN_OWNED_BY"):
+        for rel_type in ("LOCATED_IN", "WEB_DOMAIN_OWNED_BY", "test.HAS_BRAND", "acme.PART_OF"):
             self.types.create(RelationshipType("relationshipTypes/" + rel_type, rel_type, ""))
 
     @staticmethod

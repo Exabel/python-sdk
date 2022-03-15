@@ -43,7 +43,7 @@ class LoadRelationshipsFromCsv(CsvScriptWithEntityMapping):
             "--relationship-type",
             required=True,
             type=str,
-            help="The type of the relationships to be loaded. Created if it doesn't already exist.",
+            help="The type of the relationships to be loaded.",
         )
         self.parser.add_argument(
             "--entity-from-column",

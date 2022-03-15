@@ -75,7 +75,7 @@ class TestCsvRelationshipLoader(unittest.TestCase):
             ),
         ]
         actual_relationships = client.relationship_api.list_relationships().results
-        self.assertSequenceEqual(expected_relationships, actual_relationships)
+        self.assertCountEqual(expected_relationships, actual_relationships)
 
     def test_load_relationships_with_non_existent_property(self):
         client: ExabelClient = ExabelMockClient()
@@ -89,3 +89,42 @@ class TestCsvRelationshipLoader(unittest.TestCase):
                 property_columns={"non_existent_prop": str},
                 upsert=False,
             )
+
+    def test_load_relationships_with_non_existent_relationship_type(self):
+        client: ExabelClient = ExabelMockClient()
+        with self.assertRaises(CsvLoadingException):
+            CsvRelationshipLoader(client).load_relationships(
+                filename="exabel_data_sdk/tests/resources/data/relationships.csv",
+                namespace="test",
+                relationship_type="NON_EXISTENT_RELATIONSHIPTYPE",
+                entity_from_column="entity_from",
+                entity_to_column="brand",
+                upsert=False,
+            )
+
+    def test_load_relationships_with_existent_relationship_type(self):
+        client: ExabelClient = ExabelMockClient()
+        CsvRelationshipLoader(client).load_relationships(
+            filename="exabel_data_sdk/tests/resources/data/relationships.csv",
+            namespace="test",
+            relationship_type="HAS_BRAND",
+            entity_from_column="entity_from",
+            entity_to_column="brand",
+            upsert=False,
+        )
+        expected_relationships = [
+            Relationship(
+                relationship_type="relationshipTypes/test.HAS_BRAND",
+                from_entity="entityTypes/company/company_x",
+                to_entity="entityTypes/brand/entities/test.Spring_Vine",
+                read_only=False,
+            ),
+            Relationship(
+                relationship_type="relationshipTypes/test.HAS_BRAND",
+                from_entity="entityTypes/company/company_y",
+                to_entity="entityTypes/brand/entities/test.The_Coconut_Tree",
+                read_only=False,
+            ),
+        ]
+        actual_relationships = client.relationship_api.list_relationships().results
+        self.assertCountEqual(expected_relationships, actual_relationships)

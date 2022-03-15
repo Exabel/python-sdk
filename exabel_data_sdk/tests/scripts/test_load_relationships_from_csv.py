@@ -2,7 +2,6 @@ import unittest
 from unittest.mock import MagicMock, patch
 
 from exabel_data_sdk.client.api.data_classes.relationship import Relationship
-from exabel_data_sdk.client.api.data_classes.relationship_type import RelationshipType
 from exabel_data_sdk.scripts.load_relationships_from_csv import LoadRelationshipsFromCsv
 from exabel_data_sdk.tests.scripts.common_utils import load_test_data_from_csv
 
@@ -30,11 +29,6 @@ class TestLoadRelationships(unittest.TestCase):
             "description",
         ]
         client = load_test_data_from_csv(LoadRelationshipsFromCsv, args)
-        # Check that the relationship type was created
-        self.assertEqual(
-            RelationshipType("relationshipTypes/acme.PART_OF"),
-            client.relationship_api.get_relationship_type("relationshipTypes/acme.PART_OF"),
-        )
         expected_relationships = [
             Relationship(
                 relationship_type="relationshipTypes/acme.PART_OF",
@@ -76,7 +70,7 @@ class TestLoadRelationships(unittest.TestCase):
     def check_relationships(self, client, expected_relationships):
         """Check expected entities against actual entities retrieved from the client"""
         all_relationships = client.relationship_api.list_relationships().results
-        self.assertListEqual(expected_relationships, all_relationships)
+        self.assertCountEqual(expected_relationships, all_relationships)
         for expected_relationship in expected_relationships:
             relationship = client.relationship_api.get_relationship(
                 expected_relationship.relationship_type,
@@ -96,11 +90,6 @@ class TestLoadRelationships(unittest.TestCase):
             "--upsert",
         ]
         client = load_test_data_from_csv(LoadRelationshipsFromCsv, args)
-        # Check that the relationship type was created
-        self.assertEqual(
-            RelationshipType("relationshipTypes/acme.PART_OF"),
-            client.relationship_api.get_relationship_type("relationshipTypes/acme.PART_OF"),
-        )
         expected_relationships = [
             Relationship(
                 relationship_type="relationshipTypes/acme.PART_OF",
