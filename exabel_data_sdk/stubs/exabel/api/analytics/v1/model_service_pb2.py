@@ -1,0 +1,22 @@
+"""Generated protocol buffer code."""
+from google.protobuf import descriptor as _descriptor
+from google.protobuf import message as _message
+from google.protobuf import reflection as _reflection
+from google.protobuf import symbol_database as _symbol_database
+_sym_db = _symbol_database.Default()
+from .....exabel.api.analytics.v1 import model_messages_pb2 as exabel_dot_api_dot_analytics_dot_v1_dot_model__messages__pb2
+from google.api import annotations_pb2 as google_dot_api_dot_annotations__pb2
+from google.api import field_behavior_pb2 as google_dot_api_dot_field__behavior__pb2
+DESCRIPTOR = _descriptor.FileDescriptor(name='exabel/api/analytics/v1/model_service.proto', package='exabel.api.analytics.v1', syntax='proto3', serialized_options=b'\n\x1bcom.exabel.api.analytics.v1B\x11ModelServiceProtoP\x01Z\x1bexabel.com/api/analytics/v1', create_key=_descriptor._internal_create_key, serialized_pb=b'\n+exabel/api/analytics/v1/model_service.proto\x12\x17exabel.api.analytics.v1\x1a,exabel/api/analytics/v1/model_messages.proto\x1a\x1cgoogle/api/annotations.proto\x1a\x1fgoogle/api/field_behavior.proto"a\n\x15CreateModelRunRequest\x12\x13\n\x06parent\x18\x01 \x01(\tB\x03\xe0A\x02\x123\n\x03run\x18\x02 \x01(\x0b2!.exabel.api.analytics.v1.ModelRunB\x03\xe0A\x022\x9d\x01\n\x0cModelService\x12\x8c\x01\n\x0eCreateModelRun\x12..exabel.api.analytics.v1.CreateModelRunRequest\x1a!.exabel.api.analytics.v1.ModelRun"\'\x82\xd3\xe4\x93\x02!"\x1a/v1/{parent=models/*}/runs:\x03runBO\n\x1bcom.exabel.api.analytics.v1B\x11ModelServiceProtoP\x01Z\x1bexabel.com/api/analytics/v1b\x06proto3', dependencies=[exabel_dot_api_dot_analytics_dot_v1_dot_model__messages__pb2.DESCRIPTOR, google_dot_api_dot_annotations__pb2.DESCRIPTOR, google_dot_api_dot_field__behavior__pb2.DESCRIPTOR])
+_CREATEMODELRUNREQUEST = _descriptor.Descriptor(name='CreateModelRunRequest', full_name='exabel.api.analytics.v1.CreateModelRunRequest', filename=None, file=DESCRIPTOR, containing_type=None, create_key=_descriptor._internal_create_key, fields=[_descriptor.FieldDescriptor(name='parent', full_name='exabel.api.analytics.v1.CreateModelRunRequest.parent', index=0, number=1, type=9, cpp_type=9, label=1, has_default_value=False, default_value=b''.decode('utf-8'), message_type=None, enum_type=None, containing_type=None, is_extension=False, extension_scope=None, serialized_options=b'\xe0A\x02', file=DESCRIPTOR, create_key=_descriptor._internal_create_key), _descriptor.FieldDescriptor(name='run', full_name='exabel.api.analytics.v1.CreateModelRunRequest.run', index=1, number=2, type=11, cpp_type=10, label=1, has_default_value=False, default_value=None, message_type=None, enum_type=None, containing_type=None, is_extension=False, extension_scope=None, serialized_options=b'\xe0A\x02', file=DESCRIPTOR, create_key=_descriptor._internal_create_key)], extensions=[], nested_types=[], enum_types=[], serialized_options=None, is_extendable=False, syntax='proto3', extension_ranges=[], oneofs=[], serialized_start=181, serialized_end=278)
+_CREATEMODELRUNREQUEST.fields_by_name['run'].message_type = exabel_dot_api_dot_analytics_dot_v1_dot_model__messages__pb2._MODELRUN
+DESCRIPTOR.message_types_by_name['CreateModelRunRequest'] = _CREATEMODELRUNREQUEST
+_sym_db.RegisterFileDescriptor(DESCRIPTOR)
+CreateModelRunRequest = _reflection.GeneratedProtocolMessageType('CreateModelRunRequest', (_message.Message,), {'DESCRIPTOR': _CREATEMODELRUNREQUEST, '__module__': 'exabel.api.analytics.v1.model_service_pb2'})
+_sym_db.RegisterMessage(CreateModelRunRequest)
+DESCRIPTOR._options = None
+_CREATEMODELRUNREQUEST.fields_by_name['parent']._options = None
+_CREATEMODELRUNREQUEST.fields_by_name['run']._options = None
+_MODELSERVICE = _descriptor.ServiceDescriptor(name='ModelService', full_name='exabel.api.analytics.v1.ModelService', file=DESCRIPTOR, index=0, serialized_options=None, create_key=_descriptor._internal_create_key, serialized_start=281, serialized_end=438, methods=[_descriptor.MethodDescriptor(name='CreateModelRun', full_name='exabel.api.analytics.v1.ModelService.CreateModelRun', index=0, containing_service=None, input_type=_CREATEMODELRUNREQUEST, output_type=exabel_dot_api_dot_analytics_dot_v1_dot_model__messages__pb2._MODELRUN, serialized_options=b'\x82\xd3\xe4\x93\x02!"\x1a/v1/{parent=models/*}/runs:\x03run', create_key=_descriptor._internal_create_key)])
+_sym_db.RegisterServiceDescriptor(_MODELSERVICE)
+DESCRIPTOR.services_by_name['ModelService'] = _MODELSERVICE
