@@ -168,7 +168,7 @@ def to_entity_resource_names(
         print(f"Looking up {len(unique_ids)} {name}s...")
         # Skip empty identifiers
         non_empty_identifiers: Iterator[str] = (
-            identifier for identifier in unique_ids if identifier
+            identifier for identifier in unique_ids if identifier and not pd.isna(identifier)
         )
         no_search_terms = MAX_SEARCH_TERMS
         if name == "mic:ticker":
