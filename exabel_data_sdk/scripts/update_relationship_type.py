@@ -45,32 +45,26 @@ class UpdateRelationshipType(BaseScript):
         )
         is_ownership_group.add_argument(
             "--no-is-ownership",
+            dest="is_ownership",
             default=None,
             required=False,
-            action="store_true",
+            action="store_false",
             help="Whether this relationship type is not a data set ownership",
         )
 
     def run_script(self, client: ExabelClient, args: argparse.Namespace) -> None:
-        relationship_type = RelationshipType(name=args.name)
         update_mask = []
         if args.description is not None:
-            relationship_type.description = args.description
             update_mask.append("description")
 
         if args.is_ownership is not None:
-            relationship_type.is_ownership = True
-            update_mask.append("is_ownership")
-
-        if args.no_is_ownership is not None:
-            relationship_type.is_ownership = False
             update_mask.append("is_ownership")
 
         relationship_type = client.relationship_api.update_relationship_type(
             RelationshipType(
-                name=relationship_type.name,
-                description=relationship_type.description,
-                is_ownership=relationship_type.is_ownership,
+                name=args.name,
+                description=args.description,
+                is_ownership=args.is_ownership,
             ),
             update_mask=FieldMask(paths=update_mask),
             allow_missing=args.allow_missing,

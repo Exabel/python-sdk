@@ -23,15 +23,25 @@ class CreateRelationshipType(BaseScript):
         )
         self.parser.add_argument(
             "--description",
-            required=True,
+            required=False,
             type=str,
             help="One or more paragraphs of text description",
         )
-        self.parser.add_argument(
+        is_ownership_group = self.parser.add_mutually_exclusive_group(required=True)
+        is_ownership_group.add_argument(
             "--is-ownership",
+            default=None,
             required=False,
             action="store_true",
             help="Whether this relationship type is a data set ownership",
+        )
+        is_ownership_group.add_argument(
+            "--no-is-ownership",
+            dest="is_ownership",
+            default=None,
+            required=False,
+            action="store_false",
+            help="Whether this relationship type is not a data set ownership",
         )
 
     def run_script(self, client: ExabelClient, args: argparse.Namespace) -> None:
