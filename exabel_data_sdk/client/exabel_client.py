@@ -1,5 +1,6 @@
 from exabel_data_sdk.client.api.data_set_api import DataSetApi
 from exabel_data_sdk.client.api.entity_api import EntityApi
+from exabel_data_sdk.client.api.model_api import ModelApi
 from exabel_data_sdk.client.api.relationship_api import RelationshipApi
 from exabel_data_sdk.client.api.signal_api import SignalApi
 from exabel_data_sdk.client.api.time_series_api import TimeSeriesApi
@@ -43,3 +44,4 @@ class ExabelClient:
         self.time_series_api = TimeSeriesApi(config, use_json)
         self.relationship_api = RelationshipApi(config, use_json)
         self.data_set_api = DataSetApi(config, use_json)
+        self.model_api = ModelApi(config, use_json)
