@@ -118,6 +118,11 @@ def to_entity_resource_names(
         The tickers are looked up with the Exabel API, and the Exabel resource identifiers
         are returned.
 
+     - figi
+        The given identifiers are FIGIs (Financial Instrument Global Identifiers).
+        The FIGIs are looked up with the Exabel API, and the Exabel resource identifiers
+        are returned.
+
      - mic:ticker
         The given identifiers are the combination of MIC and stock ticker, separated by a colon.
         MIC is the Market Identifier Code of the stock exchange where the stock is traded under
@@ -163,7 +168,7 @@ def to_entity_resource_names(
         mapping.update(entity_mapping[name])
         unique_ids = [unique_id for unique_id in unique_ids if unique_id not in mapping]
 
-    if name in ("isin", "factset_identifier", "bloomberg_ticker", "mic:ticker"):
+    if name in ("isin", "factset_identifier", "bloomberg_ticker", "mic:ticker", "figi"):
         # A company identifier
         print(f"Looking up {len(unique_ids)} {name}s...")
         # Skip empty identifiers

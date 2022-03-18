@@ -140,11 +140,45 @@ class TestCreateEntityMappingFromCsv(unittest.TestCase):
             "Arguments not as expected",
         )
 
-        # second call - entity = "entityType/company" factset_identifier = 'DT699H-S'
+        # second call - entity = "entityType/company" bloomberg_ticker = 'AMZN US'
         call_args = client.entity_api.search_for_entities.call_args_list[1]
         _, kwargs = call_args
         self.assertEqual(
             {"entity_type": "entityTypes/company", "bloomberg_ticker": "AMZN US"},
+            kwargs,
+            "Arguments not as expected",
+        )
+
+    def test_create_mapping_figi(self):
+
+        args = [
+            "script-name",
+            "--filename-input",
+            "./exabel_data_sdk/tests/resources/data/mapping_figi.csv",
+            "--filename-output",
+            self.temp_file.name,
+            "--api-key",
+            "123",
+        ]
+
+        script = CreateEntityMappingFromCsv(args, "MappingTestFIGI")
+        client = mock.create_autospec(ExabelClient(host="host", api_key="123"))
+        script.run_script(client, script.parse_arguments())
+
+        # first call - entity = "entityType/company" figi = 'BBG000B9Y5X2'
+        call_args = client.entity_api.search_for_entities.call_args_list[0]
+        _, kwargs = call_args
+        self.assertEqual(
+            {"entity_type": "entityTypes/company", "figi": "BBG000B9Y5X2"},
+            kwargs,
+            "Arguments not as expected",
+        )
+
+        # second call - entity = "entityType/company" figi = 'BBG001S5N8V8'
+        call_args = client.entity_api.search_for_entities.call_args_list[1]
+        _, kwargs = call_args
+        self.assertEqual(
+            {"entity_type": "entityTypes/company", "figi": "BBG001S5N8V8"},
             kwargs,
             "Arguments not as expected",
         )

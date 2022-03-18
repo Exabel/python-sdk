@@ -51,6 +51,12 @@ class SearchEntities(BaseScript):
             help="The Bloomberg symbol",
         )
         self.parser.add_argument(
+            "--figi",
+            required=False,
+            type=str,
+            help="The FIGI",
+        )
+        self.parser.add_argument(
             "--factset-identifier",
             required=False,
             type=str,
@@ -75,6 +81,8 @@ class SearchEntities(BaseScript):
             terms["bloomberg_ticker"] = args.bloomberg_ticker
         if args.bloomberg_symbol is not None:
             terms["bloomberg_symbol"] = args.bloomberg_symbol
+        if args.figi is not None:
+            terms["figi"] = args.figi
         if args.factset_identifier is not None:
             terms["factset_identifier"] = args.factset_identifier
         if args.text is not None:
