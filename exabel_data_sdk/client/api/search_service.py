@@ -60,6 +60,15 @@ class SearchService:
         """
         return self._company_by_field("bloomberg_symbol", *symbols)
 
+    def company_by_figi(self, *symbols: str) -> Mapping[str, Entity]:
+        """
+        Look up companies by FIGI (Financial Instrument Global Identifier).
+
+        The return value is a dict with the input values as keys and with the corresponding Entity
+        objects as values. Symbols which did not return any results, are not included.
+        """
+        return self._company_by_field("figi", *symbols)
+
     def company_by_factset_identifier(self, *identifiers: str) -> Mapping[str, Entity]:
         """
         Look up companies by FactSet identifiers.
