@@ -2,7 +2,9 @@ from abc import ABC, abstractmethod
 
 from exabel_data_sdk.stubs.exabel.api.data.v1.all_pb2 import (
     CreateEntityRequest,
+    CreateEntityTypeRequest,
     DeleteEntityRequest,
+    DeleteEntityTypeRequest,
     Entity,
     EntityType,
     GetEntityRequest,
@@ -14,6 +16,7 @@ from exabel_data_sdk.stubs.exabel.api.data.v1.all_pb2 import (
     SearchEntitiesRequest,
     SearchEntitiesResponse,
     UpdateEntityRequest,
+    UpdateEntityTypeRequest,
 )
 
 
@@ -29,6 +32,18 @@ class EntityApiClient(ABC):
     @abstractmethod
     def get_entity_type(self, request: GetEntityTypeRequest) -> EntityType:
         """Get an entity type."""
+
+    @abstractmethod
+    def create_entity_type(self, request: CreateEntityTypeRequest) -> EntityType:
+        """Create an entity type."""
+
+    @abstractmethod
+    def update_entity_type(self, request: UpdateEntityTypeRequest) -> EntityType:
+        """Update an entity type."""
+
+    @abstractmethod
+    def delete_entity_type(self, request: DeleteEntityTypeRequest) -> None:
+        """Delete an entity type."""
 
     @abstractmethod
     def list_entities(self, request: ListEntitiesRequest) -> ListEntitiesResponse:

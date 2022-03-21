@@ -4,7 +4,9 @@ from exabel_data_sdk.client.api.error_handler import handle_grpc_error
 from exabel_data_sdk.client.client_config import ClientConfig
 from exabel_data_sdk.stubs.exabel.api.data.v1.all_pb2 import (
     CreateEntityRequest,
+    CreateEntityTypeRequest,
     DeleteEntityRequest,
+    DeleteEntityTypeRequest,
     Entity,
     EntityType,
     GetEntityRequest,
@@ -16,6 +18,7 @@ from exabel_data_sdk.stubs.exabel.api.data.v1.all_pb2 import (
     SearchEntitiesRequest,
     SearchEntitiesResponse,
     UpdateEntityRequest,
+    UpdateEntityTypeRequest,
 )
 from exabel_data_sdk.stubs.exabel.api.data.v1.all_pb2_grpc import EntityServiceStub
 
@@ -38,6 +41,22 @@ class EntityGrpcClient(EntityApiClient, BaseGrpcClient):
     @handle_grpc_error
     def get_entity_type(self, request: GetEntityTypeRequest) -> EntityType:
         return self.stub.GetEntityType(request, metadata=self.metadata, timeout=self.config.timeout)
+
+    @handle_grpc_error
+    def create_entity_type(self, request: CreateEntityTypeRequest) -> EntityType:
+        return self.stub.CreateEntityType(
+            request, metadata=self.metadata, timeout=self.config.timeout
+        )
+
+    @handle_grpc_error
+    def update_entity_type(self, request: UpdateEntityTypeRequest) -> EntityType:
+        return self.stub.UpdateEntityType(
+            request, metadata=self.metadata, timeout=self.config.timeout
+        )
+
+    @handle_grpc_error
+    def delete_entity_type(self, request: DeleteEntityTypeRequest) -> None:
+        self.stub.DeleteEntityType(request, metadata=self.metadata, timeout=self.config.timeout)
 
     @handle_grpc_error
     def list_entities(self, request: ListEntitiesRequest) -> ListEntitiesResponse:

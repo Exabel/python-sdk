@@ -17,7 +17,9 @@ from exabel_data_sdk.client.api.search_service import SearchService
 from exabel_data_sdk.client.client_config import ClientConfig
 from exabel_data_sdk.stubs.exabel.api.data.v1.all_pb2 import (
     CreateEntityRequest,
+    CreateEntityTypeRequest,
     DeleteEntityRequest,
+    DeleteEntityTypeRequest,
     GetEntityRequest,
     GetEntityTypeRequest,
     ListEntitiesRequest,
@@ -25,6 +27,7 @@ from exabel_data_sdk.stubs.exabel.api.data.v1.all_pb2 import (
     SearchEntitiesRequest,
     SearchTerm,
     UpdateEntityRequest,
+    UpdateEntityTypeRequest,
 )
 
 
@@ -78,6 +81,46 @@ class EntityApi:
                 return None
             raise
         return EntityType.from_proto(response)
+
+    def create_entity_type(self, entity_type: EntityType) -> EntityType:
+        """
+        Create an entity type.
+
+        Args:
+            entity_type:    The entity type to create.
+        """
+        response = self.client.create_entity_type(
+            CreateEntityTypeRequest(entity_type=entity_type.to_proto())
+        )
+        return EntityType.from_proto(response)
+
+    def update_entity_type(
+        self, entity_type: EntityType, update_mask: FieldMask = None, allow_missing: bool = False
+    ) -> EntityType:
+        """
+        Update an entity type.
+
+        Args:
+            entity_type:    The entity type to update.
+        """
+        response = self.client.update_entity_type(
+            UpdateEntityTypeRequest(
+                entity_type=entity_type.to_proto(),
+                update_mask=update_mask,
+                allow_missing=allow_missing,
+            )
+        )
+        return EntityType.from_proto(response)
+
+    def delete_entity_type(self, name: str) -> None:
+        """
+        Delete an entity type.
+
+        Args:
+            name:   The resource name of the entity type to delete, for example
+                    "entityTypes/ns.type1".
+        """
+        self.client.delete_entity_type(DeleteEntityTypeRequest(name=name))
 
     def list_entities(
         self, entity_type: str, page_size: int = 1000, page_token: str = None

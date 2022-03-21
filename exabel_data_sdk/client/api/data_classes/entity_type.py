@@ -57,6 +57,16 @@ class EntityType:
             is_associative=entity_type.is_associative,
         )
 
+    def to_proto(self) -> ProtoEntityType:
+        """Create a protobuf EntityType from an EntityType."""
+        return ProtoEntityType(
+            name=self.name,
+            display_name=self.display_name,
+            description=self.description,
+            read_only=self.read_only,
+            is_associative=self.is_associative,
+        )
+
     def __eq__(self, other: object) -> bool:
         if not isinstance(other, EntityType):
             return False
