@@ -3,6 +3,7 @@ from exabel_data_sdk.client.api.api_client.http.base_http_client import BaseHttp
 from exabel_data_sdk.stubs.exabel.api.data.v1.all_pb2 import (
     CreateEntityRequest,
     CreateEntityTypeRequest,
+    DeleteEntitiesRequest,
     DeleteEntityRequest,
     DeleteEntityTypeRequest,
     Entity,
@@ -58,6 +59,9 @@ class EntityHttpClient(EntityApiClient, BaseHttpClient):
 
     def delete_entity(self, request: DeleteEntityRequest) -> None:
         return self._request("DELETE", request.name, None)
+
+    def delete_entities(self, request: DeleteEntitiesRequest) -> None:
+        return self._request("DELETE", f"{request.parent}/entities", None, body=request)
 
     def search_entities(self, request: SearchEntitiesRequest) -> SearchEntitiesResponse:
         return self._request(

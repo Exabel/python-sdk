@@ -18,6 +18,7 @@ from exabel_data_sdk.client.client_config import ClientConfig
 from exabel_data_sdk.stubs.exabel.api.data.v1.all_pb2 import (
     CreateEntityRequest,
     CreateEntityTypeRequest,
+    DeleteEntitiesRequest,
     DeleteEntityRequest,
     DeleteEntityTypeRequest,
     GetEntityRequest,
@@ -219,6 +220,21 @@ class EntityApi:
                     for example "entityTypes/ns.type1/entities/ns.entity1".
         """
         self.client.delete_entity(DeleteEntityRequest(name=name))
+
+    def delete_entities(self, entity_type: str, confirm: bool = False) -> None:
+        """
+        Delete all entities of a given entity type.
+
+        All relationships and time series for these entities will also be deleted. The entity type
+        itself is not deleted.
+
+        Args:
+            entity_type:    The entity type of the entities to delete, for example
+                            "entityTypes/ns.type1".
+            confirm:        This parameter is a safe guard and must be set to `True` for the
+                            operation to succeed.
+        """
+        self.client.delete_entities(DeleteEntitiesRequest(parent=entity_type, confirm=confirm))
 
     def search_for_entities(self, entity_type: str, **search_terms: str) -> Sequence[Entity]:
         """
