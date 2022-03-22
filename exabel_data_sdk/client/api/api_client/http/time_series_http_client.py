@@ -14,7 +14,7 @@ from exabel_data_sdk.stubs.exabel.api.data.v1.all_pb2 import (
 
 class TimeSeriesHttpClient(TimeSeriesApiClient, BaseHttpClient):
     """
-    Client which sends time series requests to the Exabel Data API with JSON over gRPC.
+    Client which sends time series requests to the Exabel Data API with JSON over HTTP.
     """
 
     def list_time_series(self, request: ListTimeSeriesRequest) -> ListTimeSeriesResponse:

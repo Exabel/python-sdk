@@ -3,6 +3,6 @@
 
 from .derived_signal_messages_pb2_grpc import *
 from .derived_signal_service_pb2_grpc import *
-from .model_messages_pb2_grpc import *
-from .model_service_pb2_grpc import *
+from .prediction_model_messages_pb2_grpc import *
+from .prediction_model_service_pb2_grpc import *
 from .service_pb2_grpc import *

@@ -23,7 +23,7 @@ from exabel_data_sdk.stubs.exabel.api.data.v1.all_pb2 import (
 
 class EntityHttpClient(EntityApiClient, BaseHttpClient):
     """
-    Client which sends entity requests to the Exabel Data API with JSON over gRPC.
+    Client which sends entity requests to the Exabel Data API with JSON over HTTP.
     """
 
     def list_entity_types(self, request: ListEntityTypesRequest) -> ListEntityTypesResponse:

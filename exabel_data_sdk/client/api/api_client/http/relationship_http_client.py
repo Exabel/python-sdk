@@ -21,7 +21,7 @@ from exabel_data_sdk.stubs.exabel.api.data.v1.all_pb2 import (
 
 class RelationshipHttpClient(RelationshipApiClient, BaseHttpClient):
     """
-    Client which sends relationship requests to the Exabel Data API with JSON over gRPC.
+    Client which sends relationship requests to the Exabel Data API with JSON over HTTP.
     """
 
     def list_relationship_types(

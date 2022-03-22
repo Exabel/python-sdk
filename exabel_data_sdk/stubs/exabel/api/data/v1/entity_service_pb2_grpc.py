@@ -77,8 +77,9 @@ class EntityServiceServicer(object):
 
     def DeleteEntities(self, request, context):
         """Deletes all entities of a given entity type (and their relationships). Note
-        that the 'confirm' field must be set for the operation to succeed.
-        The entity type itself is not deleted.
+        that the 'confirm' field must be set for the operation to succeed. Only
+        entities in the current writable namespace(s) are deleted, and the entity
+        type itself is not deleted.
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')

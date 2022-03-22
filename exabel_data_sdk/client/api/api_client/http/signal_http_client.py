@@ -13,7 +13,7 @@ from exabel_data_sdk.stubs.exabel.api.data.v1.all_pb2 import (
 
 class SignalHttpClient(SignalApiClient, BaseHttpClient):
     """
-    Client which sends signal requests to the Exabel Data API with JSON over gRPC.
+    Client which sends signal requests to the Exabel Data API with JSON over HTTP.
     """
 
     def list_signals(self, request: ListSignalsRequest) -> ListSignalsResponse:

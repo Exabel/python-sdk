@@ -13,7 +13,7 @@ from exabel_data_sdk.stubs.exabel.api.data.v1.all_pb2 import (
 
 class DataSetHttpClient(DataSetApiClient, BaseHttpClient):
     """
-    Client which sends data set requests to the Exabel Data API with JSON over gRPC.
+    Client which sends data set requests to the Exabel Data API with JSON over HTTP.
     """
 
     def list_data_sets(self, request: ListDataSetsRequest) -> ListDataSetsResponse:

@@ -1,5 +1,5 @@
 import os
-from typing import Optional
+from typing import Optional, Sequence, Tuple
 
 
 class DefaultConfig:
@@ -14,6 +14,7 @@ class DefaultConfig:
         self.port = int(os.getenv("EXABEL_PORT", "21443"))
         self.timeout = int(os.getenv("EXABEL_TIMEOUT", "60"))
         self.root_certificates: Optional[str] = None
+        self.extra_headers: Sequence[Tuple[str, str]] = ()
 
 
 class ClientConfig(DefaultConfig):
@@ -29,6 +30,7 @@ class ClientConfig(DefaultConfig):
         port: int = None,
         timeout: int = None,
         root_certificates: str = None,
+        extra_headers: Sequence[Tuple[str, str]] = None,
     ):
         """
         Initialize a new client configuration.
@@ -40,6 +42,7 @@ class ClientConfig(DefaultConfig):
             port:               Exabel API port.
             timeout:            Default timeout in seconds to use for API requests.
             root_certificates:  Additional allowed root certificates for verifying TLS connection.
+            extra_headers:      A list of headers to include in the request.
         """
         super().__init__()
 
@@ -49,6 +52,7 @@ class ClientConfig(DefaultConfig):
         self.port = port or self.port
         self.timeout = timeout or self.timeout
         self.root_certificates = root_certificates or self.root_certificates
+        self.extra_headers = extra_headers or self.extra_headers
 
         if not self.api_key:
             raise ValueError("No API key given. Use of the Exabel SDK requires an API key.")
