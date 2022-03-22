@@ -3,6 +3,6 @@
 
 from .derived_signal_messages_pb2 import *
 from .derived_signal_service_pb2 import *
-from .model_messages_pb2 import *
-from .model_service_pb2 import *
+from .prediction_model_messages_pb2 import *
+from .prediction_model_service_pb2 import *
 from .service_pb2 import *

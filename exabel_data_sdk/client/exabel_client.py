@@ -1,5 +1,9 @@
+from typing import Sequence, Tuple
+
 from exabel_data_sdk.client.api.data_set_api import DataSetApi
+from exabel_data_sdk.client.api.derived_signal_api import DerivedSignalApi
 from exabel_data_sdk.client.api.entity_api import EntityApi
+from exabel_data_sdk.client.api.prediction_model_api import PredictionModelApi
 from exabel_data_sdk.client.api.relationship_api import RelationshipApi
 from exabel_data_sdk.client.api.signal_api import SignalApi
 from exabel_data_sdk.client.api.time_series_api import TimeSeriesApi
@@ -20,6 +24,7 @@ class ExabelClient:
         timeout: int = None,
         root_certificates: str = None,
         use_json: bool = False,
+        extra_headers: Sequence[Tuple[str, str]] = None,
     ):
         """
         Initialize a new client.
@@ -36,10 +41,14 @@ class ExabelClient:
             root_certificates:  Additional allowed root certificates for verifying TLS connection.
             use_json:           Whether requests should be sent as JSON over HTTP rather than gRPC.
         """
-        config = ClientConfig(api_key, client_name, host, port, timeout, root_certificates)
+        config = ClientConfig(
+            api_key, client_name, host, port, timeout, root_certificates, extra_headers
+        )
 
         self.entity_api = EntityApi(config, use_json)
         self.signal_api = SignalApi(config, use_json)
         self.time_series_api = TimeSeriesApi(config, use_json)
         self.relationship_api = RelationshipApi(config, use_json)
         self.data_set_api = DataSetApi(config, use_json)
+        self.prediction_model_api = PredictionModelApi(config, use_json)
+        self.derived_signal_api = DerivedSignalApi(config, use_json)

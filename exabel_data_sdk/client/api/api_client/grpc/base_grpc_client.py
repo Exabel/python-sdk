@@ -21,3 +21,5 @@ class BaseGrpcClient:
                 config.host + ":" + str(config.port),
                 grpc.ssl_channel_credentials(root_certificates=config.root_certificates),
             )
+        for header in self.config.extra_headers:
+            self.metadata.append(header)
