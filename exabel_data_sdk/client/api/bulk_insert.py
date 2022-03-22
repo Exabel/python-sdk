@@ -92,7 +92,7 @@ def _bulk_insert(
 
 def _get_backoff(trial: int, min_sleep: float = 1.0, max_sleep: float = 60.0) -> float:
     """Return the backoff in seconds for the given trial."""
-    return min(min_sleep * 2 ** trial, max_sleep)
+    return min(min_sleep * 2**trial, max_sleep)
 
 
 def bulk_insert(
