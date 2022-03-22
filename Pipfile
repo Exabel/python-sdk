@@ -4,7 +4,7 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-black = "==20.8b1"
+black = "*"
 # Locked because upgrading to 1.31.3 leads to incompatible version requirements on the protobuf library.
 google-api-core = "==1.31.2"
 grpcio = "*"
