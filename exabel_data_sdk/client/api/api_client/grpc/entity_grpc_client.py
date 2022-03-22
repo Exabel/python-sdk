@@ -5,6 +5,7 @@ from exabel_data_sdk.client.client_config import ClientConfig
 from exabel_data_sdk.stubs.exabel.api.data.v1.all_pb2 import (
     CreateEntityRequest,
     CreateEntityTypeRequest,
+    DeleteEntitiesRequest,
     DeleteEntityRequest,
     DeleteEntityTypeRequest,
     Entity,
@@ -77,6 +78,10 @@ class EntityGrpcClient(EntityApiClient, BaseGrpcClient):
     @handle_grpc_error
     def delete_entity(self, request: DeleteEntityRequest) -> None:
         self.stub.DeleteEntity(request, metadata=self.metadata, timeout=self.config.timeout)
+
+    @handle_grpc_error
+    def delete_entities(self, request: DeleteEntitiesRequest) -> None:
+        self.stub.DeleteEntities(request, metadata=self.metadata, timeout=self.config.timeout)
 
     @handle_grpc_error
     def search_entities(self, request: SearchEntitiesRequest) -> SearchEntitiesResponse:
