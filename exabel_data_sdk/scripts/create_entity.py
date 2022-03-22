@@ -19,7 +19,7 @@ class CreateEntity(BaseScript):
             required=True,
             type=str,
             help=(
-                "The resource name of the the new entity, "
+                "The resource name of the new entity, "
                 "for example 'entityTypes/brand/entities/brandIdentifier'"
             ),
         )
