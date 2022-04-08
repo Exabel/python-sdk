@@ -24,7 +24,7 @@ class TestCreateEntityType(unittest.TestCase):
             "--no-is-associative",
         ]
         script = CreateEntityType(args, "Create an entity type.")
-        mock_client = mock.create_autospec(ExabelClient(host="host", api_key="123"))
+        mock_client = mock.create_autospec(ExabelClient(api_key="123"))
         script.run_script(mock_client, script.parse_arguments())
         mock_client.entity_api.create_entity_type.assert_called_once_with(
             EntityType(
@@ -43,7 +43,7 @@ class TestCreateEntityType(unittest.TestCase):
             "The description.",
         ]
         script = CreateEntityType(args, "Create an entity type.")
-        mock_client = mock.create_autospec(ExabelClient(host="host", api_key="123"))
+        mock_client = mock.create_autospec(ExabelClient(api_key="123"))
         with self.assertRaises(SystemExit) as cm:
             script.run_script(mock_client, script.parse_arguments())
         print(cm.exception)

@@ -5,6 +5,8 @@ from .....exabel.api.analytics.v1 import prediction_model_service_pb2 as exabel_
 
 class PredictionModelServiceStub(object):
     """Service to manage prediction models.
+
+    The only current supported operation is to request to run a given prediction model.
     """
 
     def __init__(self, channel):
@@ -17,6 +19,8 @@ class PredictionModelServiceStub(object):
 
 class PredictionModelServiceServicer(object):
     """Service to manage prediction models.
+
+    The only current supported operation is to request to run a given prediction model.
     """
 
     def CreatePredictionModelRun(self, request, context):
@@ -33,6 +37,8 @@ def add_PredictionModelServiceServicer_to_server(servicer, server):
 
 class PredictionModelService(object):
     """Service to manage prediction models.
+
+    The only current supported operation is to request to run a given prediction model.
     """
 
     @staticmethod

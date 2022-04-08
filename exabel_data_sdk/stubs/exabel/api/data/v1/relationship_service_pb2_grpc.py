@@ -45,6 +45,9 @@ class RelationshipServiceServicer(object):
 
     def CreateRelationshipType(self, request, context):
         """Creates one relationship type and returns it.
+
+        A relationship type can explicitly be created using this method, or it can implicitly be created
+        by the update method if its `allow_missing` parameter is set to true.
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -52,6 +55,10 @@ class RelationshipServiceServicer(object):
 
     def UpdateRelationshipType(self, request, context):
         """Updates one relationship type and returns it.
+
+        This method can also be used to create a relationship type, provided `allow_missing` is set to
+        `true`. When this method is used to create a relationship type, the `update_mask` parameter is
+        ignored.
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -81,6 +88,9 @@ class RelationshipServiceServicer(object):
 
     def CreateRelationship(self, request, context):
         """Creates one relationship and returns it.
+
+        A relationship can explicitly be created using this method, or it can implicitly be created by the
+        update method if its `allow_missing` parameter is set to true.
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
