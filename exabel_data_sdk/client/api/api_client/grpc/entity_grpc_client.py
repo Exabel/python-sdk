@@ -1,4 +1,5 @@
 from exabel_data_sdk.client.api.api_client.entity_api_client import EntityApiClient
+from exabel_data_sdk.client.api.api_client.exabel_api_group import ExabelApiGroup
 from exabel_data_sdk.client.api.api_client.grpc.base_grpc_client import BaseGrpcClient
 from exabel_data_sdk.client.api.error_handler import handle_grpc_error
 from exabel_data_sdk.client.client_config import ClientConfig
@@ -30,7 +31,7 @@ class EntityGrpcClient(EntityApiClient, BaseGrpcClient):
     """
 
     def __init__(self, config: ClientConfig):
-        super().__init__(config)
+        super().__init__(config, ExabelApiGroup.DATA_API)
         self.stub = EntityServiceStub(self.channel)
 
     @handle_grpc_error

@@ -5,7 +5,6 @@ from .data_set_messages_pb2 import *
 from .data_set_service_pb2 import *
 from .entity_messages_pb2 import *
 from .entity_service_pb2 import *
-from .internal_entity_service_pb2 import *
 from .relationship_messages_pb2 import *
 from .relationship_service_pb2 import *
 from .search_messages_pb2 import *

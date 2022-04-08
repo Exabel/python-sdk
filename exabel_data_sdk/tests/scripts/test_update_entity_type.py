@@ -26,7 +26,7 @@ class TestUpdateEntityType(unittest.TestCase):
             "--is-associative",
         ]
         script = UpdateEntityType(args, "Update an entity type.")
-        mock_client = mock.create_autospec(ExabelClient(host="host", api_key="123"))
+        mock_client = mock.create_autospec(ExabelClient(api_key="123"))
         script.run_script(mock_client, script.parse_arguments())
         mock_client.entity_api.update_entity_type.assert_called_once_with(
             entity_type=EntityType(
@@ -44,7 +44,7 @@ class TestUpdateEntityType(unittest.TestCase):
             "The display name",
         ]
         script = UpdateEntityType(args, "Update an entity type.")
-        mock_client = mock.create_autospec(ExabelClient(host="host", api_key="123"))
+        mock_client = mock.create_autospec(ExabelClient(api_key="123"))
         script.run_script(mock_client, script.parse_arguments())
         mock_client.entity_api.update_entity_type.assert_called_once_with(
             entity_type=EntityType(

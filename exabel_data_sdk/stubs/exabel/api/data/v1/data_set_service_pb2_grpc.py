@@ -26,6 +26,8 @@ class DataSetServiceServicer(object):
 
     def ListDataSets(self, request, context):
         """Lists all data sets.
+
+        Retrieves the data set catalogue.
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -40,6 +42,9 @@ class DataSetServiceServicer(object):
 
     def CreateDataSet(self, request, context):
         """Creates one data set and returns it.
+
+        A data set can explicitly be created using this method, or it can implicitly be created by the
+        update method if its `allow_missing` parameter is set to true.
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -47,6 +52,9 @@ class DataSetServiceServicer(object):
 
     def UpdateDataSet(self, request, context):
         """Updates one data set and returns it.
+
+        This method can also be used to create a data set, provided `allow_missing` is set to `true`.
+        When this method is used to create a data set, the `update_mask` parameter is ignored.
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')

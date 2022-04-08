@@ -26,7 +26,7 @@ class TestCreateEntityMappingFromCsv(unittest.TestCase):
         ]
 
         script = CreateEntityMappingFromCsv(args, "MappingTest2")
-        client = mock.create_autospec(ExabelClient(host="host", api_key="123"))
+        client = mock.create_autospec(ExabelClient(api_key="123"))
         script.run_script(client, script.parse_arguments())
 
         # first call - entity = "entityType/company" ticker = "C" / market = "XNYS"
@@ -69,7 +69,7 @@ class TestCreateEntityMappingFromCsv(unittest.TestCase):
         ]
 
         script = CreateEntityMappingFromCsv(args, "MappingTestISIN")
-        client = mock.create_autospec(ExabelClient(host="host", api_key="123"))
+        client = mock.create_autospec(ExabelClient(api_key="123"))
         script.run_script(client, script.parse_arguments())
 
         # first call - entity = "entityType/company" isin = 'NO12345678'
@@ -94,7 +94,7 @@ class TestCreateEntityMappingFromCsv(unittest.TestCase):
         ]
 
         script = CreateEntityMappingFromCsv(args, "MappingTestISIN")
-        client = mock.create_autospec(ExabelClient(host="host", api_key="123"))
+        client = mock.create_autospec(ExabelClient(api_key="123"))
         script.run_script(client, script.parse_arguments())
 
         # first call - entity = "entityType/company" factset_identifier = '0MXNWD-E'
@@ -128,7 +128,7 @@ class TestCreateEntityMappingFromCsv(unittest.TestCase):
         ]
 
         script = CreateEntityMappingFromCsv(args, "MappingTestISIN")
-        client = mock.create_autospec(ExabelClient(host="host", api_key="123"))
+        client = mock.create_autospec(ExabelClient(api_key="123"))
         script.run_script(client, script.parse_arguments())
 
         # first call - entity = "entityType/company" bloomberg_ticker = 'AAPL US'
@@ -162,7 +162,7 @@ class TestCreateEntityMappingFromCsv(unittest.TestCase):
         ]
 
         script = CreateEntityMappingFromCsv(args, "MappingTestFIGI")
-        client = mock.create_autospec(ExabelClient(host="host", api_key="123"))
+        client = mock.create_autospec(ExabelClient(api_key="123"))
         script.run_script(client, script.parse_arguments())
 
         # first call - entity = "entityType/company" figi = 'BBG000B9Y5X2'
