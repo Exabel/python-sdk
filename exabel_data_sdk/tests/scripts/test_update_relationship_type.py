@@ -20,7 +20,7 @@ class TestUpdateRelationshipType(unittest.TestCase):
             "My updated description.",
         ]
         script = UpdateRelationshipType(args, "Update a relationship type.")
-        client = mock.create_autospec(ExabelClient(host="host", api_key="123"))
+        client = mock.create_autospec(ExabelClient(api_key="123"))
         script.run_script(client, script.parse_arguments())
         call_args_list = client.relationship_api.update_relationship_type.call_args_list
         update_mask = call_args_list[0][1]["update_mask"].paths
@@ -33,7 +33,7 @@ class TestUpdateRelationshipType(unittest.TestCase):
             "--is-ownership",
         ]
         script = UpdateRelationshipType(args, "Update a relationship type.")
-        client = mock.create_autospec(ExabelClient(host="host", api_key="123"))
+        client = mock.create_autospec(ExabelClient(api_key="123"))
         script.run_script(client, script.parse_arguments())
         call_args_list = client.relationship_api.update_relationship_type.call_args_list
         update_mask = call_args_list[0][1]["update_mask"].paths
@@ -46,7 +46,7 @@ class TestUpdateRelationshipType(unittest.TestCase):
             "--no-is-ownership",
         ]
         script = UpdateRelationshipType(args, "Update a relationship type.")
-        client = mock.create_autospec(ExabelClient(host="host", api_key="123"))
+        client = mock.create_autospec(ExabelClient(api_key="123"))
         script.run_script(client, script.parse_arguments())
         call_args_list = client.relationship_api.update_relationship_type.call_args_list
         update_mask = call_args_list[0][1]["update_mask"].paths
@@ -59,7 +59,7 @@ class TestUpdateRelationshipType(unittest.TestCase):
             "--allow-missing",
         ]
         script = UpdateRelationshipType(args, "Update a relationship type.")
-        client = mock.create_autospec(ExabelClient(host="host", api_key="123"))
+        client = mock.create_autospec(ExabelClient(api_key="123"))
         script.run_script(client, script.parse_arguments())
         call_args_list = client.relationship_api.update_relationship_type.call_args_list
         allow_missing = call_args_list[0][1]["allow_missing"]

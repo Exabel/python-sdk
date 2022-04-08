@@ -3,6 +3,7 @@ import unittest
 from unittest import mock
 from unittest.mock import MagicMock
 
+from exabel_data_sdk.client.api.api_client.exabel_api_group import ExabelApiGroup
 from exabel_data_sdk.client.api.api_client.http.base_http_client import BaseHttpClient
 from exabel_data_sdk.client.api.data_classes.request_error import RequestError
 from exabel_data_sdk.client.client_config import ClientConfig
@@ -13,7 +14,9 @@ from exabel_data_sdk.stubs.exabel.api.data.v1.all_pb2 import Signal
 
 class TestBaseHttpClient(unittest.TestCase):
     def setUp(self) -> None:
-        self.client = BaseHttpClient(ClientConfig(host="the-host", api_key="something"))
+        self.client = BaseHttpClient(
+            ClientConfig(data_api_host="the-host", api_key="something"), ExabelApiGroup.DATA_API
+        )
 
     @mock.patch("requests.request")
     def test_handle_successful_request(self, request):

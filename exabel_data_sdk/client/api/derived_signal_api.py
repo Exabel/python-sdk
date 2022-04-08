@@ -25,15 +25,17 @@ class DerivedSignalApi:
     def __init__(self, config: ClientConfig, use_json: bool = False):
         self.client = (DerivedSignalHttpClient if use_json else DerivedSignalGrpcClient)(config)
 
-    def create_derived_signal(self, signal: DerivedSignal) -> DerivedSignal:
+    def create_derived_signal(self, signal: DerivedSignal, folder: str = None) -> DerivedSignal:
         """
         Create a derived signal.
 
         Args:
             signal: The derived signal to create.
+            folder: The resource name of the folder to put the signal in. Example: "folders/123".
+                    If not provided, the signal will be put in the default analytics API folder.
         """
         response = self.client.create_derived_signal(
-            CreateDerivedSignalRequest(signal=signal.to_proto())
+            CreateDerivedSignalRequest(signal=signal.to_proto(), folder=folder)
         )
         return DerivedSignal.from_proto(response)
 

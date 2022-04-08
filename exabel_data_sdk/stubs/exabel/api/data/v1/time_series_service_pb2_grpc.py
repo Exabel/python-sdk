@@ -26,15 +26,18 @@ class TimeSeriesServiceServicer(object):
     """
 
     def ListTimeSeries(self, request, context):
-        """Lists all time series for one entity or for one signal. Only the names are returned.
+        """Lists time series.
+
+        Lists all time series for one entity or for one signal. Only the names are returned.
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
     def GetTimeSeries(self, request, context):
-        """Gets one time series. The known_time (of present) must be formatted
-        according to RFC3339, as specified by
+        """Gets one time series.
+
+        The known_time (of present) must be formatted according to RFC3339, as specified by
         https://developers.google.com/protocol-buffers/docs/proto3#json.
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
@@ -42,31 +45,63 @@ class TimeSeriesServiceServicer(object):
         raise NotImplementedError('Method not implemented!')
 
     def CreateTimeSeries(self, request, context):
-        """Creates one time series and returns it.
+        """Creates one time series.
+
+        *Note* The Exabel Platform only supports processing time series with daily or lower resolution.
+
+        Timestamps (including known times) must be normalised to**midnight UTC** (`00:00:00Z`).
+
+        The `view` argument is only used to define which values should be returned to the caller.
+        If this is not set, no values are returned (but all values are still inserted).
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
     def UpdateTimeSeries(self, request, context):
-        """Updates one time series and returns it. The data in this request and the
-        existing data will be merged together.
+        """Updates one time series.
+
+        This method can also be used to create a time series, provided `allowMissing` is set to `true`.
+
+        Updating a time series will usually create a new version of the time series. However, by
+        explicitly setting a known time, any version may be changed or updated. If a value already
+        exists with exactly the same timestamp *and* known time, it will be updated. Otherwise a new
+        point will be created.
+
+        If a timestamp that is previously known is not included, its value is *not* deleted, even
+        though it is within the range of this update. The old value will simply continue to exist at
+        the new version. Data points without values are cleared from this version, meaning that the
+        old value will continue to exist up until the new version, then cease to exist.
+
+        Time series storage is optimized by discarding values which haven't changed from the previous
+        versions. Note that this optimization may cause surprising behavior when updating older
+        versions. When older versions are updated, it is therefore recommended to perform a full
+        backload from this version on.
+
+        *Note* The Exabel Platform only supports processing time series with daily or lower resolution.
+        Timestamps (including known times) must be normalised to **midnight UTC** (`00:00:00Z`).
+
+        The `view` argument is only used to define which values should be returned to the caller. If
+        this is not set, no values are returned (but all values are still updated).
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
     def DeleteTimeSeries(self, request, context):
-        """Deletes one time series. The time series and all its points will be deleted.
+        """Deletes one time series.
+
+        The time series and *all* its points will be deleted.
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
     def BatchDeleteTimeSeriesPoints(self, request, context):
-        """Deletes part(s) of one time series. The requested points will be deleted, but the time series
-        will not. With this request, it is possible to delete all points from a time series, but not
-        the time series itself.
+        """Deletes part(s) of one time series.
+
+        The requested points will be deleted, but the time series will not. With this request, it is
+        possible to delete all points from a time series, but not the time series itself.
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')

@@ -4,6 +4,8 @@ from .....exabel.api.management.v1 import user_service_pb2 as exabel_dot_api_dot
 
 class UserServiceStub(object):
     """Service to manage users and groups.
+
+    Supported operations are listing the current customer's user groups and users.
     """
 
     def __init__(self, channel):
@@ -17,6 +19,8 @@ class UserServiceStub(object):
 
 class UserServiceServicer(object):
     """Service to manage users and groups.
+
+    Supported operations are listing the current customer's user groups and users.
     """
 
     def ListGroups(self, request, context):
@@ -40,6 +44,8 @@ def add_UserServiceServicer_to_server(servicer, server):
 
 class UserService(object):
     """Service to manage users and groups.
+
+    Supported operations are listing the current customer's user groups and users.
     """
 
     @staticmethod

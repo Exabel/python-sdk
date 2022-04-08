@@ -21,7 +21,7 @@ class TestCreateRelationshipType(unittest.TestCase):
             "--is-ownership",
         ]
         script = CreateRelationshipType(args, "Create a relationship type.")
-        client = mock.create_autospec(ExabelClient(host="host", api_key="123"))
+        client = mock.create_autospec(ExabelClient(api_key="123"))
         script.run_script(client, script.parse_arguments())
         call_args_list = client.relationship_api.create_relationship_type.call_args_list
         self.assertEqual(call_args_list[0][0][0].description, "My description.")
@@ -32,7 +32,7 @@ class TestCreateRelationshipType(unittest.TestCase):
             "--no-is-ownership",
         ]
         script = CreateRelationshipType(args, "Create a relationship type.")
-        client = mock.create_autospec(ExabelClient(host="host", api_key="123"))
+        client = mock.create_autospec(ExabelClient(api_key="123"))
         script.run_script(client, script.parse_arguments())
         call_args_list = client.relationship_api.create_relationship_type.call_args_list
         self.assertEqual(call_args_list[0][0][0].description, None)
@@ -41,7 +41,7 @@ class TestCreateRelationshipType(unittest.TestCase):
     def test_create_relationship_not_specified_ownership(self):
         args = common_args
         script = CreateRelationshipType(args, "Create a relationship type.")
-        client = mock.create_autospec(ExabelClient(host="host", api_key="123"))
+        client = mock.create_autospec(ExabelClient(api_key="123"))
         with self.assertRaises(SystemExit):
             script.run_script(client, script.parse_arguments())
 

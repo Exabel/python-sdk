@@ -5,6 +5,7 @@ import requests
 from google.protobuf.json_format import MessageToJson, Parse
 from google.protobuf.message import Message
 
+from exabel_data_sdk.client.api.api_client.exabel_api_group import ExabelApiGroup
 from exabel_data_sdk.client.api.data_classes.request_error import RequestError
 from exabel_data_sdk.client.api.error_handler import http_status_to_error_type
 from exabel_data_sdk.client.client_config import ClientConfig
@@ -17,8 +18,9 @@ class BaseHttpClient:
     Base class for clients that access the Exabel Data API with JSON over HTTP.
     """
 
-    def __init__(self, config: ClientConfig):
+    def __init__(self, config: ClientConfig, api_group: ExabelApiGroup):
         self.config = config
+        self.host = api_group.get_host(config)
 
     @overload
     def _request(
@@ -35,7 +37,7 @@ class BaseHttpClient:
     ) -> Optional[TMessage]:
         response = requests.request(
             method,
-            f"https://{self.config.host}/v1/{url}",
+            f"https://{self.host}/v1/{url}",
             data=MessageToJson(body) if body is not None else None,
             headers={
                 "Accept": "application/json",

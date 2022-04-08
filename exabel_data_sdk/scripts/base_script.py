@@ -27,10 +27,22 @@ class BaseScript(abc.ABC):
                 help_text += ". Can also be specified in the EXABEL_API_KEY environment variable."
             self.parser.add_argument("--api-key", required=not api_key, type=str, help=help_text)
         self.parser.add_argument(
-            "--exabel-api-host",
+            "--exabel-data-api-host",
             required=False,
             default="data.api.exabel.com",
             help="Data API host",
+        )
+        self.parser.add_argument(
+            "--exabel-analytics-api-host",
+            required=False,
+            default="analytics.api.exabel.com",
+            help="Analytics API host",
+        )
+        self.parser.add_argument(
+            "--exabel-management-api-host",
+            required=False,
+            default="management.api.exabel.com",
+            help="Management API host",
         )
         self.parser.add_argument(
             "--use-json",
@@ -46,7 +58,13 @@ class BaseScript(abc.ABC):
         api_key = (
             self.api_key_retriever(args) if self.api_key_retriever is not None else args.api_key
         )
-        client = ExabelClient(host=args.exabel_api_host, api_key=api_key, use_json=args.use_json)
+        client = ExabelClient(
+            data_api_host=args.exabel_data_api_host,
+            analytics_api_host=args.exabel_analytics_api_host,
+            management_api_host=args.exabel_management_api_host,
+            api_key=api_key,
+            use_json=args.use_json,
+        )
         self.run_script(client, args)
 
     def parse_arguments(self) -> argparse.Namespace:

@@ -88,7 +88,7 @@ class TestUploadTimeSeries(unittest.TestCase):
             "",
         ]
         script = LoadTimeSeriesFromCsv(args)
-        client = mock.create_autospec(ExabelClient(host="host", api_key="123"))
+        client = mock.create_autospec(ExabelClient(api_key="123"))
         with self.assertRaises(SystemExit):
             script.run_script(client, script.parse_arguments())
 
@@ -102,7 +102,7 @@ class TestUploadTimeSeries(unittest.TestCase):
         ]
 
         script = LoadTimeSeriesFromCsv(args)
-        client = mock.create_autospec(ExabelClient(host="host", api_key="123"))
+        client = mock.create_autospec(ExabelClient(api_key="123"))
         script.run_script(client, script.parse_arguments())
 
         call_args_list = client.time_series_api.bulk_upsert_time_series.call_args_list
@@ -139,7 +139,7 @@ class TestUploadTimeSeries(unittest.TestCase):
             "0",
         ]
         script = LoadTimeSeriesFromCsv(args)
-        client = mock.create_autospec(ExabelClient(host="host", api_key="123"))
+        client = mock.create_autospec(ExabelClient(api_key="123"))
         script.run_script(client, script.parse_arguments())
 
         call_args_list = client.time_series_api.bulk_upsert_time_series.call_args_list
@@ -187,7 +187,7 @@ class TestUploadTimeSeries(unittest.TestCase):
             "acme",
         ]
         script = LoadTimeSeriesFromCsv(args)
-        client = mock.create_autospec(ExabelClient(host="host", api_key="123"))
+        client = mock.create_autospec(ExabelClient(api_key="123"))
         script.run_script(client, script.parse_arguments())
 
         call_args_list = client.time_series_api.bulk_upsert_time_series.call_args_list
@@ -251,7 +251,7 @@ class TestUploadTimeSeries(unittest.TestCase):
         ]
 
         script = LoadTimeSeriesFromCsv(args)
-        client = mock.create_autospec(ExabelClient(host="host", api_key="123"))
+        client = mock.create_autospec(ExabelClient(api_key="123"))
         script.run_script(client, script.parse_arguments())
 
         call_args_list = client.time_series_api.bulk_upsert_time_series.call_args_list
@@ -316,7 +316,7 @@ class TestUploadTimeSeries(unittest.TestCase):
         ]
 
         script = LoadTimeSeriesFromCsv(args)
-        client = mock.create_autospec(ExabelClient(host="host", api_key="123"))
+        client = mock.create_autospec(ExabelClient(api_key="123"))
         with self.assertRaises(SystemExit):
             script.run_script(client, script.parse_arguments())
 
@@ -329,7 +329,7 @@ class TestUploadTimeSeries(unittest.TestCase):
             "--no-create-tag",
         ]
         script = LoadTimeSeriesFromCsv(args)
-        client = mock.create_autospec(ExabelClient(host="host", api_key="123"))
+        client = mock.create_autospec(ExabelClient(api_key="123"))
         script.run_script(client, script.parse_arguments())
 
         call_args_list = client.time_series_api.bulk_upsert_time_series.call_args_list
@@ -344,7 +344,7 @@ class TestUploadTimeSeries(unittest.TestCase):
             "acme",
         ]
         script = LoadTimeSeriesFromCsv(args)
-        client = mock.create_autospec(ExabelClient(host="host", api_key="123"))
+        client = mock.create_autospec(ExabelClient(api_key="123"))
         script.run_script(client, script.parse_arguments())
 
         call_args_list = client.time_series_api.bulk_upsert_time_series.call_args_list
@@ -361,7 +361,7 @@ class TestUploadTimeSeries(unittest.TestCase):
             "--no-create-library-signal",
         ]
         script = LoadTimeSeriesFromCsv(args)
-        client = mock.create_autospec(ExabelClient(host="host", api_key="123"))
+        client = mock.create_autospec(ExabelClient(api_key="123"))
         client.signal_api.get_signal.return_value = None
         script.run_script(client, script.parse_arguments())
 
@@ -378,7 +378,7 @@ class TestUploadTimeSeries(unittest.TestCase):
             "--create-missing-signals",
         ]
         script = LoadTimeSeriesFromCsv(args)
-        client = mock.create_autospec(ExabelClient(host="host", api_key="123"))
+        client = mock.create_autospec(ExabelClient(api_key="123"))
         client.signal_api.get_signal.return_value = None
         script.run_script(client, script.parse_arguments())
 

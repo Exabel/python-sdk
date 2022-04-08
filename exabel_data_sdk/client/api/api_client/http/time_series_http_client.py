@@ -1,5 +1,7 @@
+from exabel_data_sdk.client.api.api_client.exabel_api_group import ExabelApiGroup
 from exabel_data_sdk.client.api.api_client.http.base_http_client import BaseHttpClient
 from exabel_data_sdk.client.api.api_client.time_series_api_client import TimeSeriesApiClient
+from exabel_data_sdk.client.client_config import ClientConfig
 from exabel_data_sdk.stubs.exabel.api.data.v1.all_pb2 import (
     BatchDeleteTimeSeriesPointsRequest,
     CreateTimeSeriesRequest,
@@ -16,6 +18,9 @@ class TimeSeriesHttpClient(TimeSeriesApiClient, BaseHttpClient):
     """
     Client which sends time series requests to the Exabel Data API with JSON over HTTP.
     """
+
+    def __init__(self, config: ClientConfig):
+        super().__init__(config, ExabelApiGroup.DATA_API)
 
     def list_time_series(self, request: ListTimeSeriesRequest) -> ListTimeSeriesResponse:
         return self._request(

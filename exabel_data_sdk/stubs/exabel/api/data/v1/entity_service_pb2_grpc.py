@@ -33,6 +33,8 @@ class EntityServiceServicer(object):
 
     def ListEntityTypes(self, request, context):
         """Lists all known entity types.
+
+        Retrieves the entity type catalogue.
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -47,6 +49,9 @@ class EntityServiceServicer(object):
 
     def CreateEntityType(self, request, context):
         """Creates one entity type and returns it.
+
+        An entity can explicitly be created using this method, or it can implicitly be created by the
+        update method if its `allow_missing` parameter is set to true.
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -60,23 +65,27 @@ class EntityServiceServicer(object):
         raise NotImplementedError('Method not implemented!')
 
     def DeleteEntityType(self, request, context):
-        """Deletes one entity type. This can only be performed on types without any
-        entites.
+        """Deletes one entity type.
+
+        This can only be performed on types without any entities.
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
     def ListEntities(self, request, context):
-        """Lists all entities of a given entity type. Some entity types are too large
-        and cannot be listed. SearchEntities can be used for those instead.
+        """Lists all entities of a given entity type.
+
+        Some entity types are too large and cannot be listed. SearchEntities can be used for those instead.
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
     def DeleteEntities(self, request, context):
-        """Deletes all entities of a given entity type (and their relationships). Note
+        """Deletes entities.
+
+        Deletes all entities of a given entity type (and their relationships). Note
         that the 'confirm' field must be set for the operation to succeed. Only
         entities in the current writable namespace(s) are deleted, and the entity
         type itself is not deleted.
@@ -101,14 +110,18 @@ class EntityServiceServicer(object):
 
     def UpdateEntity(self, request, context):
         """Updates one entity and returns it.
+
+        This method can also be used to create an entity, provided `allow_missing` is set to `true`.
+        When this method is used to create an entity, the `update_mask` parameter is ignored.
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
     def DeleteEntity(self, request, context):
-        """Deletes one entity. ALL relationships and time series for this entity will
-        also be deleted.
+        """Deletes one entity.
+
+        **All** relationships and time series for this entity will also be deleted.
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -116,6 +129,33 @@ class EntityServiceServicer(object):
 
     def SearchEntities(self, request, context):
         """Search for entities.
+
+        Currently only companies, securities and listings can be searched.
+
+        When multiple terms are present, each search is performed individually, with the results of each
+        query put into one `SearchResult`.
+
+        An exception to the above are the `MIC` and `ticker` fields, which must come in pairs, with
+        `MIC` immediately before `ticker`. One such pair is treated as one search query.
+
+        A search for companies should contain either
+        * an `ISIN` (International Securities Identification Number) field, or
+        * a `MIC` (Market Identifier Code) **and** a `ticker` field, or
+        * a `bloomberg_ticker` or a `bloomberg_symbol` field, or
+        * a `FIGI` (Financial Instruments Global Identifier), or
+        * a `factset_identifier`, either a FactSet entity identifier or a FactSet permanent identifier (also known as "FSYM_ID"), or
+        * a `text` field.
+
+        A `text` field is a free text search field, which searches for ISINs, tickers and/or company
+        names. If a search term is sufficiently long, it will also perform a prefix search. A maximum
+        of five companies are returned for each search.
+
+        A search for securities should contain either
+        * an `ISIN` (International Securities Identification Number) field, or
+        * a `MIC` (Market Identifier Code) and a `ticker` field.
+
+        A search for listings should contain
+        * a `MIC` (Market Identifier Code) and a `ticker` field.
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
