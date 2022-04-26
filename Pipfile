@@ -7,6 +7,7 @@ name = "pypi"
 black = "*"
 # Locked because upgrading to 1.31.3 leads to incompatible version requirements on the protobuf library.
 google-api-core = "==1.31.2"
+googleapis-common-protos = "*"
 grpcio = "*"
 isort = "*"
 mypy = "*"
