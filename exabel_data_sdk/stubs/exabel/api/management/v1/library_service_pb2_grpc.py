@@ -57,7 +57,7 @@ class LibraryServiceServicer(object):
         """Share a folder with a group.
 
         - To grant write access to a group with only read access, call this method with the write flag set to true.
-        - To revoke only write access from a group, call this method with the write flag set to true.
+        - To revoke only write access from a group, call this method with the write flag set to false.
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
