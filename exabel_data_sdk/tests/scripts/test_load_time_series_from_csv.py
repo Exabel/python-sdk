@@ -1,6 +1,7 @@
 import unittest
 from unittest import mock
 
+import numpy as np
 import pandas as pd
 from dateutil import tz
 
@@ -79,6 +80,62 @@ class TestUploadTimeSeries(unittest.TestCase):
             ),
             time_series[3],
         )
+
+    def test_two_signals_long_formatted(self):
+        data = [
+            ["a", "2021-01-01", "signal1", 1.0],
+            ["a", "2021-01-02", "signal1", 2.0],
+            ["b", "2021-01-01", "signal1", 3.0],
+            ["a", "2021-01-01", "signal2", 100.0],
+            ["a", "2021-01-02", "signal2", 200.0],
+            ["b", "2021-01-01", "signal2", 300.0],
+            ["b", "2021-01-02", "signal2", np.nan],
+        ]
+        ts_data = pd.DataFrame(data, columns=["entity", "date", "signal", "value"])
+
+        CsvTimeSeriesLoader.set_time_index(ts_data)
+        time_series = CsvTimeSeriesLoader.get_time_series_from_long_format(ts_data, "signals/acme.")
+
+        pd.testing.assert_series_equal(
+            pd.Series(
+                [1.0, 2.0],
+                index=pd.DatetimeIndex(["2021-01-01", "2021-01-02"], tz=tz.tzutc()),
+                name="a/signals/acme.signal1",
+            ),
+            time_series[0],
+        )
+        pd.testing.assert_series_equal(
+            pd.Series(
+                [100.0, 200.0],
+                index=pd.DatetimeIndex(["2021-01-01", "2021-01-02"], tz=tz.tzutc()),
+                name="a/signals/acme.signal2",
+            ),
+            time_series[1],
+        )
+        pd.testing.assert_series_equal(
+            pd.Series(
+                [3.0],
+                index=pd.DatetimeIndex(["2021-01-01"], tz=tz.tzutc()),
+                name="b/signals/acme.signal1",
+            ),
+            time_series[2],
+        )
+        pd.testing.assert_series_equal(
+            pd.Series(
+                [300.0, np.nan],
+                index=pd.DatetimeIndex(["2021-01-01", "2021-01-02"], tz=tz.tzutc()),
+                name="b/signals/acme.signal2",
+            ),
+            time_series[3],
+        )
+
+    def test_is_long_formatted(self):
+        ts_data_1 = pd.DataFrame([], columns=["entity", "date", "signal", "value"])
+        self.assertTrue(CsvTimeSeriesLoader.is_long_formatted(ts_data_1))
+        ts_data_2 = pd.DataFrame([], columns=["entity", "date", "signal", "value", "known_time"])
+        self.assertTrue(CsvTimeSeriesLoader.is_long_formatted(ts_data_2))
+        ts_data_3 = pd.DataFrame([], columns=["entity", "date", "signal"])
+        self.assertFalse(CsvTimeSeriesLoader.is_long_formatted(ts_data_3))
 
     def test_read_file_without_pit(self):
         args = common_args + [
@@ -174,6 +231,56 @@ class TestUploadTimeSeries(unittest.TestCase):
             pd.Series(
                 [40, 50],
                 pd.DatetimeIndex(["2021-01-01", "2021-01-03"], tz=tz.tzutc()),
+                name="entityTypes/company/entities/company_B/signals/acme.signal2",
+            ),
+            series[3],
+        )
+
+    def test_read_file_in_long_format(self):
+        args = common_args + [
+            "--filename",
+            "./exabel_data_sdk/tests/resources/data/timeseries_long_format.csv",
+            "--namespace",
+            "acme",
+            "--pit-offset",
+            "0",
+        ]
+        script = LoadTimeSeriesFromCsv(args)
+        client = mock.create_autospec(ExabelClient(api_key="123"))
+        script.run_script(client, script.parse_arguments())
+
+        call_args_list = client.time_series_api.bulk_upsert_time_series.call_args_list
+        self.assertEqual(1, len(call_args_list))
+        series = call_args_list[0][0][0]
+        self.assertEqual(4, len(series))
+        pd.testing.assert_series_equal(
+            pd.Series(
+                [1.0, 2.0],
+                pd.DatetimeIndex(["2021-01-01", "2021-01-02"], tz=tz.tzutc()),
+                name="entityTypes/company/entities/company_A/signals/acme.signal1",
+            ),
+            series[0],
+        )
+        pd.testing.assert_series_equal(
+            pd.Series(
+                [10.0, 20.0],
+                pd.DatetimeIndex(["2021-01-01", "2021-01-02"], tz=tz.tzutc()),
+                name="entityTypes/company/entities/company_A/signals/acme.signal2",
+            ),
+            series[1],
+        )
+        pd.testing.assert_series_equal(
+            pd.Series(
+                [4.0, 5.0],
+                pd.DatetimeIndex(["2021-01-01", "2021-01-03"], tz=tz.tzutc()),
+                name="entityTypes/company/entities/company_B/signals/acme.signal1",
+            ),
+            series[2],
+        )
+        pd.testing.assert_series_equal(
+            pd.Series(
+                [40.0, 50.0, np.nan],
+                pd.DatetimeIndex(["2021-01-01", "2021-01-03", "2021-01-04"], tz=tz.tzutc()),
                 name="entityTypes/company/entities/company_B/signals/acme.signal2",
             ),
             series[3],

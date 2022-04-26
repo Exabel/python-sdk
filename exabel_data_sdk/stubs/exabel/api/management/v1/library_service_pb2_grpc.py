@@ -55,6 +55,9 @@ class LibraryServiceServicer(object):
 
     def ShareFolder(self, request, context):
         """Share a folder with a group.
+
+        - To grant write access to a group with only read access, call this method with the write flag set to true.
+        - To revoke only write access from a group, call this method with the write flag set to true.
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -63,7 +66,7 @@ class LibraryServiceServicer(object):
     def UnshareFolder(self, request, context):
         """Remove sharing of a folder with a group.
 
-        This removes both read and write access. To remove only write access, use ShareFolder
+        This revokes both read and write access. To revoke only write access, use ShareFolder
         with the write flag set to false.
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
