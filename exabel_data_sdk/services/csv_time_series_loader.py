@@ -101,9 +101,15 @@ class CsvTimeSeriesLoader:
         )
         if ts_data.columns[1] != "date":
             print("Expected second column to be named 'date', got", ts_data.columns[1])
-
+        is_long_formatted = self.is_long_formatted(ts_data)
         # signals to produce from this csv file
-        signals = list(ts_data.columns[2:])
+        if is_long_formatted:
+            print("Columns 'signal' and 'value' is present, treating file as a long formatted CSV.")
+            signals = ts_data["signal"].unique().tolist()
+            signal_columns = ["value"]
+        else:
+            signals = list(ts_data.columns[2:])
+            signal_columns = signals
 
         if "known_time" in ts_data.columns:
             if pit_current_time:
@@ -138,7 +144,7 @@ class CsvTimeSeriesLoader:
 
         # validate all data points are numeric
         columns_with_invalid_data_points = {}
-        for col in signals:
+        for col in signal_columns:
             if not is_numeric_dtype(ts_data[col]):
                 examples = {
                     index: ts_data[col][index]
@@ -217,7 +223,10 @@ class CsvTimeSeriesLoader:
                 )
 
         self.set_time_index(ts_data)
-        series = self.get_time_series(ts_data, prefix)
+        if is_long_formatted:
+            series = self.get_time_series_from_long_format(ts_data, prefix)
+        else:
+            series = self.get_time_series(ts_data, prefix)
 
         if dry_run:
             print("Running the script would create the following time series:")
@@ -259,6 +268,31 @@ class CsvTimeSeriesLoader:
                     continue
                 ts.name = f"{entity}/{prefix}{signal}"
                 series.append(ts)
+        return series
+
+    @staticmethod
+    def is_long_formatted(ts_data: pd.DataFrame) -> bool:
+        """Check if the given data frame is in long format."""
+        columns = set(ts_data.columns)
+        required_columns = {"entity", "date", "signal", "value"}
+        expected_columns = required_columns | set(["known_time"])
+        return len(columns.difference(expected_columns)) == 0 and columns.issuperset(
+            required_columns
+        )
+
+    @staticmethod
+    def get_time_series_from_long_format(ts_data: pd.DataFrame, prefix: str) -> Sequence[pd.Series]:
+        """Extract all the time series from the given data frame of a long format."""
+        series = []
+        for entity_signal, group in ts_data.groupby(["entity", "signal"]):
+            # Don't drop na values since we want them to be uploaded
+            ts = group["value"]
+            if ts.empty:
+                # Skip empty series
+                continue
+            entity, signal = entity_signal
+            ts.name = f"{entity}/{prefix}{signal}"
+            series.append(ts)
         return series
 
     @staticmethod
