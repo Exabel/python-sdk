@@ -101,7 +101,7 @@ class CsvTimeSeriesLoader:
         )
         if ts_data.columns[1] != "date":
             print("Expected second column to be named 'date', got", ts_data.columns[1])
-        is_long_formatted = self.is_long_formatted(ts_data)
+        is_long_formatted = self.is_long_formatted(ts_data, ts_data.columns[0])
         # signals to produce from this csv file
         if is_long_formatted:
             print("Columns 'signal' and 'value' is present, treating file as a long formatted CSV.")
@@ -125,7 +125,8 @@ class CsvTimeSeriesLoader:
                     " remove the known_time column from the file."
                 )
             # This column shall not be loaded as a signal
-            signals.remove("known_time")
+            if not is_long_formatted:
+                signals.remove("known_time")
         else:
             if default_known_time is None:
                 raise CsvLoadingException(
@@ -271,10 +272,10 @@ class CsvTimeSeriesLoader:
         return series
 
     @staticmethod
-    def is_long_formatted(ts_data: pd.DataFrame) -> bool:
+    def is_long_formatted(ts_data: pd.DataFrame, entity_column: str) -> bool:
         """Check if the given data frame is in long format."""
         columns = set(ts_data.columns)
-        required_columns = {"entity", "date", "signal", "value"}
+        required_columns = {entity_column, "date", "signal", "value"}
         expected_columns = required_columns | set(["known_time"])
         return len(columns.difference(expected_columns)) == 0 and columns.issuperset(
             required_columns
