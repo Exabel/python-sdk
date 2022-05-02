@@ -130,12 +130,12 @@ class TestUploadTimeSeries(unittest.TestCase):
         )
 
     def test_is_long_formatted(self):
-        ts_data_1 = pd.DataFrame([], columns=["entity", "date", "signal", "value"])
-        self.assertTrue(CsvTimeSeriesLoader.is_long_formatted(ts_data_1))
-        ts_data_2 = pd.DataFrame([], columns=["entity", "date", "signal", "value", "known_time"])
-        self.assertTrue(CsvTimeSeriesLoader.is_long_formatted(ts_data_2))
+        ts_data_1 = pd.DataFrame([], columns=["entity_column", "date", "signal", "value"])
+        self.assertTrue(CsvTimeSeriesLoader.is_long_formatted(ts_data_1, "entity_column"))
+        ts_data_2 = pd.DataFrame([], columns=["figi", "date", "signal", "value", "known_time"])
+        self.assertTrue(CsvTimeSeriesLoader.is_long_formatted(ts_data_2, "figi"))
         ts_data_3 = pd.DataFrame([], columns=["entity", "date", "signal"])
-        self.assertFalse(CsvTimeSeriesLoader.is_long_formatted(ts_data_3))
+        self.assertFalse(CsvTimeSeriesLoader.is_long_formatted(ts_data_3, "entity"))
 
     def test_read_file_without_pit(self):
         args = common_args + [
