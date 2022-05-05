@@ -19,7 +19,7 @@ Python 3.6 is deprecated as of version 3.3.0 of the Exabel Python SDK. Support w
 
 To use the SDK againts Exabel APIs, you need an API key provided by Exabel.
 
-The Exabel Export API can be used by authenticating with username and password, [Export script](https://doc.exabel.com/api/export/script.html)
+The Exabel Export API can be used by authenticating with username and password, see the [Export script](https://doc.exabel.com/api/export/script.html) for more details.
 
 Scripts for [operations against the API](https://github.com/Exabel/python-sdk/tree/main/exabel_data_sdk/scripts).
 
@@ -30,19 +30,19 @@ Scripts for [operations against the API](https://github.com/Exabel/python-sdk/tr
 ### Data API
 The Exabel Data API can be used to upload custom data to the Exabel platform. Custom data may include entities, relationships and time series.
 
-Developer guide: https://help.exabel.com/docs/data-api
+[Data API Developer guide](https://help.exabel.com/docs/data-api)
 
 ### Export API
-The Exabel Export API can be used to export dashboards and signals from the Exabel Platform
+The Exabel Export API can be used to export dashboards and signals from the Exabel Platform.
 
-Developer guide: https://doc.exabel.com/api/export/index.html
+[Export API Developer guide](https://doc.exabel.com/api/export/index.html)
 
 ### Analytics API
 The Exabel Analytics API can be used to manage derived signals and prediction models on the Exabel Platform.
 
-Develper guide: https://help.exabel.com/docs/analytics-api
+[Analytics API Developer guide](https://help.exabel.com/docs/analytics-api)
 
 ### Management API
 The Exabel Management API can be used to manage the library on the Exabel Platform.
 
-Developer guide: https://help.exabel.com/docs/management-api
+[Management API Developer guide](https://help.exabel.com/docs/management-api)
