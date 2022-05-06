@@ -17,11 +17,13 @@ Python 3.6 is deprecated as of version 3.3.0 of the Exabel Python SDK. Support w
 
 ## Getting started
 
-To use the SDK againts Exabel APIs, you need an API key provided by Exabel.
+To use the SDK against the Data API, Analytics API or Management API, you need an API key provided by Exabel. 
 
-The Exabel Export API can be used by authenticating with username and password, see the [Export script](https://doc.exabel.com/api/export/script.html) for more details.
+The Exabel Export API can be used by authenticating with username and password.
+The first time you run the script a web browser window is opened where you are asked to provide username and password. The script stores an access token in ``~/.exabel``, so you will not be asked again
+until the token expires.
 
-Scripts for [operations against the API](https://github.com/Exabel/python-sdk/tree/main/exabel_data_sdk/scripts).
+[Export API Developer guide](https://help.exabel.com/docs/exporting-via-exabel-sdk)
 
 [Examples of usage](https://github.com/Exabel/python-sdk/tree/main/exabel_data_sdk/examples).
 
@@ -35,7 +37,7 @@ The Exabel Data API can be used to upload custom data to the Exabel platform. Cu
 ### Export API
 The Exabel Export API can be used to export dashboards and signals from the Exabel Platform.
 
-[Export API Developer guide](https://doc.exabel.com/api/export/index.html)
+[Export API Developer guide](https://help.exabel.com/docs/exporting-via-exabel-sdk)
 
 ### Analytics API
 The Exabel Analytics API can be used to manage derived signals and prediction models on the Exabel Platform.
