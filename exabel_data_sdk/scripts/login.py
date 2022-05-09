@@ -12,7 +12,7 @@ import webbrowser
 from datetime import datetime
 from functools import partial
 from http.server import BaseHTTPRequestHandler, HTTPServer
-from typing import Any, List
+from typing import Any, Dict, List
 from urllib.parse import parse_qs, urlparse
 
 import requests
@@ -32,10 +32,14 @@ class CliLogin:
 
     def __init__(
         self,
-        auth0: str,
-        client_id: str,
-        backend: str,
+        auth0: str = "auth.exabel.com",
+        client_id: str = "6OoAPIEgqz1CQokkBuwtBcYKgNiLKsMF",
+        backend: str = "endpoints.exabel.com",
     ):
+        """
+        All of the arguments (auth0, client_id and backend) are only for internal engineering
+        use at Exabel. Customers and partners should always use the default values.
+        """
         self.auth0 = auth0
         self.client_id = client_id
         self.backend = backend
@@ -160,6 +164,17 @@ class CliLogin:
     def is_expired(self) -> bool:
         """Whether the current access token has expired."""
         return self.expires < datetime.utcnow()
+
+    @property
+    def auth_headers(self) -> Dict[str, str]:
+        """The authentication headers for HTTPS requests to the Exabel API."""
+        return {"Authorization": f"Bearer {self.access_token}"}
+
+    def get_auth_headers(self) -> Dict[str, str]:
+        """Log in and get the authentication headers for HTTPS requests to the Exabel API."""
+        if not self.log_in():
+            raise Exception("Failed to log in.")
+        return self.auth_headers
 
 
 class TokenHandler(BaseHTTPRequestHandler):

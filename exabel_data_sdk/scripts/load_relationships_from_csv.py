@@ -22,7 +22,7 @@ class LoadRelationshipsFromCsv(CsvScriptWithEntityMapping):
     Optionally, another column may give a description for the relationship.
 
     The type of the relationship must be specified as a command line argument.
-    If the relationship type does not already exist, it is created automatically.
+    If the relationship type does not already exist, you will be prompted how to create it.
 
     A sample of a CSV file may look like this:
         brand,product,description
