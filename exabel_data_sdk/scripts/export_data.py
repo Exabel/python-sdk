@@ -1,11 +1,9 @@
 import argparse
 import sys
-from time import time
 from typing import Sequence
 
-import requests
-
-from exabel_data_sdk.scripts.login import CliLogin
+from exabel_data_sdk.client.api.export_api import ExportApi
+from exabel_data_sdk.client.user_login import UserLogin
 
 
 class ExportData:
@@ -57,23 +55,12 @@ class ExportData:
     def run(self) -> None:
         """Download data from the Exabel API and store it to file."""
         args = self.parse_arguments()
-        login = CliLogin(args.auth0, args.client_id, args.backend)
-        login.log_in()
-        headers = {"Authorization": f"Bearer {login.access_token}"}
-        data = {"format": args.format, "query": args.query}
-        url = f"https://{args.backend}/v1/export/file"
-        start_time = time()
-        response = requests.post(url, headers=headers, data=data)
-        if response.status_code == 200:
-            with open(args.filename, "wb") as file:
-                file.write(response.content)
-        else:
-            error_message = response.content.decode()
-            if error_message.startswith('"') and error_message.endswith('"'):
-                error_message = error_message[1:-1]
-            print(f"{response.status_code}: {error_message}")
-        spent_time = time() - start_time
-        print(f"Query completed in {int(spent_time)} seconds")
+        login = UserLogin(args.auth0, args.client_id, args.backend)
+        headers = login.get_auth_headers()
+        export_api = ExportApi(headers)
+        content = export_api.run_query_bytes(query=args.query, file_format=args.format)
+        with open(args.filename, "wb") as file:
+            file.write(content)
 
 
 if __name__ == "__main__":

@@ -19,6 +19,8 @@ class Signals:
     TIME = Column("time")
     EXABEL_ID = Column("exabel_id")
     FACTSET_ID = Column("factset_id")
+    BLOOMBERG_TICKER = Column("bloomberg_ticker")
+    NAME = Column("name")
 
     @staticmethod
     def query(
