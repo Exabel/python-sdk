@@ -6,6 +6,7 @@ from typing import List, Mapping, Sequence, Union
 import pandas as pd
 import requests
 
+from exabel_data_sdk.client.user_login import UserLogin
 from exabel_data_sdk.query.column import Column
 from exabel_data_sdk.query.predicate import Predicate
 from exabel_data_sdk.query.query import Query
@@ -22,7 +23,7 @@ class ExportApi:
     ):
         """
         If authentication headers are not provided, this method will attempt to obtain them
-        by logging in with the CliLogin script.
+        by logging in with the UserLogin script.
 
         Args:
             auth_headers: authentication headers for the HTTPS requests to the backend server
@@ -31,9 +32,7 @@ class ExportApi:
         """
         if auth_headers is None:
             # Attempt to log in
-            from exabel_data_sdk.scripts.login import CliLogin
-
-            auth_headers = CliLogin().get_auth_headers()
+            auth_headers = UserLogin().get_auth_headers()
         self._auth_headers = auth_headers
         self._backend = backend
 
@@ -151,6 +150,6 @@ class ExportApi:
         query = Signals.query(
             columns, start_time=start_time, end_time=end_time, predicates=predicates
         )
-        df = self.run_query(query)
+        df = self.run_query(query.sql())
         df.set_index([col.name for col in index], inplace=True)
         return df.squeeze(axis=1).infer_objects()

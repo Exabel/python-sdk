@@ -3,7 +3,7 @@ import sys
 from typing import Sequence
 
 from exabel_data_sdk.client.api.export_api import ExportApi
-from exabel_data_sdk.scripts.login import CliLogin
+from exabel_data_sdk.client.user_login import UserLogin
 
 
 class ExportData:
@@ -55,7 +55,7 @@ class ExportData:
     def run(self) -> None:
         """Download data from the Exabel API and store it to file."""
         args = self.parse_arguments()
-        login = CliLogin(args.auth0, args.client_id, args.backend)
+        login = UserLogin(args.auth0, args.client_id, args.backend)
         headers = login.get_auth_headers()
         export_api = ExportApi(headers)
         content = export_api.run_query_bytes(query=args.query, file_format=args.format)
