@@ -84,10 +84,13 @@ class ExportApi:
         self,
         signal: Union[str, Column, Sequence[Union[str, Column]]],
         bloomberg_ticker: Union[str, Sequence[str]] = None,
+        *,
         factset_id: Union[str, Sequence[str]] = None,
         tag: Union[str, Sequence[str]] = None,
         start_time: Union[str, pd.Timestamp] = None,
         end_time: Union[str, pd.Timestamp] = None,
+        identifier: Union[Column, Sequence[Column]] = None,
+        version: Union[str, pd.Timestamp, Sequence[str], Sequence[pd.Timestamp]] = None,
     ) -> Union[pd.Series, pd.DataFrame]:
         """
         Run a query for one or more signals.
@@ -106,6 +109,15 @@ class ExportApi:
                         or with any of the provided tags if several.
             start_time: the first date to retrieve data for
             end_time:   the last date to retrieve data for
+            identifier: the identifier(s) to return to identify the entities in the result.
+                        By default, will use Signals.NAME if multiple identifiers
+                        or a tag are given, or else no identifier.
+            version:    the Point-in-Time at which to evaluate the signals,
+                        or a list of such dates at which to evaluate the signals.
+                        If a list of dates is provided, 'version' will be included as a column
+                        in the result.
+                        If no version is specified, then the signals will be evaluated with the
+                        latest available data (the default).
 
         Returns:
             A pandas Series if the result is a single time series,
@@ -116,6 +128,8 @@ class ExportApi:
         """
         if not signal:
             raise ValueError("Must specify signal to retrieve")
+
+        # Specify entity filter
         multi_company = False
         predicates: List[Predicate] = []
         if factset_id:
@@ -138,18 +152,41 @@ class ExportApi:
             multi_company = True
         if len(predicates) > 1:
             raise ValueError("At most one company identification method can be specified")
-        if multi_company:
-            index = [Signals.NAME, Signals.TIME]
+
+        # Specify the identifier(s)
+        index: List[Column] = []
+        if identifier is None:
+            if multi_company:
+                index.append(Signals.NAME)
+        elif isinstance(identifier, Column):
+            index.append(identifier)
         else:
-            index = [Signals.TIME]
+            index.extend(identifier)
+        index.append(Signals.TIME)
+
+        # Specify version(s), if provided
+        if version:
+            if isinstance(version, (str, pd.Timestamp)):
+                predicates.append(Signals.VERSION.equal(version))
+            else:
+                predicates.append(Signals.VERSION.in_list(*version))
+                index.insert(0, Signals.VERSION)
+
+        # The columns to query for
         columns: List[Union[str, Column]] = list(index)
         if isinstance(signal, (str, Column)):
             columns.append(signal)
         else:
             columns.extend(signal)
+
+        # Execute the query
         query = Signals.query(
             columns, start_time=start_time, end_time=end_time, predicates=predicates
         )
         df = self.run_query(query.sql())
+
+        # Set the row index
         df.set_index([col.name for col in index], inplace=True)
+        # Squeeze to a Series if a single time series was returned,
+        # and fix the data type (the backend returns a DataFrame with dtype=object)
         return df.squeeze(axis=1).infer_objects()
