@@ -16,11 +16,19 @@ class Signals:
 
     TABLE = Table("signals")
 
+    # Special columns. Refer to online documentation for descriptions:
+    # https://help.exabel.com/docs/exporting-via-exabel-sdk
     TIME = Column("time")
-    EXABEL_ID = Column("exabel_id")
-    FACTSET_ID = Column("factset_id")
-    BLOOMBERG_TICKER = Column("bloomberg_ticker")
+    VERSION = Column("version")
+    LABEL = Column("label")
     NAME = Column("name")
+    BLOOMBERG_TICKER = Column("bloomberg_ticker")
+    FACTSET_ID = Column("factset_id")
+    ISIN = Column("isin")
+    MIC = Column("mic")
+    TICKER = Column("ticker")
+    EXABEL_ID = Column("exabel_id")
+    RESOURCE_NAME = Column("resource_name")
 
     @staticmethod
     def query(
