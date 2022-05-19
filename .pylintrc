@@ -16,6 +16,13 @@ disable=duplicate-code,
         too-many-return-statements,
         too-many-instance-attributes,
         too-many-statements,
+        # Some tests have intentional missing imports
+        import-error,
+        # Imports are handled by 'isort'.
+        wrong-import-order,
+        wrong-import-position,
+        ungrouped-imports,
+        import-outside-toplevel,
 
 [BASIC]
 
