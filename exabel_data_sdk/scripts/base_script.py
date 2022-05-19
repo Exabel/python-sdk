@@ -4,9 +4,10 @@ import os
 from typing import Callable, Sequence
 
 from exabel_data_sdk import ExabelClient
+from exabel_data_sdk.scripts.command_line_script import CommandLineScript
 
 
-class BaseScript(abc.ABC):
+class BaseScript(CommandLineScript, abc.ABC):
     """Base class for scripts using the Exabel Python SDK."""
 
     def __init__(
@@ -15,8 +16,7 @@ class BaseScript(abc.ABC):
         description: str,
         api_key_retriever: Callable[[argparse.Namespace], str] = None,
     ):
-        self.argv = argv
-        self.parser = argparse.ArgumentParser(description=description)
+        super().__init__(argv, description)
         self.api_key_retriever = api_key_retriever
         if api_key_retriever is None:
             api_key = os.getenv("EXABEL_API_KEY")
@@ -53,7 +53,6 @@ class BaseScript(abc.ABC):
         )
 
     def run(self) -> None:
-        """Runs the script."""
         args = self.parse_arguments()
         api_key = (
             self.api_key_retriever(args) if self.api_key_retriever is not None else args.api_key
@@ -66,10 +65,6 @@ class BaseScript(abc.ABC):
             use_json=args.use_json,
         )
         self.run_script(client, args)
-
-    def parse_arguments(self) -> argparse.Namespace:
-        """Parse arguments input"""
-        return self.parser.parse_args(self.argv[1:])
 
     @abc.abstractmethod
     def run_script(self, client: ExabelClient, args: argparse.Namespace) -> None:

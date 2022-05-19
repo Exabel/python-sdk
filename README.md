@@ -10,6 +10,14 @@ pip install exabel-data-sdk
 
 or download from [PyPI](https://pypi.org/project/exabel-data-sdk/).
 
+### Installation with Snowflake support
+
+For installation with support for exporting data from Snowflake, use the following command:
+
+```
+pip install exabel-data-sdk[snowflake]
+```
+
 The SDK requires Python 3.6 or later.
 
 > **Note:**
@@ -17,7 +25,7 @@ Python 3.6 is deprecated as of version 3.3.0 of the Exabel Python SDK. Support w
 
 ## Getting started
 
-To use the SDK against the Data API, Analytics API or Management API, you need an API key provided by Exabel. 
+To use the SDK against the Data API, Analytics API or Management API, you need an API key provided by Exabel.
 
 The Exabel Export API can be used by authenticating with username and password.
 The first time you run the script a web browser window is opened where you are asked to provide username and password. The script stores an access token in ``~/.exabel``, so you will not be asked again
