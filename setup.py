@@ -6,6 +6,15 @@ with open("README.md", "r", encoding="utf-8") as fh:
 with open("VERSION", "r", encoding="utf-8") as fh:
     version = fh.read()
 
+_SQLALCHEMY_REQUIREMENTS = [
+    "sqlalchemy",
+]
+
+_SNOWFLAKE_REQUIREMENTS = _SQLALCHEMY_REQUIREMENTS + [
+    "snowflake-connector-python",
+    "snowflake-sqlalchemy",
+]
+
 setuptools.setup(
     name="exabel-data-sdk",
     version=version,
@@ -26,6 +35,9 @@ setuptools.setup(
         "protobuf",
         "requests",
     ],
+    extras_require={
+        "snowflake": _SNOWFLAKE_REQUIREMENTS,
+    },
     python_requires=">=3.6",
     classifiers=[
         "Development Status :: 4 - Beta",
