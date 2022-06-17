@@ -1,6 +1,8 @@
 from abc import ABC, abstractmethod
 
 from exabel_data_sdk.stubs.exabel.api.management.v1.all_pb2 import (
+    CreateFolderRequest,
+    DeleteFolderRequest,
     Folder,
     GetFolderRequest,
     ListFolderAccessorsRequest,
@@ -9,8 +11,10 @@ from exabel_data_sdk.stubs.exabel.api.management.v1.all_pb2 import (
     ListFoldersResponse,
     ListItemsRequest,
     ListItemsResponse,
+    MoveItemsRequest,
     ShareFolderRequest,
     UnshareFolderRequest,
+    UpdateFolderRequest,
 )
 
 
@@ -28,6 +32,18 @@ class LibraryApiClient(ABC):
         """Get a folder including its items."""
 
     @abstractmethod
+    def create_folder(self, request: CreateFolderRequest) -> Folder:
+        """Create a new folder."""
+
+    @abstractmethod
+    def update_folder(self, request: UpdateFolderRequest) -> Folder:
+        """Update a folder."""
+
+    @abstractmethod
+    def delete_folder(self, request: DeleteFolderRequest) -> None:
+        """Delete a folder."""
+
+    @abstractmethod
     def list_items(self, request: ListItemsRequest) -> ListItemsResponse:
         """List all items of a specific type."""
 
@@ -36,6 +52,10 @@ class LibraryApiClient(ABC):
         self, request: ListFolderAccessorsRequest
     ) -> ListFolderAccessorsResponse:
         """List the accessors of a specific folder."""
+
+    @abstractmethod
+    def move_items(self, request: MoveItemsRequest) -> None:
+        """Move multiple items into a folder."""
 
     @abstractmethod
     def share_folder(self, request: ShareFolderRequest) -> None:

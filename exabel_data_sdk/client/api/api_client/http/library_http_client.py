@@ -4,6 +4,8 @@ from exabel_data_sdk.client.api.api_client.library_api_client import LibraryApiC
 from exabel_data_sdk.client.client_config import ClientConfig
 from exabel_data_sdk.stubs.exabel.api.management.v1.folder_messages_pb2 import Folder
 from exabel_data_sdk.stubs.exabel.api.management.v1.library_service_pb2 import (
+    CreateFolderRequest,
+    DeleteFolderRequest,
     GetFolderRequest,
     ListFolderAccessorsRequest,
     ListFolderAccessorsResponse,
@@ -11,8 +13,10 @@ from exabel_data_sdk.stubs.exabel.api.management.v1.library_service_pb2 import (
     ListFoldersResponse,
     ListItemsRequest,
     ListItemsResponse,
+    MoveItemsRequest,
     ShareFolderRequest,
     UnshareFolderRequest,
+    UpdateFolderRequest,
 )
 
 
@@ -30,6 +34,15 @@ class LibraryHttpClient(LibraryApiClient, BaseHttpClient):
     def get_folder(self, request: GetFolderRequest) -> Folder:
         return self._request("GET", request.name, Folder())
 
+    def create_folder(self, request: CreateFolderRequest) -> Folder:
+        return self._request("POST", "folders", Folder(), body=request.folder)
+
+    def update_folder(self, request: UpdateFolderRequest) -> Folder:
+        return self._request("PATCH", request.folder.name, Folder(), body=request.folder)
+
+    def delete_folder(self, request: DeleteFolderRequest) -> None:
+        return self._request("DELETE", request.name, None)
+
     def list_items(self, request: ListItemsRequest) -> ListItemsResponse:
         return self._request("GET", f"{request.parent}/items", ListItemsResponse())
 
@@ -37,6 +50,9 @@ class LibraryHttpClient(LibraryApiClient, BaseHttpClient):
         self, request: ListFolderAccessorsRequest
     ) -> ListFolderAccessorsResponse:
         return self._request("GET", f"{request.name}/accessors", ListFolderAccessorsResponse())
+
+    def move_items(self, request: MoveItemsRequest) -> None:
+        return self._request("POST", f"{request.target_folder}:moveItems", None)
 
     def share_folder(self, request: ShareFolderRequest) -> None:
         return self._request("POST", f"{request.folder}:share", None, body=request)

@@ -6,6 +6,8 @@ from exabel_data_sdk.client.client_config import ClientConfig
 from exabel_data_sdk.stubs.exabel.api.management.v1.all_pb2_grpc import LibraryServiceStub
 from exabel_data_sdk.stubs.exabel.api.management.v1.folder_messages_pb2 import Folder
 from exabel_data_sdk.stubs.exabel.api.management.v1.library_service_pb2 import (
+    CreateFolderRequest,
+    DeleteFolderRequest,
     GetFolderRequest,
     ListFolderAccessorsRequest,
     ListFolderAccessorsResponse,
@@ -13,8 +15,10 @@ from exabel_data_sdk.stubs.exabel.api.management.v1.library_service_pb2 import (
     ListFoldersResponse,
     ListItemsRequest,
     ListItemsResponse,
+    MoveItemsRequest,
     ShareFolderRequest,
     UnshareFolderRequest,
+    UpdateFolderRequest,
 )
 
 
@@ -36,6 +40,18 @@ class LibraryGrpcClient(LibraryApiClient, BaseGrpcClient):
         return self.stub.GetFolder(request, metadata=self.metadata, timeout=self.config.timeout)
 
     @handle_grpc_error
+    def create_folder(self, request: CreateFolderRequest) -> Folder:
+        return self.stub.CreateFolder(request, metadata=self.metadata, timeout=self.config.timeout)
+
+    @handle_grpc_error
+    def update_folder(self, request: UpdateFolderRequest) -> Folder:
+        return self.stub.UpdateFolder(request, metadata=self.metadata, timeout=self.config.timeout)
+
+    @handle_grpc_error
+    def delete_folder(self, request: DeleteFolderRequest) -> None:
+        return self.stub.DeleteFolder(request, metadata=self.metadata, timeout=self.config.timeout)
+
+    @handle_grpc_error
     def list_items(self, request: ListItemsRequest) -> ListItemsResponse:
         return self.stub.ListItems(request, metadata=self.metadata, timeout=self.config.timeout)
 
@@ -46,6 +62,10 @@ class LibraryGrpcClient(LibraryApiClient, BaseGrpcClient):
         return self.stub.ListFolderAccessors(
             request, metadata=self.metadata, timeout=self.config.timeout
         )
+
+    @handle_grpc_error
+    def move_items(self, request: MoveItemsRequest) -> None:
+        return self.stub.MoveItems(request, metadata=self.metadata, timeout=self.config.timeout)
 
     @handle_grpc_error
     def share_folder(self, request: ShareFolderRequest) -> None:
