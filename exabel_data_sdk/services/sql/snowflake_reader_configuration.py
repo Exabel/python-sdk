@@ -1,25 +1,37 @@
 import argparse
 from dataclasses import dataclass, fields
-from typing import Mapping, Optional
+from typing import Mapping, NewType, Optional
 
-from exabel_data_sdk.services.sql.sql_reader_configuration import SqlReaderConfiguration
+from exabel_data_sdk.services.sql.sql_reader_configuration import (
+    ConnectionString,
+    SqlReaderConfiguration,
+)
 from exabel_data_sdk.util.handle_missing_imports import handle_missing_imports
 
 with handle_missing_imports():
     from snowflake.sqlalchemy import URL
 
 
+Account = NewType("Account", str)
+Username = NewType("Username", str)
+Password = NewType("Password", str)
+Warehouse = NewType("Warehouse", str)
+Database = NewType("Database", str)
+Schema = NewType("Schema", str)
+Role = NewType("Role", str)
+
+
 @dataclass
 class SnowflakeReaderConfiguration(SqlReaderConfiguration):
     """SQL configuration for Snowflake."""
 
-    account: str
-    user: str
-    password: str
-    warehouse: Optional[str] = None
-    database: Optional[str] = None
-    schema: Optional[str] = None
-    role: Optional[str] = None
+    account: Account
+    user: Username
+    password: Password
+    warehouse: Optional[Warehouse] = None
+    database: Optional[Database] = None
+    schema: Optional[Schema] = None
+    role: Optional[Role] = None
 
     def __post_init__(self) -> None:
         if self.schema and not self.database:
@@ -37,7 +49,7 @@ class SnowflakeReaderConfiguration(SqlReaderConfiguration):
             role=args.role,
         )
 
-    def get_connection_string(self) -> str:
+    def get_connection_string(self) -> ConnectionString:
         """Return the connection string."""
         return URL(**self._get_url_kwargs())
 

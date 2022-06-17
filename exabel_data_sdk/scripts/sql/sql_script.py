@@ -2,7 +2,6 @@ import abc
 from typing import Sequence, Type
 
 from exabel_data_sdk.scripts.command_line_script import CommandLineScript
-from exabel_data_sdk.services.file_writer_provider import FileWriterProvider
 from exabel_data_sdk.services.sql.sql_reader import SqlReader
 from exabel_data_sdk.services.sql.sql_reader_configuration import SqlReaderConfiguration
 
@@ -38,9 +37,4 @@ class SqlScript(CommandLineScript, abc.ABC):
         args = self.parse_arguments()
         configuration = self.reader_configuration_class.from_args(args)
         reader = SqlReader(configuration.get_connection_string())
-        df = reader.read_sql_query(args.query)
-        if not args.output_file:
-            print("No output file specified. Printing sample.\n")
-            print(df)
-            return
-        FileWriterProvider.get_file_writer(args.output_file).write_file(df, args.output_file)
+        reader.read_sql_query_and_write_result(args.query, args.output_file)

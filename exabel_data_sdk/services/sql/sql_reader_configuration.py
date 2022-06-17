@@ -1,5 +1,8 @@
 import abc
 import argparse
+from typing import NewType
+
+ConnectionString = NewType("ConnectionString", str)
 
 
 class SqlReaderConfiguration(abc.ABC):
@@ -11,5 +14,5 @@ class SqlReaderConfiguration(abc.ABC):
         """Construct a SQL reader configuration from the given command-line arguments."""
 
     @abc.abstractmethod
-    def get_connection_string(self) -> str:
+    def get_connection_string(self) -> ConnectionString:
         """Return the connection string."""
