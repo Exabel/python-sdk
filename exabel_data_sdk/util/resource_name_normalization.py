@@ -115,6 +115,11 @@ def to_entity_resource_names(
         The identifiers are looked up with the Exabel API, and the Exabel resource identifiers
         are returned.
 
+     - bloomberg_symbol
+        The given identifiers are Bloomberg symbols.
+        The tickers are looked up with the Exabel API, and the Exabel resource identifiers
+        are returned.
+
      - bloomberg_ticker
         The given identifiers are Bloomberg tickers.
         The tickers are looked up with the Exabel API, and the Exabel resource identifiers
@@ -170,7 +175,14 @@ def to_entity_resource_names(
         mapping.update(entity_mapping[name])
         unique_ids = [unique_id for unique_id in unique_ids if unique_id not in mapping]
 
-    if name in ("isin", "factset_identifier", "bloomberg_ticker", "mic:ticker", "figi"):
+    if name in (
+        "isin",
+        "factset_identifier",
+        "bloomberg_symbol",
+        "bloomberg_ticker",
+        "mic:ticker",
+        "figi",
+    ):
         # A company identifier
         logger.info("Looking up %d %ss...", len(unique_ids), name)
         # Skip empty identifiers
