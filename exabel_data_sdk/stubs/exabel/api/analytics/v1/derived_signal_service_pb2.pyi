@@ -4,6 +4,7 @@ isort:skip_file
 """
 from exabel.api.analytics.v1.derived_signal_messages_pb2 import DerivedSignal as exabel___api___analytics___v1___derived_signal_messages_pb2___DerivedSignal
 from google.protobuf.descriptor import Descriptor as google___protobuf___descriptor___Descriptor, FileDescriptor as google___protobuf___descriptor___FileDescriptor
+from google.protobuf.field_mask_pb2 import FieldMask as google___protobuf___field_mask_pb2___FieldMask
 from google.protobuf.message import Message as google___protobuf___message___Message
 from typing import Optional as typing___Optional, Text as typing___Text
 from typing_extensions import Literal as typing_extensions___Literal
@@ -49,13 +50,17 @@ class UpdateDerivedSignalRequest(google___protobuf___message___Message):
     def signal(self) -> exabel___api___analytics___v1___derived_signal_messages_pb2___DerivedSignal:
         ...
 
-    def __init__(self, *, signal: typing___Optional[exabel___api___analytics___v1___derived_signal_messages_pb2___DerivedSignal]=None) -> None:
+    @property
+    def update_mask(self) -> google___protobuf___field_mask_pb2___FieldMask:
         ...
 
-    def HasField(self, field_name: typing_extensions___Literal[u'signal', b'signal']) -> builtin___bool:
+    def __init__(self, *, signal: typing___Optional[exabel___api___analytics___v1___derived_signal_messages_pb2___DerivedSignal]=None, update_mask: typing___Optional[google___protobuf___field_mask_pb2___FieldMask]=None) -> None:
         ...
 
-    def ClearField(self, field_name: typing_extensions___Literal[u'signal', b'signal']) -> None:
+    def HasField(self, field_name: typing_extensions___Literal[u'signal', b'signal', u'update_mask', b'update_mask']) -> builtin___bool:
+        ...
+
+    def ClearField(self, field_name: typing_extensions___Literal[u'signal', b'signal', u'update_mask', b'update_mask']) -> None:
         ...
 type___UpdateDerivedSignalRequest = UpdateDerivedSignalRequest
 
