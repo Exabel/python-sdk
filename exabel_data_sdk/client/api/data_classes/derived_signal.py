@@ -36,6 +36,8 @@ class DerivedSignalType(Enum):
 class DerivedSignalUnit(Enum):
     """Enum representing the unit of a derived signal."""
 
+    # The signal has not been assigned a unit.
+    DERIVED_SIGNAL_UNIT_INVALID = ProtoDerivedSignalUnit.DERIVED_SIGNAL_UNIT_INVALID
     # The signal represents normal floating point numbers.
     NUMBER = ProtoDerivedSignalUnit.NUMBER
     # The signal represents a ratio, typically with values in the interval [0, 1].
