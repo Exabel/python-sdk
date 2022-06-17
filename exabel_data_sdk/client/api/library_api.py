@@ -1,5 +1,7 @@
 from typing import Sequence
 
+from google.protobuf.field_mask_pb2 import FieldMask
+
 from exabel_data_sdk.client.api.api_client.grpc.library_grpc_client import LibraryGrpcClient
 from exabel_data_sdk.client.api.api_client.http.library_http_client import LibraryHttpClient
 from exabel_data_sdk.client.api.data_classes.folder import Folder
@@ -7,12 +9,16 @@ from exabel_data_sdk.client.api.data_classes.folder_accessor import FolderAccess
 from exabel_data_sdk.client.api.data_classes.folder_item import FolderItem, FolderItemType
 from exabel_data_sdk.client.client_config import ClientConfig
 from exabel_data_sdk.stubs.exabel.api.management.v1.library_service_pb2 import (
+    CreateFolderRequest,
+    DeleteFolderRequest,
     GetFolderRequest,
     ListFolderAccessorsRequest,
     ListFoldersRequest,
     ListItemsRequest,
+    MoveItemsRequest,
     ShareFolderRequest,
     UnshareFolderRequest,
+    UpdateFolderRequest,
 )
 
 
@@ -41,6 +47,52 @@ class LibraryApi:
         proto_folder = self.client.get_folder(GetFolderRequest(name=name))
         return Folder.from_proto(proto_folder)
 
+    def create_folder(self, folder: Folder) -> Folder:
+        """
+        Create a new folder.
+
+        Args:
+            folder: The new folder. Only the display name is used.
+        """
+        proto_folder = self.client.create_folder(
+            request=CreateFolderRequest(folder=folder.to_proto())
+        )
+        return Folder.from_proto(proto_folder)
+
+    def update_folder(
+        self, folder: Folder, update_mask: FieldMask = None, allow_missing: bool = False
+    ) -> Folder:
+        """
+        Update a folder.
+
+        Note that only the folder display name can be updated through this method.
+
+        Args:
+            folder:        The updated folder object.
+            update_mask:   The fields to update. If not specified, the update behaves as a full
+                           update, overwriting all existing fields and properties.
+            allow_missing: If set to true, and the resource is not found, a new resource will be
+                           created. In this situation the "update_mask" and "folder.name" are
+                           ignored.
+        """
+        response = self.client.update_folder(
+            UpdateFolderRequest(
+                folder=folder.to_proto(), update_mask=update_mask, allow_missing=allow_missing
+            )
+        )
+        return Folder.from_proto(response)
+
+    def delete_folder(self, name: str) -> None:
+        """
+        Delete a folder.
+
+        The folder must be empty, if not, an exception will be thrown.
+
+        Args:
+            name: The folder resource name, for example "folders/987".
+        """
+        self.client.delete_folder(DeleteFolderRequest(name=name))
+
     def list_items(
         self,
         item_type: FolderItemType,
@@ -68,6 +120,18 @@ class LibraryApi:
         """
         response = self.client.list_folder_accessors(ListFolderAccessorsRequest(name=folder_name))
         return [FolderAccessor.from_proto(accessor) for accessor in response.folder_accessors]
+
+    def move_items(self, folder_name: str, items: Sequence[str]) -> None:
+        """
+        Move multiple items to the given folder.
+
+        Args:
+            folder_name: Resource name of the folder to move the items to,
+                         for example "folders/123".
+            items:       Resource names of the items to move, for example "derivedSignals/9" and
+                         "screens/8".
+        """
+        self.client.move_items(MoveItemsRequest(target_folder=folder_name, items=items))
 
     def share_folder(self, folder_name: str, group_name: str, write: bool = False) -> None:
         """
