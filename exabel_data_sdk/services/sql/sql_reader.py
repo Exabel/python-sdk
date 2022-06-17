@@ -1,3 +1,4 @@
+import logging
 from typing import NewType
 
 import pandas as pd
@@ -9,6 +10,7 @@ from exabel_data_sdk.util.handle_missing_imports import handle_missing_imports
 with handle_missing_imports():
     from sqlalchemy import create_engine
 
+logger = logging.getLogger(__name__)
 
 Query = NewType("Query", str)
 OutputFile = NewType("OutputFile", str)
@@ -31,7 +33,7 @@ class SqlReader:
         """
         df = self.read_sql_query(query)
         if not output_file:
-            print("No output file specified. Printing sample.\n")
-            print(df)
+            logger.info("No output file specified. Printing sample.")
+            logger.info(df)
             return
         FileWriterProvider.get_file_writer(output_file).write_file(df, output_file)

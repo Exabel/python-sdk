@@ -46,4 +46,4 @@ class TestCreateEntityType(unittest.TestCase):
         mock_client = mock.create_autospec(ExabelClient(api_key="123"))
         with self.assertRaises(SystemExit) as cm:
             script.run_script(mock_client, script.parse_arguments())
-        print(cm.exception)
+        self.assertEqual(2, cm.exception.code)

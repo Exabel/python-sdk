@@ -1,3 +1,4 @@
+import logging
 import re
 from typing import List, Optional, Sequence
 
@@ -22,6 +23,8 @@ from exabel_data_sdk.util.resource_name_normalization import (
     to_entity_resource_names,
     validate_signal_name,
 )
+
+logger = logging.getLogger(__name__)
 
 # pylint: disable=unsubscriptable-object
 
@@ -77,7 +80,7 @@ class CsvTimeSeriesLoader:
                  upload to be aborted; if it is `None`, the upload is never aborted
         """
         if dry_run:
-            print("Running dry-run...")
+            logger.info("Running dry-run...")
 
         default_known_time = None
         if pit_current_time:
@@ -94,17 +97,19 @@ class CsvTimeSeriesLoader:
             filename, separator=separator, string_columns=[0], keep_default_na=True
         )
         if ts_data.empty:
-            print("No data in time series file.")
+            logger.warning("No data in time series file.")
             return CsvLoadingResult()
         entity_mapping = EntityMappingFileReader.read_entity_mapping_file(
             entity_mapping_filename, separator=separator
         )
         if ts_data.columns[1] != "date":
-            print("Expected second column to be named 'date', got", ts_data.columns[1])
+            logger.error("Expected second column to be named 'date', got %s", ts_data.columns[1])
         is_long_formatted = self.is_long_formatted(ts_data, ts_data.columns[0])
         # signals to produce from this csv file
         if is_long_formatted:
-            print("Columns 'signal' and 'value' is present, treating file as a long formatted CSV.")
+            logger.info(
+                "Columns 'signal' and 'value' is present, treating file as a long formatted CSV."
+            )
             signals = ts_data["signal"].unique().tolist()
             signal_columns = ["value"]
         else:
@@ -166,7 +171,7 @@ class CsvTimeSeriesLoader:
                 error_message += f"  {col}: {pretty_examples}"
             raise CsvLoadingException(error_message)
 
-        print("Loading signals", ", ".join(str(s) for s in signals), "...")
+        logger.info("Loading signals %s ...", ", ".join(str(s) for s in signals))
 
         # validate signal names
         missing_header_pattern = re.compile(r"^Unnamed: ([0-9]+)$")
@@ -206,12 +211,12 @@ class CsvTimeSeriesLoader:
             signal for signal in signals if not self._client.signal_api.get_signal(prefix + signal)
         ]
         if missing_signals:
-            print("Available signals are:")
-            print(self._client.signal_api.list_signals())
-            print("The following signals are missing:")
-            print(missing_signals)
+            logger.info("Available signals are:")
+            logger.info(self._client.signal_api.list_signals())
+            logger.info("The following signals are missing:")
+            logger.info(missing_signals)
             if create_missing_signals and not dry_run:
-                print("Creating the missing signals.")
+                logger.info("Creating the missing signals.")
                 if not dry_run:
                     for signal in missing_signals:
                         self._client.signal_api.create_signal(
@@ -230,9 +235,9 @@ class CsvTimeSeriesLoader:
             series = self.get_time_series(ts_data, prefix)
 
         if dry_run:
-            print("Running the script would create the following time series:")
+            logger.info("Running the script would create the following time series:")
             for ts in series:
-                print(f"    {ts.name}")
+                logger.info("    %s", ts.name)
             return CsvLoadingResult(warnings=warnings)
 
         try:

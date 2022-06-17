@@ -57,6 +57,7 @@ class BaseScript(CommandLineScript, abc.ABC):
 
     def run(self) -> None:
         args = self.parse_arguments()
+        self.setup_logging()
         api_key = (
             self.api_key_retriever(args) if self.api_key_retriever is not None else args.api_key
         )

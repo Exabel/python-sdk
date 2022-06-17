@@ -1,5 +1,5 @@
+import logging
 import re
-import sys
 from collections import deque
 from typing import Deque, Iterator, List, Mapping, MutableMapping, NamedTuple, Sequence
 
@@ -8,6 +8,8 @@ import pandas as pd
 from exabel_data_sdk.client.api.entity_api import EntityApi
 from exabel_data_sdk.stubs.exabel.api.data.v1.all_pb2 import SearchTerm
 from exabel_data_sdk.util.batcher import batcher
+
+logger = logging.getLogger(__name__)
 
 MAX_SEARCH_TERMS = 1000
 
@@ -52,12 +54,12 @@ def _assert_no_collision(mapping: Mapping[str, str]) -> None:
     if duplicates.empty:
         # No duplicates, all good
         return
-    print("The normalization of identifiers have introduced resource name collisions.")
-    print("The collisions are shown below.")
-    print("Please fix these duplicates, and then re-run the script.")
+    logger.error("The normalization of identifiers have introduced resource name collisions.")
+    logger.error("The collisions are shown below.")
+    logger.error("Please fix these duplicates, and then re-run the script.")
     pd.set_option("max_colwidth", 1000)
-    print(duplicates.sort_values().to_string())
-    sys.exit(1)
+    logger.error(duplicates.sort_values().to_string())
+    raise ValueError("Resource name collisions detected")
 
 
 class EntityResourceNames(NamedTuple):
@@ -79,9 +81,9 @@ def _validate_mic_ticker(mic_ticker: str) -> bool:
     """
     valid = len(mic_ticker) >= 3 and mic_ticker[1:-1].count(":") == 1
     if not valid:
-        print(
+        logger.warning(
             "mic:ticker must contain exactly one colon (:), and both 'mic' and 'ticker' must "
-            "contain at least one character, but got:",
+            "contain at least one character, but got: %s",
             mic_ticker,
         )
     return valid
@@ -170,7 +172,7 @@ def to_entity_resource_names(
 
     if name in ("isin", "factset_identifier", "bloomberg_ticker", "mic:ticker", "figi"):
         # A company identifier
-        print(f"Looking up {len(unique_ids)} {name}s...")
+        logger.info("Looking up %d %ss...", len(unique_ids), name)
         # Skip empty identifiers
         non_empty_identifiers: Iterator[str] = (
             identifier for identifier in unique_ids if identifier and not pd.isna(identifier)
@@ -203,15 +205,15 @@ def to_entity_resource_names(
                 }
                 if not entities:
                     warning = f"Did not find any match for {pretty_terms}"
-                    print(warning)
+                    logger.warning(warning)
                     warnings.append(warning)
                 elif len(entities) > 1:
                     warning = f"Found {len(entities)} matches for {pretty_terms}:\n  {entities}"
-                    print(warning)
+                    logger.warning(warning)
                     warnings.append(warning)
                 else:
                     mapping[identifier] = entities[0].name
-        print(f"Found a match for {len(mapping)} {name}s.")
+        logger.info("Found a match for %d %ss.", len(mapping), name)
 
     else:
         # Should be a known entity type
@@ -223,9 +225,9 @@ def to_entity_resource_names(
         ]
         if not entity_type:
             message = f"Failure: Did not find entity type {entity_type_name}"
-            print(message)
-            print("Available entity types are:")
-            print(entity_api.list_entity_types())
+            logger.error(message)
+            logger.error("Available entity types are:")
+            logger.error(entity_api.list_entity_types())
             raise ValueError(message)
 
         if namespace is None:

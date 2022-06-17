@@ -1,3 +1,4 @@
+import logging
 from typing import Mapping, Optional
 
 from exabel_data_sdk import ExabelClient
@@ -13,6 +14,8 @@ from exabel_data_sdk.services.csv_reader import CsvReader
 from exabel_data_sdk.util.exceptions import TypeConvertionError
 from exabel_data_sdk.util.resource_name_normalization import normalize_resource_name
 from exabel_data_sdk.util.type_converter import type_converter
+
+logger = logging.getLogger(__name__)
 
 
 class CsvEntityLoader:
@@ -67,9 +70,9 @@ class CsvEntityLoader:
                  upload to be aborted; if it is `None`, the upload is never aborted
         """
         if dry_run:
-            print("Running dry-run...")
+            logger.info("Running dry-run...")
 
-        print("Loading entities from", filename)
+        logger.info("Loading entities from %s", filename)
         name_col_ref = name_column or 0
         if property_columns is None:
             property_columns = {}
@@ -119,8 +122,8 @@ class CsvEntityLoader:
             raise CsvLoadingException("An error occurred while converting property types.") from e
 
         if dry_run:
-            print("Loading", len(entities), "entities")
-            print(entities)
+            logger.info("Loading %d entities", len(entities))
+            logger.info(entities)
             return CsvLoadingResult()
 
         try:

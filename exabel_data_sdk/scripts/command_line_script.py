@@ -1,6 +1,8 @@
 import abc
 import argparse
-from typing import Sequence
+import logging
+import sys
+from typing import Sequence, TextIO
 
 
 class CommandLineScript(abc.ABC):
@@ -13,6 +15,15 @@ class CommandLineScript(abc.ABC):
     def parse_arguments(self) -> argparse.Namespace:
         """Parse arguments input"""
         return self.parser.parse_args(self.argv[1:])
+
+    def setup_logging(
+        self,
+        format: str = "%(message)s",  # pylint: disable=redefined-builtin
+        level: int = logging.INFO,
+        stream: TextIO = sys.stdout,
+    ) -> None:
+        """Setup logging"""
+        logging.basicConfig(format=format, level=level, stream=stream)
 
     @abc.abstractmethod
     def run(self) -> None:

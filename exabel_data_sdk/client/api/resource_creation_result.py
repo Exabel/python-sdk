@@ -1,3 +1,4 @@
+import logging
 import sys
 from collections import Counter
 from enum import Enum
@@ -8,6 +9,8 @@ import pandas as pd
 from exabel_data_sdk.client.api.data_classes.entity import Entity
 from exabel_data_sdk.client.api.data_classes.relationship import Relationship
 from exabel_data_sdk.client.api.data_classes.request_error import RequestError
+
+logger = logging.getLogger(__name__)
 
 TResource = TypeVar("TResource", Entity, Relationship, pd.Series)
 
@@ -73,7 +76,9 @@ class ResourceCreationResults(Generic[TResource]):
         """Add the result for a resource."""
         self.results.append(result)
         self.counter.update([result.status])
-        if self.do_print_status and (self.count() % 20 == 0 or self.count() == self.total_count):
+        if self.do_print_status and (
+            self.count() % 10_000 == 0 or self.count() == self.total_count
+        ):
             self.print_status()
         if self.count() % 20 == 0 and self.count() != self.total_count:
             self.check_failures()
@@ -130,24 +135,21 @@ class ResourceCreationResults(Generic[TResource]):
     def print_summary(self) -> None:
         """Prints a human legible summary of the resource creation results to screen."""
         if self.counter[ResourceCreationStatus.CREATED]:
-            print(self.counter[ResourceCreationStatus.CREATED], "new resources created")
+            logger.info("%s new resources created", self.counter[ResourceCreationStatus.CREATED])
         if self.counter[ResourceCreationStatus.EXISTS]:
-            print(self.counter[ResourceCreationStatus.EXISTS], "resources already existed")
+            logger.info("%s resources already existed", self.counter[ResourceCreationStatus.EXISTS])
         if self.counter[ResourceCreationStatus.UPSERTED]:
-            print(self.counter[ResourceCreationStatus.UPSERTED], "resources upserted")
+            logger.info("%s resources upserted", self.counter[ResourceCreationStatus.UPSERTED])
         if self.counter[ResourceCreationStatus.FAILED]:
-            print(self.counter[ResourceCreationStatus.FAILED], "resources failed:")
+            logger.warning("%s resources failed", self.counter[ResourceCreationStatus.FAILED])
             for result in self.results:
                 if result.status == ResourceCreationStatus.FAILED:
-                    print("   ", result.resource, ":\n      ", result.error)
+                    logger.warning("   %s\n      %s", result.resource, result.error)
 
     def print_status(self) -> None:
         """
         Prints a status update on the progress of the data loading, showing the percentage complete
         and how many objects were created, already existed or failed.
-
-        Note that the previous status message is overwritten (by writing '\r'),
-        but this only works if nothing else has been printed to stdout since the last update.
         """
         message_parts = []
         fraction_complete = self.count() / self.total_count
@@ -159,7 +161,4 @@ class ResourceCreationResults(Generic[TResource]):
         if self.counter[ResourceCreationStatus.EXISTS]:
             message_parts.append(f"{self.count(ResourceCreationStatus.EXISTS)} exists, ")
         message_parts.append(f"{self.count(ResourceCreationStatus.FAILED)} failed")
-        sys.stdout.write("".join(message_parts))
-        if fraction_complete == 1:
-            sys.stdout.write("\n")
-        sys.stdout.flush()
+        logger.info("".join(message_parts))

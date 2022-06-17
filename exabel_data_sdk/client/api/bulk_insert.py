@@ -1,3 +1,4 @@
+import logging
 from concurrent.futures.thread import ThreadPoolExecutor
 from time import sleep, time
 from typing import Callable, Optional, Sequence
@@ -9,6 +10,8 @@ from exabel_data_sdk.client.api.resource_creation_result import (
     ResourceCreationStatus,
     TResource,
 )
+
+logger = logging.getLogger(__name__)
 
 
 class BulkInsertFailedError(Exception):
@@ -130,13 +133,18 @@ def bulk_insert(
                 if not failures:
                     break
                 backoff = _get_backoff(trial)
-                print(f"Sleeping {backoff:.2f} seconds before retrying failed requests...")
+                logger.info("Sleeping %.2f seconds before retrying failed requests...", backoff)
                 sleep(backoff)
                 resources = [result.resource for result in failures]
-                print(f"Retry #{trial} with {len(resources)} resources:")
+                logger.info("Retry #%d with %d resources:", trial, len(resources))
             _bulk_insert(results, resources, insert_func, threads=threads)
     finally:
         spent_time = int(time() - start_time)
-        print(f"Spent {spent_time} seconds loading {len(resources)} resources ({threads} threads)")
+        logger.info(
+            "Spent %d seconds loading %d resources (%d threads)",
+            spent_time,
+            len(resources),
+            threads,
+        )
         results.print_summary()
     return results

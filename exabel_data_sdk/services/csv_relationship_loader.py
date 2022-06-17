@@ -1,3 +1,4 @@
+import logging
 from itertools import chain
 from typing import Mapping, Optional
 
@@ -15,6 +16,8 @@ from exabel_data_sdk.services.entity_mapping_file_reader import EntityMappingFil
 from exabel_data_sdk.util.exceptions import TypeConvertionError
 from exabel_data_sdk.util.resource_name_normalization import to_entity_resource_names
 from exabel_data_sdk.util.type_converter import type_converter
+
+logger = logging.getLogger(__name__)
 
 
 class CsvRelationshipLoader:
@@ -70,11 +73,14 @@ class CsvRelationshipLoader:
                  upload to be aborted; if it is `None`, the upload is never aborted
         """
         if dry_run:
-            print("Running dry-run...")
+            logger.info("Running dry-run...")
 
-        print(
-            f"Loading {relationship_type} relationships from {entity_from_column} "
-            f"to {entity_to_column} from {filename}"
+        logger.info(
+            "Loading %s relationships from %s to %s from %s",
+            relationship_type,
+            entity_from_column,
+            entity_to_column,
+            filename,
         )
 
         if property_columns is None:
@@ -95,9 +101,9 @@ class CsvRelationshipLoader:
         relationship_type_name = f"relationshipTypes/{namespace}.{relationship_type}"
 
         if not self._client.relationship_api.get_relationship_type(relationship_type_name):
-            print("Available relationship types are:")
+            logger.info("Available relationship types are:")
             for rel_type in self._client.relationship_api.list_relationship_types().results:
-                print("   ", rel_type)
+                logger.info("   %s", rel_type)
 
             raise CsvLoadingException(
                 f"Did not find relationship type {relationship_type_name}, "
@@ -150,8 +156,8 @@ class CsvRelationshipLoader:
             raise CsvLoadingException("An error occurred while converting property types.") from e
 
         if dry_run:
-            print("Loading", len(relationships), "relationships")
-            print(relationships)
+            logger.info("Loading %d relationships", len(relationships))
+            logger.info(relationships)
             return CsvLoadingResult(warnings=warnings)
 
         try:
