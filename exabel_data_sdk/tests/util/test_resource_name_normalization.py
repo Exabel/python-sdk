@@ -285,6 +285,6 @@ class TestResourceNameNormalization(unittest.TestCase):
 
     def test_name_collision(self):
         bad_mapping = {"Abc!": "Abc_", "Abcd": "Abcd", "Abc?": "Abc_"}
-        self.assertRaises(SystemExit, _assert_no_collision, bad_mapping)
+        self.assertRaises(ValueError, _assert_no_collision, bad_mapping)
         good_mapping = {"Abc!": "Abc_1", "Abcd": "Abcd", "Abc?": "Abc_2"}
         _assert_no_collision(good_mapping)
