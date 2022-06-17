@@ -50,7 +50,7 @@ class TimeSeriesServiceServicer(object):
 
         *Note* The Exabel Platform only supports processing time series with daily or lower resolution.
 
-        Timestamps (including known times) must be normalised to**midnight UTC** (`00:00:00Z`).
+        Timestamps (including known times) must be normalised to **midnight UTC** (`00:00:00Z`).
 
         The `view` argument is only used to define which values should be returned to the caller.
         If this is not set, no values are returned (but all values are still inserted).
