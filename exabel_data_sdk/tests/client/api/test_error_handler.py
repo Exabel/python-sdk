@@ -1,7 +1,8 @@
 import unittest
+from unittest.mock import MagicMock
 
 from exabel_data_sdk.client.api.data_classes.request_error import ErrorType
-from exabel_data_sdk.client.api.error_handler import http_status_to_error_type
+from exabel_data_sdk.client.api.error_handler import http_status_to_error_type, is_status_detail
 
 
 class TestHttpStatusToErrorType(unittest.TestCase):
@@ -25,3 +26,14 @@ class TestHttpStatusToErrorType(unittest.TestCase):
 
     def test_other(self):
         self.assertEqual(ErrorType.INTERNAL, http_status_to_error_type(418))
+
+    def test_is_status_detail(self):
+        status_detail = MagicMock(spec=["key", "value"])
+        status_detail.key = "grpc-status-details-anything"
+        self.assertTrue(is_status_detail(status_detail))
+        status_detail.key = "not-grpc-status-details-anything"
+        self.assertFalse(is_status_detail(status_detail))
+        status_detail = MagicMock(spec=["key"])
+        self.assertFalse(is_status_detail(status_detail))
+        status_detail = MagicMock(spec=["value"])
+        self.assertFalse(is_status_detail(status_detail))

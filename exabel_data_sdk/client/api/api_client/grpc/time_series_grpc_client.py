@@ -8,6 +8,8 @@ from exabel_data_sdk.stubs.exabel.api.data.v1.all_pb2 import (
     CreateTimeSeriesRequest,
     DeleteTimeSeriesRequest,
     GetTimeSeriesRequest,
+    ImportTimeSeriesRequest,
+    ImportTimeSeriesResponse,
     ListTimeSeriesRequest,
     ListTimeSeriesResponse,
     TimeSeries,
@@ -44,6 +46,12 @@ class TimeSeriesGrpcClient(TimeSeriesApiClient, BaseGrpcClient):
     @handle_grpc_error
     def update_time_series(self, request: UpdateTimeSeriesRequest) -> TimeSeries:
         return self.stub.UpdateTimeSeries(
+            request, metadata=self.metadata, timeout=self.config.timeout
+        )
+
+    @handle_grpc_error
+    def import_time_series(self, request: ImportTimeSeriesRequest) -> ImportTimeSeriesResponse:
+        return self.stub.ImportTimeSeries(
             request, metadata=self.metadata, timeout=self.config.timeout
         )
 

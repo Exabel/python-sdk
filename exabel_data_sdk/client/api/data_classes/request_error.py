@@ -1,4 +1,6 @@
+from dataclasses import dataclass
 from enum import Enum, unique
+from typing import Optional, Sequence
 
 
 @unique
@@ -30,23 +32,37 @@ class ErrorType(Enum):
         return self in (ErrorType.UNAVAILABLE, ErrorType.TIMEOUT, ErrorType.INTERNAL)
 
 
+@dataclass
+class Violation:
+    """
+    Violation details.
+    """
+
+    type: str
+    subject: str
+    description: str
+
+
+@dataclass
+class PreconditionFailure:
+    """
+    PreconditionFailure details.
+    """
+
+    violations: Sequence[Violation]
+
+
+@dataclass
 class RequestError(Exception):
     """
     Represents an error returned from the Exabel Api.
 
     Attributes:
-        error_type (ErrorType): Type of error.
-        message (str):          Exception message.
+        error_type (ErrorType):                     Type of error.
+        message (str):                              Exception message.
+        precondition_failure (PreconditionFailure): PreconditionFailure details.
     """
 
-    def __init__(self, error_type: ErrorType, message: str = None):
-        """
-        Create a new RequestError.
-
-        Args:
-            error_type: Type of error.
-            message:    Exception message.
-        """
-        super().__init__(message)
-        self.error_type = error_type
-        self.message = message
+    error_type: ErrorType
+    message: Optional[str] = None
+    precondition_failure: Optional[PreconditionFailure] = None

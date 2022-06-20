@@ -7,6 +7,8 @@ from exabel_data_sdk.stubs.exabel.api.data.v1.all_pb2 import (
     CreateTimeSeriesRequest,
     DeleteTimeSeriesRequest,
     GetTimeSeriesRequest,
+    ImportTimeSeriesRequest,
+    ImportTimeSeriesResponse,
     ListTimeSeriesRequest,
     ListTimeSeriesResponse,
     TimeSeries,
@@ -49,6 +51,9 @@ class TimeSeriesHttpClient(TimeSeriesApiClient, BaseHttpClient):
             assert len(parts) == 6
             name = f"{parts[2]}/{parts[3]}/{parts[4]}/{parts[5]}/{parts[0]}/{parts[1]}"
         return self._request("PATCH", name, TimeSeries(), body=request.time_series)
+
+    def import_time_series(self, request: ImportTimeSeriesRequest) -> ImportTimeSeriesResponse:
+        raise NotImplementedError("Import time series is not implemented for the HTTP client.")
 
     def delete_time_series(self, request: DeleteTimeSeriesRequest) -> None:
         self._request("DELETE", request.name, None)
