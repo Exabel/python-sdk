@@ -5,8 +5,8 @@ name = "pypi"
 
 [packages]
 black = "*"
-# Locked because upgrading to 1.31.3 leads to incompatible version requirements on the protobuf library.
-google-api-core = "==1.31.2"
+google-api-core = ">1.31.3"
+google-cloud-bigquery = "*"
 googleapis-common-protos = ">=1.56.0*"
 grpcio = "*"
 isort = "*"
@@ -20,6 +20,7 @@ setuptools = "*"
 snowflake-connector-python = "*"
 snowflake-sqlalchemy = "*"
 sqlalchemy = "*"
+sqlalchemy-bigquery = "*"
 twine = "*"
 types-protobuf = "*"
 types-python-dateutil = "*"

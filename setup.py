@@ -10,6 +10,11 @@ _SQLALCHEMY_REQUIREMENTS = [
     "sqlalchemy",
 ]
 
+_BIGQUERY_REQUIREMENTS = [
+    "google-cloud-bigquery",
+    "sqlalchemy-bigquery",
+]
+
 _SNOWFLAKE_REQUIREMENTS = _SQLALCHEMY_REQUIREMENTS + [
     "snowflake-connector-python",
     "snowflake-sqlalchemy",
@@ -37,6 +42,7 @@ setuptools.setup(
     ],
     extras_require={
         "snowflake": _SNOWFLAKE_REQUIREMENTS,
+        "bigquery": _BIGQUERY_REQUIREMENTS,
     },
     python_requires=">=3.6",
     classifiers=[
