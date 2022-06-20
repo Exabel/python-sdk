@@ -21,6 +21,7 @@ from exabel_data_sdk.stubs.exabel.api.data.v1.all_pb2 import (
     DefaultKnownTime,
     DeleteTimeSeriesRequest,
     GetTimeSeriesRequest,
+    ImportTimeSeriesRequest,
     ListTimeSeriesRequest,
 )
 from exabel_data_sdk.stubs.exabel.api.data.v1.all_pb2 import TimeSeries as ProtoTimeSeries
@@ -248,6 +249,47 @@ class TimeSeriesApi:
                 time_series=ProtoTimeSeries(
                     name=name, points=self._series_to_time_series_points(series)
                 ),
+                default_known_time=default_known_time,
+                allow_missing=allow_missing,
+                create_tag=create_tag,
+            ),
+        )
+
+    def import_time_series(
+        self,
+        parent: str,
+        series: Sequence[pd.Series],
+        default_known_time: DefaultKnownTime = None,
+        allow_missing: bool = False,
+        create_tag: bool = False,
+    ) -> None:
+        """
+        Import multiple time series.
+
+        If the time series contains data points that already exist, these data points will be
+        overwritten.
+
+        Args:
+            parent:         The common parent of all time series to import. May include `-` as a
+                            wild card.
+            series:         One or more time series to import.
+            default_known_time:
+                            The specification of the default known time to use for points that don't
+                            explicitly have a known time set. If not set, the time of insertion is
+                            used as the default known time (`current_time = true`).
+            allow_missing:  If set to true, and a time series is not found, a new time series will
+                            be created.
+            create_tag:     Set to true to create a tag for every entity type a signal has time
+                            series for. If a tag already exists, it will be updated when time series
+                            are created (or deleted) regardless of the value of this flag.
+        """
+        self.client.import_time_series(
+            ImportTimeSeriesRequest(
+                parent=parent,
+                time_series=[
+                    ProtoTimeSeries(name=ts.name, points=self._series_to_time_series_points(ts))
+                    for ts in series
+                ],
                 default_known_time=default_known_time,
                 allow_missing=allow_missing,
                 create_tag=create_tag,

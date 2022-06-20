@@ -79,4 +79,4 @@ class TestBaseHttpClient(unittest.TestCase):
         request.return_value = response
         with self.assertRaises(RequestError) as context:
             self.client._request("GET", "the-url", response_proto=None)
-        self.assertEqual("Something went wrong.", str(context.exception))
+        self.assertEqual("Something went wrong.", str(context.exception.message))
