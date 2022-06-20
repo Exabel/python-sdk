@@ -10,18 +10,26 @@ pip install exabel-data-sdk
 
 or download from [PyPI](https://pypi.org/project/exabel-data-sdk/).
 
-### Installation with Snowflake support
-
-For installation with support for exporting data from Snowflake, use the following command:
-
-```
-pip install exabel-data-sdk[snowflake]
-```
-
 The SDK requires Python 3.6 or later.
 
 > **Note:**
 Python 3.6 is deprecated as of version 3.3.0 of the Exabel Python SDK. Support will be removed in a future release. Please upgrade to Python 3.7 or a newer release of Python.
+
+### Installation with SQL data source support
+
+For installation with support for exporting data from a various SQL based data sources, add the data source as a pip extra in brackets after the package name:
+
+```sh
+# Install the Exabel Python SDK with Snowflake support:
+pip install exabel-data-sdk[snowflake]
+
+# Or install multiple data sources at the same time:
+pip install exabel-data-sdk[snowflake,bigquery]
+```
+
+Supported data sources are:
+* Snowflake: `snowflake`
+* Google BigQuery: `bigquery`
 
 ## Getting started
 
