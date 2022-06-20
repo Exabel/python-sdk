@@ -24,6 +24,7 @@ class CommandLineScript(abc.ABC):
     ) -> None:
         """Setup logging"""
         logging.basicConfig(format=format, level=level, stream=stream)
+        logging.captureWarnings(True)
 
     @abc.abstractmethod
     def run(self) -> None:
