@@ -37,7 +37,8 @@ setuptools.setup(
         "googleapis-common-protos",
         "grpcio",
         "pandas",
-        "protobuf",
+        # hotfix for protobuf raising exception on 3.21.0+
+        "protobuf<3.21.0",
         "requests",
     ],
     extras_require={
