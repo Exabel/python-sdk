@@ -12,7 +12,7 @@ class CsvReader:
         separator: str,
         string_columns: Iterable[Union[str, int]],
         *,
-        keep_default_na: bool
+        keep_default_na: bool,
     ) -> pd.DataFrame:
         """
         Read the given file and return the content as a pandas DataFrame.

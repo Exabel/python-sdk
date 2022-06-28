@@ -128,3 +128,72 @@ class TestCsvRelationshipLoader(unittest.TestCase):
         ]
         actual_relationships = client.relationship_api.list_relationships().results
         self.assertCountEqual(expected_relationships, actual_relationships)
+
+    def test_load_relationships_only_entity_from_column_specified(self):
+        client: ExabelClient = ExabelMockClient()
+        with self.assertRaises(CsvLoadingException) as exception_context:
+            CsvRelationshipLoader(client).load_relationships(
+                filename="exabel_data_sdk/tests/resources/data/relationships.csv",
+                namespace="test",
+                relationship_type="NON_EXISTENT_RELATIONSHIPTYPE",
+                entity_from_column="entity_from",
+                upsert=False,
+            )
+        self.assertEqual(
+            "Both entity_from_column and entity_to_column must be None, or both must be set. "
+            "Got: entity_from_column=entity_from, entity_to_column=None",
+            str(exception_context.exception),
+        )
+
+    def test_load_relationships_only_entity_to_column_specified(self):
+        client: ExabelClient = ExabelMockClient()
+        with self.assertRaises(CsvLoadingException) as exception_context:
+            CsvRelationshipLoader(client).load_relationships(
+                filename="exabel_data_sdk/tests/resources/data/relationships.csv",
+                namespace="test",
+                relationship_type="NON_EXISTENT_RELATIONSHIPTYPE",
+                entity_to_column="brand",
+                upsert=False,
+            )
+        self.assertEqual(
+            "Both entity_from_column and entity_to_column must be None, or both must be set. "
+            "Got: entity_from_column=None, entity_to_column=brand",
+            str(exception_context.exception),
+        )
+
+    def test_load_relationships_default_entity_from_to_columns(self):
+        client: ExabelClient = ExabelMockClient()
+        CsvRelationshipLoader(client).load_relationships(
+            filename="exabel_data_sdk/tests/resources/data/relationships_with_properties.csv",
+            namespace="test",
+            relationship_type="HAS_BRAND",
+            upsert=False,
+        )
+        expected_relationships = [
+            Relationship(
+                relationship_type="relationshipTypes/test.HAS_BRAND",
+                from_entity="entityTypes/company/entities/test.1",
+                to_entity="entityTypes/brand/entities/test.1",
+                read_only=False,
+            ),
+            Relationship(
+                relationship_type="relationshipTypes/test.HAS_BRAND",
+                from_entity="entityTypes/company/entities/test.1",
+                to_entity="entityTypes/brand/entities/test.2",
+                read_only=False,
+            ),
+            Relationship(
+                relationship_type="relationshipTypes/test.HAS_BRAND",
+                from_entity="entityTypes/company/entities/test.1",
+                to_entity="entityTypes/brand/entities/test.3",
+                read_only=False,
+            ),
+            Relationship(
+                relationship_type="relationshipTypes/test.HAS_BRAND",
+                from_entity="entityTypes/company/entities/test.1",
+                to_entity="entityTypes/brand/entities/test.4",
+                read_only=False,
+            ),
+        ]
+        actual_relationships = client.relationship_api.list_relationships().results
+        self.assertCountEqual(expected_relationships, actual_relationships)

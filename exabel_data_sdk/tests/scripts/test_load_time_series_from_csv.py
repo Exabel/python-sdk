@@ -385,6 +385,21 @@ class TestUploadTimeSeries(unittest.TestCase):
             check_freq=False,
         )
 
+    def test_read_file_with_nan_identifiers(self):
+        args = common_args + [
+            "--filename",
+            "./exabel_data_sdk/tests/resources/data/timeseries_with_empty_identifiers.csv",
+            "--namespace",
+            "acme",
+            "--pit-offset",
+            "30",
+        ]
+        with self.assertRaises(ValueError) as context:
+            script = LoadTimeSeriesFromCsv(args)
+            client = mock.create_autospec(ExabelClient(api_key="123"))
+            script.run_script(client, script.parse_arguments())
+        self.assertEqual("Cannot have an empty resource name.", str(context.exception))
+
     def test_should_fail_with_invalid_signal_names(self):
         signals_errors = {
             "0_starts_with_0": "Signal name must start with a letter, "
