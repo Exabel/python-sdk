@@ -22,7 +22,7 @@ def normalize_resource_name(name: str) -> str:
      - Cut at length at most 64 characters
     """
     # Cannot be empty
-    if not name or pd.isna(name):
+    if not name:
         raise ValueError("Cannot have an empty resource name.")
     # Only letters, numbers, underscore, and dash
     p = re.compile(r"[^a-zA-Z0-9_\-]")
