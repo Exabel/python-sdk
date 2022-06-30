@@ -4,6 +4,7 @@ from exabel_data_sdk.client.api.data_set_api import DataSetApi
 from exabel_data_sdk.client.api.derived_signal_api import DerivedSignalApi
 from exabel_data_sdk.client.api.entity_api import EntityApi
 from exabel_data_sdk.client.api.library_api import LibraryApi
+from exabel_data_sdk.client.api.namespace_api import NamespaceApi
 from exabel_data_sdk.client.api.prediction_model_api import PredictionModelApi
 from exabel_data_sdk.client.api.relationship_api import RelationshipApi
 from exabel_data_sdk.client.api.signal_api import SignalApi
@@ -74,3 +75,4 @@ class ExabelClient:
         self.derived_signal_api = DerivedSignalApi(config, use_json)
         self.user_api = UserApi(config, use_json)
         self.library_api = LibraryApi(config, use_json)
+        self.namespace_api = NamespaceApi(config, use_json)

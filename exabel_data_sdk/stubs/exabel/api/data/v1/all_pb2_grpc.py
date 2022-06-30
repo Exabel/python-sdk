@@ -5,6 +5,8 @@ from .data_set_messages_pb2_grpc import *
 from .data_set_service_pb2_grpc import *
 from .entity_messages_pb2_grpc import *
 from .entity_service_pb2_grpc import *
+from .namespace_service_pb2_grpc import *
+from .namespaces_messages_pb2_grpc import *
 from .relationship_messages_pb2_grpc import *
 from .relationship_service_pb2_grpc import *
 from .search_messages_pb2_grpc import *
