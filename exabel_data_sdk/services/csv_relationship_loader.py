@@ -1,6 +1,6 @@
 import logging
 from itertools import chain
-from typing import Mapping, Optional
+from typing import Mapping, Optional, Set, Union
 
 from exabel_data_sdk import ExabelClient
 from exabel_data_sdk.client.api.bulk_insert import BulkInsertFailedError
@@ -36,8 +36,8 @@ class CsvRelationshipLoader:
         separator: str = ",",
         namespace: str,
         relationship_type: str,
-        entity_from_column: str,
-        entity_to_column: str,
+        entity_from_column: str = None,
+        entity_to_column: str = None,
         description_column: str = None,
         property_columns: Mapping[str, type] = None,
         threads: int = DEFAULT_NUMBER_OF_THREADS,
@@ -57,8 +57,10 @@ class CsvRelationshipLoader:
             separator: the separator used in the CSV file
             namespace: an Exabel namespace
             relationship_type: the type of relationships to be loaded
-            entity_from_column: the column name for the origin entity of the relationship
-            entity_to_column: the column name for the destination entity of the relationship
+            entity_from_column: the column name for the origin entity of the relationship.
+                Defaults to the name of the first column in the file if not specified.
+            entity_to_column: the column name for the destination entity of the relationship.
+                Defaults to the name of the second column in the file if not specified.
             description_column: the column name for the relationship description; if not specified,
                 no description is provided
             property_columns: a mapping of column names to data types for the relationship
@@ -74,18 +76,20 @@ class CsvRelationshipLoader:
         """
         if dry_run:
             logger.info("Running dry-run...")
-
-        logger.info(
-            "Loading %s relationships from %s to %s from %s",
-            relationship_type,
-            entity_from_column,
-            entity_to_column,
-            filename,
-        )
-
+        use_default_entity_from_to_columns = False
+        string_columns: Set[Union[str, int]] = set()
+        if entity_from_column is None and entity_to_column is None:
+            string_columns.update([0, 1])
+            use_default_entity_from_to_columns = True
+        elif entity_from_column is not None and entity_to_column is not None:
+            string_columns.update([entity_from_column, entity_to_column])
+        else:
+            raise CsvLoadingException(
+                "Both entity_from_column and entity_to_column must be None, or both must be set. "
+                f"Got: entity_from_column={entity_from_column}, entity_to_column={entity_to_column}"
+            )
         if property_columns is None:
             property_columns = {}
-        string_columns = {entity_from_column, entity_to_column}
         if description_column:
             string_columns.add(description_column)
         string_columns.update(property_columns)
@@ -93,9 +97,20 @@ class CsvRelationshipLoader:
         relationships_df = CsvReader.read_csv(
             filename, separator, string_columns=string_columns, keep_default_na=False
         )
+        if use_default_entity_from_to_columns:
+            entity_from_col = relationships_df.columns[0]
+            entity_to_col = relationships_df.columns[1]
+        else:
+            entity_from_col = entity_from_column
+            entity_to_col = entity_to_column
+        logger.info(
+            "Loading %s relationships from %s to %s from %s",
+            relationship_type,
+            entity_from_col,
+            entity_to_col,
+            filename,
+        )
 
-        entity_from_col = entity_from_column
-        entity_to_col = entity_to_column
         description_col = description_column
 
         relationship_type_name = f"relationshipTypes/{namespace}.{relationship_type}"
@@ -115,6 +130,7 @@ class CsvRelationshipLoader:
         entity_mapping = EntityMappingFileReader.read_entity_mapping_file(
             filename=entity_mapping_filename, separator=separator
         )
+        # pylint: disable=unsupported-assignment-operation,unsubscriptable-object
         relationships_df[entity_from_col], from_warnings = to_entity_resource_names(
             self._client.entity_api,
             relationships_df[entity_from_col],
@@ -127,6 +143,7 @@ class CsvRelationshipLoader:
             namespace=namespace,
             entity_mapping=entity_mapping,
         )
+        # pylint: enable=unsupported-assignment-operation,unsubscriptable-object
         warnings = list(chain(from_warnings, to_warnings))
 
         # Drop rows where either the from or to entity is missing

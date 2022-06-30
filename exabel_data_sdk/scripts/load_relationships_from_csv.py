@@ -16,7 +16,13 @@ class LoadRelationshipsFromCsv(CsvScriptWithEntityMapping):
     The CSV file should have a header line specifying the column names.
 
     The command line arguments --entity-from-column and --entity-to-column specify the columns
-    in which the related entities are given. The entity names are automatically normalized to
+    in which the related entities are given.
+
+    If neither --entity-from-column nor --entity-to-column are specified,
+    names of the first and second column in the file will be used respectively.
+    If either argument is specified, both must be specified.
+
+    The entity names are automatically normalized to
     form the corresponding resource names (consistently with the load_entities_from_csv script).
 
     Optionally, another column may give a description for the relationship.
@@ -33,7 +39,9 @@ class LoadRelationshipsFromCsv(CsvScriptWithEntityMapping):
     which would be loaded by specifying:
         --relationship-type my_namespace.HAS_PRODUCT
         --entity-from-column brand
+            (defaults to the name of the first column in the file if not specified)
         --entity-to-column product
+            (defaults to the name of the second column in the file if not specified)
         --description-column description
     """
 
@@ -47,15 +55,19 @@ class LoadRelationshipsFromCsv(CsvScriptWithEntityMapping):
         )
         self.parser.add_argument(
             "--entity-from-column",
-            required=True,
             type=str,
-            help="The column name for the entity from which the relationship originates.",
+            help=(
+                "The column name for the entity from which the relationship originates. "
+                "Defaults to the name of the first column in the file if not specified."
+            ),
         )
         self.parser.add_argument(
             "--entity-to-column",
-            required=True,
             type=str,
-            help="The column name for the entity name to which the relationship goes.",
+            help=(
+                "The column name for the entity name to which the relationship goes. "
+                "Defaults to the name of the second column in the file if not specified."
+            ),
         )
         self.parser.add_argument(
             "--description-column",
