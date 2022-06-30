@@ -24,7 +24,11 @@ class SqlReader:
 
     def read_sql_query(self, query: Query) -> pd.DataFrame:
         """Execute the given query and return the content as a pandas DataFrame."""
-        return pd.read_sql_query(query, self.engine)
+        try:
+            return pd.read_sql_query(query, self.engine)
+        except Exception as e:
+            logger.error("An error occurred while executing the query: %s", str(e))
+            raise
 
     def read_sql_query_and_write_result(self, query: Query, output_file: OutputFile = None) -> None:
         """
