@@ -1,5 +1,4 @@
 import logging
-import sys
 from collections import Counter
 from enum import Enum
 from typing import Generic, List, Optional, Sequence, TypeVar
@@ -126,11 +125,9 @@ class ResourceCreationResults(Generic[TResource]):
         if fraction_error > self.abort_threshold and not self.abort:
             self.abort = True
             if self.do_print_status:
-                sys.stdout.write(
-                    f"\nAborting - more than {self.abort_threshold:.0%} "
-                    "of the requests are failing.\n"
+                logger.error(
+                    "Aborting - more than %.0f of the requests are failing.", self.abort_threshold
                 )
-                sys.stdout.flush()
 
     def print_summary(self) -> None:
         """Prints a human legible summary of the resource creation results to screen."""
