@@ -7,7 +7,6 @@ from exabel_data_sdk.tests.client.exabel_mock_client import ExabelMockClient
 
 
 class TestCsvTimeSeriesLoader(unittest.TestCase):
-    """test again"""
     def test_read_csv_should_failed_by_non_numeric_signal_values(self):
         client: ExabelClient = ExabelMockClient()
         with self.assertRaises(CsvLoadingException) as context:
