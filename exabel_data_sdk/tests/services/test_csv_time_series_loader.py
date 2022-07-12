@@ -22,15 +22,30 @@ class TestCsvTimeSeriesLoader(unittest.TestCase):
             "Signal 'production' contains 6 non-numeric values, check the first five as examples:\n"
             "      entity        date  known_time       production\n"
             " small_brand  2022-02-01  2022-02-01  three_thousands\n"
-            " small_brand  2022-02-04  2022-02-05   four_thousands\n "
-            "  mini_brand  2022-02-05  2022-02-06   five_thousands\n "
-            "  mini_brand  2022-02-06  2022-02-07    six_thousands\n "
+            " small_brand  2022-02-04  2022-02-05   four_thousands\n"
+            "  mini_brand  2022-02-05  2022-02-06   five_thousands\n"
+            "  mini_brand  2022-02-06  2022-02-07    six_thousands\n"
             "  mini_brand  2022-02-07  2022-02-08  seven_thousands\n\n"
             "Signal 'price' contains 3 non-numeric values:\n      "
             "       entity        date  known_time      price\n"
             " middle_brand  2022-02-01  2022-02-01    fifteen\n"
-            " middle_brand  2022-01-01  2022-01-01    sixteen\n "
+            " middle_brand  2022-01-01  2022-01-01    sixteen\n"
             "  small_brand  2022-02-02  2022-02-03  seventeen"
         )
         print(str(exception))
         self.assertEqual(expected_error_message_beginning, str(exception))
+"""
+Signal 'production' contains 6 non-numeric values, check the first five as examples:
+      entity        date  known_time       production
+ small_brand  2022-02-01  2022-02-01  three_thousands
+ small_brand  2022-02-04  2022-02-05   four_thousands
+  mini_brand  2022-02-05  2022-02-06   five_thousands
+  mini_brand  2022-02-06  2022-02-07    six_thousands
+  mini_brand  2022-02-07  2022-02-08  seven_thousands
+
+Signal 'price' contains 3 non-numeric values:
+       entity        date  known_time      price
+ middle_brand  2022-02-01  2022-02-01    fifteen
+ middle_brand  2022-01-01  2022-01-01    sixteen
+  small_brand  2022-02-02  2022-02-03  seventeen
+"""
