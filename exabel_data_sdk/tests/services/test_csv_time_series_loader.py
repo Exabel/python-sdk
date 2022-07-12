@@ -32,4 +32,5 @@ class TestCsvTimeSeriesLoader(unittest.TestCase):
             "middle_brand 2022-01-01 2022-01-01   sixteen\n "
             "small_brand 2022-02-02 2022-02-03 seventeen"
         )
+        print(str(exception))
         self.assertEqual(expected_error_message_beginning, str(exception))
