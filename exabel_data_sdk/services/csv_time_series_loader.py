@@ -1,6 +1,6 @@
 import logging
 import re
-from typing import List, Optional, Sequence
+from typing import Any, Dict, List, Optional, Sequence
 
 import pandas as pd
 from dateutil import tz
@@ -25,6 +25,7 @@ from exabel_data_sdk.util.resource_name_normalization import (
 )
 
 logger = logging.getLogger(__name__)
+
 
 # pylint: disable=unsubscriptable-object
 
@@ -147,28 +148,7 @@ class CsvTimeSeriesLoader:
             entity_mapping=entity_mapping,
         )
         ts_data.rename(columns={ts_data.columns[0]: "entity"}, inplace=True)
-        # validate all data points are numeric
-        columns_with_invalid_data_points = {}
-        for col in signal_columns:
-            if not is_numeric_dtype(ts_data[col]):
-                examples = {}
-                for index in ts_data[col][~ts_data[col].str.isnumeric()][:5].index:
-                    examples.update({ts_data["entity"][index]: ts_data[col][index]})
-                columns_with_invalid_data_points[col] = examples
-
-        if columns_with_invalid_data_points:
-            error_message = (
-                "Signal column(s) contain non-numeric values. Please ensure all values "
-                "can be parsed to numeric values.\n"
-            )
-            error_message += "Columns with non-numeric values (with up to 5 examples):"
-            for col, examples in columns_with_invalid_data_points.items():
-                pretty_examples = ", ".join(
-                    f"'{value}' at index {index}" for index, value in examples.items()
-                )
-                error_message += f"  {col}: {pretty_examples}"
-            raise CsvLoadingException(error_message)
-
+        self.validate_numeric(ts_data, signal_columns)
         logger.info("Loading signals %s ...", ", ".join(str(s) for s in signals))
 
         # validate signal names
@@ -320,3 +300,48 @@ class CsvTimeSeriesLoader:
         else:
             ts_data.set_index(date_index, inplace=True)
             ts_data.drop(columns="date", inplace=True)
+
+    @staticmethod
+    def validate_numeric(ts_data: pd.DataFrame, signal_columns: list) -> None:
+        """
+        To check signal values of csv file.
+        Detect non-numeric values and prepare error message containing examples
+        """
+        non_numeric_columns: Dict[str, pd.DataFrame] = {}
+
+        def is_float(element: Any) -> bool:
+            try:
+                float(element)
+                return True
+            except ValueError:
+                return False
+
+        def base_columns(time_series: pd.DataFrame) -> Sequence[str]:
+            return (
+                ["entity", "date", "known_time"]
+                if "known_time" in time_series.columns
+                else ["entity", "date"]
+            )
+
+        def extract_entity_name(element: str) -> str:
+            return element.split("/entities/")[-1].split(".")[-1]
+
+        for column in signal_columns:
+            if not is_numeric_dtype(ts_data[column]) and any(~ts_data[column].apply(is_float)):
+                non_numeric_columns[column] = ts_data.loc[
+                    ~ts_data[column].apply(is_float), [*base_columns(ts_data), column]
+                ]
+        if len(non_numeric_columns) > 0:
+            error_message = (
+                f"{len(non_numeric_columns)} signal column(s) contain non-numeric values. Please "
+                f"ensure all values can be parsed to numeric values\n"
+            )
+            for column, df in non_numeric_columns.items():
+                df["entity"] = df["entity"].apply(extract_entity_name)
+                error_message = (
+                    f"{error_message}\n\n"
+                    f"Signal '{column}' contains {df.shape[0]} non-numeric values"
+                    f"{', check the first five as examples' if df.shape[0] > 5 else ''}:"
+                    f"\n{df.iloc[:5].to_string(index=False)}"
+                )
+            raise CsvLoadingException(error_message)
