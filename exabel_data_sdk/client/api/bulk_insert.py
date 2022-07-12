@@ -3,7 +3,11 @@ from concurrent.futures.thread import ThreadPoolExecutor
 from time import sleep, time
 from typing import Callable, Optional, Sequence
 
-from exabel_data_sdk.client.api.data_classes.request_error import ErrorType, RequestError
+from exabel_data_sdk.client.api.data_classes.request_error import (
+    ErrorType,
+    RequestError,
+    ResourceCreationError,
+)
 from exabel_data_sdk.client.api.resource_creation_result import (
     ResourceCreationResult,
     ResourceCreationResults,
@@ -48,6 +52,12 @@ def _process(
             else ResourceCreationStatus.FAILED
         )
         results.add(ResourceCreationResult(status, resource, error))
+    except TypeError as error:
+        status = ResourceCreationStatus.FAILED
+        resource_creation_error = ResourceCreationError(
+            ErrorType.INVALID_DATA_POINTS, message=str(error)
+        )
+        results.add(ResourceCreationResult(status, resource, resource_creation_error))
 
 
 def _raise_error() -> None:

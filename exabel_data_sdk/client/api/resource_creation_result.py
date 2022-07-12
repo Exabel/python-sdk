@@ -1,13 +1,16 @@
 import logging
 from collections import Counter
 from enum import Enum
-from typing import Generic, List, Optional, Sequence, TypeVar
+from typing import Generic, List, Optional, Sequence, TypeVar, Union
 
 import pandas as pd
 
 from exabel_data_sdk.client.api.data_classes.entity import Entity
 from exabel_data_sdk.client.api.data_classes.relationship import Relationship
-from exabel_data_sdk.client.api.data_classes.request_error import RequestError
+from exabel_data_sdk.client.api.data_classes.request_error import (
+    RequestError,
+    ResourceCreationError,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -38,7 +41,10 @@ class ResourceCreationResult(Generic[TResource]):
     """
 
     def __init__(
-        self, status: ResourceCreationStatus, resource: TResource, error: RequestError = None
+        self,
+        status: ResourceCreationStatus,
+        resource: TResource,
+        error: Union[RequestError, ResourceCreationError] = None,
     ):
         self.status = status
         self.resource: TResource = resource
