@@ -12,7 +12,7 @@ class TestCsvTimeSeriesLoader(unittest.TestCase):
         with self.assertRaises(CsvLoadingException) as context:
             CsvTimeSeriesLoader(client).load_time_series(
                 filename="exabel_data_sdk/tests/resources/"
-                         "data/time_series_with_non_numeric_values.csv",
+                "data/time_series_with_non_numeric_values.csv",
                 namespace="test",
             )
         exception = context.exception
