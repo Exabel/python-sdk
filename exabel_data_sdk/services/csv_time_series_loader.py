@@ -147,15 +147,13 @@ class CsvTimeSeriesLoader:
             entity_mapping=entity_mapping,
         )
         ts_data.rename(columns={ts_data.columns[0]: "entity"}, inplace=True)
-
         # validate all data points are numeric
         columns_with_invalid_data_points = {}
         for col in signal_columns:
             if not is_numeric_dtype(ts_data[col]):
-                examples = {
-                    index: ts_data[col][index]
-                    for index in ts_data[col][~ts_data[col].str.isnumeric()][:5].index
-                }
+                examples = {}
+                for index in ts_data[col][~ts_data[col].str.isnumeric()][:5].index:
+                    examples.update({ts_data["entity"][index]: ts_data[col][index]})
                 columns_with_invalid_data_points[col] = examples
 
         if columns_with_invalid_data_points:
