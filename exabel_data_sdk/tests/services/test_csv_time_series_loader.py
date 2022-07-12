@@ -17,7 +17,7 @@ class TestCsvTimeSeriesLoader(unittest.TestCase):
             )
         exception = context.exception
         expected_error_message_beginning = (
-            "2 signal column(s) contain non-numeric values. "
+            "2 signal column(s) contain non-numeric values."
             "Please ensure all values can be parsed to numeric values\n\n\n"
             "Signal 'production' contains 6 non-numeric values, check the first five as examples:\n"
             "      entity        date  known_time       production\n"
