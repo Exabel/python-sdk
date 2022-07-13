@@ -260,7 +260,7 @@ def to_entity_resource_names(
                 if identifier
             }
         )
-        _assert_no_collision(mapping)
+    _assert_no_collision(mapping)
 
     result = identifiers.map(mapping)
     result.name = "entity"

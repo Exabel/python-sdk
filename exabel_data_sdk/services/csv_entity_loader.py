@@ -1,5 +1,8 @@
 import logging
-from typing import Mapping, Optional
+from typing import Mapping, Optional, Union
+
+from pandas import DataFrame, Index
+from pandas.core.arrays import ExtensionArray
 
 from exabel_data_sdk import ExabelClient
 from exabel_data_sdk.client.api.bulk_insert import BulkInsertFailedError
@@ -103,6 +106,7 @@ class CsvEntityLoader:
                 "Property columns must be a subset of columns present in the file. Columns "
                 f"missing in the file: {set(property_columns) - set(entities_df.columns)}"
             )
+        CsvEntityLoader.detect_duplicate_entities(entities_df, name_col, filename)
         try:
             entities = [
                 Entity(
@@ -146,3 +150,18 @@ class CsvEntityLoader:
             if error_on_any_failure:
                 raise CsvLoadingException("An error occurred while uploading entities.") from e
             return CsvLoadingResult(aborted=True)
+
+    @staticmethod
+    def detect_duplicate_entities(
+        entities_dataframe: DataFrame,
+        name_col: Union[str, None, ExtensionArray, Index],
+        filename: str,
+    ) -> None:
+        """Detects duplicate entities"""
+        duplicated_original_names = entities_dataframe[name_col][
+            entities_dataframe[name_col].duplicated(keep=False)
+        ]
+        if not duplicated_original_names.empty:
+            logger.error("Fix these duplicate entities in the CSV file: %s", filename)
+            logger.error(duplicated_original_names)
+            raise ValueError(f"Duplicate entities in {filename}")

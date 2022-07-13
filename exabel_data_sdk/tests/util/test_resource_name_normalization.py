@@ -288,3 +288,29 @@ class TestResourceNameNormalization(unittest.TestCase):
         self.assertRaises(ValueError, _assert_no_collision, bad_mapping)
         good_mapping = {"Abc!": "Abc_1", "Abcd": "Abcd", "Abc?": "Abc_2"}
         _assert_no_collision(good_mapping)
+
+    def test_mapping_with_duplicated_entity_identifiers_should_fail(self):
+        company_data = pd.Series(["TGT US", "TGT UK"], name="bloomberg_ticker")
+
+        search_terms = [
+            SearchTerm(field="bloomberg_ticker", query="TGT US"),
+            SearchTerm(field="bloomberg_ticker", query="TGT UK"),
+        ]
+        entity_api = mock.create_autospec(EntityApi(ClientConfig(api_key="123"), use_json=True))
+        entity_api.search.entities_by_terms.return_value = [
+            SearchEntitiesResponse.SearchResult(
+                terms=[search_terms[0]],
+                entities=[
+                    Entity("entityTypes/company/entities/F_000C7F-E", "Target, Inc.").to_proto(),
+                ],
+            ),
+            SearchEntitiesResponse.SearchResult(
+                terms=[search_terms[1]],
+                entities=[
+                    Entity("entityTypes/company/entities/F_000C7F-E", "Target, Inc.").to_proto(),
+                ],
+            ),
+        ]
+        with self.assertRaises(ValueError) as context:
+            to_entity_resource_names(entity_api, company_data, namespace="acme")
+        self.assertEqual("Resource name collisions detected", str(context.exception))
