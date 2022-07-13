@@ -61,6 +61,21 @@ class TestLoadEntities(unittest.TestCase):
             entity = client.entity_api.get_entity(expected_entity.name)
             self.assertEqual(expected_entity, entity)
 
+    def test_read_file_with_duplicated_entity_identifiers_should_fail(self):
+        args = common_args + [
+            "--filename",
+            "./exabel_data_sdk/tests/resources/data/entities_with_duplicated_brands.csv",
+            "--description-col",
+            "description",
+        ]
+        with self.assertRaises(ValueError) as context:
+            load_test_data_from_csv(LoadEntitiesFromCsv, args)
+        self.assertEqual(
+            "Duplicate entities in "
+            "./exabel_data_sdk/tests/resources/data/entities_with_duplicated_brands.csv",
+            str(context.exception),
+        )
+
     def test_read_file_random_errors(self):
         random.seed(1)
         args = common_args + [
@@ -91,7 +106,7 @@ class TestLoadEntities(unittest.TestCase):
             Entity(
                 name="entityTypes/brand/entities/test.Spring_Vine",
                 display_name="Spring & Vine",
-                description="This entry might be ignored because it's a duplicate",
+                description="Shampoo bars",
             ),
             Entity(
                 name="entityTypes/brand/entities/test.The_Coconut_Tree",
