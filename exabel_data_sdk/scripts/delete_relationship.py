@@ -8,7 +8,7 @@ from exabel_data_sdk.scripts.base_script import BaseScript
 
 class DeleteRelationship(BaseScript):
     """
-    Deletes a new relationship.
+    Deletes an existing relationship.
     """
 
     def __init__(self, argv: Sequence[str], description: str):
@@ -31,12 +31,6 @@ class DeleteRelationship(BaseScript):
             required=True,
             type=str,
             help="The resource name of the entity the relationship goes to",
-        )
-        self.parser.add_argument(
-            "--description",
-            required=True,
-            type=str,
-            help="One or more paragraphs of text description",
         )
 
     def run_script(self, client: ExabelClient, args: argparse.Namespace) -> None:
