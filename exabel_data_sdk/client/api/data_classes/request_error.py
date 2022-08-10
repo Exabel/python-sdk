@@ -24,8 +24,6 @@ class ErrorType(Enum):
     UNAVAILABLE = 5
     # Timeout.
     TIMEOUT = 6
-    # Invalid data points
-    INVALID_DATA_POINTS = 7
     # Any internal error.
     INTERNAL = 10
 
@@ -68,18 +66,3 @@ class RequestError(Exception):
     error_type: ErrorType
     message: Optional[str] = None
     precondition_failure: Optional[PreconditionFailure] = None
-
-
-@dataclass
-class ResourceCreationError(Exception):
-    """
-    Represents en error returned from resource creation.
-    A typical reason to this error is sending invalid data in the request.
-
-    Attributes:
-        error_type (ErrorType): Type of error.
-        message(str): Exception message.
-    """
-
-    error_type: ErrorType
-    message: Optional[str] = None

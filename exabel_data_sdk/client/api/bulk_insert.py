@@ -3,11 +3,7 @@ from concurrent.futures.thread import ThreadPoolExecutor
 from time import sleep, time
 from typing import Callable, Optional, Sequence
 
-from exabel_data_sdk.client.api.data_classes.request_error import (
-    ErrorType,
-    RequestError,
-    ResourceCreationError,
-)
+from exabel_data_sdk.client.api.data_classes.request_error import ErrorType, RequestError
 from exabel_data_sdk.client.api.resource_creation_result import (
     ResourceCreationResult,
     ResourceCreationResults,
@@ -53,11 +49,9 @@ def _process(
         )
         results.add(ResourceCreationResult(status, resource, error))
     except TypeError as error:
-        status = ResourceCreationStatus.FAILED
-        resource_creation_error = ResourceCreationError(
-            ErrorType.INVALID_DATA_POINTS, message=str(error)
-        )
-        results.add(ResourceCreationResult(status, resource, resource_creation_error))
+        # Raised when proto message is not constructable (as a result of invalid argument types).
+        request_error = RequestError(ErrorType.INVALID_ARGUMENT, message=str(error))
+        results.add(ResourceCreationResult(ResourceCreationStatus.FAILED, resource, request_error))
 
 
 def _raise_error() -> None:
