@@ -47,11 +47,29 @@ class TestCreateEntityMappingFromCsv(unittest.TestCase):
             "Arguments not as expected",
         )
 
-        # third call - entity = "entityType/company" ticker = "M" / market = "XNYS"
+        # third call - entity = "entityType/company" ticker = "C" / market = "XASE"
         call_args = client.entity_api.search_for_entities.call_args_list[2]
         _, kwargs = call_args
         self.assertEqual(
+            {"entity_type": "entityTypes/company", "mic": "XASE", "ticker": "C"},
+            kwargs,
+            "Arguments not as expected",
+        )
+
+        # fourth call - entity = "entityType/company" ticker = "M" / market = "XNYS"
+        call_args = client.entity_api.search_for_entities.call_args_list[3]
+        _, kwargs = call_args
+        self.assertEqual(
             {"entity_type": "entityTypes/company", "mic": "XNYS", "ticker": "M"},
+            kwargs,
+            "Arguments not as expected",
+        )
+
+        # fifth call - entity = "entityType/company" ticker = "001" / market = "XHKG"
+        call_args = client.entity_api.search_for_entities.call_args_list[4]
+        _, kwargs = call_args
+        self.assertEqual(
+            {"entity_type": "entityTypes/company", "mic": "XHKG", "ticker": "001"},
             kwargs,
             "Arguments not as expected",
         )
