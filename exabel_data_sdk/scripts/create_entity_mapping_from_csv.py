@@ -6,6 +6,7 @@ import pandas as pd
 
 from exabel_data_sdk import ExabelClient
 from exabel_data_sdk.scripts.base_script import BaseScript
+from exabel_data_sdk.services.csv_reader import CsvReader
 
 
 class CreateEntityMappingFromCsv(BaseScript):
@@ -215,14 +216,16 @@ class CreateEntityMappingFromCsv(BaseScript):
             market - the market to translate to list of MICs
         """
         if market == "US":
-            markets = ["XNAS", "XNYS"]
+            markets = ["XNAS", "XNYS", "XASE"]
         else:
             markets = [market]
         return markets
 
     def run_script(self, client: ExabelClient, args: argparse.Namespace) -> None:
 
-        mapping_input = pd.read_csv(args.filename_input, header=0, sep=args.sep)
+        mapping_input = CsvReader.read_csv(
+            args.filename_input, separator=args.sep, string_columns=[0], keep_default_na=True
+        )
         mapping_input = mapping_input.loc[0:, mapping_input.columns].drop_duplicates()
 
         try:
