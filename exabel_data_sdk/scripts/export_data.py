@@ -34,6 +34,12 @@ class ExportData:
             help="The format",
         )
         parser.add_argument(
+            "--reauthenticate",
+            action="store_true",
+            type=bool,
+            help="Reauthenticate the user, for example to login to a different tenant",
+        )
+        parser.add_argument(
             "--backend",
             required=False,
             type=str,
@@ -55,7 +61,7 @@ class ExportData:
     def run(self) -> None:
         """Download data from the Exabel API and store it to file."""
         args = self.parse_arguments()
-        login = UserLogin(args.auth0, args.client_id, args.backend)
+        login = UserLogin(args.auth0, args.client_id, args.backend, args.reauthenticate)
         headers = login.get_auth_headers()
         export_api = ExportApi(headers)
         content = export_api.run_query_bytes(query=args.query, file_format=args.format)

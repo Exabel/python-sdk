@@ -18,8 +18,9 @@ class UserLogin:
     """
     Class for interactive programs that need to log in to the API as a user.
 
-    Stores a refresh token in '~/.exabel'. If the token is missing or expired, the script starts a
-    local web server and opens the user’s web browser to log in to Auth0 to get a refresh token.
+    Stores a refresh token in '~/.exabel'. If the token is missing or expired, or
+    `reauthenticate` is set, the script starts a local web server and opens the user’s
+    web browser to log in to Auth0 to get a refresh token.
 
     Get access token (to be used as “Bearer” authentication):
     login.log_in()
@@ -31,6 +32,7 @@ class UserLogin:
         auth0: str = "auth.exabel.com",
         client_id: str = "6OoAPIEgqz1CQokkBuwtBcYKgNiLKsMF",
         backend: str = "endpoints.exabel.com",
+        reauthenticate: bool = False,
     ):
         """
         All of the arguments (auth0, client_id and backend) are only for internal engineering
@@ -46,6 +48,7 @@ class UserLogin:
         self.state = ""
         self.expires = datetime.utcnow()
         self.callback_received = threading.Event()
+        self.reauthenticate = reauthenticate
 
     def start_http_server(self) -> HTTPServer:
         """Start a local web server."""
@@ -81,7 +84,8 @@ class UserLogin:
 
     def get_access_token(self) -> bool:
         """Get an access token from Auth0 using a refresh token."""
-        if self.refresh_token == "":
+        if self.refresh_token == "" or self.reauthenticate:
+            self.reauthenticate = False
             return False
 
         url = f"https://{self.auth0}/oauth/token"

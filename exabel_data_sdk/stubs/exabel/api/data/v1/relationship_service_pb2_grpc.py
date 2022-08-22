@@ -65,8 +65,9 @@ class RelationshipServiceServicer(object):
         raise NotImplementedError('Method not implemented!')
 
     def DeleteRelationshipType(self, request, context):
-        """Deletes one relationship type. A relationship type cannot be deleted if
-        there exist relationships having that type.
+        """Deletes one relationship type.
+
+        A relationship type cannot be deleted if there exist relationships having that type.
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -74,6 +75,8 @@ class RelationshipServiceServicer(object):
 
     def ListRelationships(self, request, context):
         """Lists relationship for a given entity.
+
+        At least one of from_entity and to_entity must be provided.
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
