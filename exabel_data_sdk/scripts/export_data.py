@@ -36,7 +36,6 @@ class ExportData:
         parser.add_argument(
             "--reauthenticate",
             action="store_true",
-            type=bool,
             help="Reauthenticate the user, for example to login to a different tenant",
         )
         parser.add_argument(
