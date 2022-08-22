@@ -94,6 +94,7 @@ def to_entity_resource_names(
     identifiers: pd.Series,
     namespace: str = None,
     entity_mapping: Mapping[str, Mapping[str, str]] = None,
+    check_entity_types: bool = True,
 ) -> EntityResourceNames:
     """
     Turns the given identifiers into entity resource names.
@@ -235,7 +236,7 @@ def to_entity_resource_names(
         read_only_entity_type_names = [
             entity_type.name for entity_type in entity_types if entity_type.read_only
         ]
-        if not entity_type:
+        if check_entity_types and not entity_type:
             message = f"Failure: Did not find entity type {entity_type_name}"
             logger.error(message)
             logger.error("Available entity types are:")
