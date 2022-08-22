@@ -7,6 +7,7 @@ _OPTIONAL_DEPENDENCIES = {
     "snowflake": "snowflake-connector-python",
     "snowflake.sqlalchemy": "snowflake-sqlalchemy",
     "sqlalchemy": "sqlalchemy",
+    "openpyxl": "openpyxl",
 }
 
 
