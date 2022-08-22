@@ -1,7 +1,12 @@
 import unittest
 
 from exabel_data_sdk.services.csv_writer import CsvWriter
-from exabel_data_sdk.services.file_writer_provider import FULL_CSV_EXTENSIONS, FileWriterProvider
+from exabel_data_sdk.services.excel_writer import ExcelWriter
+from exabel_data_sdk.services.file_writer_provider import (
+    EXCEL_EXTENSIONS,
+    FULL_CSV_EXTENSIONS,
+    FileWriterProvider,
+)
 
 
 class TestFileWriterProvider(unittest.TestCase):
@@ -23,6 +28,10 @@ class TestFileWriterProvider(unittest.TestCase):
     def test_provide_csv_writer(self):
         for extension in FULL_CSV_EXTENSIONS:
             self.assertEqual(CsvWriter, FileWriterProvider.get_file_writer(f"test{extension}"))
+
+    def test_provide_excel_writer(self):
+        for extension in EXCEL_EXTENSIONS:
+            self.assertEqual(ExcelWriter, FileWriterProvider.get_file_writer(f"test{extension}"))
 
     def test_provide_file_writer_should_fail(self):
         self.assertRaises(ValueError, FileWriterProvider.get_file_writer, "test.a")
