@@ -56,7 +56,7 @@ jobs:
     - name: Install SDK from cache
       run: |
         PACKAGE=$(ls ./dist/ | grep -P .+\.whl$)
-        pip install ./dist/$PACKAGE
+        pip install ./dist/$PACKAGE --no-cache-dir
 
     - name: Run unit tests
       run: |
