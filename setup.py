@@ -33,12 +33,11 @@ setuptools.setup(
     packages=setuptools.find_packages(),
     install_requires=[
         'dataclasses == 0.8; python_version <= "3.6"',
-        "google-api-core==1.31.2",
-        "googleapis-common-protos",
+        "google-api-core>1.31.3",
+        "googleapis-common-protos>=1.56.0",
         "grpcio",
         "pandas",
-        # hotfix for protobuf raising exception on 3.21.0+
-        "protobuf<3.21.0",
+        "protobuf<4",
         "requests",
     ],
     extras_require={
