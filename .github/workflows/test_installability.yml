@@ -1,0 +1,32 @@
+name: Test installability and usability of Python Package
+
+on:
+  schedule:
+    # Run on Fridays at 05:00 UTC
+    - cron: '0 5 * * 5'
+
+jobs:
+  test-package:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.6", "3.7", "3.8", "3.9"]
+      fail-fast: true
+
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.python-version }}
+
+    - name: Install the current SDK version from PyPI
+      run: |
+        VERSION=$(<VERSION)
+        pip install exabel-data-sdk==$VERSION --no-cache-dir
+
+    - name: Run unit tests
+      run: |
+        mkdir -p tests/exabel_data_sdk
+        cp -r ./exabel_data_sdk/tests ./tests/exabel_data_sdk/
+        cd ./tests/
+        python -m unittest discover -s ./exabel_data_sdk/tests
