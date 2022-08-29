@@ -85,10 +85,18 @@ jobs:
         user: __token__
         password: ${{ secrets.PYPI_API_TOKEN }}
 
+    - name: Set success status
+      if: needs.test-package.result == 'success'
+      run: |
+        echo "ACTION_STATUS=success" >> $GITHUB_ENV
+    - name: Set failure status
+      if: needs.test-package.result != 'success' || failure() || cancelled()
+      run: |
+        echo "ACTION_STATUS=failure" >> $GITHUB_ENV
     - name: Post to Slack
       if: always()
       uses: ravsamhq/notify-slack-action@v2
       with:
-        status: ${{ job.status && needs.test-package.result == 'success' }}
+        status: ${{ env.ACTION_STATUS }}
       env:
         SLACK_WEBHOOK_URL: ${{ secrets.NOTIFY_SLACK_ACTION_WEBHOOK_URL }}
