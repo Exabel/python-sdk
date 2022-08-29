@@ -30,3 +30,11 @@ jobs:
         cp -r ./exabel_data_sdk/tests ./tests/exabel_data_sdk/
         cd ./tests/
         python -m unittest discover -s ./exabel_data_sdk/tests
+
+    - name: Post to Slack
+      uses: ravsamhq/notify-slack-action@v2
+      if: always()
+      with:
+        status: ${{ job.status }}
+      env:
+        SLACK_WEBHOOK_URL: ${{ secrets.NOTIFY_SLACK_ACTION_WEBHOOK_URL }}
