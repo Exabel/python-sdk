@@ -66,6 +66,7 @@ jobs:
         python -m unittest discover -s ./exabel_data_sdk/tests
 
   publish-package-to-pypi:
+    if: always()
     needs: test-package
     runs-on: ubuntu-latest
 
@@ -83,8 +84,8 @@ jobs:
         password: ${{ secrets.PYPI_API_TOKEN }}
 
     - name: Post to Slack
-      uses: ravsamhq/notify-slack-action@v2
       if: always()
+      uses: ravsamhq/notify-slack-action@v2
       with:
         status: ${{ job.status }}
       env:
