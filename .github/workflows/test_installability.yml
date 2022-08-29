@@ -33,7 +33,7 @@ jobs:
 
     - name: Post to Slack
       uses: ravsamhq/notify-slack-action@v2
-      if: always()
+      if: failure()
       with:
         status: ${{ job.status }}
       env:
