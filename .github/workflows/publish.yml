@@ -72,12 +72,14 @@ jobs:
 
     steps:
     - name: Recover cache
+      if: needs.test-package.result == 'success'
       uses: actions/cache@v2
       with:
         path: ./dist
         key: build-cache
 
     - name: Publish package to PyPI
+      if: needs.test-package.result == 'success'
       uses: pypa/gh-action-pypi-publish@release/v1
       with:
         user: __token__
@@ -87,6 +89,6 @@ jobs:
       if: always()
       uses: ravsamhq/notify-slack-action@v2
       with:
-        status: ${{ job.status }}
+        status: ${{ job.status && needs.test-package.result == 'success' }}
       env:
         SLACK_WEBHOOK_URL: ${{ secrets.NOTIFY_SLACK_ACTION_WEBHOOK_URL }}
