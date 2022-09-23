@@ -2,11 +2,8 @@ import unittest
 
 from exabel_data_sdk.services.csv_writer import CsvWriter
 from exabel_data_sdk.services.excel_writer import ExcelWriter
-from exabel_data_sdk.services.file_writer_provider import (
-    EXCEL_EXTENSIONS,
-    FULL_CSV_EXTENSIONS,
-    FileWriterProvider,
-)
+from exabel_data_sdk.services.file_constants import EXCEL_EXTENSIONS, FULL_CSV_EXTENSIONS
+from exabel_data_sdk.services.file_writer_provider import FileWriterProvider
 
 
 class TestFileWriterProvider(unittest.TestCase):

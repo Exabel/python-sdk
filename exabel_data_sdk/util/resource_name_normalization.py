@@ -1,11 +1,13 @@
 import logging
 import re
 from collections import deque
-from typing import Deque, Iterator, List, Mapping, MutableMapping, NamedTuple, Sequence
+from dataclasses import dataclass
+from typing import Deque, Iterator, List, Mapping, MutableMapping, Sequence
 
 import pandas as pd
 
 from exabel_data_sdk.client.api.entity_api import EntityApi
+from exabel_data_sdk.client.api.search_service import COMPANY_SEARCH_TERM_FIELDS
 from exabel_data_sdk.stubs.exabel.api.data.v1.all_pb2 import SearchTerm
 from exabel_data_sdk.util.batcher import batcher
 
@@ -37,6 +39,15 @@ def normalize_resource_name(name: str) -> str:
     return name
 
 
+def remove_prefix(name: str, prefix: str) -> str:
+    """
+    Remove the given prefix from the identifier, if it is there.
+    """
+    if name.startswith(prefix):
+        return name[len(prefix) :]
+    return name
+
+
 def _assert_no_collision(mapping: Mapping[str, str]) -> None:
     """
     Verify that the normalization of identifiers hasn't introduced any name collisions.
@@ -62,14 +73,40 @@ def _assert_no_collision(mapping: Mapping[str, str]) -> None:
     raise ValueError("Resource name collisions detected")
 
 
-class EntityResourceNames(NamedTuple):
+@dataclass
+class EntitySearchResultWarning:
+    """A warning that is generated when searching for an entity."""
+
+    field: str
+    query: str
+    matched_entity_names: Sequence[str]
+
+    @property
+    def _pretty_terms(self) -> str:
+        return f"{{'{self.field}': '{self.query}'}}"
+
+    def __str__(self) -> str:
+        if not self.matched_entity_names:
+            return f"Did not find any match for {self._pretty_terms}"
+        if len(self.matched_entity_names) > 1:
+            return (
+                f"Found {len(self.matched_entity_names)} matches for {self._pretty_terms}:\n"
+                f"\t{self.matched_entity_names}"
+            )
+        return f"Unknown LookupWarning for search term: {self._pretty_terms}"
+
+
+@dataclass
+class EntityResourceNames:
     """
     Identified resource names along with warnings regarding entities that could not be uniquely
     identified.
     """
 
     names: pd.Series
-    warnings: Sequence[str]
+    warnings: Sequence[EntitySearchResultWarning]
+    mapping: Mapping[str, str]
+    identifier_type: str
 
 
 def _validate_mic_ticker(mic_ticker: str) -> bool:
@@ -164,11 +201,11 @@ def to_entity_resource_names(
               be mapped is set to None
             * a sequence of warnings for entities that could not be uniquely identified
     """
-    warnings: List[str] = []
+    warnings: List[EntitySearchResultWarning] = []
     name = identifiers.name
     if name in ("entity", "entity_from", "entity_to"):
         # Already resource identifiers, nothing to be done
-        return EntityResourceNames(identifiers, warnings)
+        return EntityResourceNames(identifiers, warnings, {}, name)
 
     unique_ids = identifiers.unique().tolist()
     mapping: MutableMapping[str, str] = {}
@@ -176,14 +213,7 @@ def to_entity_resource_names(
         mapping.update(entity_mapping[name])
         unique_ids = [unique_id for unique_id in unique_ids if unique_id not in mapping]
 
-    if name in (
-        "isin",
-        "factset_identifier",
-        "bloomberg_symbol",
-        "bloomberg_ticker",
-        "mic:ticker",
-        "figi",
-    ):
+    if name in COMPANY_SEARCH_TERM_FIELDS:
         # A company identifier
         logger.info("Looking up %d %ss...", len(unique_ids), name)
         # Skip empty identifiers
@@ -213,15 +243,12 @@ def to_entity_resource_names(
             )
             for identifier, search_result in zip(identifier_batch, search_results):
                 entities = search_result.entities
-                pretty_terms = {
-                    search_term.field: search_term.query for search_term in search_result.terms
-                }
-                if not entities:
-                    warning = f"Did not find any match for {pretty_terms}"
-                    logger.warning(warning)
-                    warnings.append(warning)
-                elif len(entities) > 1:
-                    warning = f"Found {len(entities)} matches for {pretty_terms}:\n  {entities}"
+                if not entities or len(entities) > 1:
+                    warning = EntitySearchResultWarning(
+                        field=name,
+                        query=identifier,
+                        matched_entity_names=[entity.name for entity in entities],
+                    )
                     logger.warning(warning)
                     warnings.append(warning)
                 else:
@@ -255,7 +282,8 @@ def to_entity_resource_names(
         mapping.update(
             {
                 identifier: (
-                    f"{entity_type_name}/entities/{prefix}{normalize_resource_name(identifier)}"
+                    f"{entity_type_name}/entities/"
+                    f"{prefix}{normalize_resource_name(remove_prefix(identifier, prefix))}"
                 )
                 for identifier in unique_ids
                 if identifier
@@ -265,7 +293,7 @@ def to_entity_resource_names(
 
     result = identifiers.map(mapping)
     result.name = "entity"
-    return EntityResourceNames(result, warnings)
+    return EntityResourceNames(result, warnings, mapping, name)
 
 
 def validate_signal_name(name: str) -> None:

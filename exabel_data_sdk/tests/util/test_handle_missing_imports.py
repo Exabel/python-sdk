@@ -10,6 +10,24 @@ class TestHandleMissingImports(unittest.TestCase):
                 import exabel_data_sdk.might_not_exist  # pylint: disable=unused-import
         self.assertTrue(str(cm.warning).startswith("Module 'exabel_data_sdk.might_not_exist'"))
 
+    def test_handle_missing_imports_custom_warning(self):
+        with self.assertWarns(UserWarning) as cm:
+            with handle_missing_imports(
+                {"exabel_data_sdk.might_not_exist": "library-name"}, warning="custom warning"
+            ):
+                import exabel_data_sdk.might_not_exist  # pylint: disable=unused-import
+        self.assertTrue(str(cm.warning).startswith("custom warning"))
+
+    def test_handle_missing_imports_reraise(self):
+        with self.assertRaises(ImportError) as cm:
+            with handle_missing_imports(
+                {"exabel_data_sdk.might_not_exist": "library-name"},
+                warning="custom exception",
+                reraise=True,
+            ):
+                import exabel_data_sdk.might_not_exist  # pylint: disable=unused-import
+        self.assertTrue(str(cm.exception).startswith("custom exception"))
+
     def test_handle_missing_imports_should_fail(self):
         with self.assertRaises(ImportError) as cm:
             with handle_missing_imports({}):

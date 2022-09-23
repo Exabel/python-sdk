@@ -5,7 +5,8 @@ from .....exabel.api.data.v1 import relationship_service_pb2 as exabel_dot_api_d
 from google.protobuf import empty_pb2 as google_dot_protobuf_dot_empty__pb2
 
 class RelationshipServiceStub(object):
-    """Manages relationship types and relationships in the Data API.
+    """Service for managing relationship types and relationships. See the User Guide for more
+    information about relationship types and relationships.
     """
 
     def __init__(self, channel):
@@ -26,11 +27,15 @@ class RelationshipServiceStub(object):
         self.DeleteRelationship = channel.unary_unary('/exabel.api.data.v1.RelationshipService/DeleteRelationship', request_serializer=exabel_dot_api_dot_data_dot_v1_dot_relationship__service__pb2.DeleteRelationshipRequest.SerializeToString, response_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString)
 
 class RelationshipServiceServicer(object):
-    """Manages relationship types and relationships in the Data API.
+    """Service for managing relationship types and relationships. See the User Guide for more
+    information about relationship types and relationships.
     """
 
     def ListRelationshipTypes(self, request, context):
         """List all relationship types from a common catalog.
+
+        Lists all relationship types available to your customer, including those created by you, in
+        the global catalog, and from data sets you are subscribed to.
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -45,9 +50,6 @@ class RelationshipServiceServicer(object):
 
     def CreateRelationshipType(self, request, context):
         """Creates one relationship type and returns it.
-
-        A relationship type can explicitly be created using this method, or it can implicitly be created
-        by the update method if its `allow_missing` parameter is set to true.
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -56,9 +58,10 @@ class RelationshipServiceServicer(object):
     def UpdateRelationshipType(self, request, context):
         """Updates one relationship type and returns it.
 
-        This method can also be used to create a relationship type, provided `allow_missing` is set to
-        `true`. When this method is used to create a relationship type, the `update_mask` parameter is
-        ignored.
+        This can also be used to create a relationship type by setting `allow_missing` to `true`.
+
+        Note that modifying the `is_ownership` property may be a slow operation, as all individual
+        relationships of this type will have to be updated.
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -67,7 +70,8 @@ class RelationshipServiceServicer(object):
     def DeleteRelationshipType(self, request, context):
         """Deletes one relationship type.
 
-        A relationship type cannot be deleted if there exist relationships having that type.
+        This can only be performed on relationship types with no relationships. You should delete
+        relationships before deleting their entity type.
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -76,7 +80,7 @@ class RelationshipServiceServicer(object):
     def ListRelationships(self, request, context):
         """Lists relationship for a given entity.
 
-        At least one of from_entity and to_entity must be provided.
+        At least one of `from_entity` and `to_entity` must be specified.
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -91,9 +95,6 @@ class RelationshipServiceServicer(object):
 
     def CreateRelationship(self, request, context):
         """Creates one relationship and returns it.
-
-        A relationship can explicitly be created using this method, or it can implicitly be created by the
-        update method if its `allow_missing` parameter is set to true.
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -101,6 +102,8 @@ class RelationshipServiceServicer(object):
 
     def UpdateRelationship(self, request, context):
         """Updates one relationship and returns it.
+
+        This can also be used to create a relationship by setting `allow_missing` to `true`.
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -119,7 +122,8 @@ def add_RelationshipServiceServicer_to_server(servicer, server):
     server.add_generic_rpc_handlers((generic_handler,))
 
 class RelationshipService(object):
-    """Manages relationship types and relationships in the Data API.
+    """Service for managing relationship types and relationships. See the User Guide for more
+    information about relationship types and relationships.
     """
 
     @staticmethod

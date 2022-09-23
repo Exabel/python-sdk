@@ -14,7 +14,7 @@ class TestCsvReader(unittest.TestCase):
             with open(file, "w", encoding="utf-8") as f:
                 for line in content:
                     f.write(",".join(map(str, line)) + "\n")
-            return CsvReader.read_csv(
+            return CsvReader.read_file(
                 file, separator=",", string_columns=string_columns, keep_default_na=False
             )
 

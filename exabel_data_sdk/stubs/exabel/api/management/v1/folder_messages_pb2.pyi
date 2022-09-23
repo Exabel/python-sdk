@@ -29,6 +29,7 @@ class _FolderItemType(google___protobuf___internal___enum_type_wrapper____EnumTy
     DRILL_DOWN = typing___cast(FolderItemTypeValue, 5)
     TAG = typing___cast(FolderItemTypeValue, 6)
     SCREEN = typing___cast(FolderItemTypeValue, 7)
+    FINANCIAL_MODEL = typing___cast(FolderItemTypeValue, 8)
 FOLDER_ITEM_TYPE_INVALID = typing___cast(FolderItemTypeValue, 0)
 DERIVED_SIGNAL = typing___cast(FolderItemTypeValue, 1)
 PREDICTION_MODEL = typing___cast(FolderItemTypeValue, 2)
@@ -37,6 +38,7 @@ DASHBOARD = typing___cast(FolderItemTypeValue, 4)
 DRILL_DOWN = typing___cast(FolderItemTypeValue, 5)
 TAG = typing___cast(FolderItemTypeValue, 6)
 SCREEN = typing___cast(FolderItemTypeValue, 7)
+FINANCIAL_MODEL = typing___cast(FolderItemTypeValue, 8)
 
 class Folder(google___protobuf___message___Message):
     DESCRIPTOR: google___protobuf___descriptor___Descriptor = ...

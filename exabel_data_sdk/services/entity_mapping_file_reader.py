@@ -3,9 +3,7 @@ from typing import Mapping, Optional
 
 import pandas as pd
 
-from exabel_data_sdk.services.csv_exception import CsvLoadingException
-
-# pylint: disable=unsubscriptable-object
+from exabel_data_sdk.services.file_loading_exception import FileLoadingException
 
 
 class EntityMappingFileReader:
@@ -25,7 +23,7 @@ class EntityMappingFileReader:
             return EntityMappingFileReader._read_json(filename)
         if filename.endswith(".csv"):
             return EntityMappingFileReader._read_csv(filename, separator=separator)
-        raise CsvLoadingException(
+        raise FileLoadingException(
             "Expected the entity mapping file to be a *.json or *.csv file, "
             f"but got: '{filename}'."
         )
@@ -36,13 +34,13 @@ class EntityMappingFileReader:
             mappings = json.load(f)
         # validate the mapping is a dictionary (and not a list)
         if not isinstance(mappings, dict):
-            raise CsvLoadingException(
+            raise FileLoadingException(
                 "Expected entity mapping file to be a JSON key-value object, "
                 f"but got: {mappings}"
             )
         for value in mappings.values():
             if not isinstance(value, dict):
-                raise CsvLoadingException(
+                raise FileLoadingException(
                     "Expected all values of the JSON object to be objects as well, "
                     f"but got: {value}"
                 )
@@ -50,7 +48,7 @@ class EntityMappingFileReader:
         for mapping in mappings.values():
             for key, value in mapping.items():
                 if not isinstance(key, str) or not isinstance(value, str):
-                    raise CsvLoadingException(
+                    raise FileLoadingException(
                         "Expected the key-value pairs in the entity mapping JSON file to be "
                         f"str-str mappings, but got:\n"
                         f"Key ({type(key)}): {key}\n"
@@ -69,7 +67,7 @@ class EntityMappingFileReader:
             if f"{identifier}_entity" not in entity_columns
         ]
         if invalid_identifiers:
-            raise CsvLoadingException(
+            raise FileLoadingException(
                 "The entity mapping CSV file is missing one or more entity columns: "
                 f"{[identifier + '_entity' for identifier in invalid_identifiers]}"
             )
@@ -79,7 +77,7 @@ class EntityMappingFileReader:
             if entity[: -len("_entity")] not in identifier_columns
         ]
         if invalid_entities:
-            raise CsvLoadingException(
+            raise FileLoadingException(
                 "The entity mapping CSV file is missing one or more identifier columns: "
                 f"{[entity[:-len('_entity')] for entity in invalid_entities]}"
             )
@@ -88,6 +86,8 @@ class EntityMappingFileReader:
         for identifier in identifier_columns:
             mappings[identifier] = {
                 getattr(row, identifier): getattr(row, f"{identifier}_entity")
+                # pylint: disable=unsubscriptable-object
                 for row in csv_data_frame[~csv_data_frame[identifier].isna()].itertuples()
+                # pylint: enable=unsubscriptable-object
             }
         return mappings

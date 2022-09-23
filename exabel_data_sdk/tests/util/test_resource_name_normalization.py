@@ -37,7 +37,7 @@ class TestResourceNameNormalization(unittest.TestCase):
             name="entity",
         )
         entity_api = mock.create_autospec(EntityApi(ClientConfig(api_key="123"), use_json=True))
-        result, _ = to_entity_resource_names(entity_api, data, namespace="acme")
+        result = to_entity_resource_names(entity_api, data, namespace="acme").names
         pd.testing.assert_series_equal(expected, result)
 
     def test_global_entity_type_mapping(self):
@@ -55,7 +55,7 @@ class TestResourceNameNormalization(unittest.TestCase):
         entity_api.list_entity_types.side_effect = [
             [EntityType("entityTypes/country", "Countries", "Countries", True)]
         ]
-        result, _ = to_entity_resource_names(entity_api, data, namespace="acme")
+        result = to_entity_resource_names(entity_api, data, namespace="acme").names
         pd.testing.assert_series_equal(expected, result)
 
     def test_validate_mic_ticker(self):
@@ -96,7 +96,7 @@ class TestResourceNameNormalization(unittest.TestCase):
                 ],
             ),
         ]
-        result, _ = to_entity_resource_names(entity_api, data, namespace="acme")
+        result = to_entity_resource_names(entity_api, data, namespace="acme").names
         call_args_list = entity_api.search.entities_by_terms.call_args_list
         self.assertEqual(1, len(call_args_list))
 
@@ -136,9 +136,9 @@ class TestResourceNameNormalization(unittest.TestCase):
                 ],
             ),
         ]
-        result, _ = to_entity_resource_names(
+        result = to_entity_resource_names(
             entity_api, data, namespace="acme", entity_mapping=entity_mapping
-        )
+        ).names
         call_args_list = entity_api.search.entities_by_terms.call_args_list
         self.assertEqual(1, len(call_args_list))
         self.assertEqual(
@@ -187,15 +187,15 @@ class TestResourceNameNormalization(unittest.TestCase):
             name="entity",
         )
         entity_api = mock.create_autospec(EntityApi(ClientConfig(api_key="123"), use_json=True))
-        company_result, _ = to_entity_resource_names(
+        company_result = to_entity_resource_names(
             entity_api, company_data, namespace="acme", entity_mapping=entity_mapping
-        )
+        ).names
         self.assertFalse(entity_api.search_for_entities.called)
         pd.testing.assert_series_equal(expected_companies, company_result)
 
-        brand_result, _ = to_entity_resource_names(
+        brand_result = to_entity_resource_names(
             entity_api, brand_data, namespace="acme", entity_mapping=entity_mapping
-        )
+        ).names
         pd.testing.assert_series_equal(expected_brands, brand_result)
 
     def test_micticker_mapping(self):
@@ -266,7 +266,7 @@ class TestResourceNameNormalization(unittest.TestCase):
                 entities=[],
             ),
         ]
-        result, _ = to_entity_resource_names(entity_api, data, namespace="acme")
+        result = to_entity_resource_names(entity_api, data, namespace="acme").names
         pd.testing.assert_series_equal(expected, result)
 
         # Check that the expected searches were performed

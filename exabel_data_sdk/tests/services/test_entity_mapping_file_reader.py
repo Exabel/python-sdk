@@ -1,7 +1,7 @@
 import unittest
 
-from exabel_data_sdk.services.csv_exception import CsvLoadingException
 from exabel_data_sdk.services.entity_mapping_file_reader import EntityMappingFileReader
+from exabel_data_sdk.services.file_loading_exception import FileLoadingException
 
 
 class TestEntityMappingFileReader(unittest.TestCase):
@@ -28,7 +28,7 @@ class TestEntityMappingFileReader(unittest.TestCase):
         )
 
     def test_should_fail_read_entity_mapping_file_invalid_csv(self):
-        with self.assertRaises(CsvLoadingException) as context:
+        with self.assertRaises(FileLoadingException) as context:
             EntityMappingFileReader.read_entity_mapping_file(
                 "./exabel_data_sdk/tests/resources/data/entity_mapping_invalid.csv"
             )
@@ -52,7 +52,7 @@ class TestEntityMappingFileReader(unittest.TestCase):
         ]
 
         for file, expected in zip(files, expected_errors):
-            with self.assertRaises(CsvLoadingException) as context:
+            with self.assertRaises(FileLoadingException) as context:
                 EntityMappingFileReader.read_entity_mapping_file(file)
             self.assertEqual(expected, str(context.exception))
 
@@ -63,7 +63,7 @@ class TestEntityMappingFileReader(unittest.TestCase):
             "./file/does/not/exist/entity_mapping.xlsx",
         ]
         for file in files:
-            with self.assertRaises(CsvLoadingException) as context:
+            with self.assertRaises(FileLoadingException) as context:
                 EntityMappingFileReader.read_entity_mapping_file(file)
             self.assertEqual(
                 "Expected the entity mapping file to be a *.json or *.csv file, "

@@ -2,8 +2,10 @@ import unittest
 
 from exabel_data_sdk.client.api.data_classes.relationship import Relationship
 from exabel_data_sdk.client.exabel_client import ExabelClient
-from exabel_data_sdk.services.csv_exception import CsvLoadingException
+from exabel_data_sdk.services.csv_loading_result import CsvLoadingResult
 from exabel_data_sdk.services.csv_relationship_loader import CsvRelationshipLoader
+from exabel_data_sdk.services.file_loading_exception import FileLoadingException
+from exabel_data_sdk.services.file_loading_result import FileLoadingResult
 from exabel_data_sdk.tests.client.exabel_mock_client import ExabelMockClient
 
 
@@ -79,7 +81,7 @@ class TestCsvRelationshipLoader(unittest.TestCase):
 
     def test_load_relationships_with_non_existent_property(self):
         client: ExabelClient = ExabelMockClient()
-        with self.assertRaises(CsvLoadingException):
+        with self.assertRaises(FileLoadingException):
             CsvRelationshipLoader(client).load_relationships(
                 filename="exabel_data_sdk/tests/resources/data/relationships_with_properties.csv",
                 namespace="test",
@@ -92,7 +94,7 @@ class TestCsvRelationshipLoader(unittest.TestCase):
 
     def test_load_relationships_with_non_existent_relationship_type(self):
         client: ExabelClient = ExabelMockClient()
-        with self.assertRaises(CsvLoadingException):
+        with self.assertRaises(FileLoadingException):
             CsvRelationshipLoader(client).load_relationships(
                 filename="exabel_data_sdk/tests/resources/data/relationships.csv",
                 namespace="test",
@@ -104,7 +106,7 @@ class TestCsvRelationshipLoader(unittest.TestCase):
 
     def test_load_relationships_with_existent_relationship_type(self):
         client: ExabelClient = ExabelMockClient()
-        CsvRelationshipLoader(client).load_relationships(
+        result = CsvRelationshipLoader(client).load_relationships(
             filename="exabel_data_sdk/tests/resources/data/relationships.csv",
             namespace="test",
             relationship_type="HAS_BRAND",
@@ -128,10 +130,12 @@ class TestCsvRelationshipLoader(unittest.TestCase):
         ]
         actual_relationships = client.relationship_api.list_relationships().results
         self.assertCountEqual(expected_relationships, actual_relationships)
+        self.assertIsInstance(result, FileLoadingResult)
+        self.assertIsInstance(result, CsvLoadingResult)
 
     def test_load_relationships_only_entity_from_column_specified(self):
         client: ExabelClient = ExabelMockClient()
-        with self.assertRaises(CsvLoadingException) as exception_context:
+        with self.assertRaises(FileLoadingException) as exception_context:
             CsvRelationshipLoader(client).load_relationships(
                 filename="exabel_data_sdk/tests/resources/data/relationships.csv",
                 namespace="test",
@@ -147,7 +151,7 @@ class TestCsvRelationshipLoader(unittest.TestCase):
 
     def test_load_relationships_only_entity_to_column_specified(self):
         client: ExabelClient = ExabelMockClient()
-        with self.assertRaises(CsvLoadingException) as exception_context:
+        with self.assertRaises(FileLoadingException) as exception_context:
             CsvRelationshipLoader(client).load_relationships(
                 filename="exabel_data_sdk/tests/resources/data/relationships.csv",
                 namespace="test",

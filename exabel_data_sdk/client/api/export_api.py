@@ -36,6 +36,12 @@ class ExportApi:
         self._auth_headers = auth_headers
         self._backend = backend
 
+    @staticmethod
+    def from_api_key(api_key: str, use_test_backend: bool = False) -> "ExportApi":
+        """Create an `ExportApi` from an API key."""
+        backend = "export.api-test.exabel.com" if use_test_backend else "export.api.exabel.com"
+        return ExportApi(auth_headers={"x-api-key": api_key}, backend=backend)
+
     def run_query_bytes(self, query: Union[str, Query], file_format: str) -> bytes:
         """
         Run an export data query, and returns a byte string with the file in the requested format.

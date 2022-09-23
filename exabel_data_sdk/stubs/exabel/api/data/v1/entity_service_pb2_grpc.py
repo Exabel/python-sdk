@@ -5,7 +5,8 @@ from .....exabel.api.data.v1 import entity_service_pb2 as exabel_dot_api_dot_dat
 from google.protobuf import empty_pb2 as google_dot_protobuf_dot_empty__pb2
 
 class EntityServiceStub(object):
-    """Manages entity types and entities in the Data API.
+    """Service for managing entity types and entities. See the User Guide for more information about
+    entity types and entities.
     """
 
     def __init__(self, channel):
@@ -28,13 +29,15 @@ class EntityServiceStub(object):
         self.SearchEntities = channel.unary_unary('/exabel.api.data.v1.EntityService/SearchEntities', request_serializer=exabel_dot_api_dot_data_dot_v1_dot_entity__service__pb2.SearchEntitiesRequest.SerializeToString, response_deserializer=exabel_dot_api_dot_data_dot_v1_dot_entity__service__pb2.SearchEntitiesResponse.FromString)
 
 class EntityServiceServicer(object):
-    """Manages entity types and entities in the Data API.
+    """Service for managing entity types and entities. See the User Guide for more information about
+    entity types and entities.
     """
 
     def ListEntityTypes(self, request, context):
         """Lists all known entity types.
 
-        Retrieves the entity type catalogue.
+        Lists all entity types available to your customer, including those created by you, in the
+        global catalog, and from data sets you are subscribed to.
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -49,9 +52,6 @@ class EntityServiceServicer(object):
 
     def CreateEntityType(self, request, context):
         """Creates one entity type and returns it.
-
-        An entity can explicitly be created using this method, or it can implicitly be created by the
-        update method if its `allow_missing` parameter is set to true.
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -59,6 +59,8 @@ class EntityServiceServicer(object):
 
     def UpdateEntityType(self, request, context):
         """Updates one entity type and returns it.
+
+        This can also be used to create an entity type by setting `allow_missing` to `true`.
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -67,7 +69,8 @@ class EntityServiceServicer(object):
     def DeleteEntityType(self, request, context):
         """Deletes one entity type.
 
-        This can only be performed on types without any entities.
+        This can only be performed on entity types with no entities. You should delete entities before
+        deleting their entity type.
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -76,7 +79,9 @@ class EntityServiceServicer(object):
     def ListEntities(self, request, context):
         """Lists all entities of a given entity type.
 
-        Some entity types are too large and cannot be listed. SearchEntities can be used for those instead.
+        List all entities of a given entity type.
+        Some entity types are too large to be listed (company, regional, security, listing) - use the
+        Search method instead.
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -85,10 +90,10 @@ class EntityServiceServicer(object):
     def DeleteEntities(self, request, context):
         """Deletes entities.
 
-        Deletes all entities of a given entity type (and their relationships). Note
-        that the 'confirm' field must be set for the operation to succeed. Only
-        entities in the current writable namespace(s) are deleted, and the entity
-        type itself is not deleted.
+        Deletes ***all*** entities of a given entity type, and their relationships and time series.
+        This is useful for cleaning up erroneous data imports and data that is no longer needed.
+        Note that the `confirm` field must be set to `true`. Only entities in your namespace(s) are
+        deleted, and the entity type itself is *not* deleted.
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -111,8 +116,7 @@ class EntityServiceServicer(object):
     def UpdateEntity(self, request, context):
         """Updates one entity and returns it.
 
-        This method can also be used to create an entity, provided `allow_missing` is set to `true`.
-        When this method is used to create an entity, the `update_mask` parameter is ignored.
+        This can also be used to create an entity by setting `allow_missing` to `true`.
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -121,7 +125,7 @@ class EntityServiceServicer(object):
     def DeleteEntity(self, request, context):
         """Deletes one entity.
 
-        **All** relationships and time series for this entity will also be deleted.
+        This will delete ***all*** relationships and time series for the entity.
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -130,32 +134,29 @@ class EntityServiceServicer(object):
     def SearchEntities(self, request, context):
         """Search for entities.
 
-        Currently only companies, securities and listings can be searched.
+        Currently, only companies, securities and listings can be searched.
 
-        When multiple terms are present, each search is performed individually, with the results of each
-        query put into one `SearchResult`.
+        If multiple search terms are present, each search is performed individually, with results
+        returned in separate `SearchResult` objects.
 
-        An exception to the above are the `MIC` and `ticker` fields, which must come in pairs, with
-        `MIC` immediately before `ticker`. One such pair is treated as one search query.
+        Companies may be searched by any of the following fields:
+        * `isin` (International Securities Identification Number)
+        * `mic` (Market Identifier Code) and `ticker`
+        * `bloomberg_ticker` (eg `AAPL US`)
+        * `bloomberg_symbol` (eg `AAPL US Equity`)
+        * `figi` (Financial Instruments Global Identifier)
+        * `factset_identifier`: either FactSet entity identifier or FactSet permanent identifier ("FSYM_ID")
+        * `text`
 
-        A search for companies should contain either
-        * an `ISIN` (International Securities Identification Number) field, or
-        * a `MIC` (Market Identifier Code) **and** a `ticker` field, or
-        * a `bloomberg_ticker` or a `bloomberg_symbol` field, or
-        * a `FIGI` (Financial Instruments Global Identifier), or
-        * a `factset_identifier`, either a FactSet entity identifier or a FactSet permanent identifier (also known as "FSYM_ID"), or
-        * a `text` field.
+        `mic` and `ticker` must come in pairs, with `mic` immediately before `ticker`. Each pair is
+        treated as one search query.
 
-        A `text` field is a free text search field, which searches for ISINs, tickers and/or company
-        names. If a search term is sufficiently long, it will also perform a prefix search. A maximum
-        of five companies are returned for each search.
+        The `text` field supports free text search for ISINs, tickers and/or company names. If a
+        search term is sufficiently long, a prefix search will be performed. Up to five companies are
+        returned for each search.
 
-        A search for securities should contain either
-        * an `ISIN` (International Securities Identification Number) field, or
-        * a `MIC` (Market Identifier Code) and a `ticker` field.
-
-        A search for listings should contain
-        * a `MIC` (Market Identifier Code) and a `ticker` field.
+        Securities may be searched by `isin` or `mic`/`ticker`. Listings may be searched by
+        `mic`/`ticker`.
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -167,7 +168,8 @@ def add_EntityServiceServicer_to_server(servicer, server):
     server.add_generic_rpc_handlers((generic_handler,))
 
 class EntityService(object):
-    """Manages entity types and entities in the Data API.
+    """Service for managing entity types and entities. See the User Guide for more information about
+    entity types and entities.
     """
 
     @staticmethod

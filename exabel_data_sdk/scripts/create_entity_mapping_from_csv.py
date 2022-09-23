@@ -223,7 +223,7 @@ class CreateEntityMappingFromCsv(BaseScript):
 
     def run_script(self, client: ExabelClient, args: argparse.Namespace) -> None:
 
-        mapping_input = CsvReader.read_csv(
+        mapping_input = CsvReader.read_file(
             args.filename_input, separator=args.sep, string_columns=[0], keep_default_na=True
         )
         mapping_input = mapping_input.loc[0:, mapping_input.columns].drop_duplicates()
