@@ -5,7 +5,7 @@ from .....exabel.api.data.v1 import time_series_service_pb2 as exabel_dot_api_do
 from google.protobuf import empty_pb2 as google_dot_protobuf_dot_empty__pb2
 
 class TimeSeriesServiceStub(object):
-    """Manages time series in the Data API.
+    """Service for managing time series. See the User Guide for more information about time series.
     """
 
     def __init__(self, channel):
@@ -23,7 +23,7 @@ class TimeSeriesServiceStub(object):
         self.BatchDeleteTimeSeriesPoints = channel.unary_unary('/exabel.api.data.v1.TimeSeriesService/BatchDeleteTimeSeriesPoints', request_serializer=exabel_dot_api_dot_data_dot_v1_dot_time__series__service__pb2.BatchDeleteTimeSeriesPointsRequest.SerializeToString, response_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString)
 
 class TimeSeriesServiceServicer(object):
-    """Manages time series in the Data API.
+    """Service for managing time series. See the User Guide for more information about time series.
     """
 
     def ListTimeSeries(self, request, context):
@@ -38,8 +38,10 @@ class TimeSeriesServiceServicer(object):
     def GetTimeSeries(self, request, context):
         """Gets one time series.
 
-        The known_time (of present) must be formatted according to RFC3339, as specified by
-        https://developers.google.com/protocol-buffers/docs/proto3#json.
+        Use this method to get time series data points.
+
+        *Note*: Exabel only supports processing time series with daily or lower resolution. Timestamps
+        must be RFC 3339 timestamps, normalised to **midnight UTC**, e.g. `2020-01-01T00:00:00Z`.
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -48,12 +50,11 @@ class TimeSeriesServiceServicer(object):
     def CreateTimeSeries(self, request, context):
         """Creates one time series.
 
-        *Note* The Exabel Platform only supports processing time series with daily or lower resolution.
+        *Note*: Exabel only supports processing time series with daily or lower resolution. Timestamps
+        must be RFC 3339 timestamps, normalised to **midnight UTC**, e.g. `2020-01-01T00:00:00Z`.
 
-        Timestamps (including known times) must be normalised to **midnight UTC** (`00:00:00Z`).
-
-        The `view` argument is only used to define which values should be returned to the caller.
-        If this is not set, no values are returned (but all values are still inserted).
+        The optional `view` argument lets you request for time series data points to be returned
+        within a date range. If this is not set, no values are returned.
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -62,7 +63,7 @@ class TimeSeriesServiceServicer(object):
     def UpdateTimeSeries(self, request, context):
         """Updates one time series.
 
-        This method can also be used to create a time series, provided `allowMissing` is set to `true`.
+        This can also be used to create a time series by setting `allow_missing` to `true`.
 
         Updating a time series will usually create a new version of the time series. However, by
         explicitly setting a known time, any version may be changed or updated. If a value already
@@ -79,11 +80,11 @@ class TimeSeriesServiceServicer(object):
         versions. When older versions are updated, it is therefore recommended to perform a full
         backload from this version on.
 
-        *Note* The Exabel Platform only supports processing time series with daily or lower resolution.
-        Timestamps (including known times) must be normalised to **midnight UTC** (`00:00:00Z`).
+        *Note*: Exabel only supports processing time series with daily or lower resolution. Timestamps
+        must be RFC 3339 timestamps, normalised to **midnight UTC**, e.g. `2020-01-01T00:00:00Z`.
 
-        The `view` argument is only used to define which values should be returned to the caller. If
-        this is not set, no values are returned (but all values are still updated).
+        The optional `view` argument lets you request for time series data points to be returned
+        within a date range. If this is not set, no values are returned.
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -92,10 +93,13 @@ class TimeSeriesServiceServicer(object):
     def ImportTimeSeries(self, request, context):
         """Creates or update multiple time series.
 
-        Note that it is possible to use `-` in a parent path as a wild card.
+        Import multiple time series in bulk, by creating new time series or updating existing time
+        series.
 
-        *Note* The Exabel Platform only supports processing time series with daily or lower resolution.
-        Timestamps (including known times) must be normalised to**midnight UTC** (`00:00:00Z`).
+        You may use `-` as a wild card in the path parameters.
+
+        *Note*: Exabel only supports processing time series with daily or lower resolution. Timestamps
+        must be RFC 3339 timestamps, normalised to **midnight UTC**, e.g. `2020-01-01T00:00:00Z`.
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -104,7 +108,10 @@ class TimeSeriesServiceServicer(object):
     def DeleteTimeSeries(self, request, context):
         """Deletes one time series.
 
-        The time series and *all* its points will be deleted.
+        This will delete the time series and ***all*** its data points.
+
+        If you have a "coverage" tag from the Create, Update or Import time series endpoints (by
+        setting `create_tag` to `true`), this will remove this entity from that tag.
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -113,8 +120,8 @@ class TimeSeriesServiceServicer(object):
     def BatchDeleteTimeSeriesPoints(self, request, context):
         """Deletes part(s) of one time series.
 
-        The requested points will be deleted, but the time series will not. With this request, it is
-        possible to delete all points from a time series, but not the time series itself.
+        Delete data points within a time series by specifying time ranges. This does not delete the
+        time series.
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -126,7 +133,7 @@ def add_TimeSeriesServiceServicer_to_server(servicer, server):
     server.add_generic_rpc_handlers((generic_handler,))
 
 class TimeSeriesService(object):
-    """Manages time series in the Data API.
+    """Service for managing time series. See the User Guide for more information about time series.
     """
 
     @staticmethod

@@ -13,6 +13,15 @@ _COMPANY_ENTITY_TYPE = "entityTypes/company"
 _SECURITY_ENTITY_TYPE = "entityTypes/security"
 _LISTING_ENTITY_TYPE = "entityTypes/listing"
 
+COMPANY_SEARCH_TERM_FIELDS = {
+    "isin",
+    "factset_identifier",
+    "bloomberg_symbol",
+    "bloomberg_ticker",
+    "mic:ticker",
+    "figi",
+}
+
 TKey = TypeVar("TKey")
 
 

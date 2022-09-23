@@ -62,7 +62,7 @@ class BaseScript(CommandLineScript, abc.ABC):
             self.api_key_retriever(args) if self.api_key_retriever is not None else args.api_key
         )
         extra_headers = []
-        if args.gcp_project_number:
+        if self.api_key_retriever is None and args.gcp_project_number:
             api_key = "NO_KEY"
             extra_headers = [
                 ("x-endpoint-api-consumer-type", "PROJECT"),

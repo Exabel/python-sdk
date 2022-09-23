@@ -1,4 +1,5 @@
 from typing import Optional, Sequence
+from unittest import mock
 
 from google.protobuf.field_mask_pb2 import FieldMask
 
@@ -6,6 +7,7 @@ from exabel_data_sdk.client.api.data_classes.entity import Entity
 from exabel_data_sdk.client.api.data_classes.entity_type import EntityType
 from exabel_data_sdk.client.api.data_classes.paging_result import PagingResult
 from exabel_data_sdk.client.api.entity_api import EntityApi
+from exabel_data_sdk.client.api.search_service import SearchService
 from exabel_data_sdk.tests.client.api.mock_resource_store import MockResourceStore
 
 
@@ -18,6 +20,7 @@ class MockEntityApi(EntityApi):
     def __init__(self):
         self.entities = MockResourceStore()
         self.types = MockResourceStore()
+        self.search = mock.create_autospec(SearchService)
         self._insert_standard_entity_types()
 
     def _insert_standard_entity_types(self):
@@ -31,6 +34,9 @@ class MockEntityApi(EntityApi):
 
     def get_entity_type(self, name: str) -> Optional[EntityType]:
         return self.types.get(name)
+
+    def create_entity_type(self, entity_type: EntityType) -> EntityType:
+        return self.types.create(entity_type)
 
     def list_entities(
         self, entity_type: str, page_size: int = 1000, page_token: str = None

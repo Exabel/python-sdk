@@ -5,14 +5,14 @@ from typing import Mapping, Optional, Set, Union
 from exabel_data_sdk import ExabelClient
 from exabel_data_sdk.client.api.bulk_insert import BulkInsertFailedError
 from exabel_data_sdk.client.api.data_classes.relationship import Relationship
-from exabel_data_sdk.services.csv_exception import CsvLoadingException
 from exabel_data_sdk.services.csv_loading_constants import (
     DEFAULT_NUMBER_OF_RETRIES,
     DEFAULT_NUMBER_OF_THREADS,
 )
-from exabel_data_sdk.services.csv_loading_result import CsvLoadingResult
 from exabel_data_sdk.services.csv_reader import CsvReader
 from exabel_data_sdk.services.entity_mapping_file_reader import EntityMappingFileReader
+from exabel_data_sdk.services.file_loading_exception import FileLoadingException
+from exabel_data_sdk.services.file_loading_result import FileLoadingResult
 from exabel_data_sdk.util.exceptions import TypeConvertionError
 from exabel_data_sdk.util.resource_name_normalization import to_entity_resource_names
 from exabel_data_sdk.util.type_converter import type_converter
@@ -46,7 +46,7 @@ class CsvRelationshipLoader:
         error_on_any_failure: bool = False,
         retries: int = DEFAULT_NUMBER_OF_RETRIES,
         abort_threshold: Optional[float] = 0.5,
-    ) -> CsvLoadingResult:
+    ) -> FileLoadingResult:
         """
         Load a CSV file and upload the relationships specified therein to the Exabel Data API.
 
@@ -84,7 +84,7 @@ class CsvRelationshipLoader:
         elif entity_from_column is not None and entity_to_column is not None:
             string_columns.update([entity_from_column, entity_to_column])
         else:
-            raise CsvLoadingException(
+            raise FileLoadingException(
                 "Both entity_from_column and entity_to_column must be None, or both must be set. "
                 f"Got: entity_from_column={entity_from_column}, entity_to_column={entity_to_column}"
             )
@@ -94,7 +94,7 @@ class CsvRelationshipLoader:
             string_columns.add(description_column)
         string_columns.update(property_columns)
 
-        relationships_df = CsvReader.read_csv(
+        relationships_df = CsvReader.read_file(
             filename, separator, string_columns=string_columns, keep_default_na=False
         )
         if use_default_entity_from_to_columns:
@@ -120,7 +120,7 @@ class CsvRelationshipLoader:
             for rel_type in self._client.relationship_api.list_relationship_types().results:
                 logger.info("   %s", rel_type)
 
-            raise CsvLoadingException(
+            raise FileLoadingException(
                 f"Did not find relationship type {relationship_type_name}, "
                 "please create it by running:\n"
                 "python -m exabel_data_sdk.scripts.create_relationship_type "
@@ -130,27 +130,29 @@ class CsvRelationshipLoader:
         entity_mapping = EntityMappingFileReader.read_entity_mapping_file(
             filename=entity_mapping_filename, separator=separator
         )
-        # pylint: disable=unsupported-assignment-operation,unsubscriptable-object
-        relationships_df[entity_from_col], from_warnings = to_entity_resource_names(
+        # pylint: disable=unsubscriptable-object,unsupported-assignment-operation
+        from_entity_result = to_entity_resource_names(
             self._client.entity_api,
             relationships_df[entity_from_col],
             namespace=namespace,
             entity_mapping=entity_mapping,
         )
-        relationships_df[entity_to_col], to_warnings = to_entity_resource_names(
+        relationships_df[entity_from_col] = from_entity_result.names
+        to_entity_result = to_entity_resource_names(
             self._client.entity_api,
             relationships_df[entity_to_col],
             namespace=namespace,
             entity_mapping=entity_mapping,
         )
-        # pylint: enable=unsupported-assignment-operation,unsubscriptable-object
-        warnings = list(chain(from_warnings, to_warnings))
+        relationships_df[entity_to_col] = to_entity_result.names
+        # pylint: enable=unsubscriptable-object,unsupported-assignment-operation
+        warnings = list(chain(from_entity_result.warnings, to_entity_result.warnings))
 
         # Drop rows where either the from or to entity is missing
         relationships_df.dropna(subset=[entity_from_col, entity_to_col], inplace=True)
 
         if not set(property_columns).issubset(relationships_df.columns):
-            raise CsvLoadingException(
+            raise FileLoadingException(
                 "Property columns must be a subset of columns present in the file. Columns "
                 f"missing in the file: {set(property_columns) - set(relationships_df.columns)}"
             )
@@ -170,12 +172,12 @@ class CsvRelationshipLoader:
                 for _, row in relationships_df.iterrows()
             ]
         except TypeConvertionError as e:
-            raise CsvLoadingException("An error occurred while converting property types.") from e
+            raise FileLoadingException("An error occurred while converting property types.") from e
 
         if dry_run:
             logger.info("Loading %d relationships", len(relationships))
             logger.info(relationships)
-            return CsvLoadingResult(warnings=warnings)
+            return FileLoadingResult(warnings=list(map(str, warnings)))
 
         try:
             result = self._client.relationship_api.bulk_create_relationships(
@@ -186,13 +188,15 @@ class CsvRelationshipLoader:
                 abort_threshold=abort_threshold,
             )
             if error_on_any_failure and result.has_failure():
-                raise CsvLoadingException(
+                raise FileLoadingException(
                     "An error occurred while uploading relationships.",
                     failures=result.get_failures(),
                 )
-            return CsvLoadingResult(result, warnings=warnings)
+            return FileLoadingResult(result, warnings=list(map(str, warnings)))
         except BulkInsertFailedError as e:
             # An error summary has already been printed.
             if error_on_any_failure:
-                raise CsvLoadingException("An error occurred while uploading relationships.") from e
-            return CsvLoadingResult(warnings=warnings, aborted=True)
+                raise FileLoadingException(
+                    "An error occurred while uploading relationships."
+                ) from e
+            return FileLoadingResult(warnings=list(map(str, warnings)), aborted=True)

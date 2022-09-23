@@ -5,7 +5,7 @@ from typing import Sequence
 from exabel_data_sdk import ExabelClient
 from exabel_data_sdk.scripts.csv_script import CsvScript
 from exabel_data_sdk.services.csv_entity_loader import CsvEntityLoader
-from exabel_data_sdk.services.csv_exception import CsvLoadingException
+from exabel_data_sdk.services.file_loading_exception import FileLoadingException
 from exabel_data_sdk.util.exceptions import ParsePropertyColumnsError
 from exabel_data_sdk.util.parse_property_columns import parse_property_columns
 
@@ -102,7 +102,7 @@ class LoadEntitiesFromCsv(CsvScript):
                 dry_run=args.dry_run,
                 retries=args.retries,
             )
-        except (CsvLoadingException, ParsePropertyColumnsError) as e:
+        except (FileLoadingException, ParsePropertyColumnsError) as e:
             print(e)
             sys.exit(1)
 

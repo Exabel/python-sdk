@@ -4,8 +4,8 @@ from typing import Sequence
 
 from exabel_data_sdk import ExabelClient
 from exabel_data_sdk.scripts.csv_script_with_entity_mapping import CsvScriptWithEntityMapping
-from exabel_data_sdk.services.csv_exception import CsvLoadingException
 from exabel_data_sdk.services.csv_relationship_loader import CsvRelationshipLoader
+from exabel_data_sdk.services.file_loading_exception import FileLoadingException
 from exabel_data_sdk.util.parse_property_columns import parse_property_columns
 
 
@@ -115,7 +115,7 @@ class LoadRelationshipsFromCsv(CsvScriptWithEntityMapping):
                 dry_run=args.dry_run,
                 retries=args.retries,
             )
-        except CsvLoadingException as e:
+        except FileLoadingException as e:
             print(e)
             sys.exit(1)
 

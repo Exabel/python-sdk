@@ -1,5 +1,5 @@
 import unittest
-from unittest.mock import MagicMock
+from unittest.mock import MagicMock, patch
 
 import pandas as pd
 
@@ -69,4 +69,17 @@ class TestExportApi(unittest.TestCase):
         mock.assert_called_with(
             "SELECT version, name, time, Sales_Actual FROM signals "
             "WHERE factset_id IN ('QLGSL2-R', 'FOOBAR') AND version IN ('2019-01-01', '2019-02-02')"
+        )
+
+    @patch("exabel_data_sdk.client.api.export_api.ExportApi")
+    def test_from_api_key(self, mock_api):
+        mock_api.return_value = None
+        api_key = "api-key"
+        ExportApi.from_api_key(api_key=api_key)
+        mock_api.assert_called_with(
+            auth_headers={"x-api-key": api_key}, backend="export.api.exabel.com"
+        )
+        ExportApi.from_api_key(api_key=api_key, use_test_backend=True)
+        mock_api.assert_called_with(
+            auth_headers={"x-api-key": api_key}, backend="export.api-test.exabel.com"
         )

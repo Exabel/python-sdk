@@ -1,4 +1,4 @@
-from typing import Optional, Sequence
+from typing import List, Optional, Sequence
 
 import pandas as pd
 from dateutil import tz
@@ -402,6 +402,43 @@ class TimeSeriesApi:
         return bulk_insert(
             series, insert, threads=threads, retries=retries, abort_threshold=abort_threshold
         )
+
+    @staticmethod
+    def _get_batches_for_import(series: Sequence[pd.Series]) -> Sequence[Sequence[pd.Series]]:
+        """
+        Split the given sequence of series into batches of series where each batch can be sent
+        in a single ImportTimeSeriesRequest.
+
+        The goal is to create batches such that the size of the ImportTimeSeriesRequest for each
+        batch does not exceed 1MB.
+        """
+        all_batches = []
+        current_batch: List[pd.Series] = []
+        current_size = 0
+        one_mb = 2**20
+        for s in series:
+            size = TimeSeriesApi._estimate_size(s)
+            if current_size + size > one_mb and current_size > 0:
+                all_batches.append(current_batch)
+                current_batch = [s]
+                current_size = size
+            else:
+                current_size += size
+                current_batch.append(s)
+        all_batches.append(current_batch)
+        return all_batches
+
+    @staticmethod
+    def _estimate_size(series: pd.Series) -> int:
+        """
+        Estimate how many bytes the given series will add to an ImportTimeSeriesRequest.
+        """
+
+        # 1 byte for each character in the time series name
+        # + 27/19 bytes for each data point (depends on whether known-time is specified)
+        # + 7 bytes overhead.
+        has_known_time = isinstance(series.index, pd.MultiIndex)
+        return len(str(series.name)) + (27 if has_known_time else 19) * len(series) + 7
 
     @staticmethod
     def _series_to_time_series_points(series: pd.Series) -> Sequence[TimeSeriesPoint]:

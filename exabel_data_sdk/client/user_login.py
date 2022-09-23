@@ -29,18 +29,20 @@ class UserLogin:
 
     def __init__(
         self,
-        auth0: str = "auth.exabel.com",
-        client_id: str = "6OoAPIEgqz1CQokkBuwtBcYKgNiLKsMF",
-        backend: str = "endpoints.exabel.com",
         reauthenticate: bool = False,
+        use_test_backend: bool = False,
     ):
         """
-        All of the arguments (auth0, client_id and backend) are only for internal engineering
-        use at Exabel. Customers and partners should always use the default values.
+        The argument use_test_backend is only for internal engineering use at Exabel.
+        Customers and partners should leave it at the default value.
         """
-        self.auth0 = auth0
-        self.client_id = client_id
-        self.backend = backend
+        self.auth0 = "exabel-test.eu.auth0.com" if use_test_backend else "auth.exabel.com"
+        self.client_id = (
+            "VcQvJBLqhsTvKh1KMu6kXDCLWXumlubj"
+            if use_test_backend
+            else "6OoAPIEgqz1CQokkBuwtBcYKgNiLKsMF"
+        )
+        self.backend = "endpoints-test.exabel.com" if use_test_backend else "endpoints.exabel.com"
         self.authorization_code = ""
         self.access_token = ""
         self.redirect_uri = ""

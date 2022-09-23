@@ -7,13 +7,13 @@ from pandas.core.arrays import ExtensionArray
 from exabel_data_sdk import ExabelClient
 from exabel_data_sdk.client.api.bulk_insert import BulkInsertFailedError
 from exabel_data_sdk.client.api.data_classes.entity import Entity
-from exabel_data_sdk.services.csv_exception import CsvLoadingException
 from exabel_data_sdk.services.csv_loading_constants import (
     DEFAULT_NUMBER_OF_RETRIES,
     DEFAULT_NUMBER_OF_THREADS,
 )
-from exabel_data_sdk.services.csv_loading_result import CsvLoadingResult
 from exabel_data_sdk.services.csv_reader import CsvReader
+from exabel_data_sdk.services.file_loading_exception import FileLoadingException
+from exabel_data_sdk.services.file_loading_result import FileLoadingResult
 from exabel_data_sdk.util.exceptions import TypeConvertionError
 from exabel_data_sdk.util.resource_name_normalization import normalize_resource_name
 from exabel_data_sdk.util.type_converter import type_converter
@@ -46,7 +46,7 @@ class CsvEntityLoader:
         error_on_any_failure: bool = False,
         retries: int = DEFAULT_NUMBER_OF_RETRIES,
         abort_threshold: Optional[float] = 0.5,
-    ) -> CsvLoadingResult:
+    ) -> FileLoadingResult:
         """
         Load a CSV file and upload the entities specified therein to the Exabel Data API.
 
@@ -86,7 +86,7 @@ class CsvEntityLoader:
         string_columns.update(property_columns)
         if description_column:
             string_columns.add(description_column)
-        entities_df = CsvReader.read_csv(
+        entities_df = CsvReader.read_file(
             filename, separator, string_columns=string_columns, keep_default_na=False
         )
 
@@ -96,13 +96,13 @@ class CsvEntityLoader:
 
         entity_type_name = f"entityTypes/{entity_type or name_col}"
         if not self._client.entity_api.get_entity_type(entity_type_name):
-            raise CsvLoadingException(
+            raise FileLoadingException(
                 f"Did not find entity type {entity_type_name}.\n"
                 f"The available entity types are: {self._client.entity_api.list_entity_types()}"
             )
 
         if not set(property_columns).issubset(entities_df.columns):
-            raise CsvLoadingException(
+            raise FileLoadingException(
                 "Property columns must be a subset of columns present in the file. Columns "
                 f"missing in the file: {set(property_columns) - set(entities_df.columns)}"
             )
@@ -123,12 +123,12 @@ class CsvEntityLoader:
                 for _, row in entities_df.iterrows()
             ]
         except TypeConvertionError as e:
-            raise CsvLoadingException("An error occurred while converting property types.") from e
+            raise FileLoadingException("An error occurred while converting property types.") from e
 
         if dry_run:
             logger.info("Loading %d entities", len(entities))
             logger.info(entities)
-            return CsvLoadingResult()
+            return FileLoadingResult()
 
         try:
             result = self._client.entity_api.bulk_create_entities(
@@ -140,16 +140,16 @@ class CsvEntityLoader:
                 abort_threshold=abort_threshold,
             )
             if error_on_any_failure and result.has_failure():
-                raise CsvLoadingException(
+                raise FileLoadingException(
                     "An error occurred while uploading entities.",
                     failures=result.get_failures(),
                 )
-            return CsvLoadingResult(result)
+            return FileLoadingResult(result)
         except BulkInsertFailedError as e:
             # An error summary has already been printed.
             if error_on_any_failure:
-                raise CsvLoadingException("An error occurred while uploading entities.") from e
-            return CsvLoadingResult(aborted=True)
+                raise FileLoadingException("An error occurred while uploading entities.") from e
+            return FileLoadingResult(aborted=True)
 
     @staticmethod
     def detect_duplicate_entities(

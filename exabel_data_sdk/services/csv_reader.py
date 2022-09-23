@@ -7,12 +7,13 @@ class CsvReader:
     """Reader of CSV files."""
 
     @staticmethod
-    def read_csv(
+    def read_file(
         filename: str,
         separator: str,
         string_columns: Iterable[Union[str, int]],
         *,
         keep_default_na: bool,
+        nrows: int = None
     ) -> pd.DataFrame:
         """
         Read the given file and return the content as a pandas DataFrame.
@@ -21,10 +22,17 @@ class CsvReader:
             filename: the location of the CSV file
             separator: the separator used in the CSV file
             string_columns: the columns which contain general strings
+            keep_default_na: whether to parse default nan values as nan
+            nrows: how many rows to parse
         """
         dtype: Optional[Mapping[Union[str, int], type]] = None
         if string_columns:
             dtype = {column: str for column in string_columns}
         return pd.read_csv(
-            filename, header=0, sep=separator, dtype=dtype, keep_default_na=keep_default_na
+            filename,
+            header=0,
+            sep=separator,
+            dtype=dtype,
+            keep_default_na=keep_default_na,
+            nrows=nrows,
         )

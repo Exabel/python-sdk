@@ -36,6 +36,7 @@ setuptools.setup(
         "google-api-core>1.31.3",
         "googleapis-common-protos>=1.56.0",
         "grpcio",
+        "openpyxl",
         "pandas",
         "protobuf<4",
         "requests",

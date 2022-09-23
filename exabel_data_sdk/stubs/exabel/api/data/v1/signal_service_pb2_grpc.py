@@ -5,7 +5,8 @@ from .....exabel.api.data.v1 import signal_service_pb2 as exabel_dot_api_dot_dat
 from google.protobuf import empty_pb2 as google_dot_protobuf_dot_empty__pb2
 
 class SignalServiceStub(object):
-    """Manages signals in the Data API.
+    """Service for managing raw data signals. See the User Guide for more information about raw data
+    signals.
     """
 
     def __init__(self, channel):
@@ -21,11 +22,15 @@ class SignalServiceStub(object):
         self.DeleteSignal = channel.unary_unary('/exabel.api.data.v1.SignalService/DeleteSignal', request_serializer=exabel_dot_api_dot_data_dot_v1_dot_signal__service__pb2.DeleteSignalRequest.SerializeToString, response_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString)
 
 class SignalServiceServicer(object):
-    """Manages signals in the Data API.
+    """Service for managing raw data signals. See the User Guide for more information about raw data
+    signals.
     """
 
     def ListSignals(self, request, context):
         """Lists all known signals.
+
+        Lists all raw data signals available to your customer, including those created by you, in the
+        global catalog, and from data sets you are subscribed to.
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -47,6 +52,8 @@ class SignalServiceServicer(object):
 
     def UpdateSignal(self, request, context):
         """Updates one signal and returns it.
+
+        This can also be used to create a signal by setting `allow_missing` to `true`.
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -54,6 +61,8 @@ class SignalServiceServicer(object):
 
     def DeleteSignal(self, request, context):
         """Deletes one signal. ALL time series for this signal will also be deleted.
+
+        This will delete ***all*** time series for this signal.
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -65,7 +74,8 @@ def add_SignalServiceServicer_to_server(servicer, server):
     server.add_generic_rpc_handlers((generic_handler,))
 
 class SignalService(object):
-    """Manages signals in the Data API.
+    """Service for managing raw data signals. See the User Guide for more information about raw data
+    signals.
     """
 
     @staticmethod

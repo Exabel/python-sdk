@@ -3,7 +3,7 @@ import unittest
 from exabel_data_sdk.client.api.data_classes.entity import Entity
 from exabel_data_sdk.client.exabel_client import ExabelClient
 from exabel_data_sdk.services.csv_entity_loader import CsvEntityLoader
-from exabel_data_sdk.services.csv_exception import CsvLoadingException
+from exabel_data_sdk.services.file_loading_exception import FileLoadingException
 from exabel_data_sdk.tests.client.exabel_mock_client import ExabelMockClient
 
 
@@ -73,7 +73,7 @@ class TestCsvEntityLoader(unittest.TestCase):
 
     def test_load_entities_with_non_existent_property(self):
         client: ExabelClient = ExabelMockClient()
-        with self.assertRaises(CsvLoadingException):
+        with self.assertRaises(FileLoadingException):
             CsvEntityLoader(client).load_entities(
                 filename="exabel_data_sdk/tests/resources/data/entities_with_properties.csv",
                 namespace="test",

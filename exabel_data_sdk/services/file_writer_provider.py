@@ -1,18 +1,10 @@
-import itertools
 from pathlib import Path
 from typing import Type
 
 from exabel_data_sdk.services.csv_writer import CsvWriter
 from exabel_data_sdk.services.excel_writer import ExcelWriter
+from exabel_data_sdk.services.file_constants import EXCEL_EXTENSIONS, FULL_CSV_EXTENSIONS
 from exabel_data_sdk.services.file_writer import FileWriter
-
-_CSV_EXTENSIONS = {".csv"}
-_CSV_COMPRESSION_EXTENSIONS = {".gz", ".bz2", ".zip", ".xz", ".zst", ""}
-FULL_CSV_EXTENSIONS = set(
-    csv_ext + comp_ext
-    for csv_ext, comp_ext in itertools.product(_CSV_EXTENSIONS, _CSV_COMPRESSION_EXTENSIONS)
-)
-EXCEL_EXTENSIONS = {".xlsx"}
 
 
 class FileWriterProvider:
