@@ -85,10 +85,18 @@ jobs:
         user: __token__
         password: ${{ secrets.PYPI_API_TOKEN }}
 
-    - name: Post to Slack
-      if: always()
+    - name: Post status to Slack
+      if: ${{ success() }}
       uses: ravsamhq/notify-slack-action@v2
       with:
-        status: ${{ success() && needs.test-package.result == 'success' && 'success' || 'failure' }}
+        status: ${{ needs.test-package.result == 'success' && 'success' || 'failure' }}
+      env:
+        SLACK_WEBHOOK_URL: ${{ secrets.NOTIFY_SLACK_ACTION_WEBHOOK_URL }}
+
+    - name: Post failure to Slack
+      if: ${{ failure() || cancelled() }}
+      uses: ravsamhq/notify-slack-action@v2
+      with:
+        status: 'failure'
       env:
         SLACK_WEBHOOK_URL: ${{ secrets.NOTIFY_SLACK_ACTION_WEBHOOK_URL }}
