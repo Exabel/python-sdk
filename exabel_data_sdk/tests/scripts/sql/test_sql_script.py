@@ -31,13 +31,14 @@ class TestSqlScript(unittest.TestCase):
             argparse.Namespace(
                 query="SELECT 1 AS A",
                 output_file=None,
+                batch_size=None,
             )
         )
         mock_reader.assert_called_once_with(
             mock_config_instance.get_connection_string.return_value,
         )
         mock_reader.return_value.read_sql_query_and_write_result.assert_called_once_with(
-            "SELECT 1 AS A", None
+            "SELECT 1 AS A", None, batch_size=None
         )
 
     @mock.patch("exabel_data_sdk.scripts.sql.sql_script.SqlReader")
@@ -54,6 +55,7 @@ class TestSqlScript(unittest.TestCase):
             argparse.Namespace(
                 query="SELECT 1 AS A",
                 output_file="output_file",
+                batch_size=None,
             )
         )
         mock_reader.assert_called_once_with(
@@ -62,4 +64,5 @@ class TestSqlScript(unittest.TestCase):
         mock_reader.return_value.read_sql_query_and_write_result.assert_called_once_with(
             "SELECT 1 AS A",
             "output_file",
+            batch_size=None,
         )

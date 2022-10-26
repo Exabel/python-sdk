@@ -3,7 +3,6 @@ from typing import Sequence
 from google.protobuf.field_mask_pb2 import FieldMask
 
 from exabel_data_sdk.client.api.api_client.grpc.library_grpc_client import LibraryGrpcClient
-from exabel_data_sdk.client.api.api_client.http.library_http_client import LibraryHttpClient
 from exabel_data_sdk.client.api.data_classes.folder import Folder
 from exabel_data_sdk.client.api.data_classes.folder_accessor import FolderAccessor
 from exabel_data_sdk.client.api.data_classes.folder_item import FolderItem, FolderItemType
@@ -27,8 +26,8 @@ class LibraryApi:
     API class for library operations.
     """
 
-    def __init__(self, config: ClientConfig, use_json: bool = False):
-        self.client = LibraryHttpClient(config) if use_json else LibraryGrpcClient(config)
+    def __init__(self, config: ClientConfig):
+        self.client = LibraryGrpcClient(config)
 
     def list_folders(self) -> Sequence[Folder]:
         """

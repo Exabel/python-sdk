@@ -6,11 +6,13 @@ from google.protobuf import timestamp_pb2
 from google.protobuf.wrappers_pb2 import DoubleValue
 
 from exabel_data_sdk.client.api.time_series_api import TimeSeriesApi
-from exabel_data_sdk.client.client_config import DefaultConfig
-from exabel_data_sdk.stubs.exabel.api.data.v1.all_pb2 import ImportTimeSeriesRequest, TimeSeries
+from exabel_data_sdk.stubs.exabel.api.data.v1.all_pb2 import (
+    ImportTimeSeriesRequest,
+    TimeSeries,
+    TimeSeriesPoint,
+)
 
 # pylint: disable=protected-access
-from exabel_data_sdk.stubs.exabel.api.data.v1.time_series_messages_pb2 import TimeSeriesPoint
 
 
 class TestTimeSeriesApi(unittest.TestCase):
@@ -91,14 +93,6 @@ class TestTimeSeriesApi(unittest.TestCase):
                 TimeSeriesApi._series_to_time_series_points(series)
             ),
         )
-
-    def test_http_import_time_series_not_implemented(self):
-        api = TimeSeriesApi(config=DefaultConfig(), use_json=True)
-        with self.assertRaises(NotImplementedError):
-            api.import_time_series(
-                parent="parent",
-                series=[],
-            )
 
     def test_estimate_size_constants(self):
         point_without_known_time = TimeSeriesPoint(

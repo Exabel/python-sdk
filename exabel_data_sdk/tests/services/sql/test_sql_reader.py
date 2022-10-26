@@ -35,6 +35,14 @@ class TestSqlReader(unittest.TestCase):
             df,
         )
 
+    def test_read_sql_query_in_batches(self):
+        df = self.reader.read_sql_query_in_batches("SELECT 0 as a UNION SELECT 1", batch_size=1)
+        for i, row in enumerate(df):
+            pdt.assert_frame_equal(
+                pd.DataFrame({"a": [i]}),
+                row,
+            )
+
     @mock.patch("exabel_data_sdk.services.sql.sql_reader.FileWriterProvider")
     def test_read_sql_query_and_write_result_without_output_file(self, mock_provider):
         self.reader.read_sql_query_and_write_result("SELECT 1 as a UNION SELECT 2")

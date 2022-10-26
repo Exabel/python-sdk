@@ -7,8 +7,6 @@ from exabel_data_sdk.tests.scripts.common_utils import load_test_data_from_csv
 
 common_args = [
     "script-name",
-    "--namespace",
-    "acme",
     "--api-key",
     "123",
     "--relationship-type",
@@ -16,7 +14,7 @@ common_args = [
 ]
 common_args_with_entity_to_column = common_args + [
     "--entity-to-column",
-    "brand",
+    "BRAND",
 ]
 
 
@@ -30,7 +28,7 @@ class TestLoadRelationships(unittest.TestCase):
             "--description-column",
             "description",
         ]
-        client = load_test_data_from_csv(LoadRelationshipsFromCsv, args)
+        client = load_test_data_from_csv(LoadRelationshipsFromCsv, args, namespace="acme")
         expected_relationships = [
             Relationship(
                 relationship_type="relationshipTypes/acme.PART_OF",
@@ -52,13 +50,13 @@ class TestLoadRelationships(unittest.TestCase):
             "--filename",
             "./exabel_data_sdk/tests/resources/data/relationships.csv",
             "--entity-from-column",
-            "brand",
+            "BRAND",
             "--entity-to-column",
             "entity_from",
             "--description-column",
             "description",
         ]
-        client = load_test_data_from_csv(LoadRelationshipsFromCsv, args)
+        client = load_test_data_from_csv(LoadRelationshipsFromCsv, args, namespace="acme")
         expected_relationships = [
             Relationship(
                 relationship_type="relationshipTypes/acme.PART_OF",
@@ -82,7 +80,9 @@ class TestLoadRelationships(unittest.TestCase):
             "--description-column",
             "description",
         ]
-        client = load_test_data_from_csv(LoadRelationshipsFromCsv, args_default_from_to_columns)
+        client = load_test_data_from_csv(
+            LoadRelationshipsFromCsv, args_default_from_to_columns, namespace="acme"
+        )
         expected_relationships = [
             Relationship(
                 relationship_type="relationshipTypes/acme.PART_OF",
@@ -100,13 +100,15 @@ class TestLoadRelationships(unittest.TestCase):
         self.check_relationships(client, expected_relationships)
 
     def test_read_file_with_integer_identifiers(self):
-        args = common_args_with_entity_to_column + [
+        args = common_args + [
             "--filename",
             "./exabel_data_sdk/tests/resources/data/relationships_with_integer_identifiers.csv",
             "--entity-from-column",
             "company",
+            "--entity-to-column",
+            "brand",
         ]
-        client = load_test_data_from_csv(LoadRelationshipsFromCsv, args)
+        client = load_test_data_from_csv(LoadRelationshipsFromCsv, args, namespace="acme")
         expected_relationships = [
             Relationship(
                 relationship_type="relationshipTypes/acme.PART_OF",
@@ -140,10 +142,10 @@ class TestLoadRelationships(unittest.TestCase):
             "--entity-from-column",
             "entity_from",
             "--description-column",
-            "description",
+            "DESCRIPTION",
             "--upsert",
         ]
-        client = load_test_data_from_csv(LoadRelationshipsFromCsv, args)
+        client = load_test_data_from_csv(LoadRelationshipsFromCsv, args, namespace="acme")
         expected_relationships = [
             Relationship(
                 relationship_type="relationshipTypes/acme.PART_OF",
@@ -172,8 +174,8 @@ class TestLoadRelationships(unittest.TestCase):
             "--entity-to-column",
             "the-entity-to-column",
             "--property-columns",
-            "the-property-column",
-            "the-other-property-column",
+            "THE-PROPERTY-COLUMN",
+            "THE-OTHER-PROPERTY-COLUMN",
         ]
         client = MagicMock()
         with patch("exabel_data_sdk.scripts.load_relationships_from_csv.CsvRelationshipLoader"):

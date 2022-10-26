@@ -16,3 +16,8 @@ class TestExcelWriter(unittest.TestCase):
             ExcelWriter.write_file(test_df, file.name)
             actual_df = pd.read_excel(file.name, engine="openpyxl")
         assert_frame_equal(test_df, actual_df)
+
+    def test_excel_writer__iterable_should_fail(self):
+        with tempfile.NamedTemporaryFile(suffix=".xlsx") as file:
+            with self.assertRaises(NotImplementedError):
+                ExcelWriter.write_file([], file.name)

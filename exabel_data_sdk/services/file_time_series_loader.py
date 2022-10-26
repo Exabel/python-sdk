@@ -22,10 +22,12 @@ from exabel_data_sdk.services.file_time_series_parser import (
     EntitiesInColumns,
     ParsedTimeSeriesFile,
     SignalNamesInColumns,
+    SignalNamesInColumnsGlobalEntity,
     SignalNamesInRows,
     TimeSeriesFileParser,
 )
 from exabel_data_sdk.stubs.exabel.api.data.v1.time_series_messages_pb2 import DefaultKnownTime
+from exabel_data_sdk.util.deprecate_arguments import deprecate_arguments
 from exabel_data_sdk.util.resource_name_normalization import validate_signal_name
 
 logger = logging.getLogger(__name__)
@@ -39,13 +41,15 @@ class FileTimeSeriesLoader:
     def __init__(self, client: ExabelClient):
         self._client = client
 
+    @deprecate_arguments(namespace=None)
     def load_time_series(
         self,
         *,
         filename: str,
         entity_mapping_filename: str = None,
         separator: str = ",",
-        namespace: str,
+        entity_type: str = None,
+        identifier_type: str = None,
         pit_current_time: Optional[bool] = False,
         pit_offset: Optional[int] = None,
         create_missing_signals: bool = False,
@@ -57,6 +61,8 @@ class FileTimeSeriesLoader:
         error_on_any_failure: bool = False,
         retries: int = DEFAULT_NUMBER_OF_RETRIES,
         abort_threshold: Optional[float] = 0.5,
+        # Deprecated arguments
+        namespace: str = None,  # pylint: disable=unused-argument
     ) -> Sequence[TimeSeriesFileLoadingResult]:
         """
         Load a file and upload the time series to the Exabel Data API
@@ -68,7 +74,9 @@ class FileTimeSeriesLoader:
             entity_mapping_filename: the location of the entity mapping file to use; only *.json and
                 *.csv extensions are supported
             separator: the separator used in the file (only applicable to csv files)
-            namespace: an Exabel namespace
+            entity_type: the entity type of the entities in the file. If not specified, the entity
+                type is inferred from the column name.
+            identifier_type: the identifier type of the entities in the file
             pit_current_time: set the known time of the uploaded data to be the time at which it is
                 inserted into the Exabel system
             pit_offset: set the known time of the uploaded data to be the timestamp of each data
@@ -98,8 +106,9 @@ class FileTimeSeriesLoader:
             results.append(
                 self._load_time_series(
                     parser=parser,
-                    namespace=namespace,
                     entity_mapping=entity_mapping,
+                    entity_type=entity_type,
+                    identifier_type=identifier_type,
                     pit_current_time=pit_current_time,
                     pit_offset=pit_offset,
                     create_missing_signals=create_missing_signals,
@@ -119,8 +128,9 @@ class FileTimeSeriesLoader:
         self,
         *,
         parser: TimeSeriesFileParser,
-        namespace: str,
         entity_mapping: Mapping[str, Mapping[str, str]] = None,
+        entity_type: str = None,
+        identifier_type: str = None,
         pit_current_time: Optional[bool] = False,
         pit_offset: Optional[int] = None,
         create_missing_signals: bool = False,
@@ -132,13 +142,18 @@ class FileTimeSeriesLoader:
         error_on_any_failure: bool = False,
         retries: int = DEFAULT_NUMBER_OF_RETRIES,
         abort_threshold: Optional[float] = 0.5,
+        # Deprecated arguments
+        namespace: str = None,  # pylint: disable=unused-argument
     ) -> TimeSeriesFileLoadingResult:
         """
         Load time series from a parser.
         """
         if dry_run:
             logger.info("Running dry-run...")
-
+        if identifier_type and not entity_type:
+            raise FileLoadingException(
+                "entity_type must be specified if identifier_type is specified"
+            )
         if pit_offset is not None and pit_current_time:
             raise FileLoadingException(
                 "Cannot specify both pit_current_time and pit_offset, it is one or the other"
@@ -156,16 +171,22 @@ class FileTimeSeriesLoader:
             EntitiesInColumns,
             SignalNamesInRows,
             SignalNamesInColumns,
+            SignalNamesInColumnsGlobalEntity,
         ]
 
         parsed_file = None
         for candidate_class in candidate_parsers:
             if candidate_class.can_parse(parser):
                 parsed_file = candidate_class.from_file(
-                    parser, self._client.entity_api, namespace, entity_mapping
+                    parser,
+                    self._client.entity_api,
+                    self._client.namespace,
+                    entity_mapping,
+                    entity_type=identifier_type or entity_type,
                 )
                 break
         if parsed_file is None:
+            parser.check_columns()
             raise FileLoadingException("Column and row setup not recognized.")
 
         if parsed_file.has_known_time():
@@ -216,12 +237,28 @@ class FileTimeSeriesLoader:
         self._check_signal_names(signals)
 
         prefix = "signals/"
-        if namespace:
-            prefix += namespace + "."
+        if self._client.namespace:
+            prefix += self._client.namespace + "."
 
-        missing_signals = [
-            signal for signal in signals if not self._client.signal_api.get_signal(prefix + signal)
-        ]
+        # Signals are reversed because we want to match the first signal returned by the API
+        # lexicographically.
+        all_signals = {
+            signal.name.lower(): signal
+            for signal in reversed(self._client.signal_api.list_signals().results)
+        }
+
+        missing_signals = []
+        columns_to_rename = {}
+        for signal in signals:
+            lowered_signal_name = prefix + signal.lower()
+            if lowered_signal_name not in all_signals:
+                missing_signals.append(lowered_signal_name)
+            else:
+                signal_match = all_signals[lowered_signal_name]
+                if lowered_signal_name != signal_match.name:
+                    columns_to_rename[signal] = signal_match.name.split(".")[-1]
+        parsed_file.data = parsed_file.data.rename(columns=columns_to_rename)
+
         if missing_signals:
             logger.info("Available signals are:")
             logger.info(self._client.signal_api.list_signals())
@@ -232,14 +269,13 @@ class FileTimeSeriesLoader:
                 if not dry_run:
                     for signal in missing_signals:
                         self._client.signal_api.create_signal(
-                            Signal(name=prefix + signal, display_name=signal),
+                            Signal(name=signal, display_name=signal),
                             create_library_signal=create_library_signal,
                         )
             else:
                 raise FileLoadingException(
                     "Aborting script. Please create the missing signals, and try again."
                 )
-        missing_signals = [prefix + signal for signal in missing_signals]
 
         entity_mapping_result = EntityMappingResult(
             parsed_file.get_entity_lookup_result().mapping,
@@ -248,6 +284,7 @@ class FileTimeSeriesLoader:
             [w.query for w in parsed_file.get_entity_lookup_result().warnings],
         )
         series, invalid_series = parsed_file.get_series(prefix=prefix)
+
         if dry_run:
             logger.info("Running the script would create the following time series:")
             for ts in series:

@@ -1,4 +1,4 @@
-from typing import Sequence, Tuple
+from typing import Optional, Sequence, Tuple
 
 from exabel_data_sdk.client.api.data_set_api import DataSetApi
 from exabel_data_sdk.client.api.derived_signal_api import DerivedSignalApi
@@ -30,7 +30,6 @@ class ExabelClient:
         management_api_port: int = None,
         timeout: int = None,
         root_certificates: str = None,
-        use_json: bool = False,
         extra_headers: Sequence[Tuple[str, str]] = None,
     ):
         """
@@ -50,7 +49,6 @@ class ExabelClient:
             management_api_port: Override default Exabel Management API port.
             timeout:             Override default timeout in seconds to use for API requests.
             root_certificates:   Additional allowed root certificates for verifying TLS connection.
-            use_json:            Whether requests should be sent as JSON over HTTP rather than gRPC.
         """
         config = ClientConfig(
             api_key=api_key,
@@ -66,13 +64,21 @@ class ExabelClient:
             extra_headers=extra_headers,
         )
 
-        self.entity_api = EntityApi(config, use_json)
-        self.signal_api = SignalApi(config, use_json)
-        self.time_series_api = TimeSeriesApi(config, use_json)
-        self.relationship_api = RelationshipApi(config, use_json)
-        self.data_set_api = DataSetApi(config, use_json)
-        self.prediction_model_api = PredictionModelApi(config, use_json)
-        self.derived_signal_api = DerivedSignalApi(config, use_json)
-        self.user_api = UserApi(config, use_json)
-        self.library_api = LibraryApi(config, use_json)
-        self.namespace_api = NamespaceApi(config, use_json)
+        self.entity_api = EntityApi(config)
+        self.signal_api = SignalApi(config)
+        self.time_series_api = TimeSeriesApi(config)
+        self.relationship_api = RelationshipApi(config)
+        self.data_set_api = DataSetApi(config)
+        self.prediction_model_api = PredictionModelApi(config)
+        self.derived_signal_api = DerivedSignalApi(config)
+        self.user_api = UserApi(config)
+        self.library_api = LibraryApi(config)
+        self.namespace_api = NamespaceApi(config)
+        self._namespace: Optional[str] = None
+
+    @property
+    def namespace(self) -> str:
+        """The (writeable) namespace of the current customer."""
+        if self._namespace is None:
+            self._namespace = self.namespace_api.get_writeable_namespace().name.split("/")[-1]
+        return self._namespace

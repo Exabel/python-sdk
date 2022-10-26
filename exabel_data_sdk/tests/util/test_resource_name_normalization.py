@@ -5,12 +5,14 @@ import pandas as pd
 
 from exabel_data_sdk.client.api.data_classes.entity import Entity
 from exabel_data_sdk.client.api.data_classes.entity_type import EntityType
+from exabel_data_sdk.client.api.data_classes.paging_result import PagingResult
 from exabel_data_sdk.client.api.entity_api import EntityApi
 from exabel_data_sdk.client.client_config import ClientConfig
 from exabel_data_sdk.stubs.exabel.api.data.v1.all_pb2 import SearchEntitiesResponse, SearchTerm
 from exabel_data_sdk.util.resource_name_normalization import (
     _assert_no_collision,
     _validate_mic_ticker,
+    get_namespace_from_resource_identifier,
     normalize_resource_name,
     to_entity_resource_names,
 )
@@ -25,8 +27,24 @@ class TestResourceNameNormalization(unittest.TestCase):
         self.assertEqual(long_name[:64], normalize_resource_name(long_name))
         self.assertRaises(ValueError, normalize_resource_name, "")
 
-    def test_entity_type_mapping(self):
-        data = pd.Series(["abc, Inc.", "abcXYZ0189-_", "", "-Øl?."], name="brand")
+    def test_entity_type_uppercase_existing_mapping(self):
+        data = pd.Series(["abc, Inc.", "abcXYZ0189-_", "", "-Øl?."], name="BRAND")
+        expected = pd.Series(
+            [
+                "entityTypes/BRAND/entities/acme.abc_Inc_",
+                "entityTypes/BRAND/entities/acme.abcXYZ0189-_",
+                None,
+                "entityTypes/BRAND/entities/acme._l_",
+            ],
+            name="entity",
+        )
+        entity_api = mock.create_autospec(EntityApi(ClientConfig(api_key="123")))
+        entity_api.list_entity_types.side_effect = self._list_entity_types_uppercase
+        result = to_entity_resource_names(entity_api, data, namespace="acme").names
+        pd.testing.assert_series_equal(expected, result)
+
+    def test_entity_type_uppercase_not_existing_mapping(self):
+        data = pd.Series(["abc, Inc.", "abcXYZ0189-_", "", "-Øl?."], name="BRAND")
         expected = pd.Series(
             [
                 "entityTypes/brand/entities/acme.abc_Inc_",
@@ -36,7 +54,8 @@ class TestResourceNameNormalization(unittest.TestCase):
             ],
             name="entity",
         )
-        entity_api = mock.create_autospec(EntityApi(ClientConfig(api_key="123"), use_json=True))
+        entity_api = mock.create_autospec(EntityApi(ClientConfig(api_key="123")))
+        entity_api.list_entity_types.side_effect = self._list_entity_types
         result = to_entity_resource_names(entity_api, data, namespace="acme").names
         pd.testing.assert_series_equal(expected, result)
 
@@ -51,10 +70,8 @@ class TestResourceNameNormalization(unittest.TestCase):
             ],
             name="entity",
         )
-        entity_api = mock.create_autospec(EntityApi(ClientConfig(api_key="123"), use_json=True))
-        entity_api.list_entity_types.side_effect = [
-            [EntityType("entityTypes/country", "Countries", "Countries", True)]
-        ]
+        entity_api = mock.create_autospec(EntityApi(ClientConfig(api_key="123")))
+        entity_api.list_entity_types.side_effect = self._list_entity_types
         result = to_entity_resource_names(entity_api, data, namespace="acme").names
         pd.testing.assert_series_equal(expected, result)
 
@@ -81,7 +98,7 @@ class TestResourceNameNormalization(unittest.TestCase):
             SearchTerm(field="isin", query="US87612E1064"),
             SearchTerm(field="isin", query="DE000A1EWWW0"),
         ]
-        entity_api = mock.create_autospec(EntityApi(ClientConfig(api_key="123"), use_json=True))
+        entity_api = mock.create_autospec(EntityApi(ClientConfig(api_key="123")))
         entity_api.search.entities_by_terms.return_value = [
             SearchEntitiesResponse.SearchResult(
                 terms=[search_terms[0]],
@@ -127,7 +144,7 @@ class TestResourceNameNormalization(unittest.TestCase):
         search_terms = [
             SearchTerm(field="isin", query="US87612E1064"),
         ]
-        entity_api = mock.create_autospec(EntityApi(ClientConfig(api_key="123"), use_json=True))
+        entity_api = mock.create_autospec(EntityApi(ClientConfig(api_key="123")))
         entity_api.search.entities_by_terms.return_value = [
             SearchEntitiesResponse.SearchResult(
                 terms=[search_terms[0]],
@@ -186,7 +203,8 @@ class TestResourceNameNormalization(unittest.TestCase):
             ],
             name="entity",
         )
-        entity_api = mock.create_autospec(EntityApi(ClientConfig(api_key="123"), use_json=True))
+        entity_api = mock.create_autospec(EntityApi(ClientConfig(api_key="123")))
+        entity_api.list_entity_types.side_effect = self._list_entity_types
         company_result = to_entity_resource_names(
             entity_api, company_data, namespace="acme", entity_mapping=entity_mapping
         ).names
@@ -232,7 +250,7 @@ class TestResourceNameNormalization(unittest.TestCase):
         for mic, ticker in map(lambda x: x.split(":"), mic_tickers[:2] + mic_tickers[4:]):
             search_terms.append(SearchTerm(field="mic", query=mic))
             search_terms.append(SearchTerm(field="ticker", query=ticker))
-        entity_api = mock.create_autospec(EntityApi(ClientConfig(api_key="123"), use_json=True))
+        entity_api = mock.create_autospec(EntityApi(ClientConfig(api_key="123")))
         entity_api.search.entities_by_terms.return_value = [
             SearchEntitiesResponse.SearchResult(
                 terms=[search_terms[0]],
@@ -294,7 +312,7 @@ class TestResourceNameNormalization(unittest.TestCase):
             SearchTerm(field="bloomberg_ticker", query="TGT US"),
             SearchTerm(field="bloomberg_ticker", query="TGT UK"),
         ]
-        entity_api = mock.create_autospec(EntityApi(ClientConfig(api_key="123"), use_json=True))
+        entity_api = mock.create_autospec(EntityApi(ClientConfig(api_key="123")))
         entity_api.search.entities_by_terms.return_value = [
             SearchEntitiesResponse.SearchResult(
                 terms=[search_terms[0]],
@@ -309,3 +327,85 @@ class TestResourceNameNormalization(unittest.TestCase):
                 ],
             ),
         ]
+
+    def _list_entity_types(self):
+        return PagingResult(
+            [
+                EntityType("entityTypes/brand", "", "", False),
+                EntityType("entityTypes/country", "", "", True),
+            ],
+            "next",
+            2,
+        )
+
+    def _list_entity_types_uppercase(self):
+        return PagingResult(
+            [
+                EntityType("entityTypes/BRAND", "", "", False),
+            ],
+            "next",
+            1,
+        )
+
+    def test_preserve_namespace(self):
+        mock_entity_api = mock.create_autospec(EntityApi)
+        identifiers = pd.Series(
+            [
+                "ns.entity",
+                "otherns.entity",
+                "global_entity",
+            ],
+            name="global_entity_type",
+        )
+        normalized = to_entity_resource_names(
+            mock_entity_api,
+            identifiers,
+            namespace="ns",
+            check_entity_types=False,
+            preserve_namespace=True,
+        ).names
+        expected = pd.Series(
+            [
+                "entityTypes/global_entity_type/entities/ns.entity",
+                "entityTypes/global_entity_type/entities/otherns.entity",
+                "entityTypes/global_entity_type/entities/global_entity",
+            ],
+            name="entity",
+        )
+        pd.testing.assert_series_equal(expected, normalized)
+
+    def test_preserve_namespace__infer_namespace(self):
+        mock_entity_api = mock.create_autospec(EntityApi)
+        identifiers = pd.Series(
+            [
+                "ns.entity",
+                "other_entity",
+            ],
+            name="ns.entity_type",
+        )
+        normalized = to_entity_resource_names(
+            mock_entity_api,
+            identifiers,
+            namespace="ns",
+            check_entity_types=False,
+            preserve_namespace=True,
+        ).names
+        expected = pd.Series(
+            [
+                "entityTypes/ns.entity_type/entities/ns.entity",
+                "entityTypes/ns.entity_type/entities/ns.other_entity",
+            ],
+            name="entity",
+        )
+        pd.testing.assert_series_equal(expected, normalized)
+
+    def test_get_namespace_from_entity_type_name(self):
+        self.assertEqual("ns", get_namespace_from_resource_identifier("ns.entity_type"))
+        self.assertEqual(None, get_namespace_from_resource_identifier("entity_type"))
+
+    def test_get_namespace_from_entity_type_name__invalid_name_should_fail(self):
+        self.assertRaises(
+            ValueError,
+            get_namespace_from_resource_identifier,
+            "ns.ns2.entity_type",
+        )

@@ -1,5 +1,5 @@
 import logging
-from typing import Mapping, Optional, Union
+from typing import Mapping, Optional, Set, Union
 
 from pandas import DataFrame, Index
 from pandas.core.arrays import ExtensionArray
@@ -14,6 +14,8 @@ from exabel_data_sdk.services.csv_loading_constants import (
 from exabel_data_sdk.services.csv_reader import CsvReader
 from exabel_data_sdk.services.file_loading_exception import FileLoadingException
 from exabel_data_sdk.services.file_loading_result import FileLoadingResult
+from exabel_data_sdk.util.case_insensitive_column import get_case_insensitive_column
+from exabel_data_sdk.util.deprecate_arguments import deprecate_arguments
 from exabel_data_sdk.util.exceptions import TypeConvertionError
 from exabel_data_sdk.util.resource_name_normalization import normalize_resource_name
 from exabel_data_sdk.util.type_converter import type_converter
@@ -29,14 +31,14 @@ class CsvEntityLoader:
     def __init__(self, client: ExabelClient):
         self._client = client
 
+    @deprecate_arguments(name_column="entity_column", namespace=None)
     def load_entities(
         self,
         *,
         filename: str,
         separator: str = ",",
-        namespace: str,
         entity_type: str = None,
-        name_column: str = None,
+        entity_column: str = None,
         display_name_column: str = None,
         description_column: str = None,
         property_columns: Mapping[str, type] = None,
@@ -46,6 +48,9 @@ class CsvEntityLoader:
         error_on_any_failure: bool = False,
         retries: int = DEFAULT_NUMBER_OF_RETRIES,
         abort_threshold: Optional[float] = 0.5,
+        # Deprecated arguments
+        name_column: str = None,  # pylint: disable=unused-argument
+        namespace: str = None,  # pylint: disable=unused-argument
     ) -> FileLoadingResult:
         """
         Load a CSV file and upload the entities specified therein to the Exabel Data API.
@@ -53,13 +58,13 @@ class CsvEntityLoader:
         Args:
             filename: the location of the CSV file
             separator: the separator used in the CSV file
-            namespace: an Exabel namespace
             entity_type: the type of entities to be loaded (which must already exist in the data
                 model); if not specified, it defaults to the name of the name column header
-            name_column: the column for the entity name; if not specified, defaults to the first
+            entity_column: the column for the entity name; if not specified, defaults to the first
                 column in the file
             display_name_column: the column name for the entity’s display name; if not specified,
-                the entity name is used
+                defaults to the second column in the file, or the entity name if the file only
+                contains one column.
             description_column: the column name for the entity description; if not specified, no
                 description is provided
             property_columns: a mapping of column names to data types for the entity properties;
@@ -76,30 +81,53 @@ class CsvEntityLoader:
             logger.info("Running dry-run...")
 
         logger.info("Loading entities from %s", filename)
-        name_col_ref = name_column or 0
-        if property_columns is None:
+        preview_df = CsvReader.read_file(
+            filename, separator, string_columns=[], keep_default_na=False, nrows=0
+        )
+
+        string_columns: Set[Union[str, int]] = set()
+        name_col_ref = entity_column or 0
+        display_name_col_ref = (
+            display_name_column or preview_df.columns[1]
+            if len(preview_df.columns) > 1
+            else name_col_ref
+        )
+        string_columns.add(get_case_insensitive_column(name_col_ref, preview_df.columns))
+        string_columns.add(get_case_insensitive_column(display_name_col_ref, preview_df.columns))
+        if property_columns is not None:
+            for pc in property_columns:
+                string_columns.add(get_case_insensitive_column(pc, preview_df.columns))
+        else:
             property_columns = {}
-        string_columns = {
-            name_col_ref,
-            display_name_column or name_col_ref,
-        }
-        string_columns.update(property_columns)
         if description_column:
-            string_columns.add(description_column)
+            string_columns.add(get_case_insensitive_column(description_column, preview_df.columns))
         entities_df = CsvReader.read_file(
             filename, separator, string_columns=string_columns, keep_default_na=False
         )
+        entities_df.columns = [column.lower() for column in entities_df.columns]
 
-        name_col = name_column or entities_df.columns[0]
-        display_name_col = display_name_column or name_col
+        name_col = entity_column or entities_df.columns[0]
+        display_name_col = (
+            display_name_column or entities_df.columns[1]
+            if len(entities_df.columns) > 1
+            else name_col
+        )
         description_col = description_column
 
-        entity_type_name = f"entityTypes/{entity_type or name_col}"
-        if not self._client.entity_api.get_entity_type(entity_type_name):
+        # Entity types are reversed because we want to match the first entity type returned by the
+        # API lexicographically.
+        entity_types = {
+            et.name.lower(): et
+            for et in reversed(self._client.entity_api.list_entity_types().results)
+        }
+        entity_type = entity_type or name_col
+        entity_type_name = f"entityTypes/{entity_type}"
+        try:
+            entity_type_name = entity_types[entity_type_name.lower()].name
+        except KeyError as e:
             raise FileLoadingException(
-                f"Did not find entity type {entity_type_name}.\n"
-                f"The available entity types are: {self._client.entity_api.list_entity_types()}"
-            )
+                f"The available entity types are: {entity_types.values()}"
+            ) from e
 
         if not set(property_columns).issubset(entities_df.columns):
             raise FileLoadingException(
@@ -110,7 +138,7 @@ class CsvEntityLoader:
         try:
             entities = [
                 Entity(
-                    name=f"{entity_type_name}/entities/{namespace}."
+                    name=f"{entity_type_name}/entities/{self._client.namespace}."
                     f"{normalize_resource_name(row[name_col])}",
                     display_name=row[display_name_col],
                     description=row[description_col] if description_col else "",

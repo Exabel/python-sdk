@@ -47,13 +47,6 @@ class BaseScript(CommandLineScript, abc.ABC):
             default="management.api.exabel.com",
             help="Management API host on format 'hostname[:port]'",
         )
-        self.parser.add_argument(
-            "--use-json",
-            required=False,
-            action="store_true",
-            default=False,
-            help="If set, send requests as JSON over HTTP rather than gRPC",
-        )
 
     def run(self) -> None:
         args = self.parse_arguments()
@@ -83,7 +76,6 @@ class BaseScript(CommandLineScript, abc.ABC):
             management_api_host=management_api_host,
             management_api_port=management_api_port,
             api_key=api_key,
-            use_json=args.use_json,
             extra_headers=extra_headers,
         )
         self.run_script(client, args)

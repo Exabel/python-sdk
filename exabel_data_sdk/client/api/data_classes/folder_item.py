@@ -39,6 +39,7 @@ class FolderItem:
         name (str):             Folder item resource name. Example: "derivedSignals/123".
         display_name (str):     Display name of the folder item.
         item_type (str):        Type of the folder item.
+        description (str):      Description of the folder item.
         create_time (datetime): Time the item was created.
         update_time (datetime): Time the item was last updated.
         created_by (str):       Resource name of the user who created the item.
@@ -51,6 +52,7 @@ class FolderItem:
         name: str,
         display_name: str,
         item_type: FolderItemType,
+        description: str,
         create_time: datetime,
         update_time: datetime,
         created_by: Optional[str],
@@ -64,6 +66,7 @@ class FolderItem:
             name (str):             Folder item resource name. Example: "derivedSignals/123".
             display_name (str):     Display name of the folder item.
             item_type (str):        Type of the folder item.
+            description (str):      Description of the folder item.
             create_time (datetime): Time the item was created.
             update_time (datetime): Time the item was last updated.
             created_by (str):       Resource name of the user who created the item.
@@ -73,6 +76,7 @@ class FolderItem:
         self.name = name
         self.display_name = display_name
         self.item_type = item_type
+        self.description = description
         self.create_time = create_time
         self.update_time = update_time
         self.created_by = created_by
@@ -86,6 +90,7 @@ class FolderItem:
             name=folder_item.name,
             display_name=folder_item.display_name,
             item_type=FolderItemType(folder_item.item_type),
+            description=folder_item.description,
             create_time=cls._proto_timestamp_to_datetime(folder_item.create_time),
             update_time=cls._proto_timestamp_to_datetime(folder_item.update_time),
             created_by=folder_item.created_by or None,
@@ -99,6 +104,7 @@ class FolderItem:
             name=self.name,
             display_name=self.display_name,
             item_type=self.item_type.value,
+            description=self.description,
             create_time=self._datetime_to_proto_timestamp(self.create_time),
             update_time=self._datetime_to_proto_timestamp(self.update_time),
             created_by=self.created_by,
@@ -113,6 +119,7 @@ class FolderItem:
             and self.name == other.name
             and self.display_name == other.display_name
             and self.item_type == other.item_type
+            and self.description == other.description
             and self.create_time == other.create_time
             and self.update_time == other.update_time
             and self.created_by == other.created_by
@@ -127,9 +134,10 @@ class FolderItem:
     def __repr__(self) -> str:
         return (
             f"FolderItem(parent='{self.parent}', name='{self.name}', "
-            f"display_name='{self.display_name}', item_type={self.item_type}, "
-            f"create_time={self.create_time}, update_time={self.update_time}, "
-            f"created_by={self.created_by}, updated_by={self.updated_by})"
+            f"display_name='{self.display_name}', description={self.description}, "
+            f"item_type={self.item_type}, create_time={self.create_time}, "
+            f"update_time={self.update_time}, created_by={self.created_by}, "
+            f"updated_by={self.updated_by})"
         )
 
     @staticmethod

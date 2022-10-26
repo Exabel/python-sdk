@@ -3,9 +3,6 @@ from typing import Optional
 from exabel_data_sdk.client.api.api_client.grpc.derived_signal_grpc_client import (
     DerivedSignalGrpcClient,
 )
-from exabel_data_sdk.client.api.api_client.http.derived_signal_http_client import (
-    DerivedSignalHttpClient,
-)
 from exabel_data_sdk.client.api.data_classes.derived_signal import DerivedSignal
 from exabel_data_sdk.client.api.data_classes.request_error import ErrorType, RequestError
 from exabel_data_sdk.client.client_config import ClientConfig
@@ -22,8 +19,8 @@ class DerivedSignalApi:
     API class for derived signal CRUD operations.
     """
 
-    def __init__(self, config: ClientConfig, use_json: bool = False):
-        self.client = (DerivedSignalHttpClient if use_json else DerivedSignalGrpcClient)(config)
+    def __init__(self, config: ClientConfig):
+        self.client = DerivedSignalGrpcClient(config)
 
     def create_derived_signal(self, signal: DerivedSignal, folder: str = None) -> DerivedSignal:
         """

@@ -3,7 +3,9 @@ import unittest
 from unittest.mock import MagicMock, patch
 
 from exabel_data_sdk.client.api.data_classes.entity import Entity
+from exabel_data_sdk.client.api.data_classes.entity_type import EntityType
 from exabel_data_sdk.scripts.load_entities_from_csv import LoadEntitiesFromCsv
+from exabel_data_sdk.tests.client.exabel_mock_client import ExabelMockClient
 from exabel_data_sdk.tests.scripts.common_utils import load_test_data_from_csv
 
 common_args = [
@@ -16,11 +18,15 @@ common_args = [
 
 
 class TestLoadEntities(unittest.TestCase):
-    def test_read_file(self):
+    def test_read_file_with_uppercased_entity_type_in_column_non_existing(self):
         args = common_args + [
             "--filename",
             "./exabel_data_sdk/tests/resources/data/entities.csv",
-            "--description-col",
+            "--name-column",
+            "brand",
+            "--display-name-column",
+            "brand",
+            "--description-column",
             "description",
         ]
         client = load_test_data_from_csv(LoadEntitiesFromCsv, args)
@@ -38,6 +44,59 @@ class TestLoadEntities(unittest.TestCase):
         ]
         self.check_entities(client, expected_entities)
 
+    def test_read_file__non_existent_entity_column_should_fail(self):
+        args = common_args + [
+            "--filename",
+            "./exabel_data_sdk/tests/resources/data/entities.csv",
+            "--description-column",
+            "description",
+            "--name-column",
+            "COMPANY",
+        ]
+        with self.assertRaises(KeyError) as context:
+            load_test_data_from_csv(LoadEntitiesFromCsv, args)
+        self.assertEqual("company", context.exception.args[0])
+
+    def test_read_file_with_uppercased_entity_type_in_argument_existing(self):
+        args = common_args + [
+            "--filename",
+            "./exabel_data_sdk/tests/resources/data/entities.csv",
+            "--description-column",
+            "description",
+            "--entity-type",
+            "ANOTHER_BRAND",
+            "--name-column",
+            "BRAND",
+            "--display-name-column",
+            "BRAND",
+        ]
+        script = LoadEntitiesFromCsv(args, f"Test{type(LoadEntitiesFromCsv).__name__}")
+        client = ExabelMockClient()
+        client.entity_api.create_entity_type(
+            EntityType(
+                name="entityTypes/ANOTHER_BRAND",
+                display_name="Another Brand Uppercased",
+                description="This is another uppercased brand",
+            )
+        )
+        script.run_script(client, script.parse_arguments())
+
+        expected_entities = [
+            Entity(
+                name="entityTypes/ANOTHER_BRAND/entities/test.Spring_Vine",
+                display_name="Spring & Vine",
+                description="Shampoo bars",
+            ),
+            Entity(
+                name="entityTypes/ANOTHER_BRAND/entities/test.The_Coconut_Tree",
+                display_name="The Coconut Tree",
+                description="Sri Lankan street food",
+            ),
+        ]
+        self.check_entities(
+            client, expected_entities, expected_entity_type="entityTypes/ANOTHER_BRAND"
+        )
+
     def test_read_file_with_integer_identifier(self):
         file_args = common_args + [
             "--filename",
@@ -45,17 +104,19 @@ class TestLoadEntities(unittest.TestCase):
         ]
         extra_args = [[], ["--name-column", "brand"]]
         expected_entities = [
-            Entity(name="entityTypes/brand/entities/test.0001", display_name="0001"),
-            Entity(name="entityTypes/brand/entities/test.0002", display_name="0002"),
+            Entity(name="entityTypes/brand/entities/test.0001", display_name="Spring & Vine"),
+            Entity(name="entityTypes/brand/entities/test.0002", display_name="The Coconut Tree"),
         ]
         for e_args in extra_args:
             args = file_args + e_args
             client = load_test_data_from_csv(LoadEntitiesFromCsv, args)
             self.check_entities(client, expected_entities)
 
-    def check_entities(self, client, expected_entities):
+    def check_entities(
+        self, client, expected_entities, expected_entity_type: str = "entityTypes/brand"
+    ):
         """Check expected entities against actual entities retrieved from the client"""
-        all_entities = client.entity_api.list_entities("entityTypes/brand").results
+        all_entities = client.entity_api.list_entities(expected_entity_type).results
         self.assertListEqual(sorted(expected_entities), sorted(all_entities))
         for expected_entity in expected_entities:
             entity = client.entity_api.get_entity(expected_entity.name)
@@ -65,7 +126,7 @@ class TestLoadEntities(unittest.TestCase):
         args = common_args + [
             "--filename",
             "./exabel_data_sdk/tests/resources/data/entities_with_duplicated_brands.csv",
-            "--description-col",
+            "--description-column",
             "description",
         ]
         with self.assertRaises(ValueError) as context:
@@ -97,7 +158,9 @@ class TestLoadEntities(unittest.TestCase):
         args = common_args + [
             "--filename",
             "./exabel_data_sdk/tests/resources/data/entities.csv",
-            "--description-col",
+            "--display-name-column",
+            "brand",
+            "--description-column",
             "description",
             "--upsert",
         ]

@@ -2,6 +2,7 @@ import unittest
 from unittest import mock
 
 from exabel_data_sdk import ExabelClient
+from exabel_data_sdk.client.api.relationship_api import RelationshipApi
 from exabel_data_sdk.scripts.update_relationship_type import UpdateRelationshipType
 
 common_args = [
@@ -14,15 +15,18 @@ common_args = [
 
 
 class TestUpdateRelationshipType(unittest.TestCase):
+    def setUp(self) -> None:
+        self.client = mock.create_autospec(ExabelClient)
+        self.client.relationship_api = mock.create_autospec(RelationshipApi)
+
     def test_update_description(self):
         args = common_args + [
             "--description",
             "My updated description.",
         ]
         script = UpdateRelationshipType(args, "Update a relationship type.")
-        client = mock.create_autospec(ExabelClient(api_key="123"))
-        script.run_script(client, script.parse_arguments())
-        call_args_list = client.relationship_api.update_relationship_type.call_args_list
+        script.run_script(self.client, script.parse_arguments())
+        call_args_list = self.client.relationship_api.update_relationship_type.call_args_list
         update_mask = call_args_list[0][1]["update_mask"].paths
 
         self.assertEqual(call_args_list[0][0][0].description, "My updated description.")
@@ -33,9 +37,8 @@ class TestUpdateRelationshipType(unittest.TestCase):
             "--is-ownership",
         ]
         script = UpdateRelationshipType(args, "Update a relationship type.")
-        client = mock.create_autospec(ExabelClient(api_key="123"))
-        script.run_script(client, script.parse_arguments())
-        call_args_list = client.relationship_api.update_relationship_type.call_args_list
+        script.run_script(self.client, script.parse_arguments())
+        call_args_list = self.client.relationship_api.update_relationship_type.call_args_list
         update_mask = call_args_list[0][1]["update_mask"].paths
 
         self.assertEqual(call_args_list[0][0][0].is_ownership, True)
@@ -46,9 +49,8 @@ class TestUpdateRelationshipType(unittest.TestCase):
             "--no-is-ownership",
         ]
         script = UpdateRelationshipType(args, "Update a relationship type.")
-        client = mock.create_autospec(ExabelClient(api_key="123"))
-        script.run_script(client, script.parse_arguments())
-        call_args_list = client.relationship_api.update_relationship_type.call_args_list
+        script.run_script(self.client, script.parse_arguments())
+        call_args_list = self.client.relationship_api.update_relationship_type.call_args_list
         update_mask = call_args_list[0][1]["update_mask"].paths
 
         self.assertEqual(call_args_list[0][0][0].is_ownership, False)
@@ -59,9 +61,8 @@ class TestUpdateRelationshipType(unittest.TestCase):
             "--allow-missing",
         ]
         script = UpdateRelationshipType(args, "Update a relationship type.")
-        client = mock.create_autospec(ExabelClient(api_key="123"))
-        script.run_script(client, script.parse_arguments())
-        call_args_list = client.relationship_api.update_relationship_type.call_args_list
+        script.run_script(self.client, script.parse_arguments())
+        call_args_list = self.client.relationship_api.update_relationship_type.call_args_list
         allow_missing = call_args_list[0][1]["allow_missing"]
 
         self.assertEqual(allow_missing, True)

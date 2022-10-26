@@ -26,14 +26,13 @@ class ReadBigQuery(SqlScript):
             "--credentials-path",
             help=(
                 "Path and filename to the json file that will be used to authenticate the service "
-                "account to use for the querying against Google BigQuery."
-                "Credentials can be downloaded using a command like this:"
-                "'gcloud iam service-accounts keys create <key-file> "
-                " --iam-account=<service-account>@<project>.iam.gserviceaccount.com'"
-                "Optionally to specifying with '--credentials-path', a service account can be "
-                "authenticated using the Google Cloud SDK command "
-                "'gcloud auth activate-service-account "
-                "<service-account>@<project>.iam.gserviceaccount.com --key-file=<key-file>"
+                "account to use for the querying against Google BigQuery. Credentials can be "
+                "downloaded using a command like this: 'gcloud iam service-accounts keys create "
+                "<key-file> --iam-account=<service-account>@<project>.iam.gserviceaccount.com'. "
+                "If no credentials are specified, the authentication will be attempted using the "
+                "Google Cloud SDK. A service account can also be authenticated using the Google "
+                "Cloud SDK with the command 'gcloud auth activate-service-account "
+                "<service-account>@<project>.iam.gserviceaccount.com --key-file=<key-file>'"
             ),
         )
 

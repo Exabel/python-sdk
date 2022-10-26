@@ -5,9 +5,6 @@ from google.protobuf.field_mask_pb2 import FieldMask
 from exabel_data_sdk.client.api.api_client.grpc.relationship_grpc_client import (
     RelationshipGrpcClient,
 )
-from exabel_data_sdk.client.api.api_client.http.relationship_http_client import (
-    RelationshipHttpClient,
-)
 from exabel_data_sdk.client.api.bulk_insert import bulk_insert
 from exabel_data_sdk.client.api.data_classes.paging_result import PagingResult
 from exabel_data_sdk.client.api.data_classes.relationship import Relationship
@@ -37,8 +34,8 @@ class RelationshipApi:
     API class for entity relationship CRUD operations.
     """
 
-    def __init__(self, config: ClientConfig, use_json: bool = False):
-        self.client = (RelationshipHttpClient if use_json else RelationshipGrpcClient)(config)
+    def __init__(self, config: ClientConfig):
+        self.client = RelationshipGrpcClient(config)
 
     def list_relationship_types(
         self, page_size: int = 1000, page_token: str = None

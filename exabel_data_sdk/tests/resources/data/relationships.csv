@@ -1,4 +1,4 @@
-entity_from,brand,description
+ENTITY_FROM,BRAND,DESCRIPTION
 entityTypes/company/company_x,Spring & Vine,Owned since 2019
 entityTypes/company/company_x,Spring & Vine,This entry might be ignored because it's a duplicate
 entityTypes/company/company_y,The Coconut Tree,Acquired for $200M

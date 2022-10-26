@@ -1,14 +1,18 @@
 import argparse
+import logging
 import os
 from typing import Collection, Mapping, Optional, Sequence, Union
 
 import pandas as pd
 
+from exabel_data_sdk.scripts.actions import DeprecatedArgumentAction
 from exabel_data_sdk.scripts.base_script import BaseScript
 from exabel_data_sdk.services.csv_loading_constants import (
     DEFAULT_NUMBER_OF_RETRIES,
     DEFAULT_NUMBER_OF_THREADS,
 )
+
+logger = logging.getLogger(__name__)
 
 
 class CsvScript(BaseScript):
@@ -41,18 +45,16 @@ class CsvScript(BaseScript):
             default=False,
             help="Only print to console instead of uploading.",
         )
-        namespace = os.getenv("EXABEL_NAMESPACE")
-        help_text = "The customer's namespace into which to load the resources."
-        if namespace:
-            help_text += f" Defaults to '{namespace}' (from EXABEL_NAMESPACE environment variable)"
-        else:
-            help_text += " Can also be specified in the EXABEL_NAMESPACE environment variable."
+        if os.getenv("EXABEL_NAMESPACE"):
+            logger.warning(
+                "Specifying a namespace in the environment variable EXABEL_NAMESPACE is deprecated."
+            )
         self.parser.add_argument(
             "--namespace",
-            required=not namespace,
             type=str,
-            default=namespace,
-            help=help_text,
+            action=DeprecatedArgumentAction,
+            help=argparse.SUPPRESS,
+            replace_with_none=True,
         )
         self.parser.add_argument(
             "--threads",

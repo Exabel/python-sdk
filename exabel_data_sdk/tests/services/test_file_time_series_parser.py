@@ -4,7 +4,12 @@ from itertools import zip_longest
 import pandas as pd
 import pandas.testing as pdt
 
-from exabel_data_sdk.services.file_time_series_parser import ParsedTimeSeriesFile
+from exabel_data_sdk.services.file_time_series_parser import (
+    ParsedTimeSeriesFile,
+    SignalNamesInColumns,
+    SignalNamesInRows,
+    _remove_dot_int,
+)
 
 # pylint: disable=protected-access
 
@@ -82,3 +87,45 @@ class TestTimeSeriesFileParser(unittest.TestCase):
         )
         for e, a in zip_longest(invalid_series, actual):
             pdt.assert_series_equal(e, a)
+
+    def test_validate_long_format_columns(self):
+        self.assertTrue(
+            SignalNamesInRows.is_valid(
+                pd.DataFrame(columns=["mic:ticker", "signal", "value", "date"])
+            )
+        )
+        self.assertTrue(
+            SignalNamesInRows.is_valid(pd.DataFrame(columns=["1brand", "signal", "value", "date"]))
+        )
+        self.assertFalse(
+            SignalNamesInRows.is_valid(
+                pd.DataFrame(columns=["mic:ticker", "signal", "brand", "value", "date"])
+            )
+        )
+        self.assertFalse(
+            SignalNamesInRows.is_valid(pd.DataFrame(columns=["mic:ticker", "signal", "value"]))
+        )
+
+    def test_validate_medium_format_columns(self):
+        self.assertTrue(
+            SignalNamesInColumns.is_valid(pd.DataFrame(columns=["mic:ticker", "date", "signal1"]))
+        )
+        self.assertFalse(
+            SignalNamesInColumns.is_valid(
+                pd.DataFrame(columns=["mic:ticker", "date", "signal1", "1thing"])
+            )
+        )
+        self.assertTrue(
+            SignalNamesInColumns.is_valid(pd.DataFrame(columns=["1thing", "date", "signal1"]))
+        )
+        self.assertFalse(
+            SignalNamesInColumns.is_valid(pd.DataFrame(columns=["date", "signal1", "1thing"]))
+        )
+
+    def test_remove_dot_int(self):
+        self.assertEqual("asdf.fefe", _remove_dot_int("asdf.fefe"))
+        self.assertEqual("asdf.", _remove_dot_int("asdf."))
+        self.assertEqual(".asdf", _remove_dot_int(".asdf"))
+        self.assertEqual("asdf", _remove_dot_int("asdf.1"))
+        self.assertEqual("asdf", _remove_dot_int("asdf.10000"))
+        self.assertEqual("asdf.1", _remove_dot_int("asdf.1.100"))
