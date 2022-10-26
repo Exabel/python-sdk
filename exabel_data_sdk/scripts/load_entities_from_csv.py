@@ -3,6 +3,7 @@ import sys
 from typing import Sequence
 
 from exabel_data_sdk import ExabelClient
+from exabel_data_sdk.scripts.actions import CaseInsensitiveArgumentAction, DeprecatedArgumentAction
 from exabel_data_sdk.scripts.csv_script import CsvScript
 from exabel_data_sdk.services.csv_entity_loader import CsvEntityLoader
 from exabel_data_sdk.services.file_loading_exception import FileLoadingException
@@ -26,6 +27,17 @@ class LoadEntitiesFromCsv(CsvScript):
 
     Optionally, another column may specify a display name for the entity, and another column
     may give a description for the entity.
+
+    All column names are lower cased after the file is read. For instance, "BRAND" or "BranD"
+    becomes "brand".
+
+    Resource lookup in the Exabel API supports case-insensitivity. If there exists a resource where
+    a resource identifier matches the lower case column name, this resource will be used.
+    If there are multiple resources that match the same column name, the first lexicographical
+    match is used.
+
+    Example: The column name "BRAND" matches the entity type with resource identifier "brand"
+    and "Brand". If both exist, "brand" is chosen.
     """
 
     def __init__(self, argv: Sequence[str], description: str):
@@ -39,30 +51,43 @@ class LoadEntitiesFromCsv(CsvScript):
                 "If not specified, defaults to the same value as the name_column argument."
             ),
         )
-        self.parser.add_argument(
-            "--name-column",
-            required=False,
+        entity_group = self.parser.add_mutually_exclusive_group()
+        entity_group.add_argument(
+            "--entity-column",
             type=str,
+            action=CaseInsensitiveArgumentAction,
             help=(
                 "The column name for the entity name. "
-                "If not specified, defaults to the first column in the file."
+                "If not specified, defaults to the first column in the file. "
+                "Supports case-insensitive column names."
             ),
+        )
+        entity_group.add_argument(
+            "--name-column",
+            dest="entity_column",
+            type=str,
+            help=argparse.SUPPRESS,
+            action=DeprecatedArgumentAction,
+            case_insensitive=True,
         )
         self.parser.add_argument(
             "--display-name-column",
             required=False,
             type=str,
+            action=CaseInsensitiveArgumentAction,
             help=(
-                "The column name for the entity's display name. "
-                "If not specified, uses the entity name"
+                "The column name for the entity's display name. The value is case insensitive. "
+                "If not specified, defaults to the second column in the file, or the entity name "
+                "if the file only contains one column."
             ),
         )
         self.parser.add_argument(
             "--description-column",
             required=False,
             type=str,
+            action=CaseInsensitiveArgumentAction,
             help=(
-                "The column name for the entity description. "
+                "The column name for the entity description. The value is case insensitive. "
                 "If not specified, no description is provided."
             ),
         )
@@ -71,11 +96,13 @@ class LoadEntitiesFromCsv(CsvScript):
             nargs="+",
             required=False,
             type=str,
+            action=CaseInsensitiveArgumentAction,
             default=[],
             help=(
                 "Mappings of column name to data type for the entity properties. If not "
                 "specified, no properties are provided. Should be specified in the following "
-                "format: 'column_name:type'. Supported types are bool, str, int, float."
+                "format: 'column_name:type'. The 'column_name' part is case insensitive. "
+                "Supported types are bool, str, int, float."
             ),
         )
         self.parser.add_argument(
@@ -91,9 +118,8 @@ class LoadEntitiesFromCsv(CsvScript):
             CsvEntityLoader(client).load_entities(
                 filename=args.filename,
                 separator=args.sep,
-                namespace=args.namespace,
                 entity_type=args.entity_type,
-                name_column=args.name_column,
+                entity_column=args.entity_column,
                 display_name_column=args.display_name_column,
                 description_column=args.description_column,
                 property_columns=parse_property_columns(*args.property_columns),

@@ -8,6 +8,7 @@ from exabel_data_sdk.services.csv_loading_constants import (
 )
 from exabel_data_sdk.services.file_loading_result import FileLoadingResult
 from exabel_data_sdk.services.file_time_series_loader import FileTimeSeriesLoader
+from exabel_data_sdk.util.deprecate_arguments import deprecate_arguments
 
 logger = logging.getLogger(__name__)
 
@@ -20,13 +21,13 @@ class CsvTimeSeriesLoader:
     def __init__(self, client: ExabelClient):
         self._client = client
 
+    @deprecate_arguments(namespace=None)
     def load_time_series(
         self,
         *,
         filename: str,
         entity_mapping_filename: str = None,
         separator: str = ",",
-        namespace: str,
         pit_current_time: bool = False,
         pit_offset: Optional[int] = None,
         create_missing_signals: bool = False,
@@ -38,6 +39,8 @@ class CsvTimeSeriesLoader:
         error_on_any_failure: bool = False,
         retries: int = DEFAULT_NUMBER_OF_RETRIES,
         abort_threshold: Optional[float] = 0.5,
+        # Deprecated arguments
+        namespace: str = None,  # pylint: disable=unused-argument
     ) -> FileLoadingResult:
         """
         Load a CSV file and upload the time series to the Exabel Data API
@@ -47,7 +50,6 @@ class CsvTimeSeriesLoader:
             entity_mapping_filename: the location of the entity mapping file to use; only *.json and
                 *.csv extensions are supported
             separator: the separator used in the CSV file
-            namespace: an Exabel namespace
             pit_current_time: set the known time of the uploaded data to be the time at which it is
                 inserted into the Exabel system
             pit_offset: set the known time of the uploaded data to be the timestamp of each data
@@ -73,7 +75,6 @@ class CsvTimeSeriesLoader:
             filename=filename,
             entity_mapping_filename=entity_mapping_filename,
             separator=separator,
-            namespace=namespace,
             pit_current_time=pit_current_time,
             pit_offset=pit_offset,
             create_missing_signals=create_missing_signals,

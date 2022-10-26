@@ -1,7 +1,6 @@
 from typing import Sequence
 
 from exabel_data_sdk.client.api.api_client.grpc.user_grpc_client import UserGrpcClient
-from exabel_data_sdk.client.api.api_client.http.user_http_client import UserHttpClient
 from exabel_data_sdk.client.api.data_classes.group import Group
 from exabel_data_sdk.client.api.data_classes.user import User
 from exabel_data_sdk.client.client_config import ClientConfig
@@ -16,8 +15,8 @@ class UserApi:
     API class for user operations.
     """
 
-    def __init__(self, config: ClientConfig, use_json: bool = False):
-        self.client = (UserHttpClient if use_json else UserGrpcClient)(config)
+    def __init__(self, config: ClientConfig):
+        self.client = UserGrpcClient(config)
 
     def list_users(self) -> Sequence[User]:
         """

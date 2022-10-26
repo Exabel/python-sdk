@@ -6,8 +6,7 @@ from google.protobuf import timestamp_pb2
 from google.protobuf.wrappers_pb2 import DoubleValue
 
 from exabel_data_sdk.client.api.api_client.grpc.time_series_grpc_client import TimeSeriesGrpcClient
-from exabel_data_sdk.client.api.api_client.http.time_series_http_client import TimeSeriesHttpClient
-from exabel_data_sdk.client.api.bulk_insert import bulk_insert
+from exabel_data_sdk.client.api.bulk_import import bulk_import
 from exabel_data_sdk.client.api.data_classes.paging_result import PagingResult
 from exabel_data_sdk.client.api.data_classes.request_error import ErrorType, RequestError
 from exabel_data_sdk.client.api.resource_creation_result import (
@@ -38,8 +37,8 @@ class TimeSeriesApi:
     API class for time series CRUD operations.
     """
 
-    def __init__(self, config: ClientConfig, use_json: bool):
-        self.client = (TimeSeriesHttpClient if use_json else TimeSeriesGrpcClient)(config)
+    def __init__(self, config: ClientConfig):
+        self.client = TimeSeriesGrpcClient(config)
 
     def get_signal_time_series(
         self, signal: str, page_size: int = 1000, page_token: str = None
@@ -365,42 +364,120 @@ class TimeSeriesApi:
         self,
         series: Sequence[pd.Series],
         create_tag: bool = False,
-        threads: int = 40,
+        threads: int = 4,
+        default_known_time: DefaultKnownTime = None,
+        retries: int = 5,
+        abort_threshold: Optional[float] = 0.5,
+        threads_for_import: int = 4,
+    ) -> ResourceCreationResults[pd.Series]:
+        """Import the provided time series in batches.
+
+        Calls import_time_series for each of the provided time series in batches, while catching
+        errors and tracking progress. If any error occurs while importing a time series, the time
+        series will be retried individually.
+
+        The name attribute of each time series is taken to be the resource name. See the docstring
+        of upsert_time_series regarding required format for this resource name.
+
+        Args:
+            series:         The time series to be imported.
+            create_tag:     Set to true to create a tag for every entity type a signal has time
+                            series for. If a tag already exists, it will be updated when time
+                            series are created (or deleted) regardless of the value of this flag.
+            threads:        The number of parallel upload threads to use, when falling back to
+                            uploading time series individually.
+            default_known_time:
+                            Specify a default known time policy. This is used to determine
+                            the Known Time for data points where a specific known time timestamp
+                            has not been given. If not provided, the Exabel API defaults to the
+                            current time (upload time) as the Known Time.
+            retries:        Maximum number of retries to make for each failed request.
+            abort_threshold:
+                            The threshold for the proportion of failed requests that will cause the
+                            upload to be aborted; if it is `None`, the upload is never aborted.
+            threads_for_import:
+                            The number of parallel threads to use, when using the import endpoint.
+        """
+
+        return self._bulk_import_time_series(
+            series=series,
+            create_tag=create_tag,
+            threads_for_import=threads_for_import,
+            threads_for_insert=threads,
+            default_known_time=default_known_time,
+            retries=retries,
+            abort_threshold=abort_threshold,
+        )
+
+    def _bulk_import_time_series(
+        self,
+        series: Sequence[pd.Series],
+        create_tag: bool = False,
+        threads_for_import: int = 4,
+        threads_for_insert: int = 4,
         default_known_time: DefaultKnownTime = None,
         retries: int = 5,
         abort_threshold: Optional[float] = 0.5,
     ) -> ResourceCreationResults[pd.Series]:
-        """
-        Calls upsert_time_series for each of the provided time series,
-        while catching errors and tracking progress.
+        """Split the given series into batches and call import_time_series for each batch.
+
+        If a batch is not imported successfully by import_time_series,
+        append_time_series_data will be called for it, while catching errors and tracking progress.
 
         The name attribute of each time series is taken to be the resource name.
-        See the docstring of upsert_time_series regarding required format for this resource name.
+        See the docstring of append_time_series_data regarding required format
+        for this resource name.
 
         Args:
-            series:          The time series to be inserted
-            create_tag:      Set to true to create a tag for every entity type a signal has time
-                             series for. If a tag already exists, it will be updated when time
-                             series are created (or deleted) regardless of the value of this flag.
-            threads:         The number of parallel upload threads to use.
+            series:     The time series to be imported.
+            create_tag: Set to true to create a tag for every entity type a signal has time
+                        series for. If a tag already exists, it will be updated when time
+                        series are created (or deleted) regardless of the value of this flag.
+            threads_for_import:
+                        The number of parallel threads to run function using time series import API.
+            threads_for_insert:
+                        The number of parallel threads to run function using time series append API.
             default_known_time:
                         Specify a default known time policy. This is used to determine
                         the Known Time for data points where a specific known time timestamp
                         has not been given. If not provided, the Exabel API defaults to the
                         current time (upload time) as the Known Time.
-            retries:         Maximum number of retries to make for each failed request.
-            abort_threshold: the threshold for the proportion of failed requests that will cause the
-                 upload to be aborted; if it is `None`, the upload is never aborted
+            retries:    Maximum number of retries to run the insert function using time series
+                        append API make for each failed batch in the request.
+            abort_threshold:
+                        The threshold for the proportion of failed requests that will cause the
+                        upload to be aborted; if it is `None`, the upload is never aborted.
         """
+        series_batches = self._get_batches_for_import(series)
 
-        def insert(ts: pd.Series) -> ResourceCreationStatus:
-            self.upsert_time_series(
-                str(ts.name), ts, create_tag=create_tag, default_known_time=default_known_time
+        def import_func(ts_sequence: Sequence[pd.Series]) -> Sequence[ResourceCreationStatus]:
+            self.import_time_series(
+                parent="signals/-",
+                series=ts_sequence,
+                default_known_time=default_known_time,
+                allow_missing=True,
+                create_tag=create_tag,
+            )
+            return [ResourceCreationStatus.UPSERTED] * len(ts_sequence)
+
+        def insert_func(ts: pd.Series) -> ResourceCreationStatus:
+            self.append_time_series_data(
+                name=str(ts.name),
+                series=ts,
+                default_known_time=default_known_time,
+                allow_missing=True,
+                create_tag=create_tag,
             )
             return ResourceCreationStatus.UPSERTED
 
-        return bulk_insert(
-            series, insert, threads=threads, retries=retries, abort_threshold=abort_threshold
+        return bulk_import(
+            series_batches,
+            import_func,
+            insert_func,
+            threads_for_import,
+            threads_for_insert,
+            retries,
+            abort_threshold,
         )
 
     @staticmethod

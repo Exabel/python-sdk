@@ -1,4 +1,5 @@
 import abc
+import collections
 import logging
 import re
 from collections import defaultdict
@@ -36,7 +37,7 @@ ENTITY_COLUMNS = {
     "figi",
     "mic:ticker",
 }
-EMPTY_HEADER_PATTERN = re.compile(r"^Unnamed: ([0-9]+)$")
+EMPTY_HEADER_PATTERN = re.compile(r"^[Uu]nnamed: ([0-9]+)$")
 
 
 @dataclass
@@ -46,7 +47,7 @@ class TimeSeriesFileParser:
 
     For CSV imports, we force the first column to be a string column. This means that signal values
     should not be put in this column. Entity identifiers which start with numbers must be in the
-    first column when imported through CSV.
+    first column.
     """
 
     filename: str
@@ -88,7 +89,7 @@ class TimeSeriesFileParser:
         """Parse the file as a Pandas data frame."""
         extension = Path(self.filename).suffix.lower()
         if extension in file_constants.FULL_CSV_EXTENSIONS:
-            return pd.read_csv(
+            df = pd.read_csv(
                 self.filename,
                 nrows=nrows,
                 header=header or [0],
@@ -96,8 +97,8 @@ class TimeSeriesFileParser:
                 keep_default_na=True,
                 dtype={0: str},
             )
-        if extension in file_constants.EXCEL_EXTENSIONS:
-            return pd.read_excel(
+        elif extension in file_constants.EXCEL_EXTENSIONS:
+            df = pd.read_excel(
                 self.filename,
                 nrows=nrows,
                 header=header or [0],
@@ -106,7 +107,49 @@ class TimeSeriesFileParser:
                 dtype={0: str},
                 engine="openpyxl",
             )
-        raise FileLoadingException(f"Unknown file extension '{extension}'")
+        else:
+            raise FileLoadingException(f"Unknown file extension '{extension}'")
+        if not df.empty:
+            df = df.rename(lambda n: n.lower(), axis="columns", level=0)
+        return df
+
+    def check_columns(self) -> None:
+        """
+        Checks that the columns of the file are valid.
+
+        Note that the different subclasses of `ParsedTimeSeriesFile` have stricter validation rules,
+        so this check is only a generic check used to give better error messages in cases where the
+        data is not valid for any of the formats.
+
+        This function does encode some of the specifics of the different formats we support, so it
+        may need to be changed if we want to support more formats.
+        """
+        reserved = {"date", "known_time", "signal", "value"}
+        invalid = []
+        entity_column = None
+        for column in self.preview.columns:
+            if column in ENTITY_COLUMNS:
+                entity_column = column
+                break
+        for column in self.preview.columns:
+            if entity_column is not None and column == entity_column:
+                continue
+            if entity_column is None and _is_valid_entity_column(column, reserved):
+                continue
+            if column in reserved or _is_valid_signal_name(column, reserved, allow_duplicates=True):
+                continue
+            if EMPTY_HEADER_PATTERN.match(column):
+                raise FileLoadingException("Column with empty header found.")
+            invalid.append(column)
+        if invalid:
+            raise FileLoadingException(
+                f"Parsing failed, invalid column(s) found: " f"{', '.join(invalid)}."
+            )
+        if "date" in self.preview.columns and _has_duplicate_columns(self.preview.columns):
+            raise FileLoadingException(
+                "File contains duplicate columns: "
+                f"{', '.join(_get_duplicate_columns(self.preview.columns))}."
+            )
 
 
 class ParsedTimeSeriesFile(abc.ABC):
@@ -128,6 +171,16 @@ class ParsedTimeSeriesFile(abc.ABC):
         self._data = data
         self._entity_lookup_result = entity_lookup_result
 
+    @property
+    def data(self) -> pd.DataFrame:
+        """Return the data frame containing the time series."""
+        return self._data
+
+    @data.setter
+    def data(self, data: pd.DataFrame) -> None:
+        """Set the data frame containing the time series."""
+        self._data = data
+
     @classmethod
     def from_file(
         cls,
@@ -135,10 +188,11 @@ class ParsedTimeSeriesFile(abc.ABC):
         entity_api: EntityApi,
         namespace: str,
         entity_mapping: Mapping[str, Mapping[str, str]] = None,
+        entity_type: str = None,
     ) -> "ParsedTimeSeriesFile":
         """Read a file and construct a parsed file from the contents."""
         data = file_parser.parse_file()
-        return cls.from_data_frame(data, entity_api, namespace, entity_mapping)
+        return cls.from_data_frame(data, entity_api, namespace, entity_mapping, entity_type)
 
     @classmethod
     def from_data_frame(
@@ -147,10 +201,13 @@ class ParsedTimeSeriesFile(abc.ABC):
         entity_api: EntityApi,
         namespace: str,
         entity_mapping: Mapping[str, Mapping[str, str]] = None,
+        entity_type: str = None,
     ) -> "ParsedTimeSeriesFile":
         """Construct a new parsed file from a data frame."""
         data = cls._set_index(data)
-        data, entity_lookup_result = cls._map_entities(data, entity_api, namespace, entity_mapping)
+        data, entity_lookup_result = cls._map_entities(
+            data, entity_api, namespace, entity_mapping, entity_type
+        )
         return cls(data, entity_lookup_result)
 
     @classmethod
@@ -265,17 +322,24 @@ class ParsedTimeSeriesFile(abc.ABC):
         entity_api: EntityApi,
         namespace: str,
         entity_mapping: Mapping[str, Mapping[str, str]] = None,
+        preserve_namespace: bool = False,
     ) -> EntityResourceNames:
         """Look up the entity identifier, and throw an exception if no entities are found."""
         if not all(isinstance(i, str) for i in identifiers):
             example = next(i for i in identifiers if not isinstance(i, str))
+            if example is np.nan:
+                raise FileLoadingException("A cell in the entity column was empty.")
             raise FileLoadingException(
                 "Entity identifiers were not strings. If there are entity identifiers which are "
                 f"numbers, the first column must be the entity column. Example: '{example}'."
             )
         try:
             entity_resource_names = to_entity_resource_names(
-                entity_api, identifiers, namespace=namespace, entity_mapping=entity_mapping
+                entity_api,
+                identifiers,
+                namespace=namespace,
+                entity_mapping=entity_mapping,
+                preserve_namespace=preserve_namespace,
             )
         except ValueError as e:
             raise FileLoadingException(str(e)) from e
@@ -284,7 +348,34 @@ class ParsedTimeSeriesFile(abc.ABC):
         return entity_resource_names
 
 
-class SignalNamesInRows(ParsedTimeSeriesFile):
+class DateParsingMixin:
+    """
+    A mixin for those `ParsedTimeSeriesFile` classes which support "date" and "known_time" columns.
+    """
+
+    @classmethod
+    def _set_index(cls, data: pd.DataFrame) -> pd.DataFrame:
+        date_index = cls._try_parsing_date_column(data, "date")
+        date_index.name = None
+        if "known_time" in data.columns:
+            known_time_index = cls._try_parsing_date_column(data, "known_time")
+            known_time_index.name = None
+            data.set_index([date_index, known_time_index], inplace=True)
+            data.drop(columns=["date", "known_time"], inplace=True)
+        else:
+            data.set_index(date_index, inplace=True)
+            data.drop(columns="date", inplace=True)
+        return data
+
+    @classmethod
+    def _try_parsing_date_column(cls, data: pd.DataFrame, column: str) -> pd.DatetimeIndex:
+        try:
+            return pd.DatetimeIndex(data[column], tz=tz.tzutc())
+        except Exception as e:
+            raise FileLoadingException(f"Failed parsing '{column}' column as dates.") from e
+
+
+class SignalNamesInRows(DateParsingMixin, ParsedTimeSeriesFile):
     """
     Container for files which have a column containing the signal name.
 
@@ -312,11 +403,16 @@ class SignalNamesInRows(ParsedTimeSeriesFile):
             return False
         if "date" not in data.columns:
             return False
+        entity_column = None
         for column in data.columns:
-            if column not in cls.VALID_COLUMNS and not _is_valid_entity_column(
-                column, cls.RESERVED_COLUMNS
-            ):
-                return False
+            if column in cls.VALID_COLUMNS:
+                continue
+            if entity_column is None and _is_valid_entity_column(column, cls.RESERVED_COLUMNS):
+                entity_column = column
+                continue
+            return False
+        if _has_duplicate_columns(data.columns):
+            return False
         return True
 
     @classmethod
@@ -354,20 +450,6 @@ class SignalNamesInRows(ParsedTimeSeriesFile):
         return series
 
     @classmethod
-    def _set_index(cls, data: pd.DataFrame) -> pd.DataFrame:
-        date_index = pd.DatetimeIndex(data["date"], tz=tz.tzutc())
-        date_index.name = None
-        if "known_time" in data.columns:
-            known_time_index = pd.DatetimeIndex(data["known_time"], tz=tz.tzutc())
-            known_time_index.name = None
-            data.set_index([date_index, known_time_index], inplace=True)
-            data.drop(columns=["date", "known_time"], inplace=True)
-        else:
-            data.set_index(date_index, inplace=True)
-            data.drop(columns="date", inplace=True)
-        return data
-
-    @classmethod
     def _map_entities(
         cls,
         data: pd.DataFrame,
@@ -382,14 +464,20 @@ class SignalNamesInRows(ParsedTimeSeriesFile):
             data.insert(0, "entity", "entityTypes/global/entities/global")
         entity_column = cls._entity_column(data)
         identifiers = data[entity_column]
-        identifiers.name = entity_column
-        lookup_result = cls._lookup_entities(identifiers, entity_api, namespace, entity_mapping)
+        identifiers.name = entity_type or entity_column
+        lookup_result = cls._lookup_entities(
+            identifiers,
+            entity_api,
+            namespace,
+            entity_mapping,
+            preserve_namespace=entity_type is not None,
+        )
         data[entity_column] = lookup_result.names
         data.rename(columns={entity_column: "entity"}, inplace=True)
         return data, lookup_result
 
 
-class SignalNamesInColumns(ParsedTimeSeriesFile):
+class SignalNamesInColumns(DateParsingMixin, ParsedTimeSeriesFile):
     """
     Container for files which have one column for each signal.
 
@@ -400,8 +488,7 @@ class SignalNamesInColumns(ParsedTimeSeriesFile):
     | MSFT US          | 2020-01-02 | 11.0     | 23.1     | 2020-01-05  |
     +------------------+------------+----------+----------+-------------+
 
-    The entities must be in the first column, if included. When uploading global signals, the first
-    column should be the date column. The `known_time` column is optional.
+    The entities must be in the first column. The `known_time` column is optional.
     """
 
     RESERVED_COLUMNS = {"date", "known_time", "value", "signal"}
@@ -411,12 +498,14 @@ class SignalNamesInColumns(ParsedTimeSeriesFile):
     def is_valid(cls, data: pd.DataFrame) -> bool:
         if "date" not in data:
             return False
+        if len(data.columns) < 3:
+            return False
+        if not _is_valid_entity_column(data.columns[0], cls.RESERVED_COLUMNS):
+            return False
         # Check that all columns are valid:
-        for column in data.columns:
-            if (
-                column not in cls.VALID_COLUMNS
-                and not _is_valid_entity_column(column, cls.RESERVED_COLUMNS)
-                and not _is_valid_signal_name(column, cls.RESERVED_COLUMNS)
+        for column in data.columns[1:]:
+            if column not in cls.VALID_COLUMNS and not _is_valid_signal_name(
+                column, cls.RESERVED_COLUMNS
             ):
                 return False
         # Check that there is at least one possible signal column:
@@ -424,15 +513,13 @@ class SignalNamesInColumns(ParsedTimeSeriesFile):
             _is_valid_signal_name(column, cls.RESERVED_COLUMNS) for column in data.columns[1:]
         ):
             return False
+        if _has_duplicate_columns(data.columns):
+            return False
         return True
-
-    @classmethod
-    def _entity_column(cls, data: pd.DataFrame) -> str:
-        return data.columns[0]
 
     def get_signals(self) -> Sequence[str]:
         columns = set(self._data.columns)
-        columns.remove(self._entity_column(self._data))
+        columns.remove("entity")
         return list(columns)
 
     def get_entity_names(self) -> Sequence[str]:
@@ -462,18 +549,67 @@ class SignalNamesInColumns(ParsedTimeSeriesFile):
         return series
 
     @classmethod
-    def _set_index(cls, data: pd.DataFrame) -> pd.DataFrame:
-        date_index = pd.DatetimeIndex(data["date"], tz=tz.tzutc())
-        date_index.name = None
-        if "known_time" in data.columns:
-            known_time_index = pd.DatetimeIndex(data["known_time"], tz=tz.tzutc())
-            known_time_index.name = None
-            data.set_index([date_index, known_time_index], inplace=True)
-            data.drop(columns=["date", "known_time"], inplace=True)
-        else:
-            data.set_index(date_index, inplace=True)
-            data.drop(columns="date", inplace=True)
-        return data
+    def _map_entities(
+        cls,
+        data: pd.DataFrame,
+        entity_api: EntityApi,
+        namespace: str,
+        entity_mapping: Mapping[str, Mapping[str, str]] = None,
+        entity_type: str = None,
+    ) -> Tuple[pd.DataFrame, EntityResourceNames]:
+        entity_column = data.columns[0]
+        identifiers = data[entity_column]
+        identifiers.name = entity_type or entity_column
+        lookup_result = cls._lookup_entities(
+            identifiers,
+            entity_api,
+            namespace,
+            entity_mapping,
+            preserve_namespace=entity_type is not None,
+        )
+        data[entity_column] = lookup_result.names
+        data = data.loc[~data[entity_column].isnull()]
+        data = data.rename(columns={entity_column: "entity"})
+        return data, lookup_result
+
+
+class SignalNamesInColumnsGlobalEntity(SignalNamesInColumns):
+    """
+    Container for files which have one column for each signal, and no entity column.
+
+    This is the same format as `SignalNamesInColumns` except that there is no entity column.
+
+    +------------+----------+----------+-------------+
+    | date       | my_sig1  | my_sig2  | known_time  |
+    +------------+----------+----------+-------------+
+    | 2020-01-01 | 10.0     | 22.1     | 2020-01-04  |
+    | 2020-01-02 | 11.0     | 23.1     | 2020-01-05  |
+    +------------+----------+----------+-------------+
+
+    The dates must be in the first column. The `known_time` column is optional.
+    """
+
+    RESERVED_COLUMNS = {"date", "known_time", "value", "signal"}
+    VALID_COLUMNS = {"date", "known_time"}
+
+    @classmethod
+    def is_valid(cls, data: pd.DataFrame) -> bool:
+        if data.columns[0] != "date":
+            return False
+        if len(data.columns) < 2:
+            return False
+        # Check that all columns are valid:
+        for column in data.columns:
+            if column not in cls.VALID_COLUMNS and not _is_valid_signal_name(
+                column, cls.RESERVED_COLUMNS
+            ):
+                return False
+        # Check that there is at least one possible signal column:
+        if not any(_is_valid_signal_name(column, cls.RESERVED_COLUMNS) for column in data.columns):
+            return False
+        if _has_duplicate_columns(data.columns):
+            return False
+        return True
 
     @classmethod
     def _map_entities(
@@ -484,17 +620,13 @@ class SignalNamesInColumns(ParsedTimeSeriesFile):
         entity_mapping: Mapping[str, Mapping[str, str]] = None,
         entity_type: str = None,
     ) -> Tuple[pd.DataFrame, EntityResourceNames]:
-        if data.iloc[0].dtype in (int, float) or not _is_valid_entity_column(
-            data.columns[0], cls.RESERVED_COLUMNS
-        ):
-            data.insert(0, "entity", "entityTypes/global/entities/global")
-        entity_column = cls._entity_column(data)
-        identifiers = data[entity_column]
-        identifiers.name = entity_column
+        if entity_type is not None:
+            raise FileLoadingException(
+                "entity_type is not supported when loading time series to the global entity."
+            )
+        data.insert(0, "entity", "entityTypes/global/entities/global")
+        identifiers = data.iloc[:, 0]
         lookup_result = cls._lookup_entities(identifiers, entity_api, namespace, entity_mapping)
-        data[entity_column] = lookup_result.names
-        data = data.loc[~data[entity_column].isnull()]
-        data = data.rename(columns={entity_column: "entity"})
         return data, lookup_result
 
 
@@ -527,8 +659,11 @@ class EntitiesInColumns(ParsedTimeSeriesFile):
         entity_api: EntityApi,
         namespace: str,
         entity_mapping: Mapping[str, Mapping[str, str]] = None,
+        entity_type: str = None,
     ) -> "ParsedTimeSeriesFile":
         """Read a file and construct a new parser from the contents of that file."""
+        if entity_type is not None:
+            raise FileLoadingException("entity_type is not supported with this format")
         data = file_parser.parse_file(header=[0, 1])
         entity_type = data.columns.get_level_values(1)[0]
         data = cls._set_index(data)
@@ -538,6 +673,8 @@ class EntitiesInColumns(ParsedTimeSeriesFile):
     @classmethod
     def is_valid(cls, data: pd.DataFrame) -> bool:
         if data.columns[0] != "signal":
+            return False
+        if data.empty:
             return False
         if not _is_valid_entity_column(data.iloc[0, 0], cls.RESERVED_COLUMNS):
             return False
@@ -637,6 +774,14 @@ def _is_float(element: Any) -> bool:
         return False
 
 
+def _is_int(element: Any) -> bool:
+    try:
+        int(element)
+        return True
+    except ValueError:
+        return False
+
+
 def _is_valid_entity_column(column: str, invalid: Set[str]) -> bool:
     if column in invalid:
         return False
@@ -646,22 +791,13 @@ def _is_valid_entity_column(column: str, invalid: Set[str]) -> bool:
         return False
     if column in ENTITY_COLUMNS:
         return True
-    if column[0].isdigit():
-        return False
     return True
 
 
 def _is_valid_signal_name(column: str, invalid: Set[str], allow_duplicates: bool = False) -> bool:
     # Pandas adds a `.x` to duplicate columns, for example `col`, `col.1`, `col.2`.
     if allow_duplicates:
-        column, *rest = column.split(".")
-        if len(rest) > 1:
-            return False
-        if len(rest) == 1:
-            try:
-                int(rest[0])
-            except ValueError:
-                return False
+        column = _remove_dot_int(column)
     if column in invalid:
         return False
     try:
@@ -669,3 +805,21 @@ def _is_valid_signal_name(column: str, invalid: Set[str], allow_duplicates: bool
     except ValueError:
         return False
     return True
+
+
+def _has_duplicate_columns(columns: Sequence[str]) -> bool:
+    return len(_get_duplicate_columns(columns)) > 0
+
+
+def _get_duplicate_columns(columns: Sequence[str]) -> Sequence[str]:
+    without_ints = [_remove_dot_int(column) for column in columns]
+    return [column for column, count in collections.Counter(without_ints).items() if count > 1]
+
+
+def _remove_dot_int(column: str) -> str:
+    if "." not in column:
+        return column
+    *first, last = column.split(".")
+    if _is_int(last):
+        return ".".join(first)
+    return column

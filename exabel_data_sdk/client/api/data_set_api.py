@@ -3,7 +3,6 @@ from typing import Optional, Sequence
 from google.protobuf.field_mask_pb2 import FieldMask
 
 from exabel_data_sdk.client.api.api_client.grpc.data_set_grpc_client import DataSetGrpcClient
-from exabel_data_sdk.client.api.api_client.http.data_set_http_client import DataSetHttpClient
 from exabel_data_sdk.client.api.data_classes.data_set import DataSet
 from exabel_data_sdk.client.api.data_classes.request_error import ErrorType, RequestError
 from exabel_data_sdk.client.client_config import ClientConfig
@@ -21,8 +20,8 @@ class DataSetApi:
     API class for data set CRUD operations.
     """
 
-    def __init__(self, config: ClientConfig, use_json: bool = False):
-        self.client = (DataSetHttpClient if use_json else DataSetGrpcClient)(config)
+    def __init__(self, config: ClientConfig):
+        self.client = DataSetGrpcClient(config)
 
     def list_data_sets(self) -> Sequence[DataSet]:
         """

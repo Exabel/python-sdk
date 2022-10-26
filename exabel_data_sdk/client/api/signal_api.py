@@ -3,7 +3,6 @@ from typing import Optional
 from google.protobuf.field_mask_pb2 import FieldMask
 
 from exabel_data_sdk.client.api.api_client.grpc.signal_grpc_client import SignalGrpcClient
-from exabel_data_sdk.client.api.api_client.http.signal_http_client import SignalHttpClient
 from exabel_data_sdk.client.api.data_classes.paging_result import PagingResult
 from exabel_data_sdk.client.api.data_classes.request_error import ErrorType, RequestError
 from exabel_data_sdk.client.api.data_classes.signal import Signal
@@ -22,8 +21,8 @@ class SignalApi:
     API class for Signal CRUD operations.
     """
 
-    def __init__(self, config: ClientConfig, use_json: bool):
-        self.client = (SignalHttpClient if use_json else SignalGrpcClient)(config)
+    def __init__(self, config: ClientConfig):
+        self.client = SignalGrpcClient(config)
 
     def list_signals(self, page_size: int = 1000, page_token: str = None) -> PagingResult[Signal]:
         """

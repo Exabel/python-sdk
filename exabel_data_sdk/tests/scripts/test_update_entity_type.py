@@ -5,6 +5,7 @@ from google.protobuf.field_mask_pb2 import FieldMask
 
 from exabel_data_sdk import ExabelClient
 from exabel_data_sdk.client.api.data_classes.entity_type import EntityType
+from exabel_data_sdk.client.api.entity_api import EntityApi
 from exabel_data_sdk.scripts.update_entity_type import UpdateEntityType
 
 common_args = [
@@ -17,6 +18,10 @@ common_args = [
 
 
 class TestUpdateEntityType(unittest.TestCase):
+    def setUp(self) -> None:
+        self.client = mock.create_autospec(ExabelClient)
+        self.client.entity_api = mock.create_autospec(EntityApi)
+
     def test_update_entity_type(self):
         args = common_args + [
             "--display-name",
@@ -26,9 +31,8 @@ class TestUpdateEntityType(unittest.TestCase):
             "--is-associative",
         ]
         script = UpdateEntityType(args, "Update an entity type.")
-        mock_client = mock.create_autospec(ExabelClient(api_key="123"))
-        script.run_script(mock_client, script.parse_arguments())
-        mock_client.entity_api.update_entity_type.assert_called_once_with(
+        script.run_script(self.client, script.parse_arguments())
+        self.client.entity_api.update_entity_type.assert_called_once_with(
             entity_type=EntityType(
                 name="entityTypes/acme.entity_type",
                 display_name="The display name",
@@ -44,9 +48,8 @@ class TestUpdateEntityType(unittest.TestCase):
             "The display name",
         ]
         script = UpdateEntityType(args, "Update an entity type.")
-        mock_client = mock.create_autospec(ExabelClient(api_key="123"))
-        script.run_script(mock_client, script.parse_arguments())
-        mock_client.entity_api.update_entity_type.assert_called_once_with(
+        script.run_script(self.client, script.parse_arguments())
+        self.client.entity_api.update_entity_type.assert_called_once_with(
             entity_type=EntityType(
                 name="entityTypes/acme.entity_type",
                 display_name="The display name",

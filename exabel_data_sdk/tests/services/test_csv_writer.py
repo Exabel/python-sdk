@@ -16,8 +16,24 @@ class TestCsvWriter(unittest.TestCase):
             file_content = file.read()
         self.assertEqual("a,b\n1,4\n2,5\n3,6\n", file_content.decode("utf-8"))
 
-    def test_csv_writer_with_compression(self):
+    def test_csv_writer__with_compression(self):
         test_df = pd.DataFrame({"a": [1, 2, 3], "b": [4, 5, 6]})
+        with tempfile.NamedTemporaryFile(suffix=".csv.gz") as file:
+            CsvWriter.write_file(test_df, file.name)
+            file.seek(0)
+            file_content = file.read()
+        self.assertEqual("a,b\n1,4\n2,5\n3,6\n", gzip.decompress(file_content).decode("utf-8"))
+
+    def test_csv_writer__iterable(self):
+        test_df = [pd.DataFrame({"a": [1, 2], "b": [4, 5]}), pd.DataFrame({"a": [3], "b": [6]})]
+        with tempfile.NamedTemporaryFile() as file:
+            CsvWriter.write_file(test_df, file.name)
+            file.seek(0)
+            file_content = file.read()
+        self.assertEqual("a,b\n1,4\n2,5\n3,6\n", file_content.decode("utf-8"))
+
+    def test_csv_writer__iterable__with_compression(self):
+        test_df = [pd.DataFrame({"a": [1, 2], "b": [4, 5]}), pd.DataFrame({"a": [3], "b": [6]})]
         with tempfile.NamedTemporaryFile(suffix=".csv.gz") as file:
             CsvWriter.write_file(test_df, file.name)
             file.seek(0)

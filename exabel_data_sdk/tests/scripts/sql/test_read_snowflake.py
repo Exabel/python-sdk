@@ -28,6 +28,8 @@ class TestReadSnowflake(unittest.TestCase):
             "SELECT 1 AS A",
             "--output-file",
             "output_file",
+            "--batch-size",
+            "100",
         ]
         script = ReadSnowflake(args)
         self.assertEqual(
@@ -41,6 +43,7 @@ class TestReadSnowflake(unittest.TestCase):
                 role="role",
                 query="SELECT 1 AS A",
                 output_file="output_file",
+                batch_size=100,
             ),
             script.parse_arguments(),
         )

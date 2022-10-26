@@ -1,4 +1,5 @@
 import abc
+from typing import Iterable, Union
 
 import pandas as pd
 
@@ -8,5 +9,5 @@ class FileWriter(abc.ABC):
 
     @staticmethod
     @abc.abstractmethod
-    def write_file(df: pd.DataFrame, filepath: str) -> None:
-        """Write the DataFrame to a file."""
+    def write_file(df: Union[pd.DataFrame, Iterable[pd.DataFrame]], filepath: str) -> None:
+        """Write the DataFrame or iterable of DataFrames to a file."""

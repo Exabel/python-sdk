@@ -3,6 +3,7 @@ import sys
 from typing import Sequence
 
 from exabel_data_sdk import ExabelClient
+from exabel_data_sdk.scripts.actions import CaseInsensitiveArgumentAction
 from exabel_data_sdk.scripts.csv_script_with_entity_mapping import CsvScriptWithEntityMapping
 from exabel_data_sdk.services.file_loading_exception import FileLoadingException
 from exabel_data_sdk.services.file_time_series_loader import FileTimeSeriesLoader
@@ -41,6 +42,21 @@ class LoadTimeSeriesFromFile(CsvScriptWithEntityMapping):
     def __init__(self, argv: Sequence[str]):
         description = "Upload time series file."
         super().__init__(argv, description)
+        self.parser.add_argument(
+            "--entity-type",
+            type=str,
+            help=(
+                "The entity type of the entities in the file. If not specified, the entity type "
+                "will be inferred from the column name."
+            ),
+            action=CaseInsensitiveArgumentAction,
+        )
+        self.parser.add_argument(
+            "--identifier-type",
+            type=str,
+            help="The identifier type used to map the entities in the file.",
+            action=CaseInsensitiveArgumentAction,
+        )
         self.parser.add_argument(
             "--create-missing-signals",
             required=False,
@@ -93,7 +109,8 @@ class LoadTimeSeriesFromFile(CsvScriptWithEntityMapping):
                 filename=args.filename,
                 entity_mapping_filename=args.entity_mapping_filename,
                 separator=args.sep,
-                namespace=args.namespace,
+                entity_type=args.entity_type,
+                identifier_type=args.identifier_type,
                 pit_current_time=args.pit_current_time,
                 pit_offset=args.pit_offset,
                 create_missing_signals=args.create_missing_signals,

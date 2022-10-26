@@ -36,7 +36,7 @@ class UserLogin:
         The argument use_test_backend is only for internal engineering use at Exabel.
         Customers and partners should leave it at the default value.
         """
-        self.auth0 = "exabel-test.eu.auth0.com" if use_test_backend else "auth.exabel.com"
+        self.auth0 = "auth-test.exabel.com" if use_test_backend else "auth.exabel.com"
         self.client_id = (
             "VcQvJBLqhsTvKh1KMu6kXDCLWXumlubj"
             if use_test_backend

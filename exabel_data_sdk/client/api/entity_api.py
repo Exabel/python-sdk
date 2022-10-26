@@ -3,7 +3,6 @@ from typing import Optional, Sequence
 from google.protobuf.field_mask_pb2 import FieldMask
 
 from exabel_data_sdk.client.api.api_client.grpc.entity_grpc_client import EntityGrpcClient
-from exabel_data_sdk.client.api.api_client.http.entity_http_client import EntityHttpClient
 from exabel_data_sdk.client.api.bulk_insert import bulk_insert
 from exabel_data_sdk.client.api.data_classes.entity import Entity
 from exabel_data_sdk.client.api.data_classes.entity_type import EntityType
@@ -40,8 +39,8 @@ class EntityApi:
         search: a SearchService which contains a number of utility methods for searching
     """
 
-    def __init__(self, config: ClientConfig, use_json: bool):
-        self.client = (EntityHttpClient if use_json else EntityGrpcClient)(config)
+    def __init__(self, config: ClientConfig):
+        self.client = EntityGrpcClient(config)
         self.search = SearchService(self.client)
 
     def list_entity_types(
