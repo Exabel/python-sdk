@@ -46,7 +46,7 @@ setuptools.setup(
     },
     python_requires=">=3.7",
     classifiers=[
-        "Development Status :: 5 - Stable",
+        "Development Status :: 5 - Production/Stable",
         "Intended Audience :: Financial and Insurance Industry",
         "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3.8",
