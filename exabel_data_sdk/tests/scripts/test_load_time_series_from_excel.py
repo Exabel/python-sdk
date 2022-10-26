@@ -228,7 +228,7 @@ class TestUploadTimeSeries(unittest.TestCase):
             entity_type="company",
             identifier_type="bloomberg_symbol",
         )
-        search_kwargs = self.client.entity_api.search.entities_by_terms.call_args.kwargs
+        search_kwargs = self.client.entity_api.search.entities_by_terms.call_args[1]
         self.assertEqual("entityTypes/company", search_kwargs.get("entity_type"))
         self.assertCountEqual(
             [

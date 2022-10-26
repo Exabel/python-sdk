@@ -49,14 +49,14 @@ class TestFileTimeSeriesLoader(unittest.TestCase):
             entity_type="ns.brand",
             pit_current_time=True,
         )
-        create_ts_args = client.time_series_api.bulk_upsert_time_series.call_args
+        create_ts_args = client.time_series_api.bulk_upsert_time_series.call_args[0]
         pd.testing.assert_series_equal(
             pd.Series(
                 [9001],
                 index=[pd.Timestamp("2022-01-01T00:00:00+0000", tz="UTC")],
                 name="entityTypes/ns.brand/entities/ns.entity/signals/ns.my_signal",
             ),
-            create_ts_args.args[0][0],
+            create_ts_args[0][0],
         )
 
     @mock.patch("exabel_data_sdk.services.file_time_series_parser.TimeSeriesFileParser.parse_file")
@@ -80,20 +80,20 @@ class TestFileTimeSeriesLoader(unittest.TestCase):
             identifier_type="isin",
             pit_current_time=True,
         )
-        search_kwargs = client.entity_api.search.entities_by_terms.call_args.kwargs
+        search_kwargs = client.entity_api.search.entities_by_terms.call_args[1]
         self.assertCountEqual(
             [SearchTerm(field="isin", query="identifier")],
             search_kwargs.get("terms"),
         )
 
-        create_ts_args = client.time_series_api.bulk_upsert_time_series.call_args
+        create_ts_args = client.time_series_api.bulk_upsert_time_series.call_args[0]
         pd.testing.assert_series_equal(
             pd.Series(
                 [9001],
                 index=[pd.Timestamp("2022-01-01T00:00:00+0000", tz="UTC")],
                 name="entityTypes/company/entities/the_company/signals/ns.my_signal",
             ),
-            create_ts_args.args[0][0],
+            create_ts_args[0][0],
         )
 
 
