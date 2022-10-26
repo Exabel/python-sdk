@@ -1,28 +1,33 @@
 """Generated protocol buffer code."""
+from google.protobuf.internal import builder as _builder
 from google.protobuf import descriptor as _descriptor
-from google.protobuf import message as _message
-from google.protobuf import reflection as _reflection
+from google.protobuf import descriptor_pool as _descriptor_pool
 from google.protobuf import symbol_database as _symbol_database
 _sym_db = _symbol_database.Default()
 from google.api import field_behavior_pb2 as google_dot_api_dot_field__behavior__pb2
 from google.protobuf import struct_pb2 as google_dot_protobuf_dot_struct__pb2
 from .....protoc_gen_openapiv2.options import annotations_pb2 as protoc__gen__openapiv2_dot_options_dot_annotations__pb2
-DESCRIPTOR = _descriptor.FileDescriptor(name='exabel/api/data/v1/entity_messages.proto', package='exabel.api.data.v1', syntax='proto3', serialized_options=b'\n\x16com.exabel.api.data.v1B\x13EntityMessagesProtoP\x01Z\x16exabel.com/api/data/v1', create_key=_descriptor._internal_create_key, serialized_pb=b'\n(exabel/api/data/v1/entity_messages.proto\x12\x12exabel.api.data.v1\x1a\x1fgoogle/api/field_behavior.proto\x1a\x1cgoogle/protobuf/struct.proto\x1a.protoc_gen_openapiv2/options/annotations.proto"\xe2\x01\n\nEntityType\x12B\n\x04name\x18\x01 \x01(\tB4\xe0A\x05\xe0A\x02\x92A+J\x15"entityTypes/company"\xca>\x11\xfa\x02\x0eentityTypeName\x12&\n\x0cdisplay_name\x18\x02 \x01(\tB\x10\x92A\rJ\x0b"Companies"\x12,\n\x0bdescription\x18\x03 \x01(\tB\x17\x92A\x14J\x12"Public companies"\x12\x16\n\tread_only\x18\x04 \x01(\x08B\x03\xe0A\x03\x12"\n\x0eis_associative\x18\x05 \x01(\x08B\n\x92A\x07J\x05false"\xa1\x01\n\x06Entity\x12\'\n\x04name\x18\x01 \x01(\tB\x19\xe0A\x05\xe0A\x02\x92A\x10\xca>\r\xfa\x02\nentityName\x12\x14\n\x0cdisplay_name\x18\x02 \x01(\t\x12\x13\n\x0bdescription\x18\x03 \x01(\t\x12\x16\n\tread_only\x18\x04 \x01(\x08B\x03\xe0A\x03\x12+\n\nproperties\x18d \x01(\x0b2\x17.google.protobuf.StructBG\n\x16com.exabel.api.data.v1B\x13EntityMessagesProtoP\x01Z\x16exabel.com/api/data/v1b\x06proto3', dependencies=[google_dot_api_dot_field__behavior__pb2.DESCRIPTOR, google_dot_protobuf_dot_struct__pb2.DESCRIPTOR, protoc__gen__openapiv2_dot_options_dot_annotations__pb2.DESCRIPTOR])
-_ENTITYTYPE = _descriptor.Descriptor(name='EntityType', full_name='exabel.api.data.v1.EntityType', filename=None, file=DESCRIPTOR, containing_type=None, create_key=_descriptor._internal_create_key, fields=[_descriptor.FieldDescriptor(name='name', full_name='exabel.api.data.v1.EntityType.name', index=0, number=1, type=9, cpp_type=9, label=1, has_default_value=False, default_value=b''.decode('utf-8'), message_type=None, enum_type=None, containing_type=None, is_extension=False, extension_scope=None, serialized_options=b'\xe0A\x05\xe0A\x02\x92A+J\x15"entityTypes/company"\xca>\x11\xfa\x02\x0eentityTypeName', file=DESCRIPTOR, create_key=_descriptor._internal_create_key), _descriptor.FieldDescriptor(name='display_name', full_name='exabel.api.data.v1.EntityType.display_name', index=1, number=2, type=9, cpp_type=9, label=1, has_default_value=False, default_value=b''.decode('utf-8'), message_type=None, enum_type=None, containing_type=None, is_extension=False, extension_scope=None, serialized_options=b'\x92A\rJ\x0b"Companies"', file=DESCRIPTOR, create_key=_descriptor._internal_create_key), _descriptor.FieldDescriptor(name='description', full_name='exabel.api.data.v1.EntityType.description', index=2, number=3, type=9, cpp_type=9, label=1, has_default_value=False, default_value=b''.decode('utf-8'), message_type=None, enum_type=None, containing_type=None, is_extension=False, extension_scope=None, serialized_options=b'\x92A\x14J\x12"Public companies"', file=DESCRIPTOR, create_key=_descriptor._internal_create_key), _descriptor.FieldDescriptor(name='read_only', full_name='exabel.api.data.v1.EntityType.read_only', index=3, number=4, type=8, cpp_type=7, label=1, has_default_value=False, default_value=False, message_type=None, enum_type=None, containing_type=None, is_extension=False, extension_scope=None, serialized_options=b'\xe0A\x03', file=DESCRIPTOR, create_key=_descriptor._internal_create_key), _descriptor.FieldDescriptor(name='is_associative', full_name='exabel.api.data.v1.EntityType.is_associative', index=4, number=5, type=8, cpp_type=7, label=1, has_default_value=False, default_value=False, message_type=None, enum_type=None, containing_type=None, is_extension=False, extension_scope=None, serialized_options=b'\x92A\x07J\x05false', file=DESCRIPTOR, create_key=_descriptor._internal_create_key)], extensions=[], nested_types=[], enum_types=[], serialized_options=None, is_extendable=False, syntax='proto3', extension_ranges=[], oneofs=[], serialized_start=176, serialized_end=402)
-_ENTITY = _descriptor.Descriptor(name='Entity', full_name='exabel.api.data.v1.Entity', filename=None, file=DESCRIPTOR, containing_type=None, create_key=_descriptor._internal_create_key, fields=[_descriptor.FieldDescriptor(name='name', full_name='exabel.api.data.v1.Entity.name', index=0, number=1, type=9, cpp_type=9, label=1, has_default_value=False, default_value=b''.decode('utf-8'), message_type=None, enum_type=None, containing_type=None, is_extension=False, extension_scope=None, serialized_options=b'\xe0A\x05\xe0A\x02\x92A\x10\xca>\r\xfa\x02\nentityName', file=DESCRIPTOR, create_key=_descriptor._internal_create_key), _descriptor.FieldDescriptor(name='display_name', full_name='exabel.api.data.v1.Entity.display_name', index=1, number=2, type=9, cpp_type=9, label=1, has_default_value=False, default_value=b''.decode('utf-8'), message_type=None, enum_type=None, containing_type=None, is_extension=False, extension_scope=None, serialized_options=None, file=DESCRIPTOR, create_key=_descriptor._internal_create_key), _descriptor.FieldDescriptor(name='description', full_name='exabel.api.data.v1.Entity.description', index=2, number=3, type=9, cpp_type=9, label=1, has_default_value=False, default_value=b''.decode('utf-8'), message_type=None, enum_type=None, containing_type=None, is_extension=False, extension_scope=None, serialized_options=None, file=DESCRIPTOR, create_key=_descriptor._internal_create_key), _descriptor.FieldDescriptor(name='read_only', full_name='exabel.api.data.v1.Entity.read_only', index=3, number=4, type=8, cpp_type=7, label=1, has_default_value=False, default_value=False, message_type=None, enum_type=None, containing_type=None, is_extension=False, extension_scope=None, serialized_options=b'\xe0A\x03', file=DESCRIPTOR, create_key=_descriptor._internal_create_key), _descriptor.FieldDescriptor(name='properties', full_name='exabel.api.data.v1.Entity.properties', index=4, number=100, type=11, cpp_type=10, label=1, has_default_value=False, default_value=None, message_type=None, enum_type=None, containing_type=None, is_extension=False, extension_scope=None, serialized_options=None, file=DESCRIPTOR, create_key=_descriptor._internal_create_key)], extensions=[], nested_types=[], enum_types=[], serialized_options=None, is_extendable=False, syntax='proto3', extension_ranges=[], oneofs=[], serialized_start=405, serialized_end=566)
-_ENTITY.fields_by_name['properties'].message_type = google_dot_protobuf_dot_struct__pb2._STRUCT
-DESCRIPTOR.message_types_by_name['EntityType'] = _ENTITYTYPE
-DESCRIPTOR.message_types_by_name['Entity'] = _ENTITY
-_sym_db.RegisterFileDescriptor(DESCRIPTOR)
-EntityType = _reflection.GeneratedProtocolMessageType('EntityType', (_message.Message,), {'DESCRIPTOR': _ENTITYTYPE, '__module__': 'exabel.api.data.v1.entity_messages_pb2'})
-_sym_db.RegisterMessage(EntityType)
-Entity = _reflection.GeneratedProtocolMessageType('Entity', (_message.Message,), {'DESCRIPTOR': _ENTITY, '__module__': 'exabel.api.data.v1.entity_messages_pb2'})
-_sym_db.RegisterMessage(Entity)
-DESCRIPTOR._options = None
-_ENTITYTYPE.fields_by_name['name']._options = None
-_ENTITYTYPE.fields_by_name['display_name']._options = None
-_ENTITYTYPE.fields_by_name['description']._options = None
-_ENTITYTYPE.fields_by_name['read_only']._options = None
-_ENTITYTYPE.fields_by_name['is_associative']._options = None
-_ENTITY.fields_by_name['name']._options = None
-_ENTITY.fields_by_name['read_only']._options = None
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n(exabel/api/data/v1/entity_messages.proto\x12\x12exabel.api.data.v1\x1a\x1fgoogle/api/field_behavior.proto\x1a\x1cgoogle/protobuf/struct.proto\x1a.protoc_gen_openapiv2/options/annotations.proto"\xe2\x01\n\nEntityType\x12B\n\x04name\x18\x01 \x01(\tB4\xe0A\x05\xe0A\x02\x92A+J\x15"entityTypes/company"\xca>\x11\xfa\x02\x0eentityTypeName\x12&\n\x0cdisplay_name\x18\x02 \x01(\tB\x10\x92A\rJ\x0b"Companies"\x12,\n\x0bdescription\x18\x03 \x01(\tB\x17\x92A\x14J\x12"Public companies"\x12\x16\n\tread_only\x18\x04 \x01(\x08B\x03\xe0A\x03\x12"\n\x0eis_associative\x18\x05 \x01(\x08B\n\x92A\x07J\x05false"\xa1\x01\n\x06Entity\x12\'\n\x04name\x18\x01 \x01(\tB\x19\xe0A\x05\xe0A\x02\x92A\x10\xca>\r\xfa\x02\nentityName\x12\x14\n\x0cdisplay_name\x18\x02 \x01(\t\x12\x13\n\x0bdescription\x18\x03 \x01(\t\x12\x16\n\tread_only\x18\x04 \x01(\x08B\x03\xe0A\x03\x12+\n\nproperties\x18d \x01(\x0b2\x17.google.protobuf.StructBG\n\x16com.exabel.api.data.v1B\x13EntityMessagesProtoP\x01Z\x16exabel.com/api/data/v1b\x06proto3')
+_builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, globals())
+_builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'exabel.api.data.v1.entity_messages_pb2', globals())
+if _descriptor._USE_C_DESCRIPTORS == False:
+    DESCRIPTOR._options = None
+    DESCRIPTOR._serialized_options = b'\n\x16com.exabel.api.data.v1B\x13EntityMessagesProtoP\x01Z\x16exabel.com/api/data/v1'
+    _ENTITYTYPE.fields_by_name['name']._options = None
+    _ENTITYTYPE.fields_by_name['name']._serialized_options = b'\xe0A\x05\xe0A\x02\x92A+J\x15"entityTypes/company"\xca>\x11\xfa\x02\x0eentityTypeName'
+    _ENTITYTYPE.fields_by_name['display_name']._options = None
+    _ENTITYTYPE.fields_by_name['display_name']._serialized_options = b'\x92A\rJ\x0b"Companies"'
+    _ENTITYTYPE.fields_by_name['description']._options = None
+    _ENTITYTYPE.fields_by_name['description']._serialized_options = b'\x92A\x14J\x12"Public companies"'
+    _ENTITYTYPE.fields_by_name['read_only']._options = None
+    _ENTITYTYPE.fields_by_name['read_only']._serialized_options = b'\xe0A\x03'
+    _ENTITYTYPE.fields_by_name['is_associative']._options = None
+    _ENTITYTYPE.fields_by_name['is_associative']._serialized_options = b'\x92A\x07J\x05false'
+    _ENTITY.fields_by_name['name']._options = None
+    _ENTITY.fields_by_name['name']._serialized_options = b'\xe0A\x05\xe0A\x02\x92A\x10\xca>\r\xfa\x02\nentityName'
+    _ENTITY.fields_by_name['read_only']._options = None
+    _ENTITY.fields_by_name['read_only']._serialized_options = b'\xe0A\x03'
+    _ENTITYTYPE._serialized_start = 176
+    _ENTITYTYPE._serialized_end = 402
+    _ENTITY._serialized_start = 405
+    _ENTITY._serialized_end = 566

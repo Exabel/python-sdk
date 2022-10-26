@@ -30,6 +30,7 @@ class _FolderItemType(google___protobuf___internal___enum_type_wrapper____EnumTy
     TAG = typing___cast(FolderItemTypeValue, 6)
     SCREEN = typing___cast(FolderItemTypeValue, 7)
     FINANCIAL_MODEL = typing___cast(FolderItemTypeValue, 8)
+    CHART = typing___cast(FolderItemTypeValue, 9)
 FOLDER_ITEM_TYPE_INVALID = typing___cast(FolderItemTypeValue, 0)
 DERIVED_SIGNAL = typing___cast(FolderItemTypeValue, 1)
 PREDICTION_MODEL = typing___cast(FolderItemTypeValue, 2)
@@ -39,6 +40,7 @@ DRILL_DOWN = typing___cast(FolderItemTypeValue, 5)
 TAG = typing___cast(FolderItemTypeValue, 6)
 SCREEN = typing___cast(FolderItemTypeValue, 7)
 FINANCIAL_MODEL = typing___cast(FolderItemTypeValue, 8)
+CHART = typing___cast(FolderItemTypeValue, 9)
 
 class Folder(google___protobuf___message___Message):
     DESCRIPTOR: google___protobuf___descriptor___Descriptor = ...
@@ -63,6 +65,7 @@ class FolderItem(google___protobuf___message___Message):
     name: typing___Text = ...
     display_name: typing___Text = ...
     item_type: type___FolderItemTypeValue = ...
+    description: typing___Text = ...
     created_by: typing___Text = ...
     updated_by: typing___Text = ...
 
@@ -74,13 +77,13 @@ class FolderItem(google___protobuf___message___Message):
     def update_time(self) -> google___protobuf___timestamp_pb2___Timestamp:
         ...
 
-    def __init__(self, *, parent: typing___Optional[typing___Text]=None, name: typing___Optional[typing___Text]=None, display_name: typing___Optional[typing___Text]=None, item_type: typing___Optional[type___FolderItemTypeValue]=None, create_time: typing___Optional[google___protobuf___timestamp_pb2___Timestamp]=None, update_time: typing___Optional[google___protobuf___timestamp_pb2___Timestamp]=None, created_by: typing___Optional[typing___Text]=None, updated_by: typing___Optional[typing___Text]=None) -> None:
+    def __init__(self, *, parent: typing___Optional[typing___Text]=None, name: typing___Optional[typing___Text]=None, display_name: typing___Optional[typing___Text]=None, item_type: typing___Optional[type___FolderItemTypeValue]=None, description: typing___Optional[typing___Text]=None, create_time: typing___Optional[google___protobuf___timestamp_pb2___Timestamp]=None, update_time: typing___Optional[google___protobuf___timestamp_pb2___Timestamp]=None, created_by: typing___Optional[typing___Text]=None, updated_by: typing___Optional[typing___Text]=None) -> None:
         ...
 
     def HasField(self, field_name: typing_extensions___Literal[u'create_time', b'create_time', u'update_time', b'update_time']) -> builtin___bool:
         ...
 
-    def ClearField(self, field_name: typing_extensions___Literal[u'create_time', b'create_time', u'created_by', b'created_by', u'display_name', b'display_name', u'item_type', b'item_type', u'name', b'name', u'parent', b'parent', u'update_time', b'update_time', u'updated_by', b'updated_by']) -> None:
+    def ClearField(self, field_name: typing_extensions___Literal[u'create_time', b'create_time', u'created_by', b'created_by', u'description', b'description', u'display_name', b'display_name', u'item_type', b'item_type', u'name', b'name', u'parent', b'parent', u'update_time', b'update_time', u'updated_by', b'updated_by']) -> None:
         ...
 type___FolderItem = FolderItem
 

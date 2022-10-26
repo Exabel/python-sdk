@@ -83,11 +83,14 @@ def _bulk_insert(
         with ThreadPoolExecutor(max_workers=threads) as executor:
             for resource in resources:
                 if not results.abort:
+                    # The generic type hints do not guarantee that TResource refers to the same
+                    # class for each of the three parameters. This leads to mypy warnings for the
+                    # following function call.
                     executor.submit(
                         _process,
-                        results,
-                        resource,
-                        insert_func,
+                        results,  # type: ignore[arg-type]
+                        resource,  # type: ignore[arg-type]
+                        insert_func,  # type: ignore[arg-type]
                         # Python 3.9 added support for the shutdown argument 'cancel_futures'.
                         # We should set this argument to True once we have moved to this python
                         # version.
