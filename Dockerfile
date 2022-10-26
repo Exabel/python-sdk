@@ -1,6 +1,6 @@
-FROM python:3.6
+FROM python:3.7
 
-RUN pip3 install "pip==20.1.1" "pipenv==2020.6.2"
+RUN pip3 install "pip==22.1.2" "pipenv==2022.6.7"
 
 RUN mkdir /exabel
 WORKDIR /exabel

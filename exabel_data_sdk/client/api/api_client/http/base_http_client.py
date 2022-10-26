@@ -45,14 +45,14 @@ class BaseHttpClient:
             stacklevel=2,
         )
 
+        headers = {"Accept": "application/json"}
+        if self.config.api_key:
+            headers["X-Api-Key"] = self.config.api_key
         response = requests.request(
             method,
             f"https://{self.host}/v1/{url}",
             data=MessageToJson(body) if body is not None else None,
-            headers={
-                "Accept": "application/json",
-                "X-Api-Key": self.config.api_key,
-            },
+            headers=headers,
         )
         if response.status_code != 200:
             values = json.loads(response.content)
