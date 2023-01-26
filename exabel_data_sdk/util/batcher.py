@@ -1,7 +1,7 @@
 import itertools
 from typing import Iterable, Iterator, Sequence, TypeVar
 
-T = TypeVar("T")  # pylint: disable=invalid-name
+T = TypeVar("T")
 
 
 def batcher(iterable: Iterable[T], n: int = 1000) -> Iterator[Sequence[T]]:

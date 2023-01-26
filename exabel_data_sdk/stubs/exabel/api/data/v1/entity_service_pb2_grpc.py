@@ -61,6 +61,8 @@ class EntityServiceServicer(object):
         """Updates one entity type and returns it.
 
         This can also be used to create an entity type by setting `allow_missing` to `true`.
+
+        Note that that this method will update all fields unless `update_mask` is set.
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -117,6 +119,8 @@ class EntityServiceServicer(object):
         """Updates one entity and returns it.
 
         This can also be used to create an entity by setting `allow_missing` to `true`.
+
+        Note that that this method will update all fields unless `update_mask` is set.
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')

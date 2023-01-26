@@ -8,6 +8,7 @@ from exabel_data_sdk.client.api.namespace_api import NamespaceApi
 from exabel_data_sdk.client.api.prediction_model_api import PredictionModelApi
 from exabel_data_sdk.client.api.relationship_api import RelationshipApi
 from exabel_data_sdk.client.api.signal_api import SignalApi
+from exabel_data_sdk.client.api.tag_api import TagApi
 from exabel_data_sdk.client.api.time_series_api import TimeSeriesApi
 from exabel_data_sdk.client.api.user_api import UserApi
 from exabel_data_sdk.client.client_config import ClientConfig
@@ -20,17 +21,17 @@ class ExabelClient:
 
     def __init__(
         self,
-        api_key: str = None,
-        client_name: str = None,
-        data_api_host: str = None,
-        analytics_api_host: str = None,
-        management_api_host: str = None,
-        data_api_port: int = None,
-        analytics_api_port: int = None,
-        management_api_port: int = None,
-        timeout: int = None,
-        root_certificates: str = None,
-        extra_headers: Sequence[Tuple[str, str]] = None,
+        api_key: Optional[str] = None,
+        client_name: Optional[str] = None,
+        data_api_host: Optional[str] = None,
+        analytics_api_host: Optional[str] = None,
+        management_api_host: Optional[str] = None,
+        data_api_port: Optional[int] = None,
+        analytics_api_port: Optional[int] = None,
+        management_api_port: Optional[int] = None,
+        timeout: Optional[int] = None,
+        root_certificates: Optional[str] = None,
+        extra_headers: Optional[Sequence[Tuple[str, str]]] = None,
     ):
         """
         Initialize a new client.
@@ -71,6 +72,7 @@ class ExabelClient:
         self.data_set_api = DataSetApi(config)
         self.prediction_model_api = PredictionModelApi(config)
         self.derived_signal_api = DerivedSignalApi(config)
+        self.tag_api = TagApi(config)
         self.user_api = UserApi(config)
         self.library_api = LibraryApi(config)
         self.namespace_api = NamespaceApi(config)

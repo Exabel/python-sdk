@@ -24,14 +24,18 @@ class UserServiceServicer(object):
     """
 
     def ListGroups(self, request, context):
-        """List all groups. Only groups for the current customer is returned.
+        """Lists all groups. Only groups for the current customer is returned.
+
+        List all user groups in your customer, including the users in each user group.
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
     def ListUsers(self, request, context):
-        """List all users in the current customer.
+        """Lists all users in the current customer.
+
+        List all users in your customer
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')

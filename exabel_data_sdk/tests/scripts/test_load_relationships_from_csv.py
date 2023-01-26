@@ -125,7 +125,8 @@ class TestLoadRelationships(unittest.TestCase):
 
     def check_relationships(self, client, expected_relationships):
         """Check expected entities against actual entities retrieved from the client"""
-        all_relationships = client.relationship_api.list_relationships().results
+        relationship_type = expected_relationships[0].relationship_type
+        all_relationships = client.relationship_api.list_relationships(relationship_type)
         self.assertCountEqual(expected_relationships, all_relationships)
         for expected_relationship in expected_relationships:
             relationship = client.relationship_api.get_relationship(

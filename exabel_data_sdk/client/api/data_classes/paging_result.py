@@ -1,11 +1,11 @@
 from typing import Generic, Iterator, Sequence, TypeVar
 
-TValue = TypeVar("TValue")
+T = TypeVar("T")
 
 
-class PagingResult(Generic[TValue]):
+class PagingResult(Generic[T]):
     """
-    A sequence of results from the Exabel API that can be be retrieved with paging.
+    A sequence of results from the Exabel API that can be retrieved with paging.
 
     Attributes:
         results (list):         The results of a single request.
@@ -14,7 +14,7 @@ class PagingResult(Generic[TValue]):
         total_size (int):       The total number of results, irrespective of paging.
     """
 
-    def __init__(self, results: Sequence[TValue], next_page_token: str, total_size: int):
+    def __init__(self, results: Sequence[T], next_page_token: str, total_size: int):
         """
         Create a PagingResult.
 
@@ -28,8 +28,11 @@ class PagingResult(Generic[TValue]):
         self.next_page_token = next_page_token
         self.total_size = total_size
 
-    def __iter__(self) -> Iterator[TValue]:
+    def __iter__(self) -> Iterator[T]:
         return self.results.__iter__()
+
+    def __len__(self) -> int:
+        return len(self.results)
 
     def __str__(self) -> str:
         results = "\n   ".join([str(result) for result in self.results])

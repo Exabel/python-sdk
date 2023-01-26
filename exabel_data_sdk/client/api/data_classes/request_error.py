@@ -1,6 +1,11 @@
+from __future__ import annotations
+
+import logging
 from dataclasses import dataclass
 from enum import Enum, unique
 from typing import Optional, Sequence
+
+logger = logging.getLogger(__name__)
 
 
 @unique
@@ -26,10 +31,21 @@ class ErrorType(Enum):
     TIMEOUT = 6
     # Any internal error.
     INTERNAL = 10
+    # Any unknown error.
+    UNKNOWN = 11
 
     def retryable(self) -> bool:
         """Return whether it makes sense to retry the request if this error is given."""
         return self in (ErrorType.UNAVAILABLE, ErrorType.TIMEOUT, ErrorType.INTERNAL)
+
+    @classmethod
+    def from_precondition_failure_violation_type(cls, violation_type: str) -> ErrorType:
+        """Convert a violation type from a precondition failure to an error type."""
+        try:
+            return ErrorType[violation_type]
+        except KeyError:
+            logger.error("Unknown error type in precondition violation: %s", violation_type)
+            return ErrorType.UNKNOWN
 
 
 @dataclass

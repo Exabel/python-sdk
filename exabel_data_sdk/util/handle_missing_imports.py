@@ -1,19 +1,23 @@
 import sys
 import warnings
 from contextlib import contextmanager
-from typing import Iterator, Mapping
+from typing import Iterator, Mapping, Optional
 
 _OPTIONAL_DEPENDENCIES = {
     "snowflake": "snowflake-connector-python",
     "snowflake.sqlalchemy": "snowflake-sqlalchemy",
     "sqlalchemy": "sqlalchemy",
     "openpyxl": "openpyxl",
+    "google.cloud.bigquery": "google-cloud-bigquery",
+    "google.oauth2.service_account": "google-cloud-bigquery",
 }
 
 
 @contextmanager
 def handle_missing_imports(
-    module_library_map: Mapping[str, str] = None, warning: str = None, reraise: bool = False
+    module_library_map: Optional[Mapping[str, str]] = None,
+    warning: Optional[str] = None,
+    reraise: bool = False,
 ) -> Iterator:
     """
     Handle import errors when importing modules that can be missing. `module_library_map` is a

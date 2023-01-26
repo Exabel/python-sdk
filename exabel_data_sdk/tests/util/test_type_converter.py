@@ -1,7 +1,7 @@
 import unittest
 from math import isinf, isnan
 
-from exabel_data_sdk.util.exceptions import TypeConvertionError
+from exabel_data_sdk.util.exceptions import TypeConversionError
 from exabel_data_sdk.util.type_converter import type_converter
 
 
@@ -26,17 +26,17 @@ class TestTypeConverter(unittest.TestCase):
         self.assertEqual(type_converter("FALSE", bool), False)
 
     def test_type_converter_with_int_should_fail(self):
-        with self.assertRaises(TypeConvertionError):
+        with self.assertRaises(TypeConversionError):
             type_converter("1.0", int)
 
     def test_type_converter_with_float_should_fail(self):
-        with self.assertRaises(TypeConvertionError):
+        with self.assertRaises(TypeConversionError):
             type_converter("not-a-float", float)
 
     def test_type_converter_with_bool_should_fail(self):
-        with self.assertRaises(TypeConvertionError):
+        with self.assertRaises(TypeConversionError):
             type_converter("not-a-bool", bool)
 
     def test_type_converter_with_invalid_type_should_fail(self):
-        with self.assertRaises(TypeConvertionError):
+        with self.assertRaises(TypeConversionError):
             type_converter("string", list)

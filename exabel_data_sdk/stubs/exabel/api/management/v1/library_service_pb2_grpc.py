@@ -6,6 +6,10 @@ from google.protobuf import empty_pb2 as google_dot_protobuf_dot_empty__pb2
 
 class LibraryServiceStub(object):
     """Service to manage library items.
+
+    Requests to the LibraryService are executed in the context of the customer's service account (SA).
+    The SA is a special user that is a member of the customer user group, giving it access to all
+    folders that are shared with this user group, but not to private folders.
     """
 
     def __init__(self, channel):
@@ -27,81 +31,111 @@ class LibraryServiceStub(object):
 
 class LibraryServiceServicer(object):
     """Service to manage library items.
+
+    Requests to the LibraryService are executed in the context of the customer's service account (SA).
+    The SA is a special user that is a member of the customer user group, giving it access to all
+    folders that are shared with this user group, but not to private folders.
     """
 
     def ListFolders(self, request, context):
-        """List all folders. Folders are returned without folder items.
+        """Lists all folders.
+
+        Folders are returned without folder items - use the "Get folder" or "List folder items"
+        methods to get folder items.
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
     def GetFolder(self, request, context):
-        """Get a folder including its items.
+        """Gets a folder including its items.
+
+        The folder will be returned with its items.
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
     def CreateFolder(self, request, context):
-        """Create a folder.
+        """Creates a folder.
+
+        Only the display name can be set. Items must be added to the new folder subsequently with the
+        "Move folder items" method.
+
+        The folder will be created as private to the service account user. To let other users access
+        this folder, you must also share it with the "Share folder" method.
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
     def UpdateFolder(self, request, context):
-        """Update a folder.
+        """Updates a folder.
+
+        Only the display name can be updated. Items must be added to a folder with the "Move folder
+        items" method.
+
+        Note that this method update all fields unless `update_mask` is set.
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
     def DeleteFolder(self, request, context):
-        """Delete a folder.
+        """Deletes a folder.
 
-        The folder must be empty.
+        The folder must be empty before it can be deleted. Use the "Move folder items" if needed to
+        move items into another folder.
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
     def ListItems(self, request, context):
-        """List all items of a specific type.
+        """Lists all items of a specific type.
+
+        List all folder items of a specific type (e.g. derived signal, dashboard). To get all items in
+        a folder, use the "Get folder" method instead.
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
     def MoveItems(self, request, context):
-        """Move items to a folder.
+        """Moves items to a folder.
+
+        Specify the target folder that items should be moved into. The service account must have write
+        access to all items that you want to move.
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
     def ListFolderAccessors(self, request, context):
-        """List the accessors of a specific folder.
+        """Lists the accessors of a specific folder.
+
+        An accessor is a user group with either read-only or read/write access.
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
     def ShareFolder(self, request, context):
-        """Share a folder with a group.
+        """Shares a folder with a group.
 
-        - To grant write access to a group with only read access, call this method with the write flag set to true.
-        - To revoke only write access from a group, call this method with the write flag set to false.
+        You may find the user group resource names from the "List groups" method in the UserService.
+        - To grant write access to a group with only read access, call this method with the `write` flag set to `true`.
+        - To revoke only write access from a group, call this method with the `write` flag set to `false`.
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
     def UnshareFolder(self, request, context):
-        """Remove sharing of a folder with a group.
+        """Removes sharing of a folder with a group.
 
-        This revokes both read and write access. To revoke only write access, use ShareFolder
-        with the write flag set to false.
+        This revokes both read and write access. To revoke only write access, use the "Share folder"
+        method with the `write` flag set to `false`.
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -114,6 +148,10 @@ def add_LibraryServiceServicer_to_server(servicer, server):
 
 class LibraryService(object):
     """Service to manage library items.
+
+    Requests to the LibraryService are executed in the context of the customer's service account (SA).
+    The SA is a special user that is a member of the customer user group, giving it access to all
+    folders that are shared with this user group, but not to private folders.
     """
 
     @staticmethod

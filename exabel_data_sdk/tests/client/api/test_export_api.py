@@ -1,3 +1,4 @@
+import re
 import unittest
 from unittest.mock import MagicMock, patch
 
@@ -20,6 +21,17 @@ class TestExportApi(unittest.TestCase):
         export_api.signal_query("Sales_Actual", factset_id="QLGSL2-R")
         mock.assert_called_with(
             "SELECT time, Sales_Actual FROM signals WHERE factset_id = 'QLGSL2-R'"
+        )
+
+        export_api.signal_query("Sales_Actual", resource_name="entityTypes/company/entities/A1-E")
+        mock.assert_called_with(
+            "SELECT time, Sales_Actual FROM signals "
+            "WHERE resource_name = 'entityTypes/company/entities/A1-E'"
+        )
+
+        export_api.signal_query("Sales_Actual", resource_name=["A", "B"])
+        mock.assert_called_with(
+            "SELECT name, time, Sales_Actual FROM signals WHERE resource_name IN ('A', 'B')"
         )
 
         export_api.signal_query("Sales_Actual", ["AAPL US", "TSLA US"])
@@ -69,6 +81,54 @@ class TestExportApi(unittest.TestCase):
         mock.assert_called_with(
             "SELECT version, name, time, Sales_Actual FROM signals "
             "WHERE factset_id IN ('QLGSL2-R', 'FOOBAR') AND version IN ('2019-01-01', '2019-02-02')"
+        )
+
+    def test_batched_signal_query(self):
+        resource_name = list("ABCDEFGHIJ")
+        data = pd.concat(
+            [
+                pd.Series(resource_name, name="name"),
+                pd.Series(pd.date_range("2023-01-01", periods=10, name="time")),
+                pd.Series(range(10)),
+            ],
+            axis=1,
+        )
+        series = data.set_index(["name", "time"]).squeeze()
+
+        def side_effect(query: str):
+            exp_query = "SELECT name, time, Sales_Actual FROM signals WHERE resource_name IN (.*)"
+            m = re.fullmatch(exp_query, query)
+            assert m
+            names = m.group(1)
+            length = len(names.split(","))
+            self.assertLessEqual(length, batch_size)
+            return data.query(f"name in {names}")
+
+        export_api = ExportApi(auth_headers={})
+        export_api.run_query = MagicMock(name="run_query", side_effect=side_effect)
+        for batch_size in range(1, 12):
+            result = export_api.batched_signal_query(
+                batch_size, "Sales_Actual", resource_name=resource_name
+            )
+            pd.testing.assert_series_equal(series, result)
+
+    def test_batched_signal_query_error(self):
+        export_api = ExportApi(auth_headers={})
+        self.assertRaisesRegex(
+            ValueError,
+            "Need to specify an identification method",
+            export_api.batched_signal_query,
+            3,
+            "Sales_Actual",
+        )
+        self.assertRaisesRegex(
+            ValueError,
+            "At most one entity identification method",
+            export_api.batched_signal_query,
+            3,
+            "Sales_Actual",
+            bloomberg_ticker=["A", "B"],
+            factset_id=["C", "D"],
         )
 
     @patch("exabel_data_sdk.client.api.export_api.ExportApi")

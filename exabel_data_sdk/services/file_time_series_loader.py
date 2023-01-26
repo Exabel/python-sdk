@@ -1,5 +1,5 @@
 import logging
-from typing import List, Mapping, Optional, Sequence, Type
+from typing import List, Mapping, MutableSequence, Optional, Sequence, Type
 
 from google.protobuf.duration_pb2 import Duration
 
@@ -9,6 +9,7 @@ from exabel_data_sdk.client.api.data_classes.signal import Signal
 from exabel_data_sdk.services.csv_loading_constants import (
     DEFAULT_NUMBER_OF_RETRIES,
     DEFAULT_NUMBER_OF_THREADS,
+    DEFAULT_NUMBER_OF_THREADS_FOR_IMPORT,
 )
 from exabel_data_sdk.services.entity_mapping_file_reader import EntityMappingFileReader
 from exabel_data_sdk.services.file_constants import GLOBAL_ENTITY_NAME
@@ -46,23 +47,25 @@ class FileTimeSeriesLoader:
         self,
         *,
         filename: str,
-        entity_mapping_filename: str = None,
+        entity_mapping_filename: Optional[str] = None,
         separator: str = ",",
-        entity_type: str = None,
-        identifier_type: str = None,
+        entity_type: Optional[str] = None,
+        identifier_type: Optional[str] = None,
         pit_current_time: Optional[bool] = False,
         pit_offset: Optional[int] = None,
         create_missing_signals: bool = False,
         create_tag: bool = True,
         create_library_signal: bool = True,
-        global_time_series: bool = None,
-        threads: int = DEFAULT_NUMBER_OF_THREADS,
+        global_time_series: Optional[bool] = None,
+        threads: int = DEFAULT_NUMBER_OF_THREADS_FOR_IMPORT,
         dry_run: bool = False,
         error_on_any_failure: bool = False,
         retries: int = DEFAULT_NUMBER_OF_RETRIES,
         abort_threshold: Optional[float] = 0.5,
+        batch_size: Optional[int] = None,
+        skip_validation: bool = False,
         # Deprecated arguments
-        namespace: str = None,  # pylint: disable=unused-argument
+        namespace: Optional[str] = None,  # pylint: disable=unused-argument
     ) -> Sequence[TimeSeriesFileLoadingResult]:
         """
         Load a file and upload the time series to the Exabel Data API
@@ -97,12 +100,27 @@ class FileTimeSeriesLoader:
             retries: the maximum number of retries to make for each failed request
             abort_threshold: the threshold for the proportion of failed requests that will cause the
                  upload to be aborted; if it is `None`, the upload is never aborted
+            batch_size: the number of rows to read and upload in each batch; if not specified, the
+                entire file will be read into memory and uploaded in a single batch
+            skip_validation: if True, the time series are not validated before uploading
         """
+        if batch_size is not None:
+            logger.info(
+                "Reading input data in batches of %d rows. File format with entities in columns is "
+                "not supported. Duplicate detection is best effort.",
+                batch_size,
+            )
         entity_mapping = EntityMappingFileReader.read_entity_mapping_file(
             entity_mapping_filename, separator=separator
         )
         results = []
-        for parser in TimeSeriesFileParser.from_file(filename, separator):
+        for batch_no, parser in enumerate(
+            TimeSeriesFileParser.from_file(filename, separator, batch_size), 1
+        ):
+            if parser.sheet_name():
+                logger.info("Uploading sheet: %s", parser.sheet_name())
+            elif batch_size is not None:
+                logger.info("Uploading batch no: %d", batch_no)
             results.append(
                 self._load_time_series(
                     parser=parser,
@@ -120,6 +138,7 @@ class FileTimeSeriesLoader:
                     error_on_any_failure=error_on_any_failure,
                     retries=retries,
                     abort_threshold=abort_threshold,
+                    skip_validation=skip_validation,
                 )
             )
         return results
@@ -128,22 +147,21 @@ class FileTimeSeriesLoader:
         self,
         *,
         parser: TimeSeriesFileParser,
-        entity_mapping: Mapping[str, Mapping[str, str]] = None,
-        entity_type: str = None,
-        identifier_type: str = None,
+        entity_mapping: Optional[Mapping[str, Mapping[str, str]]] = None,
+        entity_type: Optional[str] = None,
+        identifier_type: Optional[str] = None,
         pit_current_time: Optional[bool] = False,
         pit_offset: Optional[int] = None,
         create_missing_signals: bool = False,
         create_tag: bool = True,
         create_library_signal: bool = True,
-        global_time_series: bool = None,
+        global_time_series: Optional[bool] = None,
         threads: int = DEFAULT_NUMBER_OF_THREADS,
         dry_run: bool = False,
         error_on_any_failure: bool = False,
         retries: int = DEFAULT_NUMBER_OF_RETRIES,
         abort_threshold: Optional[float] = 0.5,
-        # Deprecated arguments
-        namespace: str = None,  # pylint: disable=unused-argument
+        skip_validation: bool = False,
     ) -> TimeSeriesFileLoadingResult:
         """
         Load time series from a parser.
@@ -167,8 +185,10 @@ class FileTimeSeriesLoader:
         elif pit_current_time is None and pit_offset is None:
             default_known_time = DefaultKnownTime(current_time=True)
 
-        candidate_parsers: Sequence[Type[ParsedTimeSeriesFile]] = [
-            EntitiesInColumns,
+        candidate_parsers: MutableSequence[Type[ParsedTimeSeriesFile]] = []
+        if parser.data_frame is None:
+            candidate_parsers.append(EntitiesInColumns)
+        candidate_parsers += [
             SignalNamesInRows,
             SignalNamesInColumns,
             SignalNamesInColumnsGlobalEntity,
@@ -244,7 +264,7 @@ class FileTimeSeriesLoader:
         # lexicographically.
         all_signals = {
             signal.name.lower(): signal
-            for signal in reversed(self._client.signal_api.list_signals().results)
+            for signal in reversed(list(self._client.signal_api.get_signal_iterator()))
         }
 
         missing_signals = []
@@ -260,10 +280,7 @@ class FileTimeSeriesLoader:
         parsed_file.data = parsed_file.data.rename(columns=columns_to_rename)
 
         if missing_signals:
-            logger.info("Available signals are:")
-            logger.info(self._client.signal_api.list_signals())
-            logger.info("The following signals are missing:")
-            logger.info(missing_signals)
+            logger.info("The following signals are missing:\n%s", missing_signals)
             if create_missing_signals:
                 logger.info("Creating the missing signals.")
                 if not dry_run:
@@ -283,7 +300,9 @@ class FileTimeSeriesLoader:
             parsed_file.get_entity_names(),
             [w.query for w in parsed_file.get_entity_lookup_result().warnings],
         )
-        series, invalid_series = parsed_file.get_series(prefix=prefix)
+        series, invalid_series = parsed_file.get_series(
+            prefix=prefix, skip_validation=skip_validation
+        )
 
         if dry_run:
             logger.info("Running the script would create the following time series:")

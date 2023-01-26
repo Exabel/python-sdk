@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from dataclasses import dataclass
 from typing import Generic, Mapping, Optional, Sequence, TypeVar
 
@@ -7,7 +9,7 @@ from exabel_data_sdk.client.api.data_classes.entity import Entity
 from exabel_data_sdk.client.api.data_classes.relationship import Relationship
 from exabel_data_sdk.client.api.resource_creation_result import ResourceCreationResults
 
-TResource = TypeVar("TResource", Entity, Relationship, pd.Series)
+ResourceT = TypeVar("ResourceT", Entity, Relationship, pd.Series)
 
 
 @dataclass
@@ -27,7 +29,7 @@ class EntityMappingResult:
     unmapped_entity_queries: Sequence[str]
 
 
-class FileLoadingResult(Generic[TResource]):
+class FileLoadingResult(Generic[ResourceT]):
     """
     Contains a summary of the results of uploading data from a data file.
 
@@ -40,14 +42,25 @@ class FileLoadingResult(Generic[TResource]):
 
     def __init__(
         self,
-        results: ResourceCreationResults[TResource] = None,
+        results: Optional[ResourceCreationResults[ResourceT]] = None,
         *,
-        warnings: Sequence[str] = None,
+        warnings: Optional[Sequence[str]] = None,
         aborted: bool = False,
     ):
-        self.results: Optional[ResourceCreationResults[TResource]] = results
+        self.results: Optional[ResourceCreationResults[ResourceT]] = results
         self.warnings = warnings or []
         self.aborted = aborted
+
+    def update(self, other: FileLoadingResult[ResourceT]) -> None:
+        """
+        Update this result with the results from another result.
+        """
+        if self.results is None:
+            self.results = other.results
+        elif self.results is not None and other.results is not None:
+            self.results.update(other.results)
+        self.warnings = (*self.warnings, *other.warnings)
+        self.aborted = self.aborted or other.aborted
 
 
 class TimeSeriesFileLoadingResult(FileLoadingResult[pd.Series]):
@@ -69,14 +82,14 @@ class TimeSeriesFileLoadingResult(FileLoadingResult[pd.Series]):
 
     def __init__(
         self,
-        results: ResourceCreationResults[pd.Series] = None,
+        results: Optional[ResourceCreationResults[pd.Series]] = None,
         *,
-        warnings: Sequence[str] = None,
+        warnings: Optional[Sequence[str]] = None,
         aborted: bool = False,
-        entity_mapping_result: EntityMappingResult = None,
-        created_data_signals: Sequence[str] = None,
-        dry_run_results: Sequence[str] = None,
-        sheet_name: str = None,
+        entity_mapping_result: Optional[EntityMappingResult] = None,
+        created_data_signals: Optional[Sequence[str]] = None,
+        dry_run_results: Optional[Sequence[str]] = None,
+        sheet_name: Optional[str] = None,
         has_known_time: bool = False,
     ):
         super().__init__(results, warnings=warnings, aborted=aborted)
@@ -89,3 +102,6 @@ class TimeSeriesFileLoadingResult(FileLoadingResult[pd.Series]):
         self.dry_run_results = dry_run_results
         self.sheet_name = sheet_name
         self.has_known_time = has_known_time
+
+    def update(self, other: FileLoadingResult[ResourceT]) -> None:
+        raise NotImplementedError("TimeSeriesFileLoadingResult cannot be updated.")

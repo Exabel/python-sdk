@@ -1,4 +1,4 @@
-from typing import Iterable, Mapping, Optional, Union
+from typing import Iterable, Iterator, Mapping, Optional, Union, overload
 
 import pandas as pd
 
@@ -6,15 +6,63 @@ import pandas as pd
 class CsvReader:
     """Reader of CSV files."""
 
+    @overload
     @staticmethod
     def read_file(
         filename: str,
-        separator: str,
+        separator: Optional[str],
         string_columns: Iterable[Union[str, int]],
         *,
         keep_default_na: bool,
-        nrows: int = None
+        nrows: Optional[int],
     ) -> pd.DataFrame:
+        ...
+
+    @overload
+    @staticmethod
+    def read_file(
+        filename: str,
+        separator: Optional[str],
+        string_columns: Iterable[Union[str, int]],
+        *,
+        keep_default_na: bool,
+    ) -> pd.DataFrame:
+        ...
+
+    @overload
+    @staticmethod
+    def read_file(
+        filename: str,
+        separator: Optional[str],
+        string_columns: Iterable[Union[str, int]],
+        *,
+        keep_default_na: bool,
+        chunksize: int,
+    ) -> Iterator[pd.DataFrame]:
+        ...
+
+    @overload
+    @staticmethod
+    def read_file(
+        filename: str,
+        separator: Optional[str],
+        string_columns: Iterable[Union[str, int]],
+        *,
+        keep_default_na: bool,
+        chunksize: Optional[int],
+    ) -> Union[pd.DataFrame, Iterator[pd.DataFrame]]:
+        ...
+
+    @staticmethod
+    def read_file(
+        filename: str,
+        separator: Optional[str],
+        string_columns: Iterable[Union[str, int]],
+        *,
+        keep_default_na: bool,
+        nrows: Optional[int] = None,
+        chunksize: Optional[int] = None,
+    ) -> Union[pd.DataFrame, Iterator[pd.DataFrame]]:
         """
         Read the given file and return the content as a pandas DataFrame.
 
@@ -35,4 +83,5 @@ class CsvReader:
             dtype=dtype,
             keep_default_na=keep_default_na,
             nrows=nrows,
+            chunksize=chunksize,
         )

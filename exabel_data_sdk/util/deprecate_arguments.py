@@ -1,11 +1,40 @@
 import functools
 import warnings
-from typing import Any, Callable, Optional
+from typing import Any, Callable, Optional, TypeVar, overload
 
 from exabel_data_sdk.util.warnings import ExabelDeprecationWarning
 
+FunctionT = TypeVar("FunctionT", bound=Callable[..., Any])
 
-def deprecate_arguments(**deprecation_replacements: Optional[str]) -> Callable[..., Any]:
+# Pylint flags '__func' as an invalid argument name, but we want the '__' prefix to make Mypy
+# interpret it as a positional-only argument. Therefore, we disable the check for this argument.
+@overload
+def deprecate_arguments(
+    **deprecation_replacements: Optional[str],
+) -> Callable[[FunctionT], FunctionT]:
+    ...
+
+
+@overload
+def deprecate_arguments(
+    __func: None,  # pylint: disable=invalid-name
+    **deprecation_replacements: Optional[str],
+) -> Callable[[FunctionT], FunctionT]:
+    ...
+
+
+@overload
+def deprecate_arguments(
+    __func: FunctionT,  # pylint: disable=invalid-name
+    **deprecation_replacements: Optional[str],
+) -> FunctionT:
+    ...
+
+
+def deprecate_arguments(
+    __func: Optional[FunctionT] = None,  # pylint: disable=invalid-name
+    **deprecation_replacements: Optional[str],
+) -> FunctionT:
     """
     Decorator for warning about and replacing deprecated arguments in a function that will be
     removed in a future release.
@@ -20,7 +49,7 @@ def deprecate_arguments(**deprecation_replacements: Optional[str]) -> Callable[.
     if not deprecation_replacements:
         raise ValueError("No deprecations specified")
 
-    def decorator(func: Callable[..., Any]) -> Callable[..., Any]:
+    def decorator(func: FunctionT) -> FunctionT:
         @functools.wraps(func)
         def wrapper(*args: Any, **kwargs: Any) -> Any:
             func_name = func.__qualname__
@@ -51,6 +80,8 @@ def deprecate_arguments(**deprecation_replacements: Optional[str]) -> Callable[.
                     new_kwargs[arg_name] = arg_value
             return func(*args, **new_kwargs)
 
-        return wrapper
+        return wrapper  # type: ignore[return-value]
 
-    return decorator
+    if __func:
+        return decorator(__func)
+    return decorator  # type: ignore[return-value]

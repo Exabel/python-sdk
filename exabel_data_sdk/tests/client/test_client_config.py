@@ -12,7 +12,7 @@ class TestExabelClient(unittest.TestCase):
         self.assertEqual("analytics.api.exabel.com", config.analytics_api_host)
         self.assertEqual("management.api.exabel.com", config.management_api_host)
         self.assertEqual(21443, config.data_api_port)
-        self.assertEqual(60, config.timeout)
+        self.assertEqual(60 * 15, config.timeout)
 
     def test_non_default_values(self):
         config = ClientConfig(

@@ -1,4 +1,3 @@
-from http import HTTPStatus
 from typing import Any, Callable, Optional, TypeVar, cast
 
 from google.rpc.error_details_pb2 import PreconditionFailure as PreconditionFailureProto
@@ -12,7 +11,7 @@ from exabel_data_sdk.client.api.data_classes.request_error import (
     Violation,
 )
 
-TFunction = TypeVar("TFunction", bound=Callable)
+FunctionT = TypeVar("FunctionT", bound=Callable)
 
 
 def is_status_detail(metadata: Any) -> bool:
@@ -47,7 +46,7 @@ def extract_precondition_failure_proto(e: RpcError) -> Optional[PreconditionFail
 
 
 def precondition_failure_proto_to_precondition_failure(
-    precondition_failure: PreconditionFailureProto = None,
+    precondition_failure: Optional[PreconditionFailureProto] = None,
 ) -> Optional[PreconditionFailure]:
     """Convert PreconditionFailureProto into a PreconditionFailure."""
     if precondition_failure is None:
@@ -85,26 +84,7 @@ def grpc_status_to_error_type(status_code: StatusCode) -> ErrorType:
     return ErrorType.INTERNAL
 
 
-def http_status_to_error_type(status_code: int) -> ErrorType:
-    """
-    Map an HTTP status code to an ErrorType.
-    """
-    if status_code == HTTPStatus.NOT_FOUND:
-        return ErrorType.NOT_FOUND
-    if status_code == HTTPStatus.CONFLICT:
-        return ErrorType.ALREADY_EXISTS
-    if status_code == HTTPStatus.BAD_REQUEST:
-        return ErrorType.INVALID_ARGUMENT
-    if status_code == HTTPStatus.FORBIDDEN:
-        return ErrorType.PERMISSION_DENIED
-    if status_code == HTTPStatus.SERVICE_UNAVAILABLE:
-        return ErrorType.UNAVAILABLE
-    if status_code == HTTPStatus.GATEWAY_TIMEOUT:
-        return ErrorType.TIMEOUT
-    return ErrorType.INTERNAL
-
-
-def handle_grpc_error(function: TFunction) -> TFunction:
+def handle_grpc_error(function: FunctionT) -> FunctionT:
     """Convert any gRPC error raised by the decorated function into a RequestError."""
 
     def error_handler_decorator(*args: Any, **kwargs: Any) -> Any:
@@ -117,5 +97,7 @@ def handle_grpc_error(function: TFunction) -> TFunction:
                 precondition_failure_proto
             )
             raise RequestError(error_type, error.details(), precondition_failure) from error
+        except Exception as error:
+            raise RequestError(ErrorType.INTERNAL, str(error)) from error
 
-    return cast(TFunction, error_handler_decorator)
+    return cast(FunctionT, error_handler_decorator)

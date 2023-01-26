@@ -7,6 +7,12 @@ class PredictionModelServiceStub(object):
     """Service to manage prediction models.
 
     The only current supported operation is to request to run a given prediction model.
+
+    Requests to the PredictionModelService are executed in the context of the customer's service
+    account (SA). The SA is a special user that is a member of the customer user group, giving
+    it access to all folders that are shared with this user group, but not to private folders.
+    Hence, only prediction models that are in folders shared to the SA, via the customer user group,
+    will be accessible via the PredictionModelService.
     """
 
     def __init__(self, channel):
@@ -21,10 +27,16 @@ class PredictionModelServiceServicer(object):
     """Service to manage prediction models.
 
     The only current supported operation is to request to run a given prediction model.
+
+    Requests to the PredictionModelService are executed in the context of the customer's service
+    account (SA). The SA is a special user that is a member of the customer user group, giving
+    it access to all folders that are shared with this user group, but not to private folders.
+    Hence, only prediction models that are in folders shared to the SA, via the customer user group,
+    will be accessible via the PredictionModelService.
     """
 
     def CreatePredictionModelRun(self, request, context):
-        """Create a model run.
+        """Runs a prediction model.
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -39,6 +51,12 @@ class PredictionModelService(object):
     """Service to manage prediction models.
 
     The only current supported operation is to request to run a given prediction model.
+
+    Requests to the PredictionModelService are executed in the context of the customer's service
+    account (SA). The SA is a special user that is a member of the customer user group, giving
+    it access to all folders that are shared with this user group, but not to private folders.
+    Hence, only prediction models that are in folders shared to the SA, via the customer user group,
+    will be accessible via the PredictionModelService.
     """
 
     @staticmethod

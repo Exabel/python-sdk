@@ -56,11 +56,11 @@ class TestSnowflakeReaderConfiguration(unittest.TestCase):
     def test_snowflake_reader_configuration_get_connection_string(self):
         self.assertEqual(
             "snowflake://username:password@account/database/schema"
-            "?role=role&warehouse=warehouse",
+            "?login_timeout=15&role=role&warehouse=warehouse",
             self.config.get_connection_string(),
         )
         self.assertEqual(
-            "snowflake://username:password@account/",
+            "snowflake://username:password@account/?login_timeout=15",
             SnowflakeReaderConfiguration(
                 account="account",
                 user="username",

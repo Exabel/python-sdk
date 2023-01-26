@@ -28,7 +28,7 @@ class MockEntityApi(EntityApi):
             self.types.create(EntityType("entityTypes/" + entity_type, entity_type, ""))
 
     def list_entity_types(
-        self, page_size: int = 1000, page_token: str = None
+        self, page_size: int = 1000, page_token: Optional[str] = None
     ) -> PagingResult[EntityType]:
         return self.types.list()
 
@@ -39,7 +39,7 @@ class MockEntityApi(EntityApi):
         return self.types.create(entity_type)
 
     def list_entities(
-        self, entity_type: str, page_size: int = 1000, page_token: str = None
+        self, entity_type: str, page_size: int = 1000, page_token: Optional[str] = None
     ) -> PagingResult[Entity]:
         return self.entities.list(lambda x: x.get_entity_type() == entity_type)
 
@@ -50,7 +50,7 @@ class MockEntityApi(EntityApi):
         return self.entities.create(entity)
 
     def update_entity(
-        self, entity: Entity, update_mask: FieldMask = None, allow_missing: bool = False
+        self, entity: Entity, update_mask: Optional[FieldMask] = None, allow_missing: bool = False
     ) -> Entity:
         # Note: The mock implementation ignores update_mask
         return self.entities.update(entity, allow_missing=allow_missing)

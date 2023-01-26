@@ -18,6 +18,7 @@ from exabel_data_sdk.client.api.resource_creation_result import (
     ResourceCreationStatus,
 )
 from exabel_data_sdk.services import file_constants
+from exabel_data_sdk.services.csv_reader import CsvReader
 from exabel_data_sdk.services.file_loading_exception import FileLoadingException
 from exabel_data_sdk.util.handle_missing_imports import handle_missing_imports
 from exabel_data_sdk.util.resource_name_normalization import (
@@ -52,27 +53,43 @@ class TimeSeriesFileParser:
 
     filename: str
     separator: Optional[str]
-    worksheet: Any
+    worksheet: Optional[str]
+    data_frame: Optional[pd.DataFrame]
 
     def __post_init__(self) -> None:
         self._preview: Optional[pd.DataFrame] = None
 
     @classmethod
-    def from_file(cls, filename: str, separator: str = None) -> Sequence["TimeSeriesFileParser"]:
+    def from_file(
+        cls, filename: str, separator: Optional[str] = None, batch_size: Optional[int] = None
+    ) -> Iterator["TimeSeriesFileParser"]:
         """
-        Construct a sequence of parsers from a file.
+        Construct an iterator of parsers from a file.
 
-        Multiple parser may be returned for example if the file is an Excel file with multiple
-        worksheets.
+        Multiple parsers may be returned for example if the file is an Excel file with multiple
+        worksheets or a batch size is specified for a CSV file.
         """
         if Path(filename).suffix.lower() in file_constants.EXCEL_EXTENSIONS:
+            if batch_size is not None:
+                raise ValueError("Cannot specify batch size when uploading Excel files.")
             with handle_missing_imports(
                 warning="'openpyxl' must be installed to import Excel files", reraise=True
             ):
                 import openpyxl
             workbook = openpyxl.load_workbook(filename, read_only=True)
-            return [TimeSeriesFileParser(filename, None, s) for s in workbook.sheetnames]
-        return [TimeSeriesFileParser(filename, separator, None)]
+            return (TimeSeriesFileParser(filename, None, s, None) for s in workbook.sheetnames)
+        if batch_size is not None:
+            return (
+                TimeSeriesFileParser(filename, separator, None, df)
+                for df in CsvReader.read_file(  # pylint: disable=not-an-iterable
+                    filename,
+                    separator,
+                    (0,),
+                    keep_default_na=True,
+                    chunksize=batch_size,
+                )
+            )
+        return iter([TimeSeriesFileParser(filename, separator, None, None)])
 
     @property
     def preview(self) -> pd.DataFrame:
@@ -85,10 +102,19 @@ class TimeSeriesFileParser:
         """Return the name of the worksheet, when applicable."""
         return str(self.worksheet) if self.worksheet is not None else None
 
-    def parse_file(self, nrows: int = None, header: Sequence[int] = None) -> pd.DataFrame:
+    def parse_file(
+        self, nrows: Optional[int] = None, header: Optional[Sequence[int]] = None
+    ) -> pd.DataFrame:
         """Parse the file as a Pandas data frame."""
         extension = Path(self.filename).suffix.lower()
-        if extension in file_constants.FULL_CSV_EXTENSIONS:
+        if self.data_frame is not None:
+            if header is not None:
+                raise ValueError("Cannot specify header when uploading in batches.")
+            if nrows is not None:
+                df = self.data_frame.head(nrows)
+            else:
+                df = self.data_frame
+        elif extension in file_constants.FULL_CSV_EXTENSIONS:
             df = pd.read_csv(
                 self.filename,
                 nrows=nrows,
@@ -187,8 +213,8 @@ class ParsedTimeSeriesFile(abc.ABC):
         file_parser: TimeSeriesFileParser,
         entity_api: EntityApi,
         namespace: str,
-        entity_mapping: Mapping[str, Mapping[str, str]] = None,
-        entity_type: str = None,
+        entity_mapping: Optional[Mapping[str, Mapping[str, str]]] = None,
+        entity_type: Optional[str] = None,
     ) -> "ParsedTimeSeriesFile":
         """Read a file and construct a parsed file from the contents."""
         data = file_parser.parse_file()
@@ -200,8 +226,8 @@ class ParsedTimeSeriesFile(abc.ABC):
         data: pd.DataFrame,
         entity_api: EntityApi,
         namespace: str,
-        entity_mapping: Mapping[str, Mapping[str, str]] = None,
-        entity_type: str = None,
+        entity_mapping: Optional[Mapping[str, Mapping[str, str]]] = None,
+        entity_type: Optional[str] = None,
     ) -> "ParsedTimeSeriesFile":
         """Construct a new parsed file from a data frame."""
         data = cls._set_index(data)
@@ -232,26 +258,30 @@ class ParsedTimeSeriesFile(abc.ABC):
     def _get_series_with_potential_duplicate_data_points(self, prefix: str) -> Sequence[pd.Series]:
         """Get the time series, with potential duplicate data points."""
 
-    def get_series(self, prefix: str) -> ValidatedTimeSeries:
+    def get_series(self, prefix: str, *, skip_validation: bool = False) -> ValidatedTimeSeries:
         """Get the time series."""
         series = self._get_series_with_potential_duplicate_data_points(prefix)
-        series_without_duplicate_data_points = [self._drop_duplicate_data_points(s) for s in series]
-        series_with_duplicate_indexes = list(
-            self._get_time_series_with_duplicates_in_index(series_without_duplicate_data_points)
-        )
-        series_with_duplicate_indexes_names = set(s.name for s in series_with_duplicate_indexes)
-        series = [
-            ts
-            for ts in series_without_duplicate_data_points
-            if ts.name not in series_with_duplicate_indexes_names
-        ]
-        return self.ValidatedTimeSeries(
-            series,
-            [
-                ResourceCreationResult(ResourceCreationStatus.FAILED, ts)
-                for ts in series_with_duplicate_indexes
-            ],
-        )
+        failures = []
+        if not skip_validation:
+            series_without_duplicate_data_points = [
+                self._drop_duplicate_data_points(s) for s in series
+            ]
+            series_with_duplicate_indexes = list(
+                self._get_time_series_with_duplicates_in_index(series_without_duplicate_data_points)
+            )
+            series_with_duplicate_indexes_names = set(s.name for s in series_with_duplicate_indexes)
+            series = [
+                ts
+                for ts in series_without_duplicate_data_points
+                if ts.name not in series_with_duplicate_indexes_names
+            ]
+            failures.extend(
+                [
+                    ResourceCreationResult(ResourceCreationStatus.FAILED, ts)
+                    for ts in series_with_duplicate_indexes
+                ]
+            )
+        return self.ValidatedTimeSeries(series, failures)
 
     def get_warnings(self) -> Sequence[str]:
         """Get the warnings generated during mapping of entities."""
@@ -281,22 +311,24 @@ class ParsedTimeSeriesFile(abc.ABC):
         data: pd.DataFrame,
         entity_api: EntityApi,
         namespace: str,
-        entity_mapping: Mapping[str, Mapping[str, str]] = None,
-        entity_type: str = None,
+        entity_mapping: Optional[Mapping[str, Mapping[str, str]]] = None,
+        entity_type: Optional[str] = None,
     ) -> Tuple[pd.DataFrame, EntityResourceNames]:
         """Map the entities of the data, and return any warnings."""
 
     @staticmethod
     def _drop_duplicate_data_points(series: pd.Series) -> pd.Series:
         """Drop duplicate data points from the series."""
-        duplicates: pd.Series = series.index.duplicated() & series.duplicated()
-        if duplicates.any():
-            logger.warning(
-                "Dropping %d duplicate data point(s) from time series with name: '%s'",
-                duplicates.sum(),
-                series.name,
-            )
-        return series[~duplicates]
+        if series.index.has_duplicates:
+            duplicates: pd.Series = series.index.duplicated() & series.duplicated()
+            if duplicates.any():
+                logger.warning(
+                    "Dropping %d duplicate data point(s) from time series with name: '%s'",
+                    duplicates.sum(),
+                    series.name,
+                )
+            return series[~duplicates]
+        return series
 
     @staticmethod
     def _get_time_series_with_duplicates_in_index(
@@ -321,7 +353,7 @@ class ParsedTimeSeriesFile(abc.ABC):
         identifiers: pd.Series,
         entity_api: EntityApi,
         namespace: str,
-        entity_mapping: Mapping[str, Mapping[str, str]] = None,
+        entity_mapping: Optional[Mapping[str, Mapping[str, str]]] = None,
         preserve_namespace: bool = False,
     ) -> EntityResourceNames:
         """Look up the entity identifier, and throw an exception if no entities are found."""
@@ -436,17 +468,15 @@ class SignalNamesInRows(DateParsingMixin, ParsedTimeSeriesFile):
     def _get_series_with_potential_duplicate_data_points(self, prefix: str) -> Sequence[pd.Series]:
         series = []
 
-        for entity, entity_group in self._data.groupby("entity"):
-            for signal in self.get_signals():
-                ts = entity_group[entity_group["signal"] == signal]
-                # Do not drop nan values, as this format is the only way to actually delete values
-                # by explicitly importing empty values.
-                ts = ts["value"]
-                if ts.empty:
-                    continue
+        for (entity, signal), group in self._data.groupby(["entity", "signal"]):
+            # Do not drop nan values, as this format is the only way to actually delete values
+            # by explicitly importing empty values.
+            ts = group["value"]
+            if ts.empty:
+                continue
 
-                ts.name = f"{entity}/{prefix}{signal}"
-                series.append(ts)
+            ts.name = f"{entity}/{prefix}{signal}"
+            series.append(ts)
         return series
 
     @classmethod
@@ -455,13 +485,13 @@ class SignalNamesInRows(DateParsingMixin, ParsedTimeSeriesFile):
         data: pd.DataFrame,
         entity_api: EntityApi,
         namespace: str,
-        entity_mapping: Mapping[str, Mapping[str, str]] = None,
-        entity_type: str = None,
+        entity_mapping: Optional[Mapping[str, Mapping[str, str]]] = None,
+        entity_type: Optional[str] = None,
     ) -> Tuple[pd.DataFrame, EntityResourceNames]:
         if not any(
             _is_valid_entity_column(column, cls.RESERVED_COLUMNS) for column in data.columns
         ):
-            data.insert(0, "entity", "entityTypes/global/entities/global")
+            data.insert(0, "entity", file_constants.GLOBAL_ENTITY_NAME)
         entity_column = cls._entity_column(data)
         identifiers = data[entity_column]
         identifiers.name = entity_type or entity_column
@@ -540,7 +570,8 @@ class SignalNamesInColumns(DateParsingMixin, ParsedTimeSeriesFile):
 
         for entity, entity_group in self._data.groupby("entity"):
             for signal in self.get_signals():
-                ts = entity_group[signal].dropna()
+                ts = entity_group[signal]
+                ts.dropna(inplace=True)
                 if ts.empty:
                     continue
 
@@ -554,8 +585,8 @@ class SignalNamesInColumns(DateParsingMixin, ParsedTimeSeriesFile):
         data: pd.DataFrame,
         entity_api: EntityApi,
         namespace: str,
-        entity_mapping: Mapping[str, Mapping[str, str]] = None,
-        entity_type: str = None,
+        entity_mapping: Optional[Mapping[str, Mapping[str, str]]] = None,
+        entity_type: Optional[str] = None,
     ) -> Tuple[pd.DataFrame, EntityResourceNames]:
         entity_column = data.columns[0]
         identifiers = data[entity_column]
@@ -617,12 +648,12 @@ class SignalNamesInColumnsGlobalEntity(SignalNamesInColumns):
         data: pd.DataFrame,
         entity_api: EntityApi,
         namespace: str,
-        entity_mapping: Mapping[str, Mapping[str, str]] = None,
-        entity_type: str = None,
+        entity_mapping: Optional[Mapping[str, Mapping[str, str]]] = None,
+        entity_type: Optional[str] = None,
     ) -> Tuple[pd.DataFrame, EntityResourceNames]:
-        if entity_type is not None:
+        if entity_type is not None and entity_type != file_constants.GLOBAL_ENTITY_TYPE:
             raise FileLoadingException(
-                "entity_type is not supported when loading time series to the global entity."
+                "Entity type must be set to 'global' when loading time series to the global entity."
             )
         data.insert(0, "entity", "entityTypes/global/entities/global")
         identifiers = data.iloc[:, 0]
@@ -658,8 +689,8 @@ class EntitiesInColumns(ParsedTimeSeriesFile):
         file_parser: TimeSeriesFileParser,
         entity_api: EntityApi,
         namespace: str,
-        entity_mapping: Mapping[str, Mapping[str, str]] = None,
-        entity_type: str = None,
+        entity_mapping: Optional[Mapping[str, Mapping[str, str]]] = None,
+        entity_type: Optional[str] = None,
     ) -> "ParsedTimeSeriesFile":
         """Read a file and construct a new parser from the contents of that file."""
         if entity_type is not None:
@@ -734,8 +765,8 @@ class EntitiesInColumns(ParsedTimeSeriesFile):
         data: pd.DataFrame,
         entity_api: EntityApi,
         namespace: str,
-        entity_mapping: Mapping[str, Mapping[str, str]] = None,
-        entity_type: str = None,
+        entity_mapping: Optional[Mapping[str, Mapping[str, str]]] = None,
+        entity_type: Optional[str] = None,
     ) -> Tuple[pd.DataFrame, EntityResourceNames]:
         identifiers = pd.Series(data.columns.get_level_values(1))
         identifiers.name = entity_type

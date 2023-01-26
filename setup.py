@@ -20,6 +20,11 @@ _SNOWFLAKE_REQUIREMENTS = _SQLALCHEMY_REQUIREMENTS + [
     "snowflake-sqlalchemy",
 ]
 
+_ATHENA_REQUIREMENTS = _SQLALCHEMY_REQUIREMENTS + [
+    "pyathena",
+    "pyarrow",
+]
+
 setuptools.setup(
     name="exabel-data-sdk",
     version=version,
@@ -43,6 +48,7 @@ setuptools.setup(
     extras_require={
         "snowflake": _SNOWFLAKE_REQUIREMENTS,
         "bigquery": _BIGQUERY_REQUIREMENTS,
+        "athena": _ATHENA_REQUIREMENTS,
     },
     python_requires=">=3.7",
     classifiers=[

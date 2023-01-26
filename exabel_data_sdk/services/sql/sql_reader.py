@@ -1,5 +1,5 @@
 import logging
-from typing import Iterable, Iterator, NewType, Optional, Union
+from typing import Any, Iterable, Iterator, Mapping, NewType, Optional, Union
 
 import pandas as pd
 
@@ -20,8 +20,11 @@ OutputFile = NewType("OutputFile", str)
 class SqlReader:
     """Reader of SQL queries."""
 
-    def __init__(self, connection_string: ConnectionString) -> None:
-        self.engine = create_engine(connection_string)
+    def __init__(
+        self, connection_string: ConnectionString, *, kwargs: Optional[Mapping[str, Any]] = None
+    ) -> None:
+        kwargs = kwargs or {}
+        self.engine = create_engine(connection_string, **kwargs)
 
     def read_sql_query(self, query: Query) -> pd.DataFrame:
         """Execute the given query and return the content as a pandas DataFrame."""
@@ -50,20 +53,22 @@ class SqlReader:
         batch_no = 0
         try:
             reader = pd.read_sql_query(query, self.engine, chunksize=batch_size)
-            for batch_no, chunk in enumerate(reader):
+            for batch_no, chunk in enumerate(reader, 1):
+                logger.info("Reading batch no: %d", batch_no)
                 yield chunk
         except Exception as e:
-            logger.exception(
+            logger.error(
                 "An error occurred in batch number %d while executing the query: %s",
                 batch_no,
                 str(e),
             )
             raise
+        logger.info("Finished reading %d batches", batch_no)
 
     def read_sql_query_and_write_result(
         self,
         query: Query,
-        output_file: OutputFile = None,
+        output_file: Optional[OutputFile] = None,
         *,
         batch_size: Optional[BatchSize] = None,
     ) -> None:

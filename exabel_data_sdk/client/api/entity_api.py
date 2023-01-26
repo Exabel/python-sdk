@@ -1,4 +1,4 @@
-from typing import Optional, Sequence
+from typing import Iterator, Optional, Sequence
 
 from google.protobuf.field_mask_pb2 import FieldMask
 
@@ -8,6 +8,7 @@ from exabel_data_sdk.client.api.data_classes.entity import Entity
 from exabel_data_sdk.client.api.data_classes.entity_type import EntityType
 from exabel_data_sdk.client.api.data_classes.paging_result import PagingResult
 from exabel_data_sdk.client.api.data_classes.request_error import ErrorType, RequestError
+from exabel_data_sdk.client.api.pagable_resource import PagableResourceMixin
 from exabel_data_sdk.client.api.resource_creation_result import (
     ResourceCreationResults,
     ResourceCreationStatus,
@@ -31,7 +32,7 @@ from exabel_data_sdk.stubs.exabel.api.data.v1.all_pb2 import (
 )
 
 
-class EntityApi:
+class EntityApi(PagableResourceMixin):
     """
     API class for CRUD operations on entities and entity types.
 
@@ -44,7 +45,7 @@ class EntityApi:
         self.search = SearchService(self.client)
 
     def list_entity_types(
-        self, page_size: int = 1000, page_token: str = None
+        self, page_size: int = 1000, page_token: Optional[str] = None
     ) -> PagingResult[EntityType]:
         """
         List all known entity types.
@@ -63,6 +64,10 @@ class EntityApi:
             next_page_token=response.next_page_token,
             total_size=response.total_size,
         )
+
+    def get_entity_type_iterator(self) -> Iterator[EntityType]:
+        """Return an iterator with all known entity types."""
+        return self._get_resource_iterator(self.list_entity_types)
 
     def get_entity_type(self, name: str) -> Optional[EntityType]:
         """
@@ -95,7 +100,10 @@ class EntityApi:
         return EntityType.from_proto(response)
 
     def update_entity_type(
-        self, entity_type: EntityType, update_mask: FieldMask = None, allow_missing: bool = False
+        self,
+        entity_type: EntityType,
+        update_mask: Optional[FieldMask] = None,
+        allow_missing: bool = False,
     ) -> EntityType:
         """
         Update an entity type.
@@ -123,7 +131,7 @@ class EntityApi:
         self.client.delete_entity_type(DeleteEntityTypeRequest(name=name))
 
     def list_entities(
-        self, entity_type: str, page_size: int = 1000, page_token: str = None
+        self, entity_type: str, page_size: int = 1000, page_token: Optional[str] = None
     ) -> PagingResult[Entity]:
         """
         List all entities of a given entity type.
@@ -143,6 +151,10 @@ class EntityApi:
             next_page_token=response.next_page_token,
             total_size=response.total_size,
         )
+
+    def get_entities_iterator(self, entity_type: str) -> Iterator[Entity]:
+        """Return an iterator with all entities of a given entity type."""
+        return self._get_resource_iterator(self.list_entities, entity_type=entity_type)
 
     def get_entity(self, name: str) -> Optional[Entity]:
         """
@@ -176,7 +188,7 @@ class EntityApi:
         return Entity.from_proto(response)
 
     def update_entity(
-        self, entity: Entity, update_mask: FieldMask = None, allow_missing: bool = False
+        self, entity: Entity, update_mask: Optional[FieldMask] = None, allow_missing: bool = False
     ) -> Entity:
         """
         Update an entity.

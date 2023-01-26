@@ -5,7 +5,6 @@ from unittest import mock
 import pandas as pd
 
 from exabel_data_sdk.client.api.data_classes.entity_type import EntityType
-from exabel_data_sdk.client.api.data_classes.paging_result import PagingResult
 from exabel_data_sdk.client.api.data_classes.relationship import Relationship
 from exabel_data_sdk.client.api.entity_api import EntityApi
 from exabel_data_sdk.client.api.relationship_api import RelationshipApi
@@ -23,7 +22,8 @@ from exabel_data_sdk.services.csv_relationship_loader import (
 )
 from exabel_data_sdk.services.file_loading_exception import FileLoadingException
 from exabel_data_sdk.services.file_loading_result import FileLoadingResult
-from exabel_data_sdk.stubs.exabel.api.data.v1.all_pb2 import SearchEntitiesResponse
+from exabel_data_sdk.stubs.exabel.api.data.v1.all_pb2 import SearchEntitiesResponse, SearchTerm
+from exabel_data_sdk.stubs.exabel.api.data.v1.entity_messages_pb2 import Entity
 from exabel_data_sdk.tests.client.exabel_mock_client import ExabelMockClient
 
 # pylint: disable=protected-access
@@ -228,7 +228,9 @@ class TestCsvRelationshipLoader(unittest.TestCase):
                 read_only=False,
             ),
         ]
-        actual_relationships = client.relationship_api.list_relationships().results
+        actual_relationships = client.relationship_api.list_relationships(
+            "relationshipTypes/test.HAS_BRAND"
+        )
         self.assertCountEqual(expected_relationships, actual_relationships)
 
     def test_load_relationships_with_non_existent_property(self):
@@ -259,7 +261,7 @@ class TestCsvRelationshipLoader(unittest.TestCase):
     ):
         client: ExabelClient = ExabelMockClient()
         client.entity_api = mock.create_autospec(EntityApi(ClientConfig(api_key="123")))
-        client.entity_api.list_entity_types.side_effect = self._list_entity_types
+        client.entity_api.get_entity_type_iterator.side_effect = self._list_entity_types
         result = CsvRelationshipLoader(client).load_relationships(
             filename="exabel_data_sdk/tests/resources/data/relationships.csv",
             relationship_type="HAS_BRAND",
@@ -281,7 +283,9 @@ class TestCsvRelationshipLoader(unittest.TestCase):
                 read_only=False,
             ),
         ]
-        actual_relationships = client.relationship_api.list_relationships().results
+        actual_relationships = client.relationship_api.list_relationships(
+            "relationshipTypes/test.HAS_BRAND"
+        )
         self.assertCountEqual(expected_relationships, actual_relationships)
         self.assertIsInstance(result, FileLoadingResult)
         self.assertIsInstance(result, CsvLoadingResult)
@@ -311,7 +315,9 @@ class TestCsvRelationshipLoader(unittest.TestCase):
                 read_only=False,
             ),
         ]
-        actual_relationships = client.relationship_api.list_relationships().results
+        actual_relationships = client.relationship_api.list_relationships(
+            "relationshipTypes/test.HAS_BRAND"
+        )
         self.assertCountEqual(expected_relationships, actual_relationships)
         self.assertIsInstance(result, FileLoadingResult)
         self.assertIsInstance(result, CsvLoadingResult)
@@ -379,11 +385,13 @@ class TestCsvRelationshipLoader(unittest.TestCase):
                 read_only=False,
             ),
         ]
-        actual_relationships = client.relationship_api.list_relationships().results
+        actual_relationships = client.relationship_api.list_relationships(
+            "relationshipTypes/test.HAS_BRAND"
+        )
         self.assertCountEqual(expected_relationships, actual_relationships)
 
     def _list_entity_types(self):
-        return PagingResult(
+        return iter(
             [
                 EntityType("entityTypes/BRAND", "", "", False),
                 EntityType("entityTypes/company", "", "", False),
@@ -391,9 +399,7 @@ class TestCsvRelationshipLoader(unittest.TestCase):
                 EntityType("entityTypes/ns.brand", "", "", False),
                 EntityType("entityTypes/global_entity", "", "", False),
                 EntityType("entityTypes/otherns.accessible_entity_type", "", "", False),
-            ],
-            "next",
-            1,
+            ]
         )
 
     def _check_load_with_entity_types(
@@ -407,18 +413,18 @@ class TestCsvRelationshipLoader(unittest.TestCase):
         client = mock.create_autospec(ExabelClient)
         client.entity_api = mock.create_autospec(EntityApi)
         client.entity_api.search = mock.create_autospec(SearchService)
-        client.entity_api.list_entity_types.side_effect = self._list_entity_types
+        client.entity_api.get_entity_type_iterator.side_effect = self._list_entity_types
         client.relationship_api = mock.create_autospec(RelationshipApi)
         client.relationship_api.get_relationship_type.return_value = True
         if "from_identifier_type" in csv_loader_kwargs:
             client.entity_api.search.entities_by_terms.return_value = [
                 SearchEntitiesResponse.SearchResult(
-                    terms=[{"field": "isin", "query": "identifier"}],
+                    terms=[SearchTerm(field="isin", query="identifier")],
                     entities=[
-                        {
-                            "name": "entityTypes/company/entities/the_company",
-                            "display_name": "The Company",
-                        }
+                        Entity(
+                            name="entityTypes/company/entities/the_company",
+                            display_name="The Company",
+                        )
                     ],
                 )
             ]
@@ -586,3 +592,20 @@ class TestCsvRelationshipLoader(unittest.TestCase):
             to_entity_type="company",
             to_identifier_type="isin",
         )
+
+    @mock.patch("exabel_data_sdk.services.csv_reader.CsvReader.read_file")
+    def test_load_relationships__with_batch_size(self, mock_read_file: mock.MagicMock):
+        df = pd.DataFrame([{"column": "value"}])
+        mock_read_file.side_effect = [df, (df for _ in range(2))]
+        client = mock.create_autospec(ExabelClient)
+        client.relationship_api = mock.create_autospec(RelationshipApi)
+        loader = CsvRelationshipLoader(client)
+        with mock.patch.object(loader, "_load_relationships") as mock_load:
+            loader.load_relationships(
+                filename="file",
+                relationship_type="relationship_type",
+                batch_size=1,
+            )
+        self.assertIsNone(mock_read_file.call_args_list[0][1].get("chunksize"))
+        self.assertEqual(mock_read_file.call_args_list[1][1]["chunksize"], 1)
+        self.assertEqual(mock_load.call_count, 2)

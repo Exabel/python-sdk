@@ -132,8 +132,7 @@ class TestLoadEntities(unittest.TestCase):
         with self.assertRaises(ValueError) as context:
             load_test_data_from_csv(LoadEntitiesFromCsv, args)
         self.assertEqual(
-            "Duplicate entities in "
-            "./exabel_data_sdk/tests/resources/data/entities_with_duplicated_brands.csv",
+            "Duplicate entities detected",
             str(context.exception),
         )
 

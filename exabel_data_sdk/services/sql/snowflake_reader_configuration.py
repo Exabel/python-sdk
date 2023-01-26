@@ -19,6 +19,7 @@ Warehouse = NewType("Warehouse", str)
 Database = NewType("Database", str)
 Schema = NewType("Schema", str)
 Role = NewType("Role", str)
+LoginTimeout = NewType("LoginTimeout", int)
 
 
 @dataclass
@@ -32,6 +33,7 @@ class SnowflakeReaderConfiguration(SqlReaderConfiguration):
     database: Optional[Database] = None
     schema: Optional[Schema] = None
     role: Optional[Role] = None
+    login_timeout: LoginTimeout = LoginTimeout(15)
 
     def __post_init__(self) -> None:
         if self.schema and not self.database:

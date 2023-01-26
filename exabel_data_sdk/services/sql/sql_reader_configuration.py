@@ -1,8 +1,15 @@
 import abc
 import argparse
-from typing import NewType
+from typing import Any, Mapping, NamedTuple, NewType
 
 ConnectionString = NewType("ConnectionString", str)
+
+
+class EngineArgs(NamedTuple):
+    """Arguments for creating a SQLAlchemy engine."""
+
+    connection_string: ConnectionString
+    kwargs: Mapping[str, Any]
 
 
 class SqlReaderConfiguration(abc.ABC):
@@ -16,3 +23,7 @@ class SqlReaderConfiguration(abc.ABC):
     @abc.abstractmethod
     def get_connection_string(self) -> ConnectionString:
         """Return the connection string."""
+
+    def get_connection_string_and_kwargs(self) -> EngineArgs:
+        """Return the connection string and additional key-word arguments."""
+        return EngineArgs(self.get_connection_string(), {})

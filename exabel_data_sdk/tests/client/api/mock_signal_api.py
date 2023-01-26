@@ -18,7 +18,9 @@ class MockSignalApi(SignalApi):
         self.signals = MockResourceStore()
         self.created_library_signals = []
 
-    def list_signals(self, page_size: int = 1000, page_token: str = None) -> PagingResult[Signal]:
+    def list_signals(
+        self, page_size: int = 1000, page_token: Optional[str] = None
+    ) -> PagingResult[Signal]:
         return self.signals.list()
 
     def get_signal(self, name: str) -> Optional[Signal]:
@@ -32,7 +34,7 @@ class MockSignalApi(SignalApi):
     def update_signal(
         self,
         signal: Signal,
-        update_mask: FieldMask = None,
+        update_mask: Optional[FieldMask] = None,
         allow_missing: bool = False,
         create_library_signal: bool = False,
     ) -> Signal:

@@ -45,7 +45,8 @@ class SqlScript(CommandLineScript, abc.ABC):
         args = self.parse_arguments()
         self.setup_logging()
         configuration = self.reader_configuration_class.from_args(args)
-        reader = SqlReader(configuration.get_connection_string())
+        connection_string, connect_args = configuration.get_connection_string_and_kwargs()
+        reader = SqlReader(connection_string, kwargs=connect_args)
         reader.read_sql_query_and_write_result(
             args.query, args.output_file, batch_size=args.batch_size
         )

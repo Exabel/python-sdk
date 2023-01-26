@@ -1,7 +1,7 @@
 import logging
 import pickle
 from time import time
-from typing import List, Mapping, Sequence, Union
+from typing import List, Mapping, Optional, Sequence, Union
 
 import pandas as pd
 import requests
@@ -16,23 +16,30 @@ from exabel_data_sdk.query.signals import Signals
 class ExportApi:
     """
     API class for data export operations.
+
+    If authentication headers are not provided, this method will attempt to obtain them by logging
+    in with the UserLogin script.
+
+    Args:
+        auth_headers:   authentication headers for the HTTPS requests to the backend server
+        backend:        the address of the backend server. This field is only for internal use at
+                        Exabel and should never be set by customers or partners.
+        reauthenticate: if True, the user will be prompted to log in again.
+        user:           the Exabel user to log in as, e.g. `my_user@enterprise.com`. If not
+                        provided, the default user will be logged in.
     """
 
     def __init__(
-        self, auth_headers: Mapping[str, str] = None, *, backend: str = "endpoints.exabel.com"
+        self,
+        auth_headers: Optional[Mapping[str, str]] = None,
+        *,
+        backend: str = "endpoints.exabel.com",
+        reauthenticate: bool = False,
+        user: Optional[str] = None,
     ):
-        """
-        If authentication headers are not provided, this method will attempt to obtain them
-        by logging in with the UserLogin script.
-
-        Args:
-            auth_headers: authentication headers for the HTTPS requests to the backend server
-            backend:      the address of the backend server. This field is only for internal
-                          use at Exabel and should never be set by customers or partners.
-        """
         if auth_headers is None:
             # Attempt to log in
-            auth_headers = UserLogin().get_auth_headers()
+            auth_headers = UserLogin(reauthenticate=reauthenticate, user=user).get_auth_headers()
         self._auth_headers = auth_headers
         self._backend = backend
 
@@ -60,7 +67,7 @@ class ExportApi:
         data = {"format": file_format, "query": query}
         url = f"https://{self._backend}/v1/export/file"
         start_time = time()
-        response = requests.post(url, headers=self._auth_headers, data=data)
+        response = requests.post(url, headers=self._auth_headers, data=data, timeout=600)
         spent_time = time() - start_time
         logging.getLogger(__name__).info(
             "Query completed in %.1f seconds, received %d bytes: %s",
@@ -89,20 +96,21 @@ class ExportApi:
     def signal_query(
         self,
         signal: Union[str, Column, Sequence[Union[str, Column]]],
-        bloomberg_ticker: Union[str, Sequence[str]] = None,
+        bloomberg_ticker: Optional[Union[str, Sequence[str]]] = None,
         *,
-        factset_id: Union[str, Sequence[str]] = None,
-        tag: Union[str, Sequence[str]] = None,
-        start_time: Union[str, pd.Timestamp] = None,
-        end_time: Union[str, pd.Timestamp] = None,
-        identifier: Union[Column, Sequence[Column]] = None,
-        version: Union[str, pd.Timestamp, Sequence[str], Sequence[pd.Timestamp]] = None,
+        factset_id: Optional[Union[str, Sequence[str]]] = None,
+        resource_name: Optional[Union[str, Sequence[str]]] = None,
+        tag: Optional[Union[str, Sequence[str]]] = None,
+        start_time: Optional[Union[str, pd.Timestamp]] = None,
+        end_time: Optional[Union[str, pd.Timestamp]] = None,
+        identifier: Optional[Union[Column, Sequence[Column]]] = None,
+        version: Optional[Union[str, pd.Timestamp, Sequence[str], Sequence[pd.Timestamp]]] = None,
     ) -> Union[pd.Series, pd.DataFrame]:
         """
         Run a query for one or more signals.
 
-        The company or companies to retrieve data for can be specified using either
-        bloomberg_ticker, factset_id or tag, but these methods cannot be combined.
+        The entity or entities to retrieve data for can be specified using either
+        bloomberg_ticker, factset_id, resource name or tag, but these methods cannot be combined.
         Alternatively, specify none of these parameters for signals that are not
         related to any entity.
 
@@ -111,6 +119,8 @@ class ExportApi:
                         At least one signal must be requested.
             bloomberg_ticker: a Bloomberg ticker such as "AAPL US", or a list of such tickers.
             factset_id: a FactSet id such as "QLGSL2-R", or a list of such identifiers.
+            resource_name: an Exabel resource name such as "entityTypes/company/entities/F_000C7F-E"
+                        or a list of such identifiers.
             tag:        retrieve data for the entities with this Exabel tag ID,
                         or with any of the provided tags if several.
             start_time: the first date to retrieve data for
@@ -126,43 +136,49 @@ class ExportApi:
                         latest available data (the default).
 
         Returns:
-            A pandas Series if the result is a single time series,
+            A pandas Series if the result is a single time series per entity,
             or a pandas DataFrame if there are multiple time series in the result.
-            If a single company identifier was specified, the index is a DatetimeIndex.
-            If a list of company identifiers or a tag was given, the index is a MultiIndex with
-            company on the first level and time on the second level.
+            If a single entity identifier was specified, the index is a DatetimeIndex.
+            If a list of entity identifiers or a tag was given, the index is a MultiIndex with
+            entity on the first level and time on the second level.
         """
         if not signal:
             raise ValueError("Must specify signal to retrieve")
 
         # Specify entity filter
-        multi_company = False
+        multi_entity = False
         predicates: List[Predicate] = []
         if factset_id:
             if isinstance(factset_id, str):
                 predicates.append(Signals.FACTSET_ID.equal(factset_id))
             else:
                 predicates.append(Signals.FACTSET_ID.in_list(*factset_id))
-                multi_company = True
+                multi_entity = True
         if bloomberg_ticker:
             if isinstance(bloomberg_ticker, str):
                 predicates.append(Signals.BLOOMBERG_TICKER.equal(bloomberg_ticker))
             else:
                 predicates.append(Signals.BLOOMBERG_TICKER.in_list(*bloomberg_ticker))
-                multi_company = True
+                multi_entity = True
+        if resource_name:
+            if isinstance(resource_name, str):
+                predicates.append(Signals.RESOURCE_NAME.equal(resource_name))
+            else:
+                predicates.append(Signals.RESOURCE_NAME.in_list(*resource_name))
+                multi_entity = True
         if tag:
             if isinstance(tag, str):
                 predicates.append(Signals.has_tag(tag))
             else:
                 predicates.append(Signals.has_tag(*tag))
-            multi_company = True
+            multi_entity = True
         if len(predicates) > 1:
-            raise ValueError("At most one company identification method can be specified")
+            raise ValueError("At most one entity identification method can be specified")
 
         # Specify the identifier(s)
         index: List[Column] = []
         if identifier is None:
-            if multi_company:
+            if multi_entity:
                 index.append(Signals.NAME)
         elif isinstance(identifier, Column):
             index.append(identifier)
@@ -196,3 +212,65 @@ class ExportApi:
         # Squeeze to a Series if a single time series was returned,
         # and fix the data type (the backend returns a DataFrame with dtype=object)
         return df.squeeze(axis=1).infer_objects()
+
+    def batched_signal_query(
+        self,
+        batch_size: int,
+        signal: Union[str, Column, Sequence[Union[str, Column]]],
+        *,
+        bloomberg_ticker: Optional[Sequence[str]] = None,
+        factset_id: Optional[Sequence[str]] = None,
+        resource_name: Optional[Sequence[str]] = None,
+        start_time: Optional[Union[str, pd.Timestamp]] = None,
+        end_time: Optional[Union[str, pd.Timestamp]] = None,
+        identifier: Optional[Union[Column, Sequence[Column]]] = None,
+        version: Optional[Union[str, pd.Timestamp, Sequence[str], Sequence[pd.Timestamp]]] = None,
+    ) -> Union[pd.Series, pd.DataFrame]:
+        """
+        Run a query for one or more signals.
+
+        The entity or entities to retrieve data for can be specified using either
+        bloomberg_ticker, factset_id or resource name, but these methods cannot be combined.
+
+        Args:
+            batch_size:  the number of entities to include in each API call.
+
+        Other arguments are the same as for the signal_query method.
+        (Note that 'tag' cannot be used to specify entities in this batched version)
+
+        Returns:
+            A pandas Series if the result is a single time series per entity,
+            or a pandas DataFrame if there are multiple time series in the result.
+            The index is a MultiIndex with entity on the first level and time on the second level.
+        """
+        entity_identifiers: List[str] = []
+        entities: Sequence[str] = []
+        if factset_id:
+            entity_identifiers.append("factset_id")
+            entities = factset_id
+        if bloomberg_ticker:
+            entity_identifiers.append("bloomberg_ticker")
+            entities = bloomberg_ticker
+        if resource_name:
+            entity_identifiers.append("resource_name")
+            entities = resource_name
+        if not entity_identifiers:
+            raise ValueError("Need to specify an identification method")
+        if len(entity_identifiers) > 1:
+            raise ValueError(
+                "At most one entity identification method can be specified"
+                + f", but got {entity_identifiers}"
+            )
+        entity_identifier = entity_identifiers[0]
+        results = [
+            self.signal_query(
+                signal=signal,
+                start_time=start_time,
+                end_time=end_time,
+                identifier=identifier,
+                version=version,
+                **{entity_identifier: entities[i : i + batch_size]},
+            )
+            for i in range(0, len(entities), batch_size)
+        ]
+        return pd.concat(results)

@@ -179,6 +179,14 @@ class LoadRelationshipsFromCsv(CsvScriptWithEntityMapping):
             default=False,
             help="Update relationships if they already exist.",
         )
+        self.parser.add_argument(
+            "--batch-size",
+            type=int,
+            help=(
+                "The number of relationships in each batch to read and upload from the file. If "
+                "not specified, defaults to reading the entire file into memory before uploading."
+            ),
+        )
 
     def run_script(self, client: ExabelClient, args: argparse.Namespace) -> None:
         try:
@@ -199,6 +207,7 @@ class LoadRelationshipsFromCsv(CsvScriptWithEntityMapping):
                 upsert=args.upsert,
                 dry_run=args.dry_run,
                 retries=args.retries,
+                batch_size=args.batch_size,
             )
         except FileLoadingException as e:
             print(e)

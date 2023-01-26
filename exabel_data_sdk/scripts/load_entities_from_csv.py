@@ -112,6 +112,14 @@ class LoadEntitiesFromCsv(CsvScript):
             default=False,
             help="Update entities if they already exist.",
         )
+        self.parser.add_argument(
+            "--batch-size",
+            type=int,
+            help=(
+                "The number of entities in each batch to read and upload from the file. If not "
+                "specified, defaults to reading the entire file into memory before uploading."
+            ),
+        )
 
     def run_script(self, client: ExabelClient, args: argparse.Namespace) -> None:
         try:
@@ -127,6 +135,7 @@ class LoadEntitiesFromCsv(CsvScript):
                 upsert=args.upsert,
                 dry_run=args.dry_run,
                 retries=args.retries,
+                batch_size=args.batch_size,
             )
         except (FileLoadingException, ParsePropertyColumnsError) as e:
             print(e)

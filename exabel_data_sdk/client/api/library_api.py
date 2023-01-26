@@ -1,4 +1,4 @@
-from typing import Sequence
+from typing import Optional, Sequence
 
 from google.protobuf.field_mask_pb2 import FieldMask
 
@@ -59,7 +59,7 @@ class LibraryApi:
         return Folder.from_proto(proto_folder)
 
     def update_folder(
-        self, folder: Folder, update_mask: FieldMask = None, allow_missing: bool = False
+        self, folder: Folder, update_mask: Optional[FieldMask] = None, allow_missing: bool = False
     ) -> Folder:
         """
         Update a folder.
@@ -95,7 +95,7 @@ class LibraryApi:
     def list_items(
         self,
         item_type: FolderItemType,
-        folder_name: str = None,
+        folder_name: Optional[str] = None,
     ) -> Sequence[FolderItem]:
         """
         List all items of a specific type.

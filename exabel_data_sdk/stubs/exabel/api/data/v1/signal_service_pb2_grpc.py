@@ -54,6 +54,8 @@ class SignalServiceServicer(object):
         """Updates one signal and returns it.
 
         This can also be used to create a signal by setting `allow_missing` to `true`.
+
+        Note that that this method will update all fields unless `update_mask` is set.
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')

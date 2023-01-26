@@ -1,16 +1,20 @@
 import unittest
+from unittest import mock
 
 import pandas as pd
 from dateutil import tz
 from google.protobuf import timestamp_pb2
 from google.protobuf.wrappers_pb2 import DoubleValue
 
+from exabel_data_sdk.client.api.data_classes.paging_result import PagingResult
 from exabel_data_sdk.client.api.time_series_api import TimeSeriesApi
+from exabel_data_sdk.client.client_config import ClientConfig
 from exabel_data_sdk.stubs.exabel.api.data.v1.all_pb2 import (
     ImportTimeSeriesRequest,
     TimeSeries,
     TimeSeriesPoint,
 )
+from exabel_data_sdk.util.import_ import estimate_size, get_batches_for_import
 
 # pylint: disable=protected-access
 
@@ -120,7 +124,7 @@ class TestTimeSeriesApi(unittest.TestCase):
                 name=str(series_without_known_time.name),
                 points=TimeSeriesApi._series_to_time_series_points(series_without_known_time),
             ).ByteSize(),
-            TimeSeriesApi._estimate_size(series_without_known_time),
+            estimate_size(series_without_known_time),
         )
 
         series_with_known_time = pd.Series(
@@ -138,13 +142,13 @@ class TestTimeSeriesApi(unittest.TestCase):
                 name=str(series_with_known_time.name),
                 points=TimeSeriesApi._series_to_time_series_points(series_with_known_time),
             ).ByteSize(),
-            TimeSeriesApi._estimate_size(series_with_known_time),
+            estimate_size(series_with_known_time),
         )
 
     def test_get_batches_for_import(self):
         index = pd.DatetimeIndex(["2021-01-01", "2022-01-01"], tz=tz.tzutc())
         series = [pd.Series(name=self._ts_name(), data=1.0, index=index)] * 10000
-        batches = TimeSeriesApi._get_batches_for_import(series)
+        batches = get_batches_for_import(series)
 
         # There are 10.000 series.
         # Each series has 365 points and adds 227 bytes to the request.
@@ -172,3 +176,49 @@ class TestTimeSeriesApi(unittest.TestCase):
         entity_name = f"{ns}.{'a' * 32}"
         signal_name = f"{ns}.custom_signal_name_with_lots_of_characters"
         return f"entityTypes/{entity_type_name}/entities/{entity_name}/signals/{signal_name}"
+
+    def test_get_signal_time_series_iterator(self):
+        ts_api = TimeSeriesApi(ClientConfig("api-key"))
+        ts_1 = "ts_1"
+        ts_2 = "ts_2"
+        ts_3 = "ts_3"
+        ts_api.get_signal_time_series = mock.MagicMock()
+        ts_api.get_signal_time_series.side_effect = [
+            PagingResult([ts_1], next_page_token="1", total_size=3),
+            PagingResult([ts_2], next_page_token="2", total_size=3),
+            PagingResult([ts_3], next_page_token=None, total_size=3),
+            AssertionError("Should not be called"),
+        ]
+        ts = list(ts_api.get_signal_time_series_iterator("signal"))
+        self.assertEqual(3, len(ts))
+        self.assertSequenceEqual([ts_1, ts_2, ts_3], ts)
+        ts_api.get_signal_time_series.assert_has_calls(
+            [
+                mock.call(signal="signal", page_token=None),
+                mock.call(signal="signal", page_token="1"),
+                mock.call(signal="signal", page_token="2"),
+            ]
+        )
+
+    def test_get_entity_time_series_iterator(self):
+        ts_api = TimeSeriesApi(ClientConfig("api-key"))
+        ts_1 = "ts_1"
+        ts_2 = "ts_2"
+        ts_3 = "ts_3"
+        ts_api.get_entity_time_series = mock.MagicMock()
+        ts_api.get_entity_time_series.side_effect = [
+            PagingResult([ts_1], next_page_token="1", total_size=3),
+            PagingResult([ts_2], next_page_token="2", total_size=3),
+            PagingResult([ts_3], next_page_token=None, total_size=3),
+            AssertionError("Should not be called"),
+        ]
+        ts = list(ts_api.get_entity_time_series_iterator("entity"))
+        self.assertEqual(3, len(ts))
+        self.assertSequenceEqual([ts_1, ts_2, ts_3], ts)
+        ts_api.get_entity_time_series.assert_has_calls(
+            [
+                mock.call(entity="entity", page_token=None),
+                mock.call(entity="entity", page_token="1"),
+                mock.call(entity="entity", page_token="2"),
+            ]
+        )

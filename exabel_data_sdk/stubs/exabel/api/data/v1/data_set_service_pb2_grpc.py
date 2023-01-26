@@ -64,6 +64,8 @@ class DataSetServiceServicer(object):
         """Updates one data set and returns it.
 
         This can also be used to create a data set by setting `allow_missing` to `true`.
+
+        Note that that this method will update all fields unless `update_mask` is set.
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')

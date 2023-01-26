@@ -174,3 +174,18 @@ class TestCsvEntityLoader(unittest.TestCase):
             [Entity(name="entityTypes/brand/entities/test.brand1", display_name="brand1")],
             client.entity_api.list_entities("entityTypes/brand").results,
         )
+
+    @mock.patch("exabel_data_sdk.services.csv_reader.CsvReader.read_file")
+    def test_load_entities__with_batch_size(self, mock_read_file: mock.MagicMock):
+        df = pd.DataFrame([{"brand": "brand"}])
+        mock_read_file.side_effect = [df, (df for _ in range(2))]
+        client = mock.create_autospec(ExabelClient)
+        loader = CsvEntityLoader(client)
+        with mock.patch.object(loader, "_load_entities") as mock_load:
+            loader.load_entities(
+                filename="file",
+                batch_size=1,
+            )
+        self.assertIsNone(mock_read_file.call_args_list[0][1].get("chunksize"))
+        self.assertEqual(mock_read_file.call_args_list[1][1]["chunksize"], 1)
+        self.assertEqual(mock_load.call_count, 2)

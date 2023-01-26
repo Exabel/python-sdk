@@ -1,4 +1,4 @@
-from typing import Sequence, Union
+from typing import Optional, Sequence, Union
 
 import pandas as pd
 
@@ -33,9 +33,9 @@ class Signals:
     @staticmethod
     def query(
         columns: Sequence[Union[str, Column]],
-        tag: Union[str, Sequence[str]] = None,
-        start_time: Union[str, pd.Timestamp] = None,
-        end_time: Union[str, pd.Timestamp] = None,
+        tag: Optional[Union[str, Sequence[str]]] = None,
+        start_time: Optional[Union[str, pd.Timestamp]] = None,
+        end_time: Optional[Union[str, pd.Timestamp]] = None,
         predicates: Sequence[Predicate] = (),
     ) -> Query:
         """

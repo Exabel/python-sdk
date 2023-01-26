@@ -1,16 +1,13 @@
-import logging
 from typing import Optional
 
 from exabel_data_sdk import ExabelClient
 from exabel_data_sdk.services.csv_loading_constants import (
     DEFAULT_NUMBER_OF_RETRIES,
-    DEFAULT_NUMBER_OF_THREADS,
+    DEFAULT_NUMBER_OF_THREADS_FOR_IMPORT,
 )
 from exabel_data_sdk.services.file_loading_result import FileLoadingResult
 from exabel_data_sdk.services.file_time_series_loader import FileTimeSeriesLoader
 from exabel_data_sdk.util.deprecate_arguments import deprecate_arguments
-
-logger = logging.getLogger(__name__)
 
 
 class CsvTimeSeriesLoader:
@@ -26,21 +23,22 @@ class CsvTimeSeriesLoader:
         self,
         *,
         filename: str,
-        entity_mapping_filename: str = None,
+        entity_mapping_filename: Optional[str] = None,
         separator: str = ",",
         pit_current_time: bool = False,
         pit_offset: Optional[int] = None,
         create_missing_signals: bool = False,
         create_tag: bool = True,
         create_library_signal: bool = True,
-        global_time_series: bool = None,
-        threads: int = DEFAULT_NUMBER_OF_THREADS,
+        global_time_series: Optional[bool] = None,
+        threads: int = DEFAULT_NUMBER_OF_THREADS_FOR_IMPORT,
         dry_run: bool = False,
         error_on_any_failure: bool = False,
         retries: int = DEFAULT_NUMBER_OF_RETRIES,
         abort_threshold: Optional[float] = 0.5,
+        skip_validation: bool = False,
         # Deprecated arguments
-        namespace: str = None,  # pylint: disable=unused-argument
+        namespace: Optional[str] = None,  # pylint: disable=unused-argument
     ) -> FileLoadingResult:
         """
         Load a CSV file and upload the time series to the Exabel Data API
@@ -70,6 +68,7 @@ class CsvTimeSeriesLoader:
             retries: the maximum number of retries to make for each failed request
             abort_threshold: the threshold for the proportion of failed requests that will cause the
                  upload to be aborted; if it is `None`, the upload is never aborted
+            skip_validation: if True, the time series are not validated before uploading
         """
         results = FileTimeSeriesLoader(self._client).load_time_series(
             filename=filename,
@@ -86,6 +85,7 @@ class CsvTimeSeriesLoader:
             error_on_any_failure=error_on_any_failure,
             retries=retries,
             abort_threshold=abort_threshold,
+            skip_validation=skip_validation,
         )
         if len(results) != 1:
             raise ValueError("Unexpected number of results from time series loading.")

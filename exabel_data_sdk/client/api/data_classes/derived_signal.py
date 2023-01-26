@@ -128,7 +128,7 @@ class DerivedSignal:
         name: Optional[str],
         label: str,
         expression: str,
-        description: str = None,
+        description: Optional[str] = None,
         metadata: DerivedSignalMetaData = DerivedSignalMetaData(),
     ):
         """

@@ -29,7 +29,7 @@ class MockRelationshipApi(RelationshipApi):
         return (relationship.relationship_type, relationship.from_entity, relationship.to_entity)
 
     def list_relationship_types(
-        self, page_size: int = 1000, page_token: str = None
+        self, page_size: int = 1000, page_token: Optional[str] = None
     ) -> PagingResult[RelationshipType]:
         return self.types.list()
 
@@ -42,8 +42,8 @@ class MockRelationshipApi(RelationshipApi):
     def update_relationship_type(
         self,
         relationship_type: RelationshipType,
-        update_mask: FieldMask = None,
-        allow_missing: bool = None,
+        update_mask: Optional[FieldMask] = None,
+        allow_missing: Optional[bool] = None,
     ) -> RelationshipType:
         raise NotImplementedError()
 
@@ -55,7 +55,7 @@ class MockRelationshipApi(RelationshipApi):
         relationship_type: str,
         from_entity: str,
         page_size: int = 1000,
-        page_token: str = None,
+        page_token: Optional[str] = None,
     ) -> PagingResult[Relationship]:
         raise NotImplementedError()
 
@@ -64,7 +64,7 @@ class MockRelationshipApi(RelationshipApi):
         relationship_type: str,
         to_entity: str,
         page_size: int = 1000,
-        page_token: str = None,
+        page_token: Optional[str] = None,
     ) -> PagingResult[Relationship]:
         raise NotImplementedError()
 
@@ -77,7 +77,10 @@ class MockRelationshipApi(RelationshipApi):
         return self.relationships.create(relationship, self._key(relationship))
 
     def update_relationship(
-        self, relationship: Relationship, update_mask: FieldMask = None, allow_missing: bool = None
+        self,
+        relationship: Relationship,
+        update_mask: Optional[FieldMask] = None,
+        allow_missing: Optional[bool] = None,
     ) -> Relationship:
         # Note: The mock implementation ignores update_mask
         return self.relationships.update(relationship, self._key(relationship), allow_missing)
@@ -85,9 +88,10 @@ class MockRelationshipApi(RelationshipApi):
     def delete_relationship(self, relationship_type: str, from_entity: str, to_entity: str) -> None:
         self.relationships.delete((relationship_type, from_entity, to_entity))
 
-    def list_relationships(self) -> PagingResult[Relationship]:
-        """
-        Returns all relationships.
-        Note that this method is only available in the mock API, not the real API.
-        """
-        return self.relationships.list()
+    def list_relationships(
+        self,
+        relationship_type: str,
+        page_size: int = 1000,
+        page_token: Optional[str] = None,
+    ) -> PagingResult[Relationship]:
+        return self.relationships.list(predicate=lambda r: r.relationship_type == relationship_type)

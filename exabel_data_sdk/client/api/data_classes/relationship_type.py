@@ -1,4 +1,4 @@
-from typing import Mapping, Union
+from typing import Mapping, Optional, Union
 
 from exabel_data_sdk.client.api.proto_utils import from_struct, to_struct
 from exabel_data_sdk.stubs.exabel.api.data.v1.all_pb2 import (
@@ -27,7 +27,7 @@ class RelationshipType:
         self,
         name: str,
         description: str = "",
-        properties: Mapping[str, Union[str, bool, int, float]] = None,
+        properties: Optional[Mapping[str, Union[str, bool, int, float]]] = None,
         read_only: bool = False,
         is_ownership: bool = False,
     ):

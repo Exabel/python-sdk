@@ -3,6 +3,8 @@ from dataclasses import dataclass
 from itertools import chain
 from typing import Mapping, Optional, Sequence, Set, Tuple, Union
 
+from pandas import DataFrame
+
 from exabel_data_sdk import ExabelClient
 from exabel_data_sdk.client.api.bulk_insert import BulkInsertFailedError
 from exabel_data_sdk.client.api.data_classes.relationship import Relationship
@@ -16,7 +18,7 @@ from exabel_data_sdk.services.file_loading_exception import FileLoadingException
 from exabel_data_sdk.services.file_loading_result import FileLoadingResult
 from exabel_data_sdk.util.case_insensitive_column import get_case_insensitive_column
 from exabel_data_sdk.util.deprecate_arguments import deprecate_arguments
-from exabel_data_sdk.util.exceptions import TypeConvertionError
+from exabel_data_sdk.util.exceptions import TypeConversionError
 from exabel_data_sdk.util.resource_name_normalization import to_entity_resource_names
 from exabel_data_sdk.util.type_converter import type_converter
 
@@ -75,12 +77,12 @@ class RelationshipLoaderColumnConfiguration:
 
     @staticmethod
     def _validate_argument_combination(
-        from_entity_type: str = None,
-        from_identifier_type: str = None,
-        from_entity_column: str = None,
-        to_entity_type: str = None,
-        to_identifier_type: str = None,
-        to_entity_column: str = None,
+        from_entity_type: Optional[str] = None,
+        from_identifier_type: Optional[str] = None,
+        from_entity_column: Optional[str] = None,
+        to_entity_type: Optional[str] = None,
+        to_identifier_type: Optional[str] = None,
+        to_entity_column: Optional[str] = None,
     ) -> None:
         """
         Validate that the argument combination is valid.
@@ -135,11 +137,11 @@ class RelationshipLoaderColumnConfiguration:
         cls,
         *,
         from_entity_type: str,
-        from_identifier_type: str = None,
-        from_entity_column: str = None,
+        from_identifier_type: Optional[str] = None,
+        from_entity_column: Optional[str] = None,
         to_entity_type: str,
-        to_identifier_type: str = None,
-        to_entity_column: str = None,
+        to_identifier_type: Optional[str] = None,
+        to_entity_column: Optional[str] = None,
     ) -> "RelationshipLoaderColumnConfiguration":
         """Create configuration from specified entity types."""
         logger.debug("Creating column configuration from entity types.")
@@ -179,12 +181,12 @@ class RelationshipLoaderColumnConfiguration:
     @classmethod
     def from_arguments(
         cls,
-        from_entity_type: str = None,
-        from_identifier_type: str = None,
-        from_entity_column: str = None,
-        to_entity_type: str = None,
-        to_identifier_type: str = None,
-        to_entity_column: str = None,
+        from_entity_type: Optional[str] = None,
+        from_identifier_type: Optional[str] = None,
+        from_entity_column: Optional[str] = None,
+        to_entity_type: Optional[str] = None,
+        to_identifier_type: Optional[str] = None,
+        to_entity_column: Optional[str] = None,
     ) -> "RelationshipLoaderColumnConfiguration":
         """
         Create a RelationshipLoaderConfiguration from the given arguments.
@@ -255,27 +257,28 @@ class CsvRelationshipLoader:
         self,
         *,
         filename: str,
-        entity_mapping_filename: str = None,
+        entity_mapping_filename: Optional[str] = None,
         separator: str = ",",
         relationship_type: str,
-        from_entity_type: str = None,
-        from_identifier_type: str = None,
-        from_entity_column: str = None,
-        to_entity_type: str = None,
-        to_identifier_type: str = None,
-        to_entity_column: str = None,
-        description_column: str = None,
-        property_columns: Mapping[str, type] = None,
+        from_entity_type: Optional[str] = None,
+        from_identifier_type: Optional[str] = None,
+        from_entity_column: Optional[str] = None,
+        to_entity_type: Optional[str] = None,
+        to_identifier_type: Optional[str] = None,
+        to_entity_column: Optional[str] = None,
+        description_column: Optional[str] = None,
+        property_columns: Optional[Mapping[str, type]] = None,
         threads: int = DEFAULT_NUMBER_OF_THREADS,
         upsert: bool = False,
         dry_run: bool = False,
         error_on_any_failure: bool = False,
         retries: int = DEFAULT_NUMBER_OF_RETRIES,
         abort_threshold: Optional[float] = 0.5,
+        batch_size: Optional[int] = None,
         # Deprecated arguments:
-        entity_from_column: str = None,  # pylint: disable=unused-argument
-        entity_to_column: str = None,  # pylint: disable=unused-argument
-        namespace: str = None,  # pylint: disable=unused-argument
+        entity_from_column: Optional[str] = None,  # pylint: disable=unused-argument
+        entity_to_column: Optional[str] = None,  # pylint: disable=unused-argument
+        namespace: Optional[str] = None,  # pylint: disable=unused-argument
     ) -> FileLoadingResult:
         """
         Load a CSV file and upload the relationships specified therein to the Exabel Data API.
@@ -310,6 +313,8 @@ class CsvRelationshipLoader:
             retries: the maximum number of retries to make for each failed request
             abort_threshold: the threshold for the proportion of failed requests that will cause the
                  upload to be aborted; if it is `None`, the upload is never aborted
+            batch_size: the number of relationships to upload in each batch; if not specified, the
+                relationship file will be read into memory and uploaded in a single batch
         """
         if dry_run:
             logger.info("Running dry-run...")
@@ -342,30 +347,70 @@ class CsvRelationshipLoader:
         for pc in property_columns:
             string_columns.add(get_case_insensitive_column(pc, preview_df.columns))
 
-        relationships_df = CsvReader.read_file(
-            filename, separator, string_columns=string_columns, keep_default_na=False
-        )
-        relationships_df.columns = [column.lower() for column in relationships_df.columns]
-
-        from_entity_column_name, to_entity_column_name = config.get_from_and_to_column_names(
-            relationships_df.columns
-        )
-        logger.info(
-            "Loading %s relationships from %s to %s from %s",
-            relationship_type,
-            from_entity_column_name,
-            to_entity_column_name,
+        relationships_dfs = CsvReader.read_file(
             filename,
+            separator,
+            string_columns=string_columns,
+            keep_default_na=False,
+            chunksize=batch_size,
         )
-
+        if isinstance(relationships_dfs, DataFrame):
+            relationships_dfs = iter((relationships_dfs,))
+        else:
+            logger.info("Processing file in chunks of %d rows.", batch_size)
         relationship_type_name = self.get_relationship_type_name(
             relationship_type=relationship_type, namespace=self._client.namespace
         )
         entity_mapping = EntityMappingFileReader.read_entity_mapping_file(
             filename=entity_mapping_filename, separator=separator
         )
-        # pylint: disable=unsubscriptable-object,unsupported-assignment-operation
-        from_entity_series = relationships_df[from_entity_column_name]
+        combined_result = FileLoadingResult()
+        for batch_no, relationships_df in enumerate(relationships_dfs, start=1):
+            logger.info("Processing batch no: %d", batch_no)
+            relationships_df.columns = relationships_df.columns.str.lower()
+            result = self._load_relationships(
+                data_frame=relationships_df,
+                entity_mapping=entity_mapping,
+                relationship_type_name=relationship_type_name,
+                config=config,
+                description_column=description_column,
+                property_columns=property_columns,
+                threads=threads,
+                upsert=upsert,
+                dry_run=dry_run,
+                error_on_any_failure=error_on_any_failure,
+                retries=retries,
+                abort_threshold=abort_threshold,
+            )
+            combined_result.update(result)
+        return combined_result
+
+    def _load_relationships(
+        self,
+        data_frame: DataFrame,
+        entity_mapping: Optional[Mapping[str, Mapping[str, str]]],
+        relationship_type_name: str,
+        config: RelationshipLoaderColumnConfiguration,
+        description_column: Optional[str],
+        property_columns: Mapping[str, type],
+        threads: int = DEFAULT_NUMBER_OF_THREADS,
+        upsert: bool = False,
+        dry_run: bool = False,
+        error_on_any_failure: bool = False,
+        retries: int = DEFAULT_NUMBER_OF_RETRIES,
+        abort_threshold: Optional[float] = 0.5,
+    ) -> FileLoadingResult:
+        from_entity_column_name, to_entity_column_name = config.get_from_and_to_column_names(
+            data_frame.columns
+        )
+        logger.info(
+            "Loading %s relationships from %s to %s.",
+            relationship_type_name.split("/")[-1],
+            from_entity_column_name,
+            to_entity_column_name,
+        )
+
+        from_entity_series = data_frame[from_entity_column_name]
         if config.from_column.entity_type is not None:
             from_entity_series = from_entity_series.rename(config.from_column.entity_type)
         from_entity_result = to_entity_resource_names(
@@ -375,8 +420,8 @@ class CsvRelationshipLoader:
             entity_mapping=entity_mapping,
             preserve_namespace=config.from_column.entity_type is not None,
         )
-        relationships_df[from_entity_column_name] = from_entity_result.names
-        to_entity_series = relationships_df[to_entity_column_name]
+        data_frame[from_entity_column_name] = from_entity_result.names
+        to_entity_series = data_frame[to_entity_column_name]
         if config.to_column.entity_type is not None:
             to_entity_series = to_entity_series.rename(config.to_column.entity_type)
         to_entity_result = to_entity_resource_names(
@@ -386,19 +431,16 @@ class CsvRelationshipLoader:
             entity_mapping=entity_mapping,
             preserve_namespace=config.to_column.entity_type is not None,
         )
-        relationships_df[to_entity_column_name] = to_entity_result.names
-        # pylint: enable=unsubscriptable-object,unsupported-assignment-operation
+        data_frame[to_entity_column_name] = to_entity_result.names
         warnings = list(chain(from_entity_result.warnings, to_entity_result.warnings))
 
         # Drop rows where either the from or to entity is missing
-        relationships_df = relationships_df.dropna(
-            subset=[from_entity_column_name, to_entity_column_name]
-        )
+        data_frame = data_frame.dropna(subset=[from_entity_column_name, to_entity_column_name])
 
-        if not set(property_columns).issubset(relationships_df.columns):
+        if not set(property_columns).issubset(data_frame.columns):
             raise FileLoadingException(
                 "Property columns must be a subset of columns present in the file. Columns "
-                f"missing in the file: {set(property_columns) - set(relationships_df.columns)}"
+                f"missing in the file: {set(property_columns) - set(data_frame.columns)}"
             )
         try:
             relationships = [
@@ -413,9 +455,9 @@ class CsvRelationshipLoader:
                         if row[property_key]
                     },
                 )
-                for _, row in relationships_df.iterrows()
+                for _, row in data_frame.iterrows()
             ]
-        except TypeConvertionError as e:
+        except TypeConversionError as e:
             raise FileLoadingException("An error occurred while converting property types.") from e
 
         if dry_run:
@@ -453,10 +495,6 @@ class CsvRelationshipLoader:
             relationship_type_name = f"relationshipTypes/{relationship_type}"
 
         if not self._client.relationship_api.get_relationship_type(relationship_type_name):
-            logger.info("Available relationship types are:")
-            for rel_type in self._client.relationship_api.list_relationship_types().results:
-                logger.info("   %s", rel_type)
-
             raise FileLoadingException(
                 f"Did not find relationship type {relationship_type_name}, "
                 "please create it by running:\n"
