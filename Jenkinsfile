@@ -171,7 +171,7 @@ String getSlackUser() {
 
 String getChannel() {
   if (ON_MAIN) {
-    return '#jenkins-ci'
+    return '#build-notifications'
   }
   return "@${getSlackUser()}"
 }
