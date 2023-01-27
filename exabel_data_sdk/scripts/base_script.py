@@ -15,7 +15,7 @@ class BaseScript(CommandLineScript, abc.ABC):
         self,
         argv: Sequence[str],
         description: str,
-        api_key_retriever: Callable[[argparse.Namespace], str] = None,
+        api_key_retriever: Optional[Callable[[argparse.Namespace], str]] = None,
     ):
         super().__init__(argv, description)
         self.api_key_retriever = api_key_retriever

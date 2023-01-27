@@ -1,4 +1,4 @@
-from typing import Optional, Sequence
+from typing import Iterator, Optional, Sequence
 
 from google.protobuf.field_mask_pb2 import FieldMask
 
@@ -10,6 +10,7 @@ from exabel_data_sdk.client.api.data_classes.paging_result import PagingResult
 from exabel_data_sdk.client.api.data_classes.relationship import Relationship
 from exabel_data_sdk.client.api.data_classes.relationship_type import RelationshipType
 from exabel_data_sdk.client.api.data_classes.request_error import ErrorType, RequestError
+from exabel_data_sdk.client.api.pagable_resource import PagableResourceMixin
 from exabel_data_sdk.client.api.resource_creation_result import (
     ResourceCreationResults,
     ResourceCreationStatus,
@@ -29,7 +30,7 @@ from exabel_data_sdk.stubs.exabel.api.data.v1.all_pb2 import (
 )
 
 
-class RelationshipApi:
+class RelationshipApi(PagableResourceMixin):
     """
     API class for entity relationship CRUD operations.
     """
@@ -38,7 +39,7 @@ class RelationshipApi:
         self.client = RelationshipGrpcClient(config)
 
     def list_relationship_types(
-        self, page_size: int = 1000, page_token: str = None
+        self, page_size: int = 1000, page_token: Optional[str] = None
     ) -> PagingResult[RelationshipType]:
         """
         List all relationship types.
@@ -56,6 +57,10 @@ class RelationshipApi:
             next_page_token=response.next_page_token,
             total_size=response.total_size,
         )
+
+    def get_relationship_types_iterator(self) -> Iterator[RelationshipType]:
+        """Return an iterator with all known relationship types."""
+        return self._get_resource_iterator(self.list_relationship_types)
 
     def get_relationship_type(self, name: str) -> Optional[RelationshipType]:
         """
@@ -90,7 +95,7 @@ class RelationshipApi:
     def update_relationship_type(
         self,
         relationship_type: RelationshipType,
-        update_mask: FieldMask = None,
+        update_mask: Optional[FieldMask] = None,
         allow_missing: bool = False,
     ) -> RelationshipType:
         """
@@ -128,7 +133,7 @@ class RelationshipApi:
         relationship_type: str,
         from_entity: str,
         page_size: int = 1000,
-        page_token: str = None,
+        page_token: Optional[str] = None,
     ) -> PagingResult[Relationship]:
         """
         Get relationships from the given entity.
@@ -157,12 +162,25 @@ class RelationshipApi:
             total_size=response.total_size,
         )
 
+    def get_relationships_from_entity_iterator(
+        self, relationship_type: str, from_entity: str
+    ) -> Iterator[Relationship]:
+        """
+        Return an iterator with all relationships from the given entity of the given relationship
+        type.
+        """
+        return self._get_resource_iterator(
+            self.get_relationships_from_entity,
+            relationship_type=relationship_type,
+            from_entity=from_entity,
+        )
+
     def get_relationships_to_entity(
         self,
         relationship_type: str,
         to_entity: str,
         page_size: int = 1000,
-        page_token: str = None,
+        page_token: Optional[str] = None,
     ) -> PagingResult[Relationship]:
         """
         Get relationships to the given entity.
@@ -189,6 +207,56 @@ class RelationshipApi:
             results=[Relationship.from_proto(r) for r in response.relationships],
             next_page_token=response.next_page_token,
             total_size=response.total_size,
+        )
+
+    def get_relationships_to_entity_iterator(
+        self, relationship_type: str, to_entity: str
+    ) -> Iterator[Relationship]:
+        """
+        Return an iterator with all relationships to the given entity of the given relationship
+        type.
+        """
+        return self._get_resource_iterator(
+            self.get_relationships_to_entity,
+            relationship_type=relationship_type,
+            to_entity=to_entity,
+        )
+
+    def list_relationships(
+        self,
+        relationship_type: str,
+        page_size: int = 1000,
+        page_token: Optional[str] = None,
+    ) -> PagingResult[Relationship]:
+        """
+        List all relationships of the given relationship type.
+
+        Args:
+            relationship_type:  The resource name of the relationship type, for example
+                                "relationshipTypes/namespace.relationshipTypeIdentifier"
+            page_size:          The maximum number of results to return. Defaults to 1000, which is
+                                also the maximum size of this field.
+            page_token:         The page token to resume the results from, as returned from a
+                                previous invocation of the method.
+        """
+        response = self.client.list_relationships(
+            ListRelationshipsRequest(
+                parent=relationship_type,
+                page_size=page_size,
+                page_token=page_token,
+            )
+        )
+        return PagingResult(
+            results=[Relationship.from_proto(r) for r in response.relationships],
+            next_page_token=response.next_page_token,
+            total_size=response.total_size,
+        )
+
+    def get_relationships_iterator(self, relationship_type: str) -> Iterator[Relationship]:
+        """Return an iterator with all relationships of the given relationship type."""
+        return self._get_resource_iterator(
+            self.list_relationships,
+            relationship_type=relationship_type,
         )
 
     def get_relationship(
@@ -232,7 +300,10 @@ class RelationshipApi:
         return Relationship.from_proto(response)
 
     def update_relationship(
-        self, relationship: Relationship, update_mask: FieldMask = None, allow_missing: bool = False
+        self,
+        relationship: Relationship,
+        update_mask: Optional[FieldMask] = None,
+        allow_missing: bool = False,
     ) -> Relationship:
         """
         Update a relationship between two entities.

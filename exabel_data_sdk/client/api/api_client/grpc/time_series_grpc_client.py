@@ -17,6 +17,8 @@ from exabel_data_sdk.stubs.exabel.api.data.v1.all_pb2 import (
 )
 from exabel_data_sdk.stubs.exabel.api.data.v1.all_pb2_grpc import TimeSeriesServiceStub
 
+FIVE_MINUTES_IN_SECONDS = 5 * 60
+
 
 class TimeSeriesGrpcClient(TimeSeriesApiClient, BaseGrpcClient):
     """
@@ -51,8 +53,12 @@ class TimeSeriesGrpcClient(TimeSeriesApiClient, BaseGrpcClient):
 
     @handle_grpc_error
     def import_time_series(self, request: ImportTimeSeriesRequest) -> ImportTimeSeriesResponse:
+        # Import requests at 1 MB can take a long time to complete, so we increase the timeout if
+        # not already set to at least five minutes.
         return self.stub.ImportTimeSeries(
-            request, metadata=self.metadata, timeout=self.config.timeout
+            request,
+            metadata=self.metadata,
+            timeout=max(self.config.timeout, FIVE_MINUTES_IN_SECONDS),
         )
 
     @handle_grpc_error

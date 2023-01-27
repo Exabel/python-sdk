@@ -22,7 +22,8 @@ class ReadBigQuery(SqlScript):
                 "as [dataset.]table."
             ),
         )
-        self.parser.add_argument(
+        credentials_group = self.parser.add_mutually_exclusive_group()
+        credentials_group.add_argument(
             "--credentials-path",
             help=(
                 "Path and filename to the json file that will be used to authenticate the service "
@@ -33,6 +34,13 @@ class ReadBigQuery(SqlScript):
                 "Google Cloud SDK. A service account can also be authenticated using the Google "
                 "Cloud SDK with the command 'gcloud auth activate-service-account "
                 "<service-account>@<project>.iam.gserviceaccount.com --key-file=<key-file>'"
+            ),
+        )
+        credentials_group.add_argument(
+            "--credentials-string",
+            help=(
+                "Same as --credentials-path, but the credentials are passed as a string instead "
+                "of a path to a file."
             ),
         )
 

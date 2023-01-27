@@ -5,7 +5,6 @@ import pandas as pd
 
 from exabel_data_sdk.client.api.data_classes.entity import Entity
 from exabel_data_sdk.client.api.data_classes.entity_type import EntityType
-from exabel_data_sdk.client.api.data_classes.paging_result import PagingResult
 from exabel_data_sdk.client.api.entity_api import EntityApi
 from exabel_data_sdk.client.client_config import ClientConfig
 from exabel_data_sdk.stubs.exabel.api.data.v1.all_pb2 import SearchEntitiesResponse, SearchTerm
@@ -39,7 +38,7 @@ class TestResourceNameNormalization(unittest.TestCase):
             name="entity",
         )
         entity_api = mock.create_autospec(EntityApi(ClientConfig(api_key="123")))
-        entity_api.list_entity_types.side_effect = self._list_entity_types_uppercase
+        entity_api.get_entity_type_iterator.side_effect = self._list_entity_types_uppercase
         result = to_entity_resource_names(entity_api, data, namespace="acme").names
         pd.testing.assert_series_equal(expected, result)
 
@@ -55,7 +54,7 @@ class TestResourceNameNormalization(unittest.TestCase):
             name="entity",
         )
         entity_api = mock.create_autospec(EntityApi(ClientConfig(api_key="123")))
-        entity_api.list_entity_types.side_effect = self._list_entity_types
+        entity_api.get_entity_type_iterator.side_effect = self._list_entity_types
         result = to_entity_resource_names(entity_api, data, namespace="acme").names
         pd.testing.assert_series_equal(expected, result)
 
@@ -71,7 +70,7 @@ class TestResourceNameNormalization(unittest.TestCase):
             name="entity",
         )
         entity_api = mock.create_autospec(EntityApi(ClientConfig(api_key="123")))
-        entity_api.list_entity_types.side_effect = self._list_entity_types
+        entity_api.get_entity_type_iterator.side_effect = self._list_entity_types
         result = to_entity_resource_names(entity_api, data, namespace="acme").names
         pd.testing.assert_series_equal(expected, result)
 
@@ -204,7 +203,7 @@ class TestResourceNameNormalization(unittest.TestCase):
             name="entity",
         )
         entity_api = mock.create_autospec(EntityApi(ClientConfig(api_key="123")))
-        entity_api.list_entity_types.side_effect = self._list_entity_types
+        entity_api.get_entity_type_iterator.side_effect = self._list_entity_types
         company_result = to_entity_resource_names(
             entity_api, company_data, namespace="acme", entity_mapping=entity_mapping
         ).names
@@ -329,22 +328,18 @@ class TestResourceNameNormalization(unittest.TestCase):
         ]
 
     def _list_entity_types(self):
-        return PagingResult(
+        return iter(
             [
                 EntityType("entityTypes/brand", "", "", False),
                 EntityType("entityTypes/country", "", "", True),
-            ],
-            "next",
-            2,
+            ]
         )
 
     def _list_entity_types_uppercase(self):
-        return PagingResult(
+        return iter(
             [
                 EntityType("entityTypes/BRAND", "", "", False),
-            ],
-            "next",
-            1,
+            ]
         )
 
     def test_preserve_namespace(self):

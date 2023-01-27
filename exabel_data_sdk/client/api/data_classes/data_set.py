@@ -1,4 +1,4 @@
-from typing import Sequence
+from typing import Optional, Sequence
 
 from exabel_data_sdk.stubs.exabel.api.data.v1.all_pb2 import DataSet as ProtoDataSet
 
@@ -20,7 +20,7 @@ class DataSet:
         name: str,
         display_name: str,
         description: str = "",
-        signals: Sequence[str] = None,
+        signals: Optional[Sequence[str]] = None,
         read_only: bool = False,
     ):
         """

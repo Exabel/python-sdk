@@ -10,7 +10,7 @@ def from_struct(struct: Struct) -> Mapping[str, Union[str, bool, int, float]]:
     for value in struct.values():
         if not isinstance(value, (str, bool, int, float, type(None))):
             raise ValueError(f"Struct contains unsupported value: {value}")
-    return dict(struct.items())
+    return dict(struct.items())  # type: ignore[arg-type]
 
 
 def to_struct(values: Mapping[str, Union[str, bool, int, float]]) -> Struct:

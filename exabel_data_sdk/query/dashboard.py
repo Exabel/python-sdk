@@ -1,4 +1,4 @@
-from typing import Sequence, Union
+from typing import Optional, Sequence, Union
 
 from exabel_data_sdk.query.column import Column
 from exabel_data_sdk.query.query import Query
@@ -19,7 +19,9 @@ class Dashboard:
 
     @staticmethod
     def query(
-        dashboard: Union[str, int], columns: Sequence[str] = None, widget: Union[str, int] = None
+        dashboard: Union[str, int],
+        columns: Optional[Sequence[str]] = None,
+        widget: Optional[Union[str, int]] = None,
     ) -> Query:
         """
         Build a query for the dashboard table.

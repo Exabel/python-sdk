@@ -86,8 +86,6 @@ class EntityMappingFileReader:
         for identifier in identifier_columns:
             mappings[identifier] = {
                 getattr(row, identifier): getattr(row, f"{identifier}_entity")
-                # pylint: disable=unsubscriptable-object
                 for row in csv_data_frame[~csv_data_frame[identifier].isna()].itertuples()
-                # pylint: enable=unsubscriptable-object
             }
         return mappings

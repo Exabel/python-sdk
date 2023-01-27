@@ -4,7 +4,7 @@ from typing import Callable, Dict, Generic, Optional, TypeVar
 from exabel_data_sdk.client.api.data_classes.paging_result import PagingResult
 from exabel_data_sdk.client.api.data_classes.request_error import ErrorType, RequestError
 
-TResource = TypeVar("TResource")
+ResourceT = TypeVar("ResourceT")
 
 
 def failure_prone(func):
@@ -21,19 +21,21 @@ def failure_prone(func):
     return unreliable
 
 
-class MockResourceStore(Generic[TResource]):
+class MockResourceStore(Generic[ResourceT]):
     """In-memory resource store. Only intended for tests."""
 
     def __init__(self):
-        self.resources: Dict[object, TResource] = {}
+        self.resources: Dict[object, ResourceT] = {}
         # The failure rate, as a fraction (0.0-1.0) of calls that should fail
         self.failure_rate = 0.0
 
-    def get(self, key: object) -> Optional[TResource]:
+    def get(self, key: object) -> Optional[ResourceT]:
         """Get the resource with the given key if present, otherwise returns None."""
         return self.resources.get(key, None)
 
-    def list(self, predicate: Callable[[TResource], bool] = None) -> PagingResult[TResource]:
+    def list(
+        self, predicate: Optional[Callable[[ResourceT], bool]] = None
+    ) -> PagingResult[ResourceT]:
         """List all resources in the store."""
         resources = list(self.resources.values())
         if predicate:
@@ -45,7 +47,7 @@ class MockResourceStore(Generic[TResource]):
         )
 
     @failure_prone
-    def create(self, resource: TResource, key: object = None) -> TResource:
+    def create(self, resource: ResourceT, key: Optional[object] = None) -> ResourceT:
         """
         Create the given resource in the store.
 
@@ -66,8 +68,11 @@ class MockResourceStore(Generic[TResource]):
 
     @failure_prone
     def update(
-        self, resource: TResource, key: object = None, allow_missing: bool = None
-    ) -> TResource:
+        self,
+        resource: ResourceT,
+        key: Optional[object] = None,
+        allow_missing: Optional[bool] = None,
+    ) -> ResourceT:
         """
         Update the given resource in the store.
 

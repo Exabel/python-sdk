@@ -22,7 +22,7 @@ COMPANY_SEARCH_TERM_FIELDS = {
     "figi",
 }
 
-TKey = TypeVar("TKey")
+KeyT = TypeVar("KeyT")
 
 
 class SearchService:
@@ -172,7 +172,7 @@ class SearchService:
         results = self._by_fields(entity_type, ("mic", "ticker"), *itertools.chain(*mic_and_ticker))
         return self._single_result(results)  # type: ignore[arg-type]
 
-    def _single_result(self, results: Mapping[TKey, Sequence[Entity]]) -> Mapping[TKey, Entity]:
+    def _single_result(self, results: Mapping[KeyT, Sequence[Entity]]) -> Mapping[KeyT, Entity]:
         new_results = {}
         for key, value in results.items():
             assert len(value) == 1

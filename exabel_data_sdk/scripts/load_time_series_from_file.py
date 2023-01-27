@@ -5,6 +5,7 @@ from typing import Sequence
 from exabel_data_sdk import ExabelClient
 from exabel_data_sdk.scripts.actions import CaseInsensitiveArgumentAction
 from exabel_data_sdk.scripts.csv_script_with_entity_mapping import CsvScriptWithEntityMapping
+from exabel_data_sdk.services.csv_loading_constants import DEFAULT_NUMBER_OF_THREADS_FOR_IMPORT
 from exabel_data_sdk.services.file_loading_exception import FileLoadingException
 from exabel_data_sdk.services.file_time_series_loader import FileTimeSeriesLoader
 
@@ -102,6 +103,22 @@ class LoadTimeSeriesFromFile(CsvScriptWithEntityMapping):
             default=True,
             help="Set to not create a tag for every entity type a signal has time series for.",
         )
+        self.parser.set_defaults(threads=DEFAULT_NUMBER_OF_THREADS_FOR_IMPORT)
+        self.parser.add_argument(
+            "--batch-size",
+            type=int,
+            help=(
+                "The number of rows in each batch to read and upload from the file. If not "
+                "specified, defaults to reading the entire file into memory before uploading."
+            ),
+        )
+        self.parser.add_argument(
+            "--skip-validation",
+            required=False,
+            action="store_true",
+            default=False,
+            help="If set, the time series are not validated before uploading.",
+        )
 
     def run_script(self, client: ExabelClient, args: argparse.Namespace) -> None:
         try:
@@ -119,6 +136,8 @@ class LoadTimeSeriesFromFile(CsvScriptWithEntityMapping):
                 threads=args.threads,
                 dry_run=args.dry_run,
                 retries=args.retries,
+                batch_size=args.batch_size,
+                skip_validation=args.skip_validation,
             )
         except FileLoadingException as e:
             print(e)

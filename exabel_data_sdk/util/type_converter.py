@@ -1,6 +1,6 @@
 from typing import Union
 
-from exabel_data_sdk.util.exceptions import TypeConvertionError
+from exabel_data_sdk.util.exceptions import TypeConversionError
 
 
 def type_converter(value: str, type_: type) -> Union[str, int, float, bool]:
@@ -21,5 +21,5 @@ def type_converter(value: str, type_: type) -> Union[str, int, float, bool]:
                 return False
             raise ValueError(f"Invalid boolean value: '{value}', expected 'true' or 'false'")
     except ValueError as e:
-        raise TypeConvertionError(f"Unable to convert '{value}' to {type_}") from e
-    raise TypeConvertionError(f"Unsupported type: {type_}")
+        raise TypeConversionError(f"Unable to convert '{value}' to {type_}") from e
+    raise TypeConversionError(f"Unsupported type: {type_}")

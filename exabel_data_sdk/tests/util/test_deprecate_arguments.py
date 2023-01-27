@@ -6,13 +6,15 @@ from exabel_data_sdk.util.warnings import ExabelDeprecationWarning
 
 
 @deprecate_arguments(old_arg="new_arg")
-def _test_func(*, new_arg: str = None, old_arg: str = None) -> Optional[str]:
+def _test_func(*, new_arg: Optional[str] = None, old_arg: Optional[str] = None) -> Optional[str]:
     return new_arg or old_arg
 
 
 class TestDeprecateArguments(unittest.TestCase):
     @deprecate_arguments(old_arg="new_arg")
-    def _test_method(self, *, new_arg: str = None, old_arg: str = None) -> Optional[str]:
+    def _test_method(
+        self, *, new_arg: Optional[str] = None, old_arg: Optional[str] = None
+    ) -> Optional[str]:
         return new_arg or old_arg
 
     def test_deprecate_arguments(self):
@@ -56,7 +58,16 @@ class TestDeprecateArguments(unittest.TestCase):
 
     def test_deprecate_argument__removed_argument(self):
         @deprecate_arguments(deprecated_arg=None)
-        def _test_func(*, deprecated_arg: str = None) -> Optional[str]:
+        def _test_func(*, deprecated_arg: Optional[str] = None) -> Optional[str]:
             return deprecated_arg
 
         self.assertIsNone(_test_func(deprecated_arg="test"))
+
+    def test_deprecate_argument__with_function_as_arg(self):
+        def _test_func(
+            new_arg: Optional[str] = None, old_arg: Optional[str] = None
+        ) -> Optional[str]:
+            return new_arg or old_arg
+
+        wrapped_local_func = deprecate_arguments(_test_func, old_arg="new_arg")
+        self.assertEqual(wrapped_local_func(new_arg="test"), "test")

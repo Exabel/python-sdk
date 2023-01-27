@@ -39,8 +39,8 @@ class TestUploadTimeSeries(unittest.TestCase):
         self.client.time_series_api = mock.create_autospec(TimeSeriesApi)
 
         self.client.namespace = "ns"
-        self.client.signal_api.list_signals.side_effect = self._list_signal
-        self.client.entity_api.list_entity_types.side_effect = self._list_entity_types
+        self.client.signal_api.get_signal_iterator.side_effect = self._list_signal
+        self.client.entity_api.get_entity_type_iterator.side_effect = self._list_entity_types
 
     def test_one_signal(self):
         data = [["a", "2021-01-01", 1], ["a", "2021-01-02", 2], ["b", "2021-01-01", 3]]
@@ -155,6 +155,66 @@ class TestUploadTimeSeries(unittest.TestCase):
                 name="b/signals/acme.signal2",
             ),
             time_series["b/signals/acme.signal2"],
+        )
+
+    def test_get_series(self):
+        data = [
+            ["a", "2021-01-01", 1],
+            ["a", "2021-01-01", 2],
+            ["b", "2021-01-01", 3],
+            ["b", "2021-01-01", 3],
+        ]
+
+        ts_data = pd.DataFrame(data, columns=["entity", "date", "signal1"])
+        parser = SignalNamesInColumns.from_data_frame(ts_data, self.client.entity_api, "")
+        time_series = parser.get_series("signals/acme.")
+        self.assertEqual(1, len(time_series.failures))
+        self.assertEqual(1, len(time_series.valid_series))
+        pd.testing.assert_series_equal(
+            pd.Series(
+                [1, 2],
+                index=pd.DatetimeIndex(["2021-01-01", "2021-01-01"], tz=tz.tzutc()),
+                name="a/signals/acme.signal1",
+            ),
+            time_series.failures[0].resource,
+        )
+        pd.testing.assert_series_equal(
+            pd.Series(
+                [3],
+                index=pd.DatetimeIndex(["2021-01-01"], tz=tz.tzutc()),
+                name="b/signals/acme.signal1",
+            ),
+            time_series.valid_series[0],
+        )
+
+    def test_get_series__skip_validation(self):
+        data = [
+            ["a", "2021-01-01", 1],
+            ["a", "2021-01-01", 2],
+            ["b", "2021-01-01", 3],
+            ["b", "2021-01-01", 3],
+        ]
+
+        ts_data = pd.DataFrame(data, columns=["entity", "date", "signal1"])
+        parser = SignalNamesInColumns.from_data_frame(ts_data, self.client.entity_api, "")
+        time_series = parser.get_series("signals/acme.", skip_validation=True)
+        self.assertSequenceEqual([], time_series.failures)
+        self.assertEqual(2, len(time_series.valid_series))
+        pd.testing.assert_series_equal(
+            pd.Series(
+                [1, 2],
+                index=pd.DatetimeIndex(["2021-01-01", "2021-01-01"], tz=tz.tzutc()),
+                name="a/signals/acme.signal1",
+            ),
+            time_series.valid_series[0],
+        )
+        pd.testing.assert_series_equal(
+            pd.Series(
+                [3, 3],
+                index=pd.DatetimeIndex(["2021-01-01", "2021-01-01"], tz=tz.tzutc()),
+                name="b/signals/acme.signal1",
+            ),
+            time_series.valid_series[1],
         )
 
     def test_read_file_without_pit(self):
@@ -308,13 +368,13 @@ class TestUploadTimeSeries(unittest.TestCase):
         series_by_name = {s.name: s for s in call_args_list[0][0][0]}
         self.assertEqual(4, len(series_by_name))
 
-        index_A = pd.MultiIndex.from_arrays(
+        index_a = pd.MultiIndex.from_arrays(
             [
                 pd.DatetimeIndex(["2021-01-01", "2021-01-02"], tz=tz.tzutc()),
                 pd.DatetimeIndex(["2021-01-01", "2021-01-05"], tz=tz.tzutc()),
             ]
         )
-        index_B = pd.MultiIndex.from_arrays(
+        index_b = pd.MultiIndex.from_arrays(
             [
                 pd.DatetimeIndex(["2021-01-01", "2021-01-03"], tz=tz.tzutc()),
                 pd.DatetimeIndex(["2021-01-10", "2019-12-31"], tz=tz.tzutc()),
@@ -323,7 +383,7 @@ class TestUploadTimeSeries(unittest.TestCase):
         pd.testing.assert_series_equal(
             pd.Series(
                 [1, 2],
-                index_A,
+                index_a,
                 name="entityTypes/company/entities/company_A/signals/ns.signal1",
             ),
             series_by_name["entityTypes/company/entities/company_A/signals/ns.signal1"],
@@ -331,7 +391,7 @@ class TestUploadTimeSeries(unittest.TestCase):
         pd.testing.assert_series_equal(
             pd.Series(
                 [10, 20],
-                index_A,
+                index_a,
                 name="entityTypes/company/entities/company_A/signals/ns.signal2",
             ),
             series_by_name["entityTypes/company/entities/company_A/signals/ns.signal2"],
@@ -339,7 +399,7 @@ class TestUploadTimeSeries(unittest.TestCase):
         pd.testing.assert_series_equal(
             pd.Series(
                 [4, 5],
-                index_B,
+                index_b,
                 name="entityTypes/company/entities/company_B/signals/ns.signal1",
             ),
             series_by_name["entityTypes/company/entities/company_B/signals/ns.signal1"],
@@ -347,7 +407,7 @@ class TestUploadTimeSeries(unittest.TestCase):
         pd.testing.assert_series_equal(
             pd.Series(
                 [40, 50],
-                index_B,
+                index_b,
                 name="entityTypes/company/entities/company_B/signals/ns.signal2",
             ),
             series_by_name["entityTypes/company/entities/company_B/signals/ns.signal2"],
@@ -509,11 +569,11 @@ class TestUploadTimeSeries(unittest.TestCase):
         parser = mock.create_autospec(TimeSeriesFileParser)
         parser.preview = parse_file_result
         parser.parse_file.return_value = parse_file_result
+        parser.data_frame = None
         loader = FileTimeSeriesLoader(client=self.client)
         return partial(
             loader._load_time_series,
             parser=parser,
-            namespace="ns",
             error_on_any_failure=True,
             pit_current_time=True,
         )
@@ -538,8 +598,10 @@ class TestUploadTimeSeries(unittest.TestCase):
         ]
         script = LoadTimeSeriesFromFile(args)
         self.client.signal_api.get_signal.return_value = None
-        self.client.signal_api.list_signals.side_effect = lambda *_: PagingResult([], "", 0)
-        self.client.entity_api.list_entity_types.side_effect = self._list_entity_types_uppercase
+        self.client.signal_api.get_signal_iterator.side_effect = lambda *_: PagingResult([], "", 0)
+        self.client.entity_api.get_entity_type_iterator.side_effect = (
+            self._list_entity_types_uppercase
+        )
 
         script.run_script(self.client, script.parse_arguments())
 
@@ -574,8 +636,10 @@ class TestUploadTimeSeries(unittest.TestCase):
             "--create-missing-signals",
         ]
         script = LoadTimeSeriesFromFile(args)
-        self.client.signal_api.list_signals.side_effect = self._list_signal_uppercase
-        self.client.entity_api.list_entity_types.side_effect = self._list_entity_types_uppercase
+        self.client.signal_api.get_signal_iterator.side_effect = self._list_signal_uppercase
+        self.client.entity_api.get_entity_type_iterator.side_effect = (
+            self._list_entity_types_uppercase
+        )
         script.run_script(self.client, script.parse_arguments())
 
         call_args_list = self.client.time_series_api.bulk_upsert_time_series.call_args_list
@@ -608,8 +672,8 @@ class TestUploadTimeSeries(unittest.TestCase):
             "--create-missing-signals",
         ]
         script = LoadTimeSeriesFromFile(args)
-        self.client.signal_api.list_signals.side_effect = self._list_signal_uppercase
-        self.client.entity_api.list_entity_types.side_effect = self._list_entity_types
+        self.client.signal_api.get_signal_iterator.side_effect = self._list_signal_uppercase
+        self.client.entity_api.get_entity_type_iterator.side_effect = self._list_entity_types
 
         script.run_script(self.client, script.parse_arguments())
 
@@ -635,39 +699,21 @@ class TestUploadTimeSeries(unittest.TestCase):
         )
 
     def _list_signal(self):
-        return PagingResult(
+        return iter(
             [
                 Signal("signals/ns.signal1", "The Signal", "A description of the signal"),
                 Signal("signals/ns.signal2", "The Other Signal", "A description of the signal"),
-            ],
-            "next",
-            2,
+            ]
         )
 
     def _list_signal_uppercase(self):
-        return PagingResult(
-            [
-                Signal("signals/ns.SIGNAL1", "The Signal", "A description of the signal"),
-            ],
-            "next",
-            1,
-        )
+        return iter([Signal("signals/ns.SIGNAL1", "The Signal", "A description of the signal")])
 
     def _list_entity_types(self):
-        return PagingResult(
-            [EntityType("entityTypes/brand", "", "", False)],
-            "next",
-            1,
-        )
+        return iter([EntityType("entityTypes/brand", "", "", False)])
 
     def _list_entity_types_uppercase(self):
-        return PagingResult(
-            [
-                EntityType("entityTypes/BRAND", "", "", False),
-            ],
-            "next",
-            1,
-        )
+        return iter([EntityType("entityTypes/BRAND", "", "", False)])
 
 
 if __name__ == "__main__":

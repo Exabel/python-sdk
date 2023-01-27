@@ -8,7 +8,11 @@ from exabel_data_sdk.client.api.resource_creation_result import (
     ResourceCreationResult,
     ResourceCreationResults,
     ResourceCreationStatus,
-    TResource,
+    ResourceT,
+)
+from exabel_data_sdk.services.csv_loading_constants import (
+    DEFAULT_NUMBER_OF_RETRIES,
+    DEFAULT_NUMBER_OF_THREADS,
 )
 
 logger = logging.getLogger(__name__)
@@ -19,9 +23,9 @@ class BulkInsertFailedError(Exception):
 
 
 def _process(
-    results: ResourceCreationResults[TResource],
-    resource: TResource,
-    insert_func: Callable[[TResource], ResourceCreationStatus],
+    results: ResourceCreationResults[ResourceT],
+    resource: ResourceT,
+    insert_func: Callable[[ResourceT], ResourceCreationStatus],
     abort: Callable,
 ) -> None:
     """
@@ -60,10 +64,10 @@ def _raise_error() -> None:
 
 
 def _bulk_insert(
-    results: ResourceCreationResults[TResource],
-    resources: Sequence[TResource],
-    insert_func: Callable[[TResource], ResourceCreationStatus],
-    threads: int = 40,
+    results: ResourceCreationResults[ResourceT],
+    resources: Sequence[ResourceT],
+    insert_func: Callable[[ResourceT], ResourceCreationStatus],
+    threads: int = DEFAULT_NUMBER_OF_THREADS,
 ) -> None:
     """
     Calls the provided insert function with each of the provided resources,
@@ -106,12 +110,12 @@ def _get_backoff(trial: int, min_sleep: float = 1.0, max_sleep: float = 60.0) ->
 
 
 def bulk_insert(
-    resources: Sequence[TResource],
-    insert_func: Callable[[TResource], ResourceCreationStatus],
-    retries: int = 5,
-    threads: int = 40,
+    resources: Sequence[ResourceT],
+    insert_func: Callable[[ResourceT], ResourceCreationStatus],
+    retries: int = DEFAULT_NUMBER_OF_RETRIES,
+    threads: int = DEFAULT_NUMBER_OF_THREADS,
     abort_threshold: Optional[float] = 0.5,
-) -> ResourceCreationResults[TResource]:
+) -> ResourceCreationResults[ResourceT]:
     """
     Calls the provided insert function with each of the provided resources,
     while catching errors and tracking progress.
@@ -130,7 +134,7 @@ def bulk_insert(
         the result set showing the current status for each insert
     """
     start_time = time()
-    results: ResourceCreationResults[TResource] = ResourceCreationResults(
+    results: ResourceCreationResults[ResourceT] = ResourceCreationResults(
         len(resources), abort_threshold=abort_threshold
     )
     try:
@@ -142,7 +146,7 @@ def bulk_insert(
                 backoff = _get_backoff(trial)
                 logger.info("Sleeping %.2f seconds before retrying failed requests...", backoff)
                 sleep(backoff)
-                resources = [result.resource for result in failures]
+                resources = [result.resource for result in failures if result.resource is not None]
                 logger.info("Retry #%d with %d resources:", trial, len(resources))
             _bulk_insert(results, resources, insert_func, threads=threads)
     finally:

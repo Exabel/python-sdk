@@ -2,7 +2,7 @@ import importlib.util
 import unittest
 from typing import Callable, Type, TypeVar
 
-T = TypeVar("T")  # pylint: disable=invalid-name
+T = TypeVar("T")
 
 
 def requires_modules(*modules: str) -> Callable[..., Type[T]]:

@@ -1,6 +1,8 @@
 import os
 from typing import Optional, Sequence, Tuple
 
+FIFTEEN_MINUTES_IN_SECONDS = 15 * 60
+
 
 class DefaultConfig:
     """
@@ -18,7 +20,7 @@ class DefaultConfig:
         self.data_api_port = int(os.getenv("EXABEL_DATA_API_PORT", "21443"))
         self.analytics_api_port = int(os.getenv("EXABEL_ANALYTICS_API_PORT", "21443"))
         self.management_api_port = int(os.getenv("EXABEL_MANAGEMENT_API_PORT", "21443"))
-        self.timeout = int(os.getenv("EXABEL_TIMEOUT", "60"))
+        self.timeout = int(os.environ.get("EXABEL_TIMEOUT", FIFTEEN_MINUTES_IN_SECONDS))
         self.root_certificates: Optional[str] = None
         self.extra_headers: Sequence[Tuple[str, str]] = ()
 
@@ -30,17 +32,17 @@ class ClientConfig(DefaultConfig):
 
     def __init__(
         self,
-        api_key: str = None,
-        client_name: str = None,
-        data_api_host: str = None,
-        analytics_api_host: str = None,
-        management_api_host: str = None,
-        data_api_port: int = None,
-        analytics_api_port: int = None,
-        management_api_port: int = None,
-        timeout: int = None,
-        root_certificates: str = None,
-        extra_headers: Sequence[Tuple[str, str]] = None,
+        api_key: Optional[str] = None,
+        client_name: Optional[str] = None,
+        data_api_host: Optional[str] = None,
+        analytics_api_host: Optional[str] = None,
+        management_api_host: Optional[str] = None,
+        data_api_port: Optional[int] = None,
+        analytics_api_port: Optional[int] = None,
+        management_api_port: Optional[int] = None,
+        timeout: Optional[int] = None,
+        root_certificates: Optional[str] = None,
+        extra_headers: Optional[Sequence[Tuple[str, str]]] = None,
     ):
         """
         Initialize a new client configuration.

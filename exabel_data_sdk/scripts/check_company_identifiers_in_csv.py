@@ -1,6 +1,6 @@
 import argparse
 import sys
-from typing import Sequence
+from typing import Optional, Sequence
 
 import pandas as pd
 
@@ -41,7 +41,9 @@ class CheckCompanyIdentifiersInCsv(CsvScript):
             ),
         )
 
-    def _get_identifier_type(self, identifier_column: str, identifier_type: str = None) -> str:
+    def _get_identifier_type(
+        self, identifier_column: str, identifier_type: Optional[str] = None
+    ) -> str:
         _identifier_type = identifier_type or identifier_column
         given_explicit_identifier_type = identifier_type is not None
         if _identifier_type not in COMPANY_SEARCH_TERM_FIELDS:

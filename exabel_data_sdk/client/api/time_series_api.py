@@ -1,4 +1,4 @@
-from typing import List, Optional, Sequence
+from typing import Iterator, Optional, Sequence
 
 import pandas as pd
 from dateutil import tz
@@ -9,11 +9,16 @@ from exabel_data_sdk.client.api.api_client.grpc.time_series_grpc_client import T
 from exabel_data_sdk.client.api.bulk_import import bulk_import
 from exabel_data_sdk.client.api.data_classes.paging_result import PagingResult
 from exabel_data_sdk.client.api.data_classes.request_error import ErrorType, RequestError
+from exabel_data_sdk.client.api.pagable_resource import PagableResourceMixin
 from exabel_data_sdk.client.api.resource_creation_result import (
     ResourceCreationResults,
     ResourceCreationStatus,
 )
 from exabel_data_sdk.client.client_config import ClientConfig
+from exabel_data_sdk.services.csv_loading_constants import (
+    DEFAULT_NUMBER_OF_RETRIES,
+    DEFAULT_NUMBER_OF_THREADS_FOR_IMPORT,
+)
 from exabel_data_sdk.stubs.exabel.api.data.v1.all_pb2 import (
     BatchDeleteTimeSeriesPointsRequest,
     CreateTimeSeriesRequest,
@@ -30,9 +35,10 @@ from exabel_data_sdk.stubs.exabel.api.data.v1.all_pb2 import (
     UpdateTimeSeriesRequest,
 )
 from exabel_data_sdk.stubs.exabel.api.time.time_range_pb2 import TimeRange
+from exabel_data_sdk.util.deprecate_arguments import deprecate_arguments
 
 
-class TimeSeriesApi:
+class TimeSeriesApi(PagableResourceMixin):
     """
     API class for time series CRUD operations.
     """
@@ -41,7 +47,7 @@ class TimeSeriesApi:
         self.client = TimeSeriesGrpcClient(config)
 
     def get_signal_time_series(
-        self, signal: str, page_size: int = 1000, page_token: str = None
+        self, signal: str, page_size: int = 1000, page_token: Optional[str] = None
     ) -> PagingResult[str]:
         """
         Get the resource names of all time series for one signal.
@@ -61,8 +67,14 @@ class TimeSeriesApi:
             response.total_size,
         )
 
+    def get_signal_time_series_iterator(self, signal: str) -> Iterator[str]:
+        """
+        Return an iterator with all the resource names of all time series for one signal.
+        """
+        return self._get_resource_iterator(self.get_signal_time_series, signal=signal)
+
     def get_entity_time_series(
-        self, entity: str, page_size: int = 1000, page_token: str = None
+        self, entity: str, page_size: int = 1000, page_token: Optional[str] = None
     ) -> PagingResult[str]:
         """
         Get the resource names of all time series for one entity.
@@ -83,12 +95,18 @@ class TimeSeriesApi:
             response.total_size,
         )
 
+    def get_entity_time_series_iterator(self, entity: str) -> Iterator[str]:
+        """
+        Return an iterator with all the resource names of all time series for one entity.
+        """
+        return self._get_resource_iterator(self.get_entity_time_series, entity=entity)
+
     def get_time_series(
         self,
         name: str,
-        start: pd.Timestamp = None,
-        end: pd.Timestamp = None,
-        known_time: pd.Timestamp = None,
+        start: Optional[pd.Timestamp] = None,
+        end: Optional[pd.Timestamp] = None,
+        known_time: Optional[pd.Timestamp] = None,
     ) -> Optional[pd.Series]:
         """
         Get one time series.
@@ -134,7 +152,7 @@ class TimeSeriesApi:
         name: str,
         series: pd.Series,
         create_tag: bool = False,
-        default_known_time: DefaultKnownTime = None,
+        default_known_time: Optional[DefaultKnownTime] = None,
     ) -> None:
         """
         Create a time series.
@@ -175,7 +193,7 @@ class TimeSeriesApi:
         name: str,
         series: pd.Series,
         create_tag: bool = False,
-        default_known_time: DefaultKnownTime = None,
+        default_known_time: Optional[DefaultKnownTime] = None,
     ) -> None:
         """
         Create or update a time series.
@@ -220,7 +238,7 @@ class TimeSeriesApi:
         self,
         name: str,
         series: pd.Series,
-        default_known_time: DefaultKnownTime = None,
+        default_known_time: Optional[DefaultKnownTime] = None,
         allow_missing: bool = False,
         create_tag: bool = False,
     ) -> None:
@@ -258,7 +276,7 @@ class TimeSeriesApi:
         self,
         parent: str,
         series: Sequence[pd.Series],
-        default_known_time: DefaultKnownTime = None,
+        default_known_time: Optional[DefaultKnownTime] = None,
         allow_missing: bool = False,
         create_tag: bool = False,
     ) -> None:
@@ -299,7 +317,7 @@ class TimeSeriesApi:
         self,
         name: str,
         series: pd.Series,
-        default_known_time: DefaultKnownTime = None,
+        default_known_time: Optional[DefaultKnownTime] = None,
         allow_missing: Optional[bool] = False,
         create_tag: Optional[bool] = False,
     ) -> pd.Series:
@@ -360,15 +378,17 @@ class TimeSeriesApi:
         """
         return self.get_time_series(name) is not None
 
+    @deprecate_arguments(threads_for_import=None)
     def bulk_upsert_time_series(
         self,
         series: Sequence[pd.Series],
         create_tag: bool = False,
-        threads: int = 4,
-        default_known_time: DefaultKnownTime = None,
-        retries: int = 5,
+        threads: int = DEFAULT_NUMBER_OF_THREADS_FOR_IMPORT,
+        default_known_time: Optional[DefaultKnownTime] = None,
+        retries: int = DEFAULT_NUMBER_OF_RETRIES,
         abort_threshold: Optional[float] = 0.5,
-        threads_for_import: int = 4,
+        # Deprecated arguments
+        threads_for_import: int = 4,  # pylint: disable=unused-argument
     ) -> ResourceCreationResults[pd.Series]:
         """Import the provided time series in batches.
 
@@ -395,60 +415,7 @@ class TimeSeriesApi:
             abort_threshold:
                             The threshold for the proportion of failed requests that will cause the
                             upload to be aborted; if it is `None`, the upload is never aborted.
-            threads_for_import:
-                            The number of parallel threads to use, when using the import endpoint.
         """
-
-        return self._bulk_import_time_series(
-            series=series,
-            create_tag=create_tag,
-            threads_for_import=threads_for_import,
-            threads_for_insert=threads,
-            default_known_time=default_known_time,
-            retries=retries,
-            abort_threshold=abort_threshold,
-        )
-
-    def _bulk_import_time_series(
-        self,
-        series: Sequence[pd.Series],
-        create_tag: bool = False,
-        threads_for_import: int = 4,
-        threads_for_insert: int = 4,
-        default_known_time: DefaultKnownTime = None,
-        retries: int = 5,
-        abort_threshold: Optional[float] = 0.5,
-    ) -> ResourceCreationResults[pd.Series]:
-        """Split the given series into batches and call import_time_series for each batch.
-
-        If a batch is not imported successfully by import_time_series,
-        append_time_series_data will be called for it, while catching errors and tracking progress.
-
-        The name attribute of each time series is taken to be the resource name.
-        See the docstring of append_time_series_data regarding required format
-        for this resource name.
-
-        Args:
-            series:     The time series to be imported.
-            create_tag: Set to true to create a tag for every entity type a signal has time
-                        series for. If a tag already exists, it will be updated when time
-                        series are created (or deleted) regardless of the value of this flag.
-            threads_for_import:
-                        The number of parallel threads to run function using time series import API.
-            threads_for_insert:
-                        The number of parallel threads to run function using time series append API.
-            default_known_time:
-                        Specify a default known time policy. This is used to determine
-                        the Known Time for data points where a specific known time timestamp
-                        has not been given. If not provided, the Exabel API defaults to the
-                        current time (upload time) as the Known Time.
-            retries:    Maximum number of retries to run the insert function using time series
-                        append API make for each failed batch in the request.
-            abort_threshold:
-                        The threshold for the proportion of failed requests that will cause the
-                        upload to be aborted; if it is `None`, the upload is never aborted.
-        """
-        series_batches = self._get_batches_for_import(series)
 
         def import_func(ts_sequence: Sequence[pd.Series]) -> Sequence[ResourceCreationStatus]:
             self.import_time_series(
@@ -460,68 +427,19 @@ class TimeSeriesApi:
             )
             return [ResourceCreationStatus.UPSERTED] * len(ts_sequence)
 
-        def insert_func(ts: pd.Series) -> ResourceCreationStatus:
-            self.append_time_series_data(
-                name=str(ts.name),
-                series=ts,
-                default_known_time=default_known_time,
-                allow_missing=True,
-                create_tag=create_tag,
-            )
-            return ResourceCreationStatus.UPSERTED
-
         return bulk_import(
-            series_batches,
+            series,
             import_func,
-            insert_func,
-            threads_for_import,
-            threads_for_insert,
+            threads,
             retries,
             abort_threshold,
         )
 
     @staticmethod
-    def _get_batches_for_import(series: Sequence[pd.Series]) -> Sequence[Sequence[pd.Series]]:
-        """
-        Split the given sequence of series into batches of series where each batch can be sent
-        in a single ImportTimeSeriesRequest.
-
-        The goal is to create batches such that the size of the ImportTimeSeriesRequest for each
-        batch does not exceed 1MB.
-        """
-        all_batches = []
-        current_batch: List[pd.Series] = []
-        current_size = 0
-        one_mb = 2**20
-        for s in series:
-            size = TimeSeriesApi._estimate_size(s)
-            if current_size + size > one_mb and current_size > 0:
-                all_batches.append(current_batch)
-                current_batch = [s]
-                current_size = size
-            else:
-                current_size += size
-                current_batch.append(s)
-        all_batches.append(current_batch)
-        return all_batches
-
-    @staticmethod
-    def _estimate_size(series: pd.Series) -> int:
-        """
-        Estimate how many bytes the given series will add to an ImportTimeSeriesRequest.
-        """
-
-        # 1 byte for each character in the time series name
-        # + 27/19 bytes for each data point (depends on whether known-time is specified)
-        # + 7 bytes overhead.
-        has_known_time = isinstance(series.index, pd.MultiIndex)
-        return len(str(series.name)) + (27 if has_known_time else 19) * len(series) + 7
-
-    @staticmethod
     def _series_to_time_series_points(series: pd.Series) -> Sequence[TimeSeriesPoint]:
         """Convert a pandas Series to a sequence of TimeSeriesPoint."""
         points = []
-        for index, value in series.iteritems():
+        for index, value in series.items():
             if isinstance(index, tuple):
                 # (timestamp, known_time)
                 if len(index) != 2:
@@ -545,7 +463,7 @@ class TimeSeriesApi:
 
     @staticmethod
     def _time_series_points_to_series(
-        points: Sequence[TimeSeriesPoint], name: str = None
+        points: Sequence[TimeSeriesPoint], name: Optional[str] = None
     ) -> pd.Series:
         """Convert a sequence of TimeSeriesPoint to a pandas Series."""
         return pd.Series(

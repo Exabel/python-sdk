@@ -75,11 +75,13 @@ def _assert_no_collision(mapping: Mapping[str, str]) -> None:
     if duplicates.empty:
         # No duplicates, all good
         return
-    logger.error("The normalization of identifiers have introduced resource name collisions.")
-    logger.error("The collisions are shown below.")
-    logger.error("Please fix these duplicates, and then re-run the script.")
     pd.set_option("max_colwidth", 1000)
-    logger.error(duplicates.sort_values().to_string())
+    logger.error(
+        "The normalization of identifiers have introduced resource name collisions. "
+        "The collisions are shown below. "
+        "Please fix these duplicates, and then re-run the script.\n%s",
+        duplicates.sort_values().to_string(),
+    )
     raise ValueError("Resource name collisions detected")
 
 
@@ -203,7 +205,7 @@ def _get_resource_names(
     entity_api: EntityApi,
     identifiers: Sequence[str],
     entity_type: str,
-    namespace: str = None,
+    namespace: Optional[str] = None,
     check_entity_types: bool = True,
     preserve_namespace: bool = False,
 ) -> Mapping[str, str]:
@@ -214,7 +216,7 @@ def _get_resource_names(
     read_only_entity_type_lower_names = set()
     # Entity types are reversed because we want to match the first entity type returned by the
     # API lexicographically.
-    for et in reversed(entity_api.list_entity_types().results):
+    for et in reversed(list(entity_api.get_entity_type_iterator())):
         lower_case_entity_type_name = et.name.lower()
         entity_type_name_lower_map[lower_case_entity_type_name] = et
         if et.read_only:
@@ -224,11 +226,7 @@ def _get_resource_names(
         entity_type_name = entity_type_name_lower_map[entity_type_name_lower].name
     except KeyError as e:
         if check_entity_types:
-            message = f"Failure: Did not find entity type {entity_type_name}"
-            logger.error(message)
-            logger.error("Available entity types are:")
-            logger.error(entity_type_name_lower_map)
-            raise ValueError(message) from e
+            raise ValueError(f"Did not find entity type {entity_type_name}") from e
 
     if entity_type_name_lower in read_only_entity_type_lower_names or preserve_namespace:
         namespace = None
@@ -261,8 +259,8 @@ def _get_resource_names(
 def to_entity_resource_names(
     entity_api: EntityApi,
     identifiers: pd.Series,
-    namespace: str = None,
-    entity_mapping: Mapping[str, Mapping[str, str]] = None,
+    namespace: Optional[str] = None,
+    entity_mapping: Optional[Mapping[str, Mapping[str, str]]] = None,
     check_entity_types: bool = True,
     preserve_namespace: bool = False,
 ) -> EntityResourceNames:

@@ -60,6 +60,8 @@ class RelationshipServiceServicer(object):
 
         This can also be used to create a relationship type by setting `allow_missing` to `true`.
 
+        Note that this method update all fields unless `update_mask` is set.
+
         Note that modifying the `is_ownership` property may be a slow operation, as all individual
         relationships of this type will have to be updated.
         """
@@ -78,9 +80,10 @@ class RelationshipServiceServicer(object):
         raise NotImplementedError('Method not implemented!')
 
     def ListRelationships(self, request, context):
-        """Lists relationship for a given entity.
+        """Lists relationship of a specific type.
 
-        At least one of `from_entity` and `to_entity` must be specified.
+        If neither `from_entity` or `to_entity` is given, it is expected that this call will
+        take some time to complete.
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -104,6 +107,8 @@ class RelationshipServiceServicer(object):
         """Updates one relationship and returns it.
 
         This can also be used to create a relationship by setting `allow_missing` to `true`.
+
+        Note that that this method will update all fields unless `update_mask` is set.
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')

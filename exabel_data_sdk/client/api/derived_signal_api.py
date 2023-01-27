@@ -22,7 +22,9 @@ class DerivedSignalApi:
     def __init__(self, config: ClientConfig):
         self.client = DerivedSignalGrpcClient(config)
 
-    def create_derived_signal(self, signal: DerivedSignal, folder: str = None) -> DerivedSignal:
+    def create_derived_signal(
+        self, signal: DerivedSignal, folder: Optional[str] = None
+    ) -> DerivedSignal:
         """
         Create a derived signal.
 

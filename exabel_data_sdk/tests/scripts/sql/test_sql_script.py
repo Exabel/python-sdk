@@ -23,6 +23,10 @@ class TestSqlScript(unittest.TestCase):
     def test_sql_script_without_output_file(self, mock_reader):
         mock_config_class = mock.create_autospec(SqlReaderConfiguration)
         mock_config_instance = mock_config_class()
+        mock_config_instance.get_connection_string_and_kwargs.return_value = (
+            "connection-string",
+            "kwargs",
+        )
         mock_config_class.from_args.return_value = mock_config_instance
         mock_reader.return_value.read_sql_query_and_write_result.return_value = None
         script = self.SqlScriptImpl(self.common_args, "sql_script", mock_config_class)
@@ -34,9 +38,7 @@ class TestSqlScript(unittest.TestCase):
                 batch_size=None,
             )
         )
-        mock_reader.assert_called_once_with(
-            mock_config_instance.get_connection_string.return_value,
-        )
+        mock_reader.assert_called_once_with("connection-string", kwargs="kwargs")
         mock_reader.return_value.read_sql_query_and_write_result.assert_called_once_with(
             "SELECT 1 AS A", None, batch_size=None
         )
@@ -45,6 +47,10 @@ class TestSqlScript(unittest.TestCase):
     def test_sql_script_with_output_file(self, mock_reader):
         mock_config_class = mock.create_autospec(SqlReaderConfiguration)
         mock_config_instance = mock_config_class()
+        mock_config_instance.get_connection_string_and_kwargs.return_value = (
+            "connection-string",
+            "kwargs",
+        )
         mock_config_class.from_args.return_value = mock_config_instance
         mock_reader.return_value.read_sql_query_and_write_result.return_value = None
         script = self.SqlScriptImpl(
@@ -58,9 +64,7 @@ class TestSqlScript(unittest.TestCase):
                 batch_size=None,
             )
         )
-        mock_reader.assert_called_once_with(
-            mock_config_instance.get_connection_string.return_value,
-        )
+        mock_reader.assert_called_once_with("connection-string", kwargs="kwargs")
         mock_reader.return_value.read_sql_query_and_write_result.assert_called_once_with(
             "SELECT 1 AS A",
             "output_file",

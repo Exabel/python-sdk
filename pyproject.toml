@@ -1,6 +1,73 @@
 [tool.black]
 line-length = 100
 
+[tool.pylint.MASTER]
+ignore = "stubs"
+# pylint on mac is reporting c-extension-no-member errors without this.
+extension-pkg-allow-list = ["math", "resource"]
+jobs = 2
+
+[tool.pylint."MESSAGES CONTROL"]
+disable = [
+    # fails on any TODO
+    "fixme",
+
+    # many dubious positives, such as similar __init__ methods and tests
+    "duplicate-code",
+
+    # when this is run on Jenkins, the dependencies are not available
+    "import-error",
+
+    # Checks fail on protobufs.
+    "no-member",
+    "no-name-in-module",
+
+    # Does not support typing correctly.
+    "isinstance-second-argument-not-valid-type",
+
+    # When an import is placed inside a function, it is generally as a work-around due to cyclic
+    # imports; emitting a warning which has to be ignored, does not seem helpful.
+    "cyclic-import",
+
+    # Since we usually follow the pattern of one class per module, the module docstring is
+    # superfluous.
+    "missing-module-docstring",
+
+    # Imports are handled by 'isort'.
+    "wrong-import-order",
+    "wrong-import-position",
+    "ungrouped-imports",
+    "import-outside-toplevel",
+
+    # The checks with 'too-few' or 'too-many' are generally reasonable programming guidelines,
+    # but when enforced they tend to have little effect beyond causing the code to be sprinkled
+    # by ignore statements.
+    "too-few-public-methods",
+    "too-many-ancestors",
+    "too-many-arguments",
+    "too-many-boolean-expressions",
+    "too-many-branches",
+    "too-many-instance-attributes",
+    "too-many-lines",
+    "too-many-locals",
+    "too-many-nested-blocks",
+    "too-many-public-methods",
+    "too-many-return-statements",
+    "too-many-statements",
+]
+enable="useless-suppression"
+
+[tool.pylint.BASIC]
+no-docstring-rgx = "^_|^test_|.*Test$|^Test"
+
+[tool.pylint.FORMAT]
+# By default, pylint enforces an argument naming convention which is different from PEP8 (stricter),
+# but we have decided on PEP8 and no need to deviate from that.
+argument-rgx = "[a-z][a-z0-9_]*$"
+attr-rgx = "_{0,2}[A-Za-z_][A-Za-z0-9_]*$"
+variable-rgx = "[a-z_][a-z0-9_]*$"
+good-names=["_", "of"]
+
 [tool.isort]
 multi_line_output = 3
 include_trailing_comma = true
@@ -8,3 +75,27 @@ force_grid_wrap = 0
 use_parentheses = true
 line_length = 100
 ensure_newline_before_comments = true
+
+[tool.mypy]
+python_version = 3.7
+# Searching for installed packages in mypy apparently does not play well with pipenv.
+ignore_missing_imports = true
+check_untyped_defs = true
+disallow_untyped_defs = true
+show_error_codes = true
+strict_equality = true
+warn_unreachable = true
+warn_unused_ignores = true
+namespace_packages = true
+local_partial_types = true
+
+[[tool.mypy.overrides]]
+module = "*.tests.*"
+disallow_untyped_defs = false
+check_untyped_defs = false
+disable_error_code = ["annotation-unchecked"]
+
+[[tool.mypy.overrides]]
+module = "exabel_data_sdk.stubs.*"
+disallow_untyped_defs = false
+disable_error_code = ["name-defined"]

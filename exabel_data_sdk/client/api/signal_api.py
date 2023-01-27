@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Iterator, Optional
 
 from google.protobuf.field_mask_pb2 import FieldMask
 
@@ -6,6 +6,7 @@ from exabel_data_sdk.client.api.api_client.grpc.signal_grpc_client import Signal
 from exabel_data_sdk.client.api.data_classes.paging_result import PagingResult
 from exabel_data_sdk.client.api.data_classes.request_error import ErrorType, RequestError
 from exabel_data_sdk.client.api.data_classes.signal import Signal
+from exabel_data_sdk.client.api.pagable_resource import PagableResourceMixin
 from exabel_data_sdk.client.client_config import ClientConfig
 from exabel_data_sdk.stubs.exabel.api.data.v1.all_pb2 import (
     CreateSignalRequest,
@@ -16,7 +17,7 @@ from exabel_data_sdk.stubs.exabel.api.data.v1.all_pb2 import (
 )
 
 
-class SignalApi:
+class SignalApi(PagableResourceMixin):
     """
     API class for Signal CRUD operations.
     """
@@ -24,7 +25,9 @@ class SignalApi:
     def __init__(self, config: ClientConfig):
         self.client = SignalGrpcClient(config)
 
-    def list_signals(self, page_size: int = 1000, page_token: str = None) -> PagingResult[Signal]:
+    def list_signals(
+        self, page_size: int = 1000, page_token: Optional[str] = None
+    ) -> PagingResult[Signal]:
         """
         List all signals.
 
@@ -41,6 +44,10 @@ class SignalApi:
             next_page_token=response.next_page_token,
             total_size=response.total_size,
         )
+
+    def get_signal_iterator(self) -> Iterator[Signal]:
+        """Return an iterator with all signals."""
+        return self._get_resource_iterator(self.list_signals)
 
     def get_signal(self, name: str) -> Optional[Signal]:
         """
@@ -79,7 +86,7 @@ class SignalApi:
     def update_signal(
         self,
         signal: Signal,
-        update_mask: FieldMask = None,
+        update_mask: Optional[FieldMask] = None,
         allow_missing: bool = False,
         create_library_signal: bool = False,
     ) -> Signal:

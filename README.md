@@ -21,12 +21,13 @@ For installation with support for exporting data from a various SQL based data s
 pip install exabel-data-sdk[snowflake]
 
 # Or install multiple data sources at the same time:
-pip install exabel-data-sdk[snowflake,bigquery]
+pip install exabel-data-sdk[snowflake,bigquery,athena]
 ```
 
 Supported data sources are:
 * Snowflake: `snowflake`
 * Google BigQuery: `bigquery`
+* AWS Athena: `athena`
 
 ## Getting started
 

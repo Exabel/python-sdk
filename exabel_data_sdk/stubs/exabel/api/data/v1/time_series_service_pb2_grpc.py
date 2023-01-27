@@ -96,7 +96,9 @@ class TimeSeriesServiceServicer(object):
         Import multiple time series in bulk, by creating new time series or updating existing time
         series.
 
-        You may use `-` as a wild card in the path parameters.
+        If you would like to import multiple time series belonging to different signals, specify `-`
+        as the `signalId` path parameter. (Signal IDs are part of each time series' resource name,
+        so your time series will still be assigned to their corresponding signals.)
 
         *Note*: Exabel only supports processing time series with daily or lower resolution. Timestamps
         must be RFC 3339 timestamps, normalised to **midnight UTC**, e.g. `2020-01-01T00:00:00Z`.

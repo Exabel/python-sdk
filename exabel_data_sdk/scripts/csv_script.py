@@ -78,7 +78,7 @@ class CsvScript(BaseScript):
         )
 
     def read_csv(
-        self, args: argparse.Namespace, string_columns: Collection[Union[str, int]] = None
+        self, args: argparse.Namespace, string_columns: Optional[Collection[Union[str, int]]] = None
     ) -> pd.DataFrame:
         """Read the CSV file from disk with the filename specified by command line argument."""
         dtype: Optional[Mapping[Union[str, int], type]] = None

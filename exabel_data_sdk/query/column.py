@@ -48,3 +48,7 @@ class Column:
     def in_list(self, *values: Literal) -> InPredicate:
         """Create a predicate for this column to have one of the given values."""
         return InPredicate(self.name, values)
+
+    def is_all_columns(self) -> bool:
+        """Whether this column represents all columns ('*')."""
+        return self.name == "*" and self.expression is None

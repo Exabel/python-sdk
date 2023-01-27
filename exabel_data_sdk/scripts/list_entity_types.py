@@ -1,9 +1,7 @@
 import argparse
 import sys
-from typing import List
 
 from exabel_data_sdk import ExabelClient
-from exabel_data_sdk.client.api.data_classes.entity_type import EntityType
 from exabel_data_sdk.scripts.base_script import BaseScript
 
 
@@ -13,14 +11,7 @@ class ListEntityTypes(BaseScript):
     """
 
     def run_script(self, client: ExabelClient, args: argparse.Namespace) -> None:
-        page_token = None
-        all_entity_types: List[EntityType] = []
-        while True:
-            result = client.entity_api.list_entity_types(page_size=1000, page_token=page_token)
-            all_entity_types.extend(result.results)
-            page_token = result.next_page_token
-            if len(all_entity_types) == result.total_size:
-                break
+        all_entity_types = list(client.entity_api.get_entity_type_iterator())
 
         if not all_entity_types:
             print("No entity types.")

@@ -96,6 +96,66 @@ class TestFileTimeSeriesLoader(unittest.TestCase):
             create_ts_args[0][0],
         )
 
+    @mock.patch("exabel_data_sdk.services.file_time_series_parser.TimeSeriesFileParser.parse_file")
+    def test_override_entity_type__with_global_entity(self, mock_parse_file):
+        mock_parse_file.return_value = pd.DataFrame([{"date": "2022-01-01", "my_signal": 9001}])
+
+        client: ExabelClient = ExabelMockClient(namespace="ns")
+        client.signal_api.create_signal(Signal("signals/ns.my_signal", ""))
+        FileTimeSeriesLoader(client).load_time_series(
+            filename="filename",
+            entity_type="global",
+            global_time_series=True,
+            pit_current_time=True,
+        )
+        create_ts_args = client.time_series_api.bulk_upsert_time_series.call_args[0]
+        pd.testing.assert_series_equal(
+            pd.Series(
+                [9001],
+                index=[pd.Timestamp("2022-01-01T00:00:00+0000", tz="UTC")],
+                name="entityTypes/global/entities/global/signals/ns.my_signal",
+            ),
+            create_ts_args[0][0],
+        )
+
+    @mock.patch("exabel_data_sdk.services.file_time_series_parser.TimeSeriesFileParser.parse_file")
+    def test_override_entity_type__with_global_entity__wrong_entity_type_should_fail(
+        self, mock_parse_file
+    ):
+        mock_parse_file.return_value = pd.DataFrame([{"date": "2022-01-01", "my_signal": 9001}])
+
+        client: ExabelClient = ExabelMockClient(namespace="ns")
+        client.signal_api.create_signal(Signal("signals/ns.my_signal", ""))
+        with self.assertRaises(FileLoadingException) as cm:
+            FileTimeSeriesLoader(client).load_time_series(
+                filename="filename",
+                entity_type="not_global",
+                global_time_series=True,
+                pit_current_time=True,
+            )
+        self.assertEqual(
+            "Entity type must be set to 'global' when loading time series to the global entity.",
+            cm.exception.args[0],
+        )
+
+    @mock.patch("exabel_data_sdk.services.file_time_series_loader.TimeSeriesFileParser.from_file")
+    def test_batch_size(self, mock_from_file):
+        batch_size = 1
+        no_batches = 2
+        mock_parser = mock.Mock()
+        mock_parser.sheet_name.return_value = None
+        mock_from_file.return_value = (mock_parser for _ in range(no_batches))
+        client = mock.create_autospec(ExabelClient)
+        loader = FileTimeSeriesLoader(client)
+        with mock.patch.object(loader, "_load_time_series", return_value="result") as mock_load:
+            results = loader.load_time_series(
+                filename="filename",
+                batch_size=batch_size,
+            )
+        self.assertEqual(batch_size, mock_from_file.call_args[0][2])
+        self.assertEqual(no_batches, mock_load.call_count)
+        self.assertEqual(no_batches, len(results))
+
 
 @requires_modules("openpyxl")
 class TestFileTimeSeriesLoaderExcelFiles(unittest.TestCase):

@@ -1,5 +1,6 @@
 import math
 import unittest
+from typing import Optional
 
 import pandas as pd
 from dateutil import tz
@@ -24,8 +25,8 @@ class TestUploadTimeSeries(unittest.TestCase):
         filename,
         *expected_calls,
         pit_from_file: bool = False,
-        entity_type: str = None,
-        identifier_type: str = None
+        entity_type: Optional[str] = None,
+        identifier_type: Optional[str] = None
     ):
         """Check that the file can be imported and that it produces the given time series."""
         args = common_args + [

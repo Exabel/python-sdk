@@ -29,8 +29,9 @@ class NamespaceServiceServicer(object):
     def ListNamespaces(self, request, context):
         """Lists namespaces.
 
-        Lists all namespaces accessible to your customer. Your own namespace will always be listed and
-        writeable. You may also have read access to other namespaces, depending on your subscriptions.
+        Lists all namespaces accessible to your customer. If you have your own namespace, it will
+        listed as writeable. You may also have read access to other namespaces, depending on your
+        subscriptions.
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')

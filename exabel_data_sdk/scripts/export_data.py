@@ -37,12 +37,17 @@ class ExportData:
         auth_group.add_argument(
             "--reauthenticate",
             action="store_true",
-            help="Reauthenticate the user, for example to login to a different tenant",
+            help="Reauthenticate the default user, for example to login to a different tenant",
         )
         auth_group.add_argument(
             "--api-key",
             type=str,
             help="Authenticate with an API key instead of an Exabel user account",
+        )
+        auth_group.add_argument(
+            "--user",
+            type=str,
+            help="The Exabel user to log in as, e.g. `my_user@enterprise.com`",
         )
         parser.add_argument(
             "--use-test-backend",
@@ -56,11 +61,12 @@ class ExportData:
         api_key: Optional[str] = None,
         reauthenticate: bool = False,
         use_test_backend: bool = False,
+        user: Optional[str] = None,
     ) -> ExportApi:
         """Get an `ExportApi` from an API key or user authentication."""
         if api_key:
             return ExportApi.from_api_key(api_key, use_test_backend)
-        login = UserLogin(reauthenticate, use_test_backend)
+        login = UserLogin(reauthenticate, use_test_backend, user)
         headers = login.get_auth_headers()
         return ExportApi(auth_headers=headers, backend=login.backend)
 
@@ -68,7 +74,7 @@ class ExportData:
         """Download data from the Exabel API and store it to file."""
         args = self.parse_arguments()
         export_api = ExportData.get_export_api(
-            args.api_key, args.reauthenticate, args.use_test_backend
+            args.api_key, args.reauthenticate, args.use_test_backend, args.user
         )
         content = export_api.run_query_bytes(query=args.query, file_format=args.format)
         with open(args.filename, "wb") as file:

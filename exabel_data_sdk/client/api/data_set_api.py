@@ -61,7 +61,7 @@ class DataSetApi:
     def update_data_set(
         self,
         data_set: DataSet,
-        update_mask: FieldMask = None,
+        update_mask: Optional[FieldMask] = None,
         allow_missing: bool = False,
     ) -> DataSet:
         """

@@ -24,6 +24,16 @@ class TestSqlReader(unittest.TestCase):
     def setUp(self) -> None:
         self.reader = SqlReader(ConnectionString("sqlite:///:memory:"))
 
+    @mock.patch("exabel_data_sdk.services.sql.sql_reader.create_engine")
+    def test_sql_reader_constructor(self, mock_create_engine):
+        mock_create_engine.return_value = None
+        SqlReader(
+            ConnectionString("connnection-string"), kwargs={"kwarg1": "value1", "kwarg2": "value2"}
+        )
+        mock_create_engine.assert_called_once_with(
+            "connnection-string", kwarg1="value1", kwarg2="value2"
+        )
+
     def test_engine(self):
         self.assertIsInstance(self.reader.engine, Engine)
         self.assertEqual("sqlite:///:memory:", str(self.reader.engine.url))
