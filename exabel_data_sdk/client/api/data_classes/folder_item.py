@@ -12,7 +12,7 @@ from exabel_data_sdk.stubs.exabel.api.management.v1.all_pb2 import (
 
 
 class FolderItemType(Enum):
-    """Enum representing the type of a folder item."""
+    """Enum representing the type of folder item."""
 
     # Derived signal.
     DERIVED_SIGNAL = ProtoFolderItemType.DERIVED_SIGNAL
@@ -28,6 +28,10 @@ class FolderItemType(Enum):
     TAG = ProtoFolderItemType.TAG
     # Screen.
     SCREEN = ProtoFolderItemType.SCREEN
+    # Financial Model
+    FINANCIAL_MODEL = ProtoFolderItemType.FINANCIAL_MODEL
+    # Chart
+    CHART = ProtoFolderItemType.CHART
 
 
 class FolderItem:

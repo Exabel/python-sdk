@@ -16,6 +16,8 @@ from exabel_data_sdk.stubs.exabel.api.management.v1.library_service_pb2 import (
     ListItemsRequest,
     ListItemsResponse,
     MoveItemsRequest,
+    SearchItemsRequest,
+    SearchItemsResponse,
     ShareFolderRequest,
     UnshareFolderRequest,
     UpdateFolderRequest,
@@ -74,3 +76,7 @@ class LibraryGrpcClient(LibraryApiClient, BaseGrpcClient):
     @handle_grpc_error
     def unshare_folder(self, request: UnshareFolderRequest) -> None:
         return self.stub.UnshareFolder(request, metadata=self.metadata, timeout=self.config.timeout)
+
+    @handle_grpc_error
+    def search_items(self, request: SearchItemsRequest) -> SearchItemsResponse:
+        return self.stub.SearchItems(request, metadata=self.metadata, timeout=self.config.timeout)

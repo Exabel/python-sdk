@@ -163,3 +163,23 @@ class FolderAccessor(google.protobuf.message.Message):
     def ClearField(self, field_name: typing_extensions.Literal['group', b'group', 'write', b'write']) -> None:
         ...
 global___FolderAccessor = FolderAccessor
+
+@typing_extensions.final
+class SearchResult(google.protobuf.message.Message):
+    """A search result."""
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    ITEM_FIELD_NUMBER: builtins.int
+
+    @property
+    def item(self) -> global___FolderItem:
+        """The folder item."""
+
+    def __init__(self, *, item: global___FolderItem | None=...) -> None:
+        ...
+
+    def HasField(self, field_name: typing_extensions.Literal['item', b'item']) -> builtins.bool:
+        ...
+
+    def ClearField(self, field_name: typing_extensions.Literal['item', b'item']) -> None:
+        ...
+global___SearchResult = SearchResult
