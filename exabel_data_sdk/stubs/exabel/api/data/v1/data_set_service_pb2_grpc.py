@@ -55,6 +55,9 @@ class DataSetServiceServicer(object):
 
     def CreateDataSet(self, request, context):
         """Creates one data set and returns it.
+
+        It is also possible to create a data set by calling `UpdateDataSet`
+        with `allow_missing` set to `true`.
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -65,7 +68,7 @@ class DataSetServiceServicer(object):
 
         This can also be used to create a data set by setting `allow_missing` to `true`.
 
-        Note that that this method will update all fields unless `update_mask` is set.
+        Note that this method will update all fields unless `update_mask` is set.
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')

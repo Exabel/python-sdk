@@ -46,7 +46,7 @@ class ListSignalsResponse(google.protobuf.message.Message):
     def signals(self) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[exabel.api.data.v1.signal_messages_pb2.Signal]:
         """List of signals."""
     next_page_token: builtins.str
-    'Token for the next page of results, which can be sent to a subsequent query.'
+    'Token for the next page of results, which can be sent to a subsequent query.\n    The end of the list is reached when the number of results is less than the page size\n    (NOT when the token is empty).\n    '
     total_size: builtins.int
     'Total number of results, irrespective of paging.'
 

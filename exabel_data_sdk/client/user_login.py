@@ -144,8 +144,7 @@ class UserLogin:
         if httpd is None:
             raise Exception("Cannot start a local HTTP server to receive the login token.")
 
-        thread = threading.Thread(target=httpd.serve_forever)
-        thread.setDaemon(True)
+        thread = threading.Thread(target=httpd.serve_forever, daemon=True)
         thread.start()
         return httpd
 

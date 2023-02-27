@@ -1,7 +1,7 @@
 import logging
 import re
 import warnings
-from collections import deque
+from collections import defaultdict, deque
 from dataclasses import dataclass
 from typing import Iterator, Mapping, MutableMapping, MutableSequence, Optional, Sequence, Tuple
 
@@ -119,6 +119,15 @@ class EntityResourceNames:
     warnings: Sequence[EntitySearchResultWarning]
     mapping: Mapping[str, str]
     identifier_type: str
+
+    def get_duplicates(self) -> Mapping[str, Sequence[str]]:
+        """
+        Return the entities for which there where multiple different identifiers in the file.
+        """
+        result = defaultdict(list)
+        for key, value in self.mapping.items():
+            result[value].append(key)
+        return {key: values for key, values in result.items() if len(values) > 1}
 
 
 def get_namespace_from_resource_identifier(resource_identifier: str) -> Optional[str]:

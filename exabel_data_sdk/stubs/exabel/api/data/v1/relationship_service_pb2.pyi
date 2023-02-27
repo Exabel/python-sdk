@@ -46,7 +46,7 @@ class ListRelationshipTypesResponse(google.protobuf.message.Message):
     def relationship_types(self) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[exabel.api.data.v1.relationship_messages_pb2.RelationshipType]:
         """List of relationship types."""
     next_page_token: builtins.str
-    'Token for the next page of results, which can be sent to a subsequent query.'
+    'Token for the next page of results, which can be sent to a subsequent query.\n    The end of the list is reached when the number of results is less than the page size\n    (NOT when the token is empty).\n    '
     total_size: builtins.int
     'Total number of results, irrespective of paging.'
 
@@ -178,7 +178,7 @@ class ListRelationshipsResponse(google.protobuf.message.Message):
     def relationships(self) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[exabel.api.data.v1.relationship_messages_pb2.Relationship]:
         """List of relationships. **Does not** return `description` or `properties`."""
     next_page_token: builtins.str
-    'Token for the next page of results, which can be sent to a subsequent query.'
+    'Token for the next page of results, which can be sent to a subsequent query.\n    The end of the list is reached when the number of results is less than the page size\n    (NOT when the token is empty).\n    '
     total_size: builtins.int
     'Total number of results, irrespective of paging.'
 

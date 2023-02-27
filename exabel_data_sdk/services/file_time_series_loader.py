@@ -64,6 +64,7 @@ class FileTimeSeriesLoader:
         abort_threshold: Optional[float] = 0.5,
         batch_size: Optional[int] = None,
         skip_validation: bool = False,
+        return_results: bool = True,
         # Deprecated arguments
         namespace: Optional[str] = None,  # pylint: disable=unused-argument
     ) -> Sequence[TimeSeriesFileLoadingResult]:
@@ -121,26 +122,26 @@ class FileTimeSeriesLoader:
                 logger.info("Uploading sheet: %s", parser.sheet_name())
             elif batch_size is not None:
                 logger.info("Uploading batch no: %d", batch_no)
-            results.append(
-                self._load_time_series(
-                    parser=parser,
-                    entity_mapping=entity_mapping,
-                    entity_type=entity_type,
-                    identifier_type=identifier_type,
-                    pit_current_time=pit_current_time,
-                    pit_offset=pit_offset,
-                    create_missing_signals=create_missing_signals,
-                    create_tag=create_tag,
-                    create_library_signal=create_library_signal,
-                    global_time_series=global_time_series,
-                    threads=threads,
-                    dry_run=dry_run,
-                    error_on_any_failure=error_on_any_failure,
-                    retries=retries,
-                    abort_threshold=abort_threshold,
-                    skip_validation=skip_validation,
-                )
+            result = self._load_time_series(
+                parser=parser,
+                entity_mapping=entity_mapping,
+                entity_type=entity_type,
+                identifier_type=identifier_type,
+                pit_current_time=pit_current_time,
+                pit_offset=pit_offset,
+                create_missing_signals=create_missing_signals,
+                create_tag=create_tag,
+                create_library_signal=create_library_signal,
+                global_time_series=global_time_series,
+                threads=threads,
+                dry_run=dry_run,
+                error_on_any_failure=error_on_any_failure,
+                retries=retries,
+                abort_threshold=abort_threshold,
+                skip_validation=skip_validation,
             )
+            if return_results:
+                results.append(result)
         return results
 
     def _load_time_series(

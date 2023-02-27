@@ -5,7 +5,8 @@ from .....exabel.api.analytics.v1 import tag_service_pb2 as exabel_dot_api_dot_a
 from google.protobuf import empty_pb2 as google_dot_protobuf_dot_empty__pb2
 
 class TagServiceStub(object):
-    """Service for managing tags. See the User Guide for more information about tags.
+    """Service for managing tags. See the User Guide for more information about tags:
+    https://help.exabel.com/docs/tags-screens
 
     Requests to the TagService are executed in the context of the customer's service account (SA).
     The SA is a special user that is a member of the customer user group, giving it access to all
@@ -30,7 +31,8 @@ class TagServiceStub(object):
         self.ListTagEntities = channel.unary_unary('/exabel.api.analytics.v1.TagService/ListTagEntities', request_serializer=exabel_dot_api_dot_analytics_dot_v1_dot_tag__service__pb2.ListTagEntitiesRequest.SerializeToString, response_deserializer=exabel_dot_api_dot_analytics_dot_v1_dot_tag__service__pb2.ListTagEntitiesResponse.FromString)
 
 class TagServiceServicer(object):
-    """Service for managing tags. See the User Guide for more information about tags.
+    """Service for managing tags. See the User Guide for more information about tags:
+    https://help.exabel.com/docs/tags-screens
 
     Requests to the TagService are executed in the context of the customer's service account (SA).
     The SA is a special user that is a member of the customer user group, giving it access to all
@@ -56,7 +58,7 @@ class TagServiceServicer(object):
     def UpdateTag(self, request, context):
         """Update a tag.
 
-        Note that that this method will update all fields unless `update_mask` is set.
+        Note that this method will update all fields unless `update_mask` is set.
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -105,7 +107,8 @@ def add_TagServiceServicer_to_server(servicer, server):
     server.add_generic_rpc_handlers((generic_handler,))
 
 class TagService(object):
-    """Service for managing tags. See the User Guide for more information about tags.
+    """Service for managing tags. See the User Guide for more information about tags:
+    https://help.exabel.com/docs/tags-screens
 
     Requests to the TagService are executed in the context of the customer's service account (SA).
     The SA is a special user that is a member of the customer user group, giving it access to all

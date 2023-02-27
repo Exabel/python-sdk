@@ -4,13 +4,17 @@ import pandas as pd
 from dateutil import tz
 from google.protobuf import timestamp_pb2
 from google.protobuf.wrappers_pb2 import DoubleValue
+from google.rpc.code_pb2 import Code as CodeProto
+from grpc import StatusCode
 
 from exabel_data_sdk.client.api.api_client.grpc.time_series_grpc_client import TimeSeriesGrpcClient
 from exabel_data_sdk.client.api.bulk_import import bulk_import
 from exabel_data_sdk.client.api.data_classes.paging_result import PagingResult
 from exabel_data_sdk.client.api.data_classes.request_error import ErrorType, RequestError
+from exabel_data_sdk.client.api.error_handler import grpc_status_to_error_type
 from exabel_data_sdk.client.api.pagable_resource import PagableResourceMixin
 from exabel_data_sdk.client.api.resource_creation_result import (
+    ResourceCreationResult,
     ResourceCreationResults,
     ResourceCreationStatus,
 )
@@ -279,7 +283,8 @@ class TimeSeriesApi(PagableResourceMixin):
         default_known_time: Optional[DefaultKnownTime] = None,
         allow_missing: bool = False,
         create_tag: bool = False,
-    ) -> None:
+        status_in_response: bool = False,
+    ) -> Optional[Sequence[ResourceCreationResult]]:
         """
         Import multiple time series.
 
@@ -299,8 +304,16 @@ class TimeSeriesApi(PagableResourceMixin):
             create_tag:     Set to true to create a tag for every entity type a signal has time
                             series for. If a tag already exists, it will be updated when time series
                             are created (or deleted) regardless of the value of this flag.
+            status_in_response:
+                            If set to true, the status of each time series will be reported as a
+                            ResourceCreationResult.
+                            If set to false, a failure for one time series will fail the entire
+                            request, and a sample of the failures will be reported in the exception.
+        Returns:
+            If status_in_response is set to true, a list of ResourceCreationResult will be returned.
+            Otherwise, None is returned.
         """
-        self.client.import_time_series(
+        response = self.client.import_time_series(
             ImportTimeSeriesRequest(
                 parent=parent,
                 time_series=[
@@ -310,8 +323,34 @@ class TimeSeriesApi(PagableResourceMixin):
                 default_known_time=default_known_time,
                 allow_missing=allow_missing,
                 create_tag=create_tag,
+                status_in_response=status_in_response,
             ),
         )
+
+        if status_in_response:
+            time_series_results = []
+            for single_time_series_response, single_time_series in zip(response.responses, series):
+                # The code (integer) given in the response corresponds to google.rpc.Code enum.
+                status_code = StatusCode[CodeProto.Name(single_time_series_response.status.code)]
+
+                if status_code == StatusCode.OK:
+                    time_series_results.append(
+                        ResourceCreationResult(ResourceCreationStatus.UPSERTED, single_time_series)
+                    )
+                else:
+                    error = RequestError(
+                        error_type=grpc_status_to_error_type(status_code),
+                        message=single_time_series_response.status.message,
+                    )
+                    time_series_results.append(
+                        ResourceCreationResult(
+                            ResourceCreationStatus.FAILED, single_time_series, error
+                        )
+                    )
+
+            return time_series_results
+
+        return None
 
     def append_time_series_data_and_return(
         self,
@@ -415,17 +454,23 @@ class TimeSeriesApi(PagableResourceMixin):
             abort_threshold:
                             The threshold for the proportion of failed requests that will cause the
                             upload to be aborted; if it is `None`, the upload is never aborted.
+
+        Returns:
+            ResourceCreationResults containing the status for each time series that was imported.
         """
 
-        def import_func(ts_sequence: Sequence[pd.Series]) -> Sequence[ResourceCreationStatus]:
-            self.import_time_series(
+        def import_func(ts_sequence: Sequence[pd.Series]) -> Sequence[ResourceCreationResult]:
+
+            result = self.import_time_series(
                 parent="signals/-",
                 series=ts_sequence,
                 default_known_time=default_known_time,
                 allow_missing=True,
                 create_tag=create_tag,
+                status_in_response=True,
             )
-            return [ResourceCreationStatus.UPSERTED] * len(ts_sequence)
+            assert result is not None
+            return result
 
         return bulk_import(
             series,

@@ -8,6 +8,7 @@ from ..... import exabel
 import google.protobuf.descriptor
 import google.protobuf.internal.containers
 import google.protobuf.message
+import google.rpc.status_pb2
 import sys
 if sys.version_info >= (3, 8):
     import typing as typing_extensions
@@ -50,7 +51,7 @@ class ListTimeSeriesResponse(google.protobuf.message.Message):
     def time_series(self) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[exabel.api.data.v1.time_series_messages_pb2.TimeSeries]:
         """List of time series. Only the resource `name` field is returned."""
     next_page_token: builtins.str
-    'Token for the next page of results, which can be sent to a subsequent query.'
+    'Token for the next page of results, which can be sent to a subsequent query.\n    The end of the list is reached when the number of results is less than the page size\n    (NOT when the token is empty).\n    '
     total_size: builtins.int
     'Total number of results, irrespective of paging.'
 
@@ -177,6 +178,7 @@ class ImportTimeSeriesRequest(google.protobuf.message.Message):
     DEFAULT_KNOWN_TIME_FIELD_NUMBER: builtins.int
     ALLOW_MISSING_FIELD_NUMBER: builtins.int
     CREATE_TAG_FIELD_NUMBER: builtins.int
+    STATUS_IN_RESPONSE_FIELD_NUMBER: builtins.int
     parent: builtins.str
     'The common parent of all time series to import. May include `-` as a wild card.'
 
@@ -194,14 +196,16 @@ class ImportTimeSeriesRequest(google.protobuf.message.Message):
     'If set to `true`, new time series will be created if they did not exist.'
     create_tag: builtins.bool
     'Set to `true` to create a "coverage" tag containing all entities that have time series, for\n    this signal and entity type. If this tag already exists, setting `create_tag` to `true` will\n    update it with all entities that have time series.\n    This flag is only relevant if `allow_missing` is set to `true`.\n    '
+    status_in_response: builtins.bool
+    'Set to `true` to report the status of each time series in the response. If `false`, a failure\n    for one time series will fail the entire request, and a sample of the failures will be\n    reported in the trailers.\n    '
 
-    def __init__(self, *, parent: builtins.str | None=..., time_series: collections.abc.Iterable[exabel.api.data.v1.time_series_messages_pb2.TimeSeries] | None=..., default_known_time: exabel.api.data.v1.time_series_messages_pb2.DefaultKnownTime | None=..., allow_missing: builtins.bool | None=..., create_tag: builtins.bool | None=...) -> None:
+    def __init__(self, *, parent: builtins.str | None=..., time_series: collections.abc.Iterable[exabel.api.data.v1.time_series_messages_pb2.TimeSeries] | None=..., default_known_time: exabel.api.data.v1.time_series_messages_pb2.DefaultKnownTime | None=..., allow_missing: builtins.bool | None=..., create_tag: builtins.bool | None=..., status_in_response: builtins.bool | None=...) -> None:
         ...
 
     def HasField(self, field_name: typing_extensions.Literal['default_known_time', b'default_known_time']) -> builtins.bool:
         ...
 
-    def ClearField(self, field_name: typing_extensions.Literal['allow_missing', b'allow_missing', 'create_tag', b'create_tag', 'default_known_time', b'default_known_time', 'parent', b'parent', 'time_series', b'time_series']) -> None:
+    def ClearField(self, field_name: typing_extensions.Literal['allow_missing', b'allow_missing', 'create_tag', b'create_tag', 'default_known_time', b'default_known_time', 'parent', b'parent', 'status_in_response', b'status_in_response', 'time_series', b'time_series']) -> None:
         ...
 global___ImportTimeSeriesRequest = ImportTimeSeriesRequest
 
@@ -210,7 +214,41 @@ class ImportTimeSeriesResponse(google.protobuf.message.Message):
     """The response to import multiple time series."""
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
 
-    def __init__(self) -> None:
+    @typing_extensions.final
+    class SingleTimeSeriesResponse(google.protobuf.message.Message):
+        """The status for one time series."""
+        DESCRIPTOR: google.protobuf.descriptor.Descriptor
+        TIME_SERIES_NAME_FIELD_NUMBER: builtins.int
+        STATUS_FIELD_NUMBER: builtins.int
+        time_series_name: builtins.str
+        'The resource name of the time series, for example\n        `entityTypes/store/entities/ns.apple_store_fifth_avenue/signals/ns.visitors`.\n        '
+
+        @property
+        def status(self) -> google.rpc.status_pb2.Status:
+            """The status for this time series. A `status.code = OK` indicates that the time series
+            was imported successfully.
+            """
+
+        def __init__(self, *, time_series_name: builtins.str | None=..., status: google.rpc.status_pb2.Status | None=...) -> None:
+            ...
+
+        def HasField(self, field_name: typing_extensions.Literal['status', b'status']) -> builtins.bool:
+            ...
+
+        def ClearField(self, field_name: typing_extensions.Literal['status', b'status', 'time_series_name', b'time_series_name']) -> None:
+            ...
+    RESPONSES_FIELD_NUMBER: builtins.int
+
+    @property
+    def responses(self) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[global___ImportTimeSeriesResponse.SingleTimeSeriesResponse]:
+        """One response for each time series, in order. This list is populated if and only if
+        `status_in_response` was set to `true` in the request.
+        """
+
+    def __init__(self, *, responses: collections.abc.Iterable[global___ImportTimeSeriesResponse.SingleTimeSeriesResponse] | None=...) -> None:
+        ...
+
+    def ClearField(self, field_name: typing_extensions.Literal['responses', b'responses']) -> None:
         ...
 global___ImportTimeSeriesResponse = ImportTimeSeriesResponse
 

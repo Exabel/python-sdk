@@ -105,7 +105,7 @@ class ListTagsRequest(google.protobuf.message.Message):
     PAGE_SIZE_FIELD_NUMBER: builtins.int
     PAGE_TOKEN_FIELD_NUMBER: builtins.int
     page_size: builtins.int
-    'Maximum number of results to return. Defaults to 20.'
+    'Maximum number of results to return. Default is 20 and max is 1000.'
     page_token: builtins.str
     'Token for a specific page of results, as returned from a previous list request with the same\n    query parameters.\n    '
 
@@ -126,9 +126,9 @@ class ListTagsResponse(google.protobuf.message.Message):
 
     @property
     def tags(self) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[exabel.api.analytics.v1.tag_messages_pb2.Tag]:
-        """List of Tags."""
+        """The tags in the requested page."""
     next_page_token: builtins.str
-    'Token for the next page of results, which can be sent to a subsequent query.'
+    'Token for the next page of results, which can be sent to a subsequent query.\n    The end of the list is reached when the token is empty.\n    '
     total_size: builtins.int
     'Total number of results, irrespective of paging.'
 
@@ -209,7 +209,7 @@ class ListTagEntitiesRequest(google.protobuf.message.Message):
     parent: builtins.str
     'The parent tag to list entities for\n    Example: `tags/user:abc123`.\n    '
     page_size: builtins.int
-    'Maximum number of results to return. Defaults to 20.'
+    'Maximum number of results to return. Default is 20 and max is 1000.'
     page_token: builtins.str
     'Token for a specific page of results, as returned from a previous list request with the same\n    query parameters.\n    '
 
@@ -232,7 +232,7 @@ class ListTagEntitiesResponse(google.protobuf.message.Message):
     def entity_names(self) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[builtins.str]:
         """List of entity resource names."""
     next_page_token: builtins.str
-    'Token for the next page of results, which can be sent to a subsequent query.'
+    'Token for the next page of results, which can be sent to a subsequent query.\n    The end of the list is reached when the token is empty.\n    '
     total_size: builtins.int
     'Total number of results, irrespective of paging.'
 

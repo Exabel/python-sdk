@@ -6,7 +6,8 @@ from google.protobuf import empty_pb2 as google_dot_protobuf_dot_empty__pb2
 
 class RelationshipServiceStub(object):
     """Service for managing relationship types and relationships. See the User Guide for more
-    information about relationship types and relationships.
+    information about relationship types and relationships:
+    https://help.exabel.com/docs/relationships
     """
 
     def __init__(self, channel):
@@ -28,7 +29,8 @@ class RelationshipServiceStub(object):
 
 class RelationshipServiceServicer(object):
     """Service for managing relationship types and relationships. See the User Guide for more
-    information about relationship types and relationships.
+    information about relationship types and relationships:
+    https://help.exabel.com/docs/relationships
     """
 
     def ListRelationshipTypes(self, request, context):
@@ -50,6 +52,9 @@ class RelationshipServiceServicer(object):
 
     def CreateRelationshipType(self, request, context):
         """Creates one relationship type and returns it.
+
+        It is also possible to create a relationship type by calling `UpdateRelationshipType`
+        with `allow_missing` set to `true`.
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -98,6 +103,9 @@ class RelationshipServiceServicer(object):
 
     def CreateRelationship(self, request, context):
         """Creates one relationship and returns it.
+
+        It is also possible to create a relationship by calling `UpdateRelationship`
+        with `allow_missing` set to `true`.
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -108,7 +116,7 @@ class RelationshipServiceServicer(object):
 
         This can also be used to create a relationship by setting `allow_missing` to `true`.
 
-        Note that that this method will update all fields unless `update_mask` is set.
+        Note that this method will update all fields unless `update_mask` is set.
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -128,7 +136,8 @@ def add_RelationshipServiceServicer_to_server(servicer, server):
 
 class RelationshipService(object):
     """Service for managing relationship types and relationships. See the User Guide for more
-    information about relationship types and relationships.
+    information about relationship types and relationships:
+    https://help.exabel.com/docs/relationships
     """
 
     @staticmethod
