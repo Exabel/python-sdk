@@ -790,7 +790,8 @@ class EntitiesInColumns(ParsedTimeSeriesFile):
         identifiers = pd.Series(data.columns.get_level_values(1))
         identifiers.name = entity_type
         lookup_result = cls._lookup_entities(identifiers, entity_api, namespace, entity_mapping)
-        if len(duplicates := lookup_result.get_duplicates()) > 0:
+        duplicates = lookup_result.get_duplicates()
+        if len(duplicates) > 0:
             raise FileLoadingException(
                 f"Multiple identifiers map to the same entity: {next(iter(duplicates.values()))}"
             )
