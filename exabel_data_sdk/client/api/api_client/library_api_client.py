@@ -12,6 +12,8 @@ from exabel_data_sdk.stubs.exabel.api.management.v1.all_pb2 import (
     ListItemsRequest,
     ListItemsResponse,
     MoveItemsRequest,
+    SearchItemsRequest,
+    SearchItemsResponse,
     ShareFolderRequest,
     UnshareFolderRequest,
     UpdateFolderRequest,
@@ -64,3 +66,7 @@ class LibraryApiClient(ABC):
     @abstractmethod
     def unshare_folder(self, request: UnshareFolderRequest) -> None:
         """Remove sharing of a folder with a group."""
+
+    @abstractmethod
+    def search_items(self, request: SearchItemsRequest) -> SearchItemsResponse:
+        """Search for folder items."""

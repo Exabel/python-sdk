@@ -6,6 +6,7 @@ from exabel_data_sdk.client.api.api_client.grpc.library_grpc_client import Libra
 from exabel_data_sdk.client.api.data_classes.folder import Folder
 from exabel_data_sdk.client.api.data_classes.folder_accessor import FolderAccessor
 from exabel_data_sdk.client.api.data_classes.folder_item import FolderItem, FolderItemType
+from exabel_data_sdk.client.api.data_classes.paging_result import PagingResult
 from exabel_data_sdk.client.client_config import ClientConfig
 from exabel_data_sdk.stubs.exabel.api.management.v1.library_service_pb2 import (
     CreateFolderRequest,
@@ -15,6 +16,7 @@ from exabel_data_sdk.stubs.exabel.api.management.v1.library_service_pb2 import (
     ListFoldersRequest,
     ListItemsRequest,
     MoveItemsRequest,
+    SearchItemsRequest,
     ShareFolderRequest,
     UnshareFolderRequest,
     UpdateFolderRequest,
@@ -158,3 +160,35 @@ class LibraryApi:
             group_name:     Resource name of the group, for example "groups/123".
         """
         self.client.unshare_folder(UnshareFolderRequest(folder=folder_name, group=group_name))
+
+    def search_items(
+        self,
+        query: str,
+        folder_item_type: Optional[FolderItemType] = None,
+        page_size: Optional[int] = None,
+        page_token: Optional[str] = None,
+    ) -> PagingResult[FolderItem]:
+        """
+        Search for folder items.
+
+        The field total_size is not calculated for this operation, and will
+        always be set to -1.
+
+        Args:
+            query:              The search query.
+            folder_item_type:   The FolderItemType to search for. If not set,
+                                items of all types are searched.
+            page_size:          The maximum number of items to return.
+            page_token:         A token used to fetch the next page of results.
+        """
+        response = self.client.search_items(
+            SearchItemsRequest(
+                folder="folders/-",
+                query=query,
+                item_type=folder_item_type.value if folder_item_type is not None else None,
+                page_size=page_size,
+                page_token=page_token,
+            )
+        )
+        items = [FolderItem.from_proto(result.item) for result in response.results]
+        return PagingResult(results=items, next_page_token=response.next_page_token, total_size=-1)

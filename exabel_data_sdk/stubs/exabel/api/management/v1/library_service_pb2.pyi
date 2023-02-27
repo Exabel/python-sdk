@@ -253,3 +253,48 @@ class UnshareFolderRequest(google.protobuf.message.Message):
     def ClearField(self, field_name: typing_extensions.Literal['folder', b'folder', 'group', b'group']) -> None:
         ...
 global___UnshareFolderRequest = UnshareFolderRequest
+
+@typing_extensions.final
+class SearchItemsRequest(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    FOLDER_FIELD_NUMBER: builtins.int
+    QUERY_FIELD_NUMBER: builtins.int
+    ITEM_TYPE_FIELD_NUMBER: builtins.int
+    PAGE_TOKEN_FIELD_NUMBER: builtins.int
+    PAGE_SIZE_FIELD_NUMBER: builtins.int
+    folder: builtins.str
+    'Resource name of the folder to search in. Only "folders/-", meaning all folders, is supported.'
+    query: builtins.str
+    'Search query.'
+    item_type: exabel.api.management.v1.folder_messages_pb2.FolderItemType.ValueType
+    'The type of items to search for.\n    If not set, all types are included in the result.\n    '
+    page_token: builtins.str
+    'Continuation token from previous call, if applicable.'
+    page_size: builtins.int
+    'The maximum number of results to return.\n    The default page_size is 20.\n    '
+
+    def __init__(self, *, folder: builtins.str | None=..., query: builtins.str | None=..., item_type: exabel.api.management.v1.folder_messages_pb2.FolderItemType.ValueType | None=..., page_token: builtins.str | None=..., page_size: builtins.int | None=...) -> None:
+        ...
+
+    def ClearField(self, field_name: typing_extensions.Literal['folder', b'folder', 'item_type', b'item_type', 'page_size', b'page_size', 'page_token', b'page_token', 'query', b'query']) -> None:
+        ...
+global___SearchItemsRequest = SearchItemsRequest
+
+@typing_extensions.final
+class SearchItemsResponse(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    RESULTS_FIELD_NUMBER: builtins.int
+    NEXT_PAGE_TOKEN_FIELD_NUMBER: builtins.int
+
+    @property
+    def results(self) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[exabel.api.management.v1.folder_messages_pb2.SearchResult]:
+        """Search results."""
+    next_page_token: builtins.str
+    'Continuation token.'
+
+    def __init__(self, *, results: collections.abc.Iterable[exabel.api.management.v1.folder_messages_pb2.SearchResult] | None=..., next_page_token: builtins.str | None=...) -> None:
+        ...
+
+    def ClearField(self, field_name: typing_extensions.Literal['next_page_token', b'next_page_token', 'results', b'results']) -> None:
+        ...
+global___SearchItemsResponse = SearchItemsResponse
