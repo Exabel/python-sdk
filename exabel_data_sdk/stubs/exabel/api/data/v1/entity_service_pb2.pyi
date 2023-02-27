@@ -44,7 +44,10 @@ class ListEntityTypesResponse(google.protobuf.message.Message):
 
     @property
     def entity_types(self) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[exabel.api.data.v1.entity_messages_pb2.EntityType]:
-        """List of entity types."""
+        """List of entity types.
+        The end of the list is reached when number of results is less than the page size
+        (NOT when the token is empty).
+        """
     next_page_token: builtins.str
     'Token for the next page of results, which can be sent to a subsequent query.'
     total_size: builtins.int
@@ -172,7 +175,7 @@ class ListEntitiesResponse(google.protobuf.message.Message):
     def entities(self) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[exabel.api.data.v1.entity_messages_pb2.Entity]:
         """List of entities."""
     next_page_token: builtins.str
-    'Token for the next page of results, which can be sent to a subsequent query.'
+    'Token for the next page of results, which can be sent to a subsequent query.\n    The end of the list is reached when the number of results is less than the page size\n    (NOT when the token is empty).\n    '
     total_size: builtins.int
     'Total number of results, irrespective of paging.'
 

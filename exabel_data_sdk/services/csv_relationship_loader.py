@@ -275,6 +275,7 @@ class CsvRelationshipLoader:
         retries: int = DEFAULT_NUMBER_OF_RETRIES,
         abort_threshold: Optional[float] = 0.5,
         batch_size: Optional[int] = None,
+        return_results: bool = True,
         # Deprecated arguments:
         entity_from_column: Optional[str] = None,  # pylint: disable=unused-argument
         entity_to_column: Optional[str] = None,  # pylint: disable=unused-argument
@@ -382,7 +383,8 @@ class CsvRelationshipLoader:
                 retries=retries,
                 abort_threshold=abort_threshold,
             )
-            combined_result.update(result)
+            if return_results:
+                combined_result.update(result)
         return combined_result
 
     def _load_relationships(

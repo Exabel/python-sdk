@@ -64,6 +64,9 @@ class LibraryServiceServicer(object):
 
         The folder will be created as private to the service account user. To let other users access
         this folder, you must also share it with the "Share folder" method.
+
+        It is also possible to create a folder type by calling `UpdateFolder`
+        with `allow_missing` set to `true`.
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -75,7 +78,9 @@ class LibraryServiceServicer(object):
         Only the display name can be updated. Items must be added to a folder with the "Move folder
         items" method.
 
-        Note that this method update all fields unless `update_mask` is set.
+        This can also be used to create an entity by setting `allow_missing` to `true`.
+
+        Note that this method will update all fields unless `update_mask` is set.
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')

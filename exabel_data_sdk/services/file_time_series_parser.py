@@ -12,6 +12,7 @@ import pandas as pd
 from dateutil import tz
 from pandas.core.dtypes.common import is_numeric_dtype
 
+from exabel_data_sdk.client.api.data_classes.request_error import ErrorType, RequestError
 from exabel_data_sdk.client.api.entity_api import EntityApi
 from exabel_data_sdk.client.api.resource_creation_result import (
     ResourceCreationResult,
@@ -275,13 +276,31 @@ class ParsedTimeSeriesFile(abc.ABC):
                 for ts in series_without_duplicate_data_points
                 if ts.name not in series_with_duplicate_indexes_names
             ]
+            duplicates = self._entity_lookup_result.get_duplicates()
             failures.extend(
                 [
-                    ResourceCreationResult(ResourceCreationStatus.FAILED, ts)
+                    ResourceCreationResult(
+                        ResourceCreationStatus.FAILED,
+                        ts,
+                        RequestError(
+                            ErrorType.INVALID_ARGUMENT,
+                            message=self._format_duplicate_message(str(ts.name), duplicates),
+                        ),
+                    )
                     for ts in series_with_duplicate_indexes
                 ]
             )
         return self.ValidatedTimeSeries(series, failures)
+
+    @staticmethod
+    def _format_duplicate_message(name: str, duplicates: Mapping[str, Sequence[str]]) -> str:
+        entity_name = "/".join(name.split("/")[0:4])
+        if entity_name in duplicates:
+            return (
+                f"Duplicate data points for {name}. Multiple identifiers map to the same entity: "
+                f"{', '.join(duplicates[entity_name][:5])}."
+            )
+        return f"Duplicate data points for {name}."
 
     def get_warnings(self) -> Sequence[str]:
         """Get the warnings generated during mapping of entities."""
@@ -771,6 +790,11 @@ class EntitiesInColumns(ParsedTimeSeriesFile):
         identifiers = pd.Series(data.columns.get_level_values(1))
         identifiers.name = entity_type
         lookup_result = cls._lookup_entities(identifiers, entity_api, namespace, entity_mapping)
+        duplicates = lookup_result.get_duplicates()
+        if len(duplicates) > 0:
+            raise FileLoadingException(
+                f"Multiple identifiers map to the same entity: {next(iter(duplicates.values()))}"
+            )
         data.columns = pd.MultiIndex.from_tuples(
             [(c[0], e) for c, e in zip(data.columns, lookup_result.names)]
         )

@@ -65,7 +65,7 @@ class DerivedSignalServiceServicer(object):
     def UpdateDerivedSignal(self, request, context):
         """Updates a derived signal.
 
-        Note that that this method will update all fields unless `update_mask` is set.
+        Note that this method will update all fields unless `update_mask` is set.
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')

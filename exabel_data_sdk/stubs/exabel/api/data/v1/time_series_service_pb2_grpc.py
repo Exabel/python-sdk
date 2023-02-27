@@ -5,7 +5,8 @@ from .....exabel.api.data.v1 import time_series_service_pb2 as exabel_dot_api_do
 from google.protobuf import empty_pb2 as google_dot_protobuf_dot_empty__pb2
 
 class TimeSeriesServiceStub(object):
-    """Service for managing time series. See the User Guide for more information about time series.
+    """Service for managing time series. See the User Guide for more information about time series:
+    https://help.exabel.com/docs/signals
     """
 
     def __init__(self, channel):
@@ -23,7 +24,8 @@ class TimeSeriesServiceStub(object):
         self.BatchDeleteTimeSeriesPoints = channel.unary_unary('/exabel.api.data.v1.TimeSeriesService/BatchDeleteTimeSeriesPoints', request_serializer=exabel_dot_api_dot_data_dot_v1_dot_time__series__service__pb2.BatchDeleteTimeSeriesPointsRequest.SerializeToString, response_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString)
 
 class TimeSeriesServiceServicer(object):
-    """Service for managing time series. See the User Guide for more information about time series.
+    """Service for managing time series. See the User Guide for more information about time series:
+    https://help.exabel.com/docs/signals
     """
 
     def ListTimeSeries(self, request, context):
@@ -53,8 +55,15 @@ class TimeSeriesServiceServicer(object):
         *Note*: Exabel only supports processing time series with daily or lower resolution. Timestamps
         must be RFC 3339 timestamps, normalised to **midnight UTC**, e.g. `2020-01-01T00:00:00Z`.
 
+        The default `known_time` for a data point is insertion time, i.e. same as setting
+        `current_time` to `true`. To override the default behaviour, set one of the
+        `default_known_time` fields.
+
         The optional `view` argument lets you request for time series data points to be returned
         within a date range. If this is not set, no values are returned.
+
+        It is also possible to create a time series by calling `UpdateTimeSeries`
+        with `allow_missing` set to `true`.
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -80,6 +89,10 @@ class TimeSeriesServiceServicer(object):
         versions. When older versions are updated, it is therefore recommended to perform a full
         backload from this version on.
 
+        The default `known_time` for a data point is insertion time, i.e. same as setting
+        `current_time` to `true`. To override the default behaviour, set one of the
+        `default_known_time` fields.
+
         *Note*: Exabel only supports processing time series with daily or lower resolution. Timestamps
         must be RFC 3339 timestamps, normalised to **midnight UTC**, e.g. `2020-01-01T00:00:00Z`.
 
@@ -99,6 +112,10 @@ class TimeSeriesServiceServicer(object):
         If you would like to import multiple time series belonging to different signals, specify `-`
         as the `signalId` path parameter. (Signal IDs are part of each time series' resource name,
         so your time series will still be assigned to their corresponding signals.)
+
+        The default `known_time` for a data point is insertion time, i.e. same as setting
+        `current_time` to `true`. To override the default behaviour, set one of the
+        `default_known_time` fields.
 
         *Note*: Exabel only supports processing time series with daily or lower resolution. Timestamps
         must be RFC 3339 timestamps, normalised to **midnight UTC**, e.g. `2020-01-01T00:00:00Z`.
@@ -135,7 +152,8 @@ def add_TimeSeriesServiceServicer_to_server(servicer, server):
     server.add_generic_rpc_handlers((generic_handler,))
 
 class TimeSeriesService(object):
-    """Service for managing time series. See the User Guide for more information about time series.
+    """Service for managing time series. See the User Guide for more information about time series:
+    https://help.exabel.com/docs/signals
     """
 
     @staticmethod

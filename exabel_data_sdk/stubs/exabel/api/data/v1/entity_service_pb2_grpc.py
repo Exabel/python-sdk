@@ -6,7 +6,7 @@ from google.protobuf import empty_pb2 as google_dot_protobuf_dot_empty__pb2
 
 class EntityServiceStub(object):
     """Service for managing entity types and entities. See the User Guide for more information about
-    entity types and entities.
+    entity types and entities: https://help.exabel.com/docs/entities
     """
 
     def __init__(self, channel):
@@ -30,7 +30,7 @@ class EntityServiceStub(object):
 
 class EntityServiceServicer(object):
     """Service for managing entity types and entities. See the User Guide for more information about
-    entity types and entities.
+    entity types and entities: https://help.exabel.com/docs/entities
     """
 
     def ListEntityTypes(self, request, context):
@@ -52,6 +52,9 @@ class EntityServiceServicer(object):
 
     def CreateEntityType(self, request, context):
         """Creates one entity type and returns it.
+
+        It is also possible to create an entity type set by calling `UpdateEntityType`
+        with `allow_missing` set to `true`.
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -62,7 +65,7 @@ class EntityServiceServicer(object):
 
         This can also be used to create an entity type by setting `allow_missing` to `true`.
 
-        Note that that this method will update all fields unless `update_mask` is set.
+        Note that this method will update all fields unless `update_mask` is set.
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -110,6 +113,9 @@ class EntityServiceServicer(object):
 
     def CreateEntity(self, request, context):
         """Creates one entity and returns it.
+
+        It is also possible to create an entity by calling `UpdateEntity`
+        with `allow_missing` set to `true`.
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -120,7 +126,7 @@ class EntityServiceServicer(object):
 
         This can also be used to create an entity by setting `allow_missing` to `true`.
 
-        Note that that this method will update all fields unless `update_mask` is set.
+        Note that this method will update all fields unless `update_mask` is set.
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -173,7 +179,7 @@ def add_EntityServiceServicer_to_server(servicer, server):
 
 class EntityService(object):
     """Service for managing entity types and entities. See the User Guide for more information about
-    entity types and entities.
+    entity types and entities: https://help.exabel.com/docs/entities
     """
 
     @staticmethod

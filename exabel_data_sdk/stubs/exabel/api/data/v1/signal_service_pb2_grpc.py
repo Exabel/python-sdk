@@ -6,7 +6,7 @@ from google.protobuf import empty_pb2 as google_dot_protobuf_dot_empty__pb2
 
 class SignalServiceStub(object):
     """Service for managing raw data signals. See the User Guide for more information about raw data
-    signals.
+    signals: https://help.exabel.com/docs/signals
     """
 
     def __init__(self, channel):
@@ -23,7 +23,7 @@ class SignalServiceStub(object):
 
 class SignalServiceServicer(object):
     """Service for managing raw data signals. See the User Guide for more information about raw data
-    signals.
+    signals: https://help.exabel.com/docs/signals
     """
 
     def ListSignals(self, request, context):
@@ -45,6 +45,9 @@ class SignalServiceServicer(object):
 
     def CreateSignal(self, request, context):
         """Creates one signal and returns it.
+
+        It is also possible to create a signal by calling `UpdateSignal`
+        with `allow_missing` set to `true`.
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -55,7 +58,7 @@ class SignalServiceServicer(object):
 
         This can also be used to create a signal by setting `allow_missing` to `true`.
 
-        Note that that this method will update all fields unless `update_mask` is set.
+        Note that this method will update all fields unless `update_mask` is set.
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -77,7 +80,7 @@ def add_SignalServiceServicer_to_server(servicer, server):
 
 class SignalService(object):
     """Service for managing raw data signals. See the User Guide for more information about raw data
-    signals.
+    signals: https://help.exabel.com/docs/signals
     """
 
     @staticmethod

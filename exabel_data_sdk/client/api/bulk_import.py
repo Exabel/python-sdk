@@ -4,7 +4,7 @@ from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass
 from itertools import chain
 from time import sleep, time
-from typing import Callable, Generic, Mapping, Optional, Sequence
+from typing import Callable, Generic, Mapping, Optional, Sequence, Union
 
 import pandas as pd
 
@@ -17,7 +17,11 @@ from exabel_data_sdk.client.api.resource_creation_result import (
     ResourceCreationStatus,
     ResourceT,
 )
-from exabel_data_sdk.services.csv_loading_constants import MAX_THREADS_FOR_IMPORT
+from exabel_data_sdk.services.csv_loading_constants import (
+    DEFAULT_NUMBER_OF_RETRIES,
+    DEFAULT_NUMBER_OF_THREADS_FOR_IMPORT,
+    MAX_THREADS_FOR_IMPORT,
+)
 from exabel_data_sdk.util.deprecate_arguments import deprecate_arguments
 from exabel_data_sdk.util.import_ import get_batches_for_import
 
@@ -87,7 +91,10 @@ class ResourceFailureHandler(Generic[ResourceT]):
 def _process(
     results: ResourceCreationResults[ResourceT],
     resources: Sequence[ResourceT],
-    import_func: Callable[[Sequence[ResourceT]], Sequence[ResourceCreationStatus]],
+    import_func: Callable[
+        [Sequence[ResourceT]],
+        Union[Sequence[ResourceCreationStatus], Sequence[ResourceCreationResult]],
+    ],
     abort: Callable,
 ) -> None:
     """
@@ -104,9 +111,14 @@ def _process(
         abort()
         return
     try:
-        statuses_batch = import_func(resources)
-        for resource, status in zip(resources, statuses_batch):
-            results.add(ResourceCreationResult(status, resource))
+        results_batch = import_func(resources)
+
+        for resource, result in zip(resources, results_batch):
+            if isinstance(result, ResourceCreationResult):
+                results.add(result)
+            elif isinstance(result, ResourceCreationStatus):
+                results.add(ResourceCreationResult(result, resource))
+
     except RequestError as error:
         failure_handler = ResourceFailureHandler(error)
         for resource in resources:
@@ -128,9 +140,12 @@ def _process(
 )
 def bulk_import(
     resources: Sequence[ResourceT],
-    import_func: Callable[[Sequence[ResourceT]], Sequence[ResourceCreationStatus]],
-    threads: int = 4,
-    retries: int = 5,
+    import_func: Callable[
+        [Sequence[ResourceT]],
+        Union[Sequence[ResourceCreationStatus], Sequence[ResourceCreationResult]],
+    ],
+    threads: int = DEFAULT_NUMBER_OF_THREADS_FOR_IMPORT,
+    retries: int = DEFAULT_NUMBER_OF_RETRIES,
     abort_threshold: Optional[float] = 0.5,
     # Deprecated arguments
     resources_batches: Optional[  # pylint: disable=unused-argument
@@ -202,7 +217,10 @@ def bulk_import(
 def _bulk_import(
     results: ResourceCreationResults[ResourceT],
     resources: Sequence[ResourceT],
-    import_func: Callable[[Sequence[ResourceT]], Sequence[ResourceCreationStatus]],
+    import_func: Callable[
+        [Sequence[ResourceT]],
+        Union[Sequence[ResourceCreationStatus], Sequence[ResourceCreationResult]],
+    ],
     threads: int,
 ) -> None:
     """

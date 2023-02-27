@@ -181,7 +181,8 @@ class ResourceCreationResults(Generic[ResourceT]):
             self.abort = True
             if self.do_print_status:
                 logger.error(
-                    "Aborting - more than %.0f of the requests are failing.", self.abort_threshold
+                    "Aborting - more than %.0f%% of the requests are failing.",
+                    self.abort_threshold * 100,
                 )
 
     def print_summary(self) -> None:

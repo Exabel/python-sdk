@@ -49,6 +49,7 @@ class CsvEntityLoader:
         retries: int = DEFAULT_NUMBER_OF_RETRIES,
         abort_threshold: Optional[float] = 0.5,
         batch_size: Optional[int] = None,
+        return_results: bool = True,
         # Deprecated arguments
         name_column: Optional[str] = None,  # pylint: disable=unused-argument
         namespace: Optional[str] = None,  # pylint: disable=unused-argument
@@ -144,7 +145,8 @@ class CsvEntityLoader:
                 retries=retries,
                 abort_threshold=abort_threshold,
             )
-            combined_result.update(result)
+            if return_results:
+                combined_result.update(result)
 
         return combined_result
 
