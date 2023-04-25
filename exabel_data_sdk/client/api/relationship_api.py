@@ -1,3 +1,4 @@
+from functools import partial
 from typing import Iterator, Optional, Sequence
 
 from google.protobuf.field_mask_pb2 import FieldMask
@@ -252,10 +253,12 @@ class RelationshipApi(PagableResourceMixin):
             total_size=response.total_size,
         )
 
-    def get_relationships_iterator(self, relationship_type: str) -> Iterator[Relationship]:
+    def get_relationships_iterator(
+        self, relationship_type: str, page_size: int = 1000
+    ) -> Iterator[Relationship]:
         """Return an iterator with all relationships of the given relationship type."""
         return self._get_resource_iterator(
-            self.list_relationships,
+            partial(self.list_relationships, page_size=page_size),
             relationship_type=relationship_type,
         )
 

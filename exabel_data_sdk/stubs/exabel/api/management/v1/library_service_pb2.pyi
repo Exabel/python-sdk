@@ -269,9 +269,9 @@ class SearchItemsRequest(google.protobuf.message.Message):
     item_type: exabel.api.management.v1.folder_messages_pb2.FolderItemType.ValueType
     'The type of items to search for.\n    If not set, all types are included in the result.\n    '
     page_token: builtins.str
-    'Continuation token from previous call, if applicable.'
+    'Token for a specific page of results, as returned from a previous search request with the same\n    query parameters.\n    '
     page_size: builtins.int
-    'The maximum number of results to return.\n    The default page_size is 20.\n    '
+    'Maximum number of results to return. Defaults to 20.'
 
     def __init__(self, *, folder: builtins.str | None=..., query: builtins.str | None=..., item_type: exabel.api.management.v1.folder_messages_pb2.FolderItemType.ValueType | None=..., page_token: builtins.str | None=..., page_size: builtins.int | None=...) -> None:
         ...

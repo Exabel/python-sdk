@@ -149,6 +149,8 @@ class LibraryServiceServicer(object):
 
     def SearchItems(self, request, context):
         """Search for folder items.
+
+        Search for all folder items or items of a specific type (e.g. derived signal, dashboard) across all folders.
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')

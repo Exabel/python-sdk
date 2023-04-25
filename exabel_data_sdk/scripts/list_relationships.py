@@ -1,9 +1,8 @@
 import argparse
 import sys
-from typing import List, Sequence
+from typing import Sequence
 
 from exabel_data_sdk import ExabelClient
-from exabel_data_sdk.client.api.data_classes.relationship import Relationship
 from exabel_data_sdk.client.api.data_classes.request_error import RequestError
 from exabel_data_sdk.scripts.base_script import BaseScript
 
@@ -38,38 +37,36 @@ class ListRelationships(BaseScript):
         )
 
     def run_script(self, client: ExabelClient, args: argparse.Namespace) -> None:
-        if (args.from_entity is None) == (args.to_entity is None):
-            raise ValueError("Specify either the from entity or the to entity.")
+        if args.from_entity and args.to_entity:
+            raise ValueError("Specify either the from entity or the to entity, not both.")
         entity = args.from_entity or args.to_entity
-        try:
-            client.entity_api.get_entity(entity)
-        except RequestError as error:
-            print(error.message)
-            return
-        page_token = None
-        all_relationships: List[Relationship] = []
-        while True:
-            if args.from_entity is not None:
-                result = client.relationship_api.get_relationships_from_entity(
-                    relationship_type=args.relationship_type,
-                    from_entity=args.from_entity,
-                    page_size=1000,
-                    page_token=page_token,
+        if entity:
+            # Check that the entity actually exists
+            try:
+                client.entity_api.get_entity(entity)
+            except RequestError as error:
+                print(error.message)
+                return
+        relationship_type = args.relationship_type
+        if args.from_entity is not None:
+            all_relationships = list(
+                client.relationship_api.get_relationships_from_entity_iterator(
+                    relationship_type, entity
                 )
-            else:
-                result = client.relationship_api.get_relationships_to_entity(
-                    relationship_type=args.relationship_type,
-                    to_entity=args.to_entity,
-                    page_size=1000,
-                    page_token=page_token,
+            )
+        elif args.to_entity is not None:
+            all_relationships = list(
+                client.relationship_api.get_relationships_to_entity_iterator(
+                    relationship_type, entity
                 )
-            all_relationships.extend(result.results)
-            page_token = result.next_page_token
-            if len(all_relationships) == result.total_size:
-                break
+            )
+        else:
+            all_relationships = list(
+                client.relationship_api.get_relationships_iterator(relationship_type)
+            )
 
         if not all_relationships:
-            print("No relationships of the given type.")
+            print("No relationships found")
 
         for relationship in all_relationships:
             print(relationship)
