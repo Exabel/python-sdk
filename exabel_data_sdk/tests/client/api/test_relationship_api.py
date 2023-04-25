@@ -126,8 +126,8 @@ class TestRelationshipApi(unittest.TestCase):
         self.assertSequenceEqual([relationship_1, relationship_2, relationship_3], relationships)
         relationship_api.list_relationships.assert_has_calls(
             [
-                mock.call(relationship_type="relationship_type", page_token=None),
-                mock.call(relationship_type="relationship_type", page_token="1"),
-                mock.call(relationship_type="relationship_type", page_token="2"),
+                mock.call(relationship_type="relationship_type", page_token=None, page_size=1000),
+                mock.call(relationship_type="relationship_type", page_token="1", page_size=1000),
+                mock.call(relationship_type="relationship_type", page_token="2", page_size=1000),
             ]
         )
