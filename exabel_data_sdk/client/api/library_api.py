@@ -53,7 +53,8 @@ class LibraryApi:
         Create a new folder.
 
         Args:
-            folder: The new folder. Only the display name is used.
+            folder: The new folder. Only the display name and description is
+            used.
         """
         proto_folder = self.client.create_folder(
             request=CreateFolderRequest(folder=folder.to_proto())
@@ -66,7 +67,7 @@ class LibraryApi:
         """
         Update a folder.
 
-        Note that only the folder display name can be updated through this method.
+        Note that only the folder display name and description can be updated through this method.
 
         Args:
             folder:        The updated folder object.

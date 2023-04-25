@@ -1,4 +1,4 @@
-from typing import Sequence
+from typing import Optional, Sequence
 
 from exabel_data_sdk.client.api.data_classes.folder_item import FolderItem
 from exabel_data_sdk.stubs.exabel.api.management.v1.all_pb2 import Folder as ProtoFolder
@@ -13,9 +13,17 @@ class Folder:
         display_name (str): The display name of the folder.
         write (bool):       Whether the caller has write access to the folder.
         items (list):       The items in the folder.
+        description (str)   An optional description of the folder.
     """
 
-    def __init__(self, name: str, display_name: str, write: bool, items: Sequence[FolderItem]):
+    def __init__(
+        self,
+        name: str,
+        display_name: str,
+        write: bool,
+        items: Sequence[FolderItem],
+        description: Optional[str] = None,
+    ):
         """
         Create a Folder.
 
@@ -24,11 +32,13 @@ class Folder:
             display_name (str): The display name of the folder.
             write (bool):       Whether the caller has write access to the folder.
             items (list):       The items in the folder.
+            description (str)   An optional description of the folder.
         """
         self.name = name
         self.display_name = display_name
         self.write = write
         self.items = items
+        self.description = description
 
     @staticmethod
     def from_proto(folder: ProtoFolder) -> "Folder":
@@ -38,6 +48,7 @@ class Folder:
             display_name=folder.display_name,
             write=folder.write,
             items=[FolderItem.from_proto(item) for item in folder.items],
+            description=folder.description if folder.description else None,
         )
 
     def to_proto(self) -> ProtoFolder:
@@ -47,6 +58,7 @@ class Folder:
             display_name=self.display_name,
             write=self.write,
             items=[item.to_proto() for item in self.items],
+            description=self.description if self.description is not None else "",
         )
 
     def __eq__(self, other: object) -> bool:
@@ -56,11 +68,12 @@ class Folder:
             self.name == other.name
             and self.display_name == other.display_name
             and self.write == other.write
+            and self.description == other.description
             and sorted(self.items) == sorted(other.items)
         )
 
     def __repr__(self) -> str:
         return (
             f"Folder(name='{self.name}', display_name='{self.display_name}', "
-            f"write={self.write}, items={self.items})"
+            f"write={self.write}, items={self.items}, description={repr(self.description)})"
         )
