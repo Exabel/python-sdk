@@ -269,16 +269,20 @@ class FileTimeSeriesLoader:
         }
 
         missing_signals = []
-        columns_to_rename = {}
+        signals_to_rename = {}
         for signal in signals:
             lowered_signal_name = prefix + signal.lower()
             if lowered_signal_name not in all_signals:
                 missing_signals.append(lowered_signal_name)
+                if isinstance(parsed_file, SignalNamesInRows) and signal != signal.lower():
+                    signals_to_rename[signal] = signal.lower()
             else:
                 signal_match = all_signals[lowered_signal_name]
-                if lowered_signal_name != signal_match.name:
-                    columns_to_rename[signal] = signal_match.name.split(".")[-1]
-        parsed_file.data = parsed_file.data.rename(columns=columns_to_rename)
+                signal_name = signal_match.name.split(".")[-1]
+                if lowered_signal_name != signal_match.name or (
+                    isinstance(parsed_file, SignalNamesInRows) and signal != signal_name
+                ):
+                    signals_to_rename[signal] = signal_name
 
         if missing_signals:
             logger.info("The following signals are missing:\n%s", missing_signals)
@@ -294,6 +298,12 @@ class FileTimeSeriesLoader:
                 raise FileLoadingException(
                     "Aborting script. Please create the missing signals, and try again."
                 )
+
+        if signals_to_rename:
+            if isinstance(parsed_file, SignalNamesInRows):
+                parsed_file.data["signal"] = parsed_file.data["signal"].replace(signals_to_rename)
+            else:
+                parsed_file.data = parsed_file.data.rename(columns=signals_to_rename)
 
         entity_mapping_result = EntityMappingResult(
             parsed_file.get_entity_lookup_result().mapping,
