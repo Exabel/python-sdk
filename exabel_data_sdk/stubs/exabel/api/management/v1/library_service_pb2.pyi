@@ -67,7 +67,7 @@ class CreateFolderRequest(google.protobuf.message.Message):
 
     @property
     def folder(self) -> exabel.api.management.v1.folder_messages_pb2.Folder:
-        """The folder to create. Only the display name can be set."""
+        """The folder to create. Only the display name and description can be set."""
 
     def __init__(self, *, folder: exabel.api.management.v1.folder_messages_pb2.Folder | None=...) -> None:
         ...
@@ -88,13 +88,15 @@ class UpdateFolderRequest(google.protobuf.message.Message):
 
     @property
     def folder(self) -> exabel.api.management.v1.folder_messages_pb2.Folder:
-        """The updated folder. The resource name must be set. Only the display name can be set."""
+        """The updated folder. The resource name must be set. Only the display name, and description can
+        be set.
+        """
 
     @property
     def update_mask(self) -> google.protobuf.field_mask_pb2.FieldMask:
         """Use this to update only selected fields. For example, specify `display_name` to update only the
         display name. If `allow_missing` is set, this field is ignored.
-        Currently, only the display name may be modified.
+        Currently, only the display name and description may be modified.
 
         For REST requests, this is a comma-separated string.
         """

@@ -60,8 +60,8 @@ class LibraryServiceServicer(object):
     def CreateFolder(self, request, context):
         """Creates a folder.
 
-        Only the display name can be set. Items must be added to the new folder subsequently with the
-        "Move folder items" method.
+        Only the display name and description can be set. Items must be added to the new folder
+        subsequently with the "Move folder items" method.
 
         The folder will be created as private to the service account user. To let other users access
         this folder, you must also share it with the "Share folder" method.
@@ -76,8 +76,8 @@ class LibraryServiceServicer(object):
     def UpdateFolder(self, request, context):
         """Updates a folder.
 
-        Only the display name can be updated. Items must be added to a folder with the "Move folder
-        items" method.
+        Only the display name and description can be updated. Items must be added to a folder with the
+        "Move folder items" method.
 
         This can also be used to create an entity by setting `allow_missing` to `true`.
 
