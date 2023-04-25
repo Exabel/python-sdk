@@ -12,6 +12,8 @@ class DataSetServiceStub(object):
 
     You may access data sets by subscribing to an Exabel data partner, or create your own data sets
     from the data you import.
+
+    See the User Guide for more information about data sets: https://help.exabel.com/docs/data-sets
     """
 
     def __init__(self, channel):
@@ -34,6 +36,8 @@ class DataSetServiceServicer(object):
 
     You may access data sets by subscribing to an Exabel data partner, or create your own data sets
     from the data you import.
+
+    See the User Guide for more information about data sets: https://help.exabel.com/docs/data-sets
     """
 
     def ListDataSets(self, request, context):
@@ -94,6 +98,8 @@ class DataSetService(object):
 
     You may access data sets by subscribing to an Exabel data partner, or create your own data sets
     from the data you import.
+
+    See the User Guide for more information about data sets: https://help.exabel.com/docs/data-sets
     """
 
     @staticmethod

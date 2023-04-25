@@ -6,7 +6,7 @@ from google.protobuf import empty_pb2 as google_dot_protobuf_dot_empty__pb2
 
 class TimeSeriesServiceStub(object):
     """Service for managing time series. See the User Guide for more information about time series:
-    https://help.exabel.com/docs/signals
+    https://help.exabel.com/docs/time-series
     """
 
     def __init__(self, channel):
@@ -25,7 +25,7 @@ class TimeSeriesServiceStub(object):
 
 class TimeSeriesServiceServicer(object):
     """Service for managing time series. See the User Guide for more information about time series:
-    https://help.exabel.com/docs/signals
+    https://help.exabel.com/docs/time-series
     """
 
     def ListTimeSeries(self, request, context):
@@ -153,7 +153,7 @@ def add_TimeSeriesServiceServicer_to_server(servicer, server):
 
 class TimeSeriesService(object):
     """Service for managing time series. See the User Guide for more information about time series:
-    https://help.exabel.com/docs/signals
+    https://help.exabel.com/docs/time-series
     """
 
     @staticmethod
