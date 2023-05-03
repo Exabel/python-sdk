@@ -9,8 +9,8 @@ from exabel_data_sdk.client.api.data_classes.relationship_type import Relationsh
 from exabel_data_sdk.client.api.data_classes.signal import Signal
 from exabel_data_sdk.client.api.data_classes.tag import Tag
 
-PagableResourceT = TypeVar(
-    "PagableResourceT",
+PageableResourceT = TypeVar(
+    "PageableResourceT",
     DataSet,
     Entity,
     EntityType,
@@ -22,14 +22,14 @@ PagableResourceT = TypeVar(
 )
 
 
-class PagableResourceMixin:
-    """Mixin class for APIs that contain methods with pagable resources."""
+class PageableResourceMixin:
+    """Mixin class for APIs that contain methods with pageable resources."""
 
     @staticmethod
     def _get_resource_iterator(
-        pagable_func: Callable[..., PagingResult[PagableResourceT]],
+        pageable_func: Callable[..., PagingResult[PageableResourceT]],
         **kwargs: str,
-    ) -> Iterator[PagableResourceT]:
+    ) -> Iterator[PageableResourceT]:
         """
         Return an iterator with all the resources returnable by function, paging through the
         results.
@@ -37,7 +37,7 @@ class PagableResourceMixin:
         page_token: Optional[str] = None
         resource_count = 0
         while True:
-            result = pagable_func(**kwargs, page_token=page_token)
+            result = pageable_func(**kwargs, page_token=page_token)
             for resource in result.results:
                 yield resource
             page_token = result.next_page_token

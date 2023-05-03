@@ -12,7 +12,7 @@ from exabel_data_sdk.client.api.bulk_import import bulk_import
 from exabel_data_sdk.client.api.data_classes.paging_result import PagingResult
 from exabel_data_sdk.client.api.data_classes.request_error import ErrorType, RequestError
 from exabel_data_sdk.client.api.error_handler import grpc_status_to_error_type
-from exabel_data_sdk.client.api.pagable_resource import PagableResourceMixin
+from exabel_data_sdk.client.api.pageable_resource import PageableResourceMixin
 from exabel_data_sdk.client.api.resource_creation_result import (
     ResourceCreationResult,
     ResourceCreationResults,
@@ -42,7 +42,7 @@ from exabel_data_sdk.stubs.exabel.api.time.time_range_pb2 import TimeRange
 from exabel_data_sdk.util.deprecate_arguments import deprecate_arguments
 
 
-class TimeSeriesApi(PagableResourceMixin):
+class TimeSeriesApi(PageableResourceMixin):
     """
     API class for time series CRUD operations.
     """

@@ -2,10 +2,10 @@ import unittest
 from typing import Iterator, Optional, Sequence
 
 from exabel_data_sdk.client.api.data_classes.paging_result import PagingResult
-from exabel_data_sdk.client.api.pagable_resource import PagableResourceMixin
+from exabel_data_sdk.client.api.pageable_resource import PageableResourceMixin
 
 
-class _PagableApiMock(PagableResourceMixin):
+class _PageableApiMock(PageableResourceMixin):
     def __init__(self, resources: Sequence[str]):
         self.resources = resources
 
@@ -23,8 +23,8 @@ class _PagableApiMock(PagableResourceMixin):
         return self._get_resource_iterator(self.get_resource_page)
 
 
-class TestPagableResourceMixin(unittest.TestCase):
+class TestPageableResourceMixin(unittest.TestCase):
     def test_get_resource_iterator(self):
         resources = ["a", "b", "c"]
-        api = _PagableApiMock(resources)
+        api = _PageableApiMock(resources)
         self.assertListEqual(list(api.get_resource_iterator()), resources)
