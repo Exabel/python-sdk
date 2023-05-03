@@ -11,7 +11,7 @@ from exabel_data_sdk.client.api.data_classes.paging_result import PagingResult
 from exabel_data_sdk.client.api.data_classes.relationship import Relationship
 from exabel_data_sdk.client.api.data_classes.relationship_type import RelationshipType
 from exabel_data_sdk.client.api.data_classes.request_error import ErrorType, RequestError
-from exabel_data_sdk.client.api.pagable_resource import PagableResourceMixin
+from exabel_data_sdk.client.api.pageable_resource import PageableResourceMixin
 from exabel_data_sdk.client.api.resource_creation_result import (
     ResourceCreationResults,
     ResourceCreationStatus,
@@ -31,7 +31,7 @@ from exabel_data_sdk.stubs.exabel.api.data.v1.all_pb2 import (
 )
 
 
-class RelationshipApi(PagableResourceMixin):
+class RelationshipApi(PageableResourceMixin):
     """
     API class for entity relationship CRUD operations.
     """
