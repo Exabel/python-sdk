@@ -6,7 +6,7 @@ from google.protobuf import symbol_database as _symbol_database
 _sym_db = _symbol_database.Default()
 from google.api import field_behavior_pb2 as google_dot_api_dot_field__behavior__pb2
 from .....protoc_gen_openapiv2.options import annotations_pb2 as protoc__gen__openapiv2_dot_options_dot_annotations__pb2
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n7exabel/api/analytics/v1/prediction_model_messages.proto\x12\x17exabel.api.analytics.v1\x1a\x1fgoogle/api/field_behavior.proto\x1a.protoc_gen_openapiv2/options/annotations.proto"~\n\x12PredictionModelRun\x123\n\x04name\x18\x01 \x01(\tB%\xe0A\x03\x92A\x1fJ\x1d"predictionModels/123/runs/3"\x123\n\x0bdescription\x18\x02 \x01(\tB\x1e\x92A\x1bJ\x19"Initated by API request"BZ\n\x1bcom.exabel.api.analytics.v1B\x1cPredictionModelMessagesProtoP\x01Z\x1bexabel.com/api/analytics/v1b\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n7exabel/api/analytics/v1/prediction_model_messages.proto\x12\x17exabel.api.analytics.v1\x1a\x1fgoogle/api/field_behavior.proto\x1a.protoc_gen_openapiv2/options/annotations.proto"\xf8\x01\n\x12PredictionModelRun\x123\n\x04name\x18\x01 \x01(\tB%\xe0A\x03\x92A\x1fJ\x1d"predictionModels/123/runs/3"\x124\n\x0bdescription\x18\x02 \x01(\tB\x1f\x92A\x1cJ\x1a"Initiated by API request"\x12B\n\rconfiguration\x18\x03 \x01(\x0e2+.exabel.api.analytics.v1.ModelConfiguration\x12\x1c\n\x14configuration_source\x18\x04 \x01(\t\x12\x15\n\rauto_activate\x18\x05 \x01(\x08*e\n\x12ModelConfiguration\x12%\n!MODEL_CONFIGURATION_NOT_SPECIFIED\x10\x00\x12\n\n\x06LATEST\x10\x01\x12\n\n\x06ACTIVE\x10\x02\x12\x10\n\x0cSPECIFIC_RUN\x10\x03BZ\n\x1bcom.exabel.api.analytics.v1B\x1cPredictionModelMessagesProtoP\x01Z\x1bexabel.com/api/analytics/v1b\x06proto3')
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, globals())
 _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'exabel.api.analytics.v1.prediction_model_messages_pb2', globals())
 if _descriptor._USE_C_DESCRIPTORS == False:
@@ -15,6 +15,8 @@ if _descriptor._USE_C_DESCRIPTORS == False:
     _PREDICTIONMODELRUN.fields_by_name['name']._options = None
     _PREDICTIONMODELRUN.fields_by_name['name']._serialized_options = b'\xe0A\x03\x92A\x1fJ\x1d"predictionModels/123/runs/3"'
     _PREDICTIONMODELRUN.fields_by_name['description']._options = None
-    _PREDICTIONMODELRUN.fields_by_name['description']._serialized_options = b'\x92A\x1bJ\x19"Initated by API request"'
-    _PREDICTIONMODELRUN._serialized_start = 165
-    _PREDICTIONMODELRUN._serialized_end = 291
+    _PREDICTIONMODELRUN.fields_by_name['description']._serialized_options = b'\x92A\x1cJ\x1a"Initiated by API request"'
+    _MODELCONFIGURATION._serialized_start = 416
+    _MODELCONFIGURATION._serialized_end = 517
+    _PREDICTIONMODELRUN._serialized_start = 166
+    _PREDICTIONMODELRUN._serialized_end = 414

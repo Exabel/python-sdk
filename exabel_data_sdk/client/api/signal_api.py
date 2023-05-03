@@ -6,7 +6,7 @@ from exabel_data_sdk.client.api.api_client.grpc.signal_grpc_client import Signal
 from exabel_data_sdk.client.api.data_classes.paging_result import PagingResult
 from exabel_data_sdk.client.api.data_classes.request_error import ErrorType, RequestError
 from exabel_data_sdk.client.api.data_classes.signal import Signal
-from exabel_data_sdk.client.api.pagable_resource import PagableResourceMixin
+from exabel_data_sdk.client.api.pageable_resource import PageableResourceMixin
 from exabel_data_sdk.client.client_config import ClientConfig
 from exabel_data_sdk.stubs.exabel.api.data.v1.all_pb2 import (
     CreateSignalRequest,
@@ -17,7 +17,7 @@ from exabel_data_sdk.stubs.exabel.api.data.v1.all_pb2 import (
 )
 
 
-class SignalApi(PagableResourceMixin):
+class SignalApi(PageableResourceMixin):
     """
     API class for Signal CRUD operations.
     """

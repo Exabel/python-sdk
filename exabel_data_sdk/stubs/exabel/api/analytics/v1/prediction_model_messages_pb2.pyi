@@ -4,13 +4,42 @@ isort:skip_file
 Copyright (c) 2022 Exabel AS. All rights reserved."""
 import builtins
 import google.protobuf.descriptor
+import google.protobuf.internal.enum_type_wrapper
 import google.protobuf.message
 import sys
-if sys.version_info >= (3, 8):
+import typing
+if sys.version_info >= (3, 10):
     import typing as typing_extensions
 else:
     import typing_extensions
 DESCRIPTOR: google.protobuf.descriptor.FileDescriptor
+
+class _ModelConfiguration:
+    ValueType = typing.NewType('ValueType', builtins.int)
+    V: typing_extensions.TypeAlias = ValueType
+
+class _ModelConfigurationEnumTypeWrapper(google.protobuf.internal.enum_type_wrapper._EnumTypeWrapper[_ModelConfiguration.ValueType], builtins.type):
+    DESCRIPTOR: google.protobuf.descriptor.EnumDescriptor
+    MODEL_CONFIGURATION_NOT_SPECIFIED: _ModelConfiguration.ValueType
+    'Not specified.'
+    LATEST: _ModelConfiguration.ValueType
+    'Latest configuration.'
+    ACTIVE: _ModelConfiguration.ValueType
+    'Configuration of the active run.'
+    SPECIFIC_RUN: _ModelConfiguration.ValueType
+    'Configuration of a specific run.'
+
+class ModelConfiguration(_ModelConfiguration, metaclass=_ModelConfigurationEnumTypeWrapper):
+    """Specifies which model configuration to use."""
+MODEL_CONFIGURATION_NOT_SPECIFIED: ModelConfiguration.ValueType
+'Not specified.'
+LATEST: ModelConfiguration.ValueType
+'Latest configuration.'
+ACTIVE: ModelConfiguration.ValueType
+'Configuration of the active run.'
+SPECIFIC_RUN: ModelConfiguration.ValueType
+'Configuration of a specific run.'
+global___ModelConfiguration = ModelConfiguration
 
 @typing_extensions.final
 class PredictionModelRun(google.protobuf.message.Message):
@@ -18,14 +47,23 @@ class PredictionModelRun(google.protobuf.message.Message):
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
     NAME_FIELD_NUMBER: builtins.int
     DESCRIPTION_FIELD_NUMBER: builtins.int
+    CONFIGURATION_FIELD_NUMBER: builtins.int
+    CONFIGURATION_SOURCE_FIELD_NUMBER: builtins.int
+    AUTO_ACTIVATE_FIELD_NUMBER: builtins.int
     name: builtins.str
     'Unique resource name of the run, e.g. `predictionModels/123/runs/3`.'
     description: builtins.str
     'You may use this to record some notes about the run. This is shown in the prediction model\n    interface when viewing all runs, and when viewing the results of a single run.\n    '
+    configuration: global___ModelConfiguration.ValueType
+    'Which model configuration to use.\n    If not specified, the latest model configuration is used.\n    '
+    configuration_source: builtins.str
+    'Specifies a prediction model run resource name, e.g. `predictionModels/123/runs/3`,\n    from which model configuration should be retrieved.\n    Only relevant when `configuration` is set to `ModelConfiguration.SPECIFIC_RUN`.\n    '
+    auto_activate: builtins.bool
+    'Whether to automatically set this run as active once it completes.\n    The run will not be activated if it fails for any of the entities in the model.\n    '
 
-    def __init__(self, *, name: builtins.str | None=..., description: builtins.str | None=...) -> None:
+    def __init__(self, *, name: builtins.str | None=..., description: builtins.str | None=..., configuration: global___ModelConfiguration.ValueType | None=..., configuration_source: builtins.str | None=..., auto_activate: builtins.bool | None=...) -> None:
         ...
 
-    def ClearField(self, field_name: typing_extensions.Literal['description', b'description', 'name', b'name']) -> None:
+    def ClearField(self, field_name: typing_extensions.Literal['auto_activate', b'auto_activate', 'configuration', b'configuration', 'configuration_source', b'configuration_source', 'description', b'description', 'name', b'name']) -> None:
         ...
 global___PredictionModelRun = PredictionModelRun
