@@ -84,7 +84,6 @@ class CreateEntityMappingFromCsv(BaseScript):
     def get_entity_mapping(
         self, client: ExabelClient, args: argparse.Namespace, mapping_input: pd.DataFrame
     ) -> pd.DataFrame:
-
         """
         Find the entity type we are creating mapping for.
 
@@ -222,7 +221,6 @@ class CreateEntityMappingFromCsv(BaseScript):
         return markets
 
     def run_script(self, client: ExabelClient, args: argparse.Namespace) -> None:
-
         mapping_input = CsvReader.read_file(
             args.filename_input, separator=args.sep, string_columns=[0], keep_default_na=True
         )

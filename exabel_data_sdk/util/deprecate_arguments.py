@@ -6,6 +6,7 @@ from exabel_data_sdk.util.warnings import ExabelDeprecationWarning
 
 FunctionT = TypeVar("FunctionT", bound=Callable[..., Any])
 
+
 # Pylint flags '__func' as an invalid argument name, but we want the '__' prefix to make Mypy
 # interpret it as a positional-only argument. Therefore, we disable the check for this argument.
 @overload
