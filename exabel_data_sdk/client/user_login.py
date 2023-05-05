@@ -142,7 +142,7 @@ class UserLogin:
                 if error.errno != errno.EADDRINUSE:
                     raise error
         if httpd is None:
-            raise Exception("Cannot start a local HTTP server to receive the login token.")
+            raise ValueError("Cannot start a local HTTP server to receive the login token.")
 
         thread = threading.Thread(target=httpd.serve_forever, daemon=True)
         thread.start()
@@ -288,7 +288,7 @@ class UserLogin:
     def get_auth_headers(self) -> Dict[str, str]:
         """Log in and get the authentication headers for HTTPS requests to the Exabel API."""
         if not self.log_in():
-            raise Exception("Failed to log in.")
+            raise ValueError("Failed to log in.")
         return self.auth_headers
 
 

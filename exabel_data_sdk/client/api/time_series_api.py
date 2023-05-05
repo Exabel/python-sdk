@@ -460,7 +460,6 @@ class TimeSeriesApi(PageableResourceMixin):
         """
 
         def import_func(ts_sequence: Sequence[pd.Series]) -> Sequence[ResourceCreationResult]:
-
             result = self.import_time_series(
                 parent="signals/-",
                 series=ts_sequence,

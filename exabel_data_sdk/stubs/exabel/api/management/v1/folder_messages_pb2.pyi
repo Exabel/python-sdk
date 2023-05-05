@@ -75,23 +75,23 @@ class Folder(google.protobuf.message.Message):
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
     NAME_FIELD_NUMBER: builtins.int
     DISPLAY_NAME_FIELD_NUMBER: builtins.int
+    DESCRIPTION_FIELD_NUMBER: builtins.int
     WRITE_FIELD_NUMBER: builtins.int
     ITEMS_FIELD_NUMBER: builtins.int
-    DESCRIPTION_FIELD_NUMBER: builtins.int
     name: builtins.str
     'Unique resource name of the folder, e.g. `folders/123`. In the "Create folder" method, this is\n    ignored and may be left empty.\n    '
     display_name: builtins.str
     'Appears in the Exabel Library in the list of folders.'
+    description: builtins.str
+    'The description of the folder.'
     write: builtins.bool
     'Whether the API caller has write access to the folder.'
 
     @property
     def items(self) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[global___FolderItem]:
         """List of items in the folder. To add or remove folder items, use the "Move folder items" method."""
-    description: builtins.str
-    'The description of the folder.'
 
-    def __init__(self, *, name: builtins.str | None=..., display_name: builtins.str | None=..., write: builtins.bool | None=..., items: collections.abc.Iterable[global___FolderItem] | None=..., description: builtins.str | None=...) -> None:
+    def __init__(self, *, name: builtins.str | None=..., display_name: builtins.str | None=..., description: builtins.str | None=..., write: builtins.bool | None=..., items: collections.abc.Iterable[global___FolderItem] | None=...) -> None:
         ...
 
     def ClearField(self, field_name: typing_extensions.Literal['description', b'description', 'display_name', b'display_name', 'items', b'items', 'name', b'name', 'write', b'write']) -> None:

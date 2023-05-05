@@ -17,7 +17,6 @@ class TestCreateEntityMappingFromCsv(unittest.TestCase):
         self.temp_file.close()
 
     def test_create_mapping_ticker(self):
-
         args = [
             "script-name",
             "--filename-input",
@@ -77,7 +76,6 @@ class TestCreateEntityMappingFromCsv(unittest.TestCase):
         )
 
     def test_create_mapping_isin(self):
-
         args = [
             "script-name",
             "--filename-input",
@@ -101,7 +99,6 @@ class TestCreateEntityMappingFromCsv(unittest.TestCase):
         )
 
     def test_create_mapping_factset_identifier(self):
-
         args = [
             "script-name",
             "--filename-input",
@@ -134,7 +131,6 @@ class TestCreateEntityMappingFromCsv(unittest.TestCase):
         )
 
     def test_create_mapping_bloomberg_ticker(self):
-
         args = [
             "script-name",
             "--filename-input",
@@ -167,7 +163,6 @@ class TestCreateEntityMappingFromCsv(unittest.TestCase):
         )
 
     def test_create_mapping_figi(self):
-
         args = [
             "script-name",
             "--filename-input",

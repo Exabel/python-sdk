@@ -1,5 +1,6 @@
 import abc
 import argparse
+from dataclasses import dataclass
 from typing import Any, Mapping, NamedTuple, NewType
 
 ConnectionString = NewType("ConnectionString", str)
@@ -12,6 +13,7 @@ class EngineArgs(NamedTuple):
     kwargs: Mapping[str, Any]
 
 
+@dataclass
 class SqlReaderConfiguration(abc.ABC):
     """Base class for SQL reader configurations."""
 

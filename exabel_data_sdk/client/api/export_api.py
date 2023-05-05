@@ -81,7 +81,7 @@ class ExportApi:
         if error_message.startswith('"') and error_message.endswith('"'):
             error_message = error_message[1:-1]
         error_message = f"{response.status_code}: {error_message}"
-        raise Exception(error_message)
+        raise ValueError(error_message)
 
     def run_query(self, query: Union[str, Query]) -> pd.DataFrame:
         """

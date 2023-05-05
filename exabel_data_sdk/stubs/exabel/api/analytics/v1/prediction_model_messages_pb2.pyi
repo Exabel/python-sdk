@@ -21,24 +21,24 @@ class _ModelConfiguration:
 class _ModelConfigurationEnumTypeWrapper(google.protobuf.internal.enum_type_wrapper._EnumTypeWrapper[_ModelConfiguration.ValueType], builtins.type):
     DESCRIPTOR: google.protobuf.descriptor.EnumDescriptor
     MODEL_CONFIGURATION_NOT_SPECIFIED: _ModelConfiguration.ValueType
-    'Not specified.'
+    'Not specified - defaults to use the latest configuration.'
     LATEST: _ModelConfiguration.ValueType
     'Latest configuration.'
     ACTIVE: _ModelConfiguration.ValueType
-    'Configuration of the active run.'
+    'Configuration of the active run. A specific run may be activated from the prediction model user interface.'
     SPECIFIC_RUN: _ModelConfiguration.ValueType
-    'Configuration of a specific run.'
+    'Configuration of a specific run. The run number must be specified as well.'
 
 class ModelConfiguration(_ModelConfiguration, metaclass=_ModelConfigurationEnumTypeWrapper):
     """Specifies which model configuration to use."""
 MODEL_CONFIGURATION_NOT_SPECIFIED: ModelConfiguration.ValueType
-'Not specified.'
+'Not specified - defaults to use the latest configuration.'
 LATEST: ModelConfiguration.ValueType
 'Latest configuration.'
 ACTIVE: ModelConfiguration.ValueType
-'Configuration of the active run.'
+'Configuration of the active run. A specific run may be activated from the prediction model user interface.'
 SPECIFIC_RUN: ModelConfiguration.ValueType
-'Configuration of a specific run.'
+'Configuration of a specific run. The run number must be specified as well.'
 global___ModelConfiguration = ModelConfiguration
 
 @typing_extensions.final
@@ -57,7 +57,7 @@ class PredictionModelRun(google.protobuf.message.Message):
     configuration: global___ModelConfiguration.ValueType
     'Which model configuration to use.\n    If not specified, the latest model configuration is used.\n    '
     configuration_source: builtins.int
-    'Specifies a prediction model run from which model configuration should be retrieved.\n    Only relevant when `configuration` is set to `ModelConfiguration.SPECIFIC_RUN`.\n    '
+    'Prediction model run number from which model configuration should be retrieved, e.g. `1`.\n    Only relevant when `configuration` is set to `ModelConfiguration.SPECIFIC_RUN`.\n    '
     auto_activate: builtins.bool
     'Whether to automatically set this run as active once it completes.\n    The run will not be activated if it fails for any of the entities in the model.\n    '
 
