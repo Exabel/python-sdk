@@ -37,6 +37,7 @@ class CsvTimeSeriesLoader:
         retries: int = DEFAULT_NUMBER_OF_RETRIES,
         abort_threshold: Optional[float] = 0.5,
         skip_validation: bool = False,
+        case_sensitive_signals: bool = False,
         # Deprecated arguments
         namespace: Optional[str] = None,  # pylint: disable=unused-argument
     ) -> FileLoadingResult:
@@ -69,6 +70,7 @@ class CsvTimeSeriesLoader:
             abort_threshold: the threshold for the proportion of failed requests that will cause the
                  upload to be aborted; if it is `None`, the upload is never aborted
             skip_validation: if True, the time series are not validated before uploading
+            case_sensitive_signals: if True, signals are case sensitive
         """
         results = FileTimeSeriesLoader(self._client).load_time_series(
             filename=filename,
@@ -86,6 +88,7 @@ class CsvTimeSeriesLoader:
             retries=retries,
             abort_threshold=abort_threshold,
             skip_validation=skip_validation,
+            case_sensitive_signals=case_sensitive_signals,
         )
         if len(results) != 1:
             raise ValueError("Unexpected number of results from time series loading.")
