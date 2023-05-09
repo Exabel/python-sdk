@@ -64,6 +64,7 @@ class FileTimeSeriesLoader:
         abort_threshold: Optional[float] = 0.5,
         batch_size: Optional[int] = None,
         skip_validation: bool = False,
+        case_sensitive_signals: bool = False,
         return_results: bool = True,
         # Deprecated arguments
         namespace: Optional[str] = None,  # pylint: disable=unused-argument
@@ -104,6 +105,7 @@ class FileTimeSeriesLoader:
             batch_size: the number of rows to read and upload in each batch; if not specified, the
                 entire file will be read into memory and uploaded in a single batch
             skip_validation: if True, the time series are not validated before uploading
+            case_sensitive_signals: if True, signals are case sensitive
         """
         if batch_size is not None:
             logger.info(
@@ -139,6 +141,7 @@ class FileTimeSeriesLoader:
                 retries=retries,
                 abort_threshold=abort_threshold,
                 skip_validation=skip_validation,
+                case_sensitive_signals=case_sensitive_signals,
             )
             if return_results:
                 results.append(result)
@@ -163,6 +166,7 @@ class FileTimeSeriesLoader:
         retries: int = DEFAULT_NUMBER_OF_RETRIES,
         abort_threshold: Optional[float] = 0.5,
         skip_validation: bool = False,
+        case_sensitive_signals: bool = False,
     ) -> TimeSeriesFileLoadingResult:
         """
         Load time series from a parser.
@@ -204,6 +208,7 @@ class FileTimeSeriesLoader:
                     self._client.namespace,
                     entity_mapping,
                     entity_type=identifier_type or entity_type,
+                    case_sensitive_signals=case_sensitive_signals,
                 )
                 break
         if parsed_file is None:
@@ -264,22 +269,26 @@ class FileTimeSeriesLoader:
         # Signals are reversed because we want to match the first signal returned by the API
         # lexicographically.
         all_signals = {
-            signal.name.lower(): signal
+            signal.name if case_sensitive_signals else signal.name.lower(): signal
             for signal in reversed(list(self._client.signal_api.get_signal_iterator()))
         }
 
         missing_signals = []
         signals_to_rename = {}
         for signal in signals:
-            lowered_signal_name = prefix + signal.lower()
-            if lowered_signal_name not in all_signals:
-                missing_signals.append(lowered_signal_name)
-                if isinstance(parsed_file, SignalNamesInRows) and signal != signal.lower():
+            signal_name = prefix + signal if case_sensitive_signals else prefix + signal.lower()
+            if signal_name not in all_signals:
+                missing_signals.append(signal_name)
+                if (
+                    not case_sensitive_signals
+                    and isinstance(parsed_file, SignalNamesInRows)
+                    and signal != signal.lower()
+                ):
                     signals_to_rename[signal] = signal.lower()
             else:
-                signal_match = all_signals[lowered_signal_name]
+                signal_match = all_signals[signal_name]
                 signal_name = signal_match.name.split(".")[-1]
-                if lowered_signal_name != signal_match.name or (
+                if signal_name != signal_match.name or (
                     isinstance(parsed_file, SignalNamesInRows) and signal != signal_name
                 ):
                     signals_to_rename[signal] = signal_name

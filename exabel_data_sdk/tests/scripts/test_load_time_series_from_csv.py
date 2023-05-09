@@ -698,6 +698,156 @@ class TestUploadTimeSeries(unittest.TestCase):
             check_freq=False,
         )
 
+    def test_load_time_series_with_uppercase_signals_not_existing_case_sensitive(self):
+        args = common_args + [
+            "--filename",
+            "./exabel_data_sdk/tests/resources/data/timeseries_with_mixedcase_columns.csv",
+            "--create-missing-signals",
+            "--case-sensitive-signals",
+        ]
+        script = LoadTimeSeriesFromFile(args)
+        self.client.signal_api.get_signal.return_value = None
+        self.client.signal_api.get_signal_iterator.side_effect = lambda *_: PagingResult([], "", 0)
+        self.client.entity_api.get_entity_type_iterator.side_effect = (
+            self._list_entity_types_uppercase
+        )
+
+        script.run_script(self.client, script.parse_arguments())
+
+        call_args_list = self.client.time_series_api.bulk_upsert_time_series.call_args_list
+        self.assertEqual(1, len(call_args_list))
+        series = call_args_list[0][0][0]
+        self.assertEqual(1, len(series))
+        call_args_list_create_signal = self.client.signal_api.create_signal.call_args_list
+        self.assertEqual(1, len(call_args_list_create_signal))
+        signal = call_args_list_create_signal[0][0][0]
+        self.assertEqual("signals/ns.Signal1", signal.name)
+
+        pd.testing.assert_series_equal(
+            pd.Series(
+                [1, 2, 3, 4, 5],
+                pd.MultiIndex.from_arrays(
+                    [
+                        pd.date_range("2021-01-01", periods=5, tz=tz.tzutc()),
+                        pd.date_range("2021-01-01", periods=5, tz=tz.tzutc()),
+                    ]
+                ),
+                name="entityTypes/BRAND/entities/ns.A_brand/signals/ns.Signal1",
+            ),
+            series[0],
+            check_freq=False,
+        )
+
+    def test_load_time_series_with_uppercase_signals_and_lower_case_existing_case_sensitive(self):
+        args = common_args + [
+            "--filename",
+            "./exabel_data_sdk/tests/resources/data/timeseries_with_mixedcase_columns.csv",
+            "--create-missing-signals",
+            "--case-sensitive-signals",
+        ]
+        script = LoadTimeSeriesFromFile(args)
+        self.client.signal_api.get_signal_iterator.side_effect = self._list_signal
+        self.client.signal_api.get_signal.return_value = None
+        self.client.signal_api.get_signal_iterator.side_effect = lambda *_: PagingResult([], "", 0)
+        self.client.entity_api.get_entity_type_iterator.side_effect = (
+            self._list_entity_types_uppercase
+        )
+
+        script.run_script(self.client, script.parse_arguments())
+
+        call_args_list = self.client.time_series_api.bulk_upsert_time_series.call_args_list
+        self.assertEqual(1, len(call_args_list))
+        series = call_args_list[0][0][0]
+        self.assertEqual(1, len(series))
+        call_args_list_create_signal = self.client.signal_api.create_signal.call_args_list
+        self.assertEqual(1, len(call_args_list_create_signal))
+        signal = call_args_list_create_signal[0][0][0]
+        self.assertEqual("signals/ns.Signal1", signal.name)
+
+        pd.testing.assert_series_equal(
+            pd.Series(
+                [1, 2, 3, 4, 5],
+                pd.MultiIndex.from_arrays(
+                    [
+                        pd.date_range("2021-01-01", periods=5, tz=tz.tzutc()),
+                        pd.date_range("2021-01-01", periods=5, tz=tz.tzutc()),
+                    ]
+                ),
+                name="entityTypes/BRAND/entities/ns.A_brand/signals/ns.Signal1",
+            ),
+            series[0],
+            check_freq=False,
+        )
+
+    def test_load_time_series_with_uppercase_signals_existing_case_sensitive(self):
+        args = common_args + [
+            "--filename",
+            "./exabel_data_sdk/tests/resources/data/timeseries_with_mixedcase_columns.csv",
+            "--create-missing-signals",
+            "--case-sensitive-signals",
+        ]
+        script = LoadTimeSeriesFromFile(args)
+        self.client.signal_api.get_signal_iterator.side_effect = self._list_signal_mixedcase
+        self.client.entity_api.get_entity_type_iterator.side_effect = self._list_entity_types
+        script.run_script(self.client, script.parse_arguments())
+
+        call_args_list = self.client.time_series_api.bulk_upsert_time_series.call_args_list
+        self.assertEqual(1, len(call_args_list))
+        self.assertEqual(0, len(self.client.signal_api.create_signal.call_args_list))
+        series = call_args_list[0][0][0]
+        self.assertEqual(1, len(series))
+
+        pd.testing.assert_series_equal(
+            pd.Series(
+                [1, 2, 3, 4, 5],
+                pd.MultiIndex.from_arrays(
+                    [
+                        pd.date_range("2021-01-01", periods=5, tz=tz.tzutc()),
+                        pd.date_range("2021-01-01", periods=5, tz=tz.tzutc()),
+                    ]
+                ),
+                name="entityTypes/brand/entities/ns.A_brand/signals/ns.Signal1",
+            ),
+            series[0],
+            check_freq=False,
+        )
+
+    def test_load_time_series_with_mixedcase_signals_existing_and_entity_type_nonexisting_cs(
+        self,
+    ):
+        args = common_args + [
+            "--filename",
+            "./exabel_data_sdk/tests/resources/data/timeseries_with_mixedcase_columns.csv",
+            "--create-missing-signals",
+            "--case-sensitive",
+        ]
+        script = LoadTimeSeriesFromFile(args)
+        self.client.signal_api.get_signal_iterator.side_effect = self._list_signal_mixedcase
+        self.client.entity_api.get_entity_type_iterator.side_effect = self._list_entity_types
+
+        script.run_script(self.client, script.parse_arguments())
+
+        call_args_list = self.client.time_series_api.bulk_upsert_time_series.call_args_list
+        self.assertEqual(1, len(call_args_list))
+        self.assertEqual(0, len(self.client.signal_api.create_signal.call_args_list))
+        series = call_args_list[0][0][0]
+        self.assertEqual(1, len(series))
+
+        pd.testing.assert_series_equal(
+            pd.Series(
+                [1, 2, 3, 4, 5],
+                pd.MultiIndex.from_arrays(
+                    [
+                        pd.date_range("2021-01-01", periods=5, tz=tz.tzutc()),
+                        pd.date_range("2021-01-01", periods=5, tz=tz.tzutc()),
+                    ]
+                ),
+                name="entityTypes/brand/entities/ns.A_brand/signals/ns.Signal1",
+            ),
+            series[0],
+            check_freq=False,
+        )
+
     def _list_signal(self):
         return iter(
             [
@@ -708,6 +858,9 @@ class TestUploadTimeSeries(unittest.TestCase):
 
     def _list_signal_uppercase(self):
         return iter([Signal("signals/ns.SIGNAL1", "The Signal", "A description of the signal")])
+
+    def _list_signal_mixedcase(self):
+        return iter([Signal("signals/ns.Signal1", "The Signal", "A description of the signal")])
 
     def _list_entity_types(self):
         return iter([EntityType("entityTypes/brand", "", "", False)])

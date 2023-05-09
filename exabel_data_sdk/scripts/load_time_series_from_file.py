@@ -119,6 +119,16 @@ class LoadTimeSeriesFromFile(CsvScriptWithEntityMapping):
             default=False,
             help="If set, the time series are not validated before uploading.",
         )
+        self.parser.add_argument(
+            "--case-sensitive-signals",
+            required=False,
+            action="store_true",
+            default=False,
+            help="If set, signal names are treated case sensitive. Note that this will disable "
+            "lowercasing of other column headers as well, as entities, 'date', and "
+            "'known_time'. Take care to maintain correct casing in the file when using this "
+            "option.",
+        )
 
     def run_script(self, client: ExabelClient, args: argparse.Namespace) -> None:
         try:
@@ -138,6 +148,7 @@ class LoadTimeSeriesFromFile(CsvScriptWithEntityMapping):
                 retries=args.retries,
                 batch_size=args.batch_size,
                 skip_validation=args.skip_validation,
+                case_sensitive_signals=args.case_sensitive_signals,
             )
         except FileLoadingException as e:
             print(e)

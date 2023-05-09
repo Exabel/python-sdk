@@ -104,7 +104,10 @@ class TimeSeriesFileParser:
         return str(self.worksheet) if self.worksheet is not None else None
 
     def parse_file(
-        self, nrows: Optional[int] = None, header: Optional[Sequence[int]] = None
+        self,
+        nrows: Optional[int] = None,
+        header: Optional[Sequence[int]] = None,
+        case_sensitive_signals: bool = False,
     ) -> pd.DataFrame:
         """Parse the file as a Pandas data frame."""
         extension = Path(self.filename).suffix.lower()
@@ -136,7 +139,7 @@ class TimeSeriesFileParser:
             )
         else:
             raise FileLoadingException(f"Unknown file extension '{extension}'")
-        if not df.empty:
+        if not df.empty and not case_sensitive_signals:
             df = df.rename(lambda n: n.lower(), axis="columns", level=0)
         return df
 
@@ -216,9 +219,10 @@ class ParsedTimeSeriesFile(abc.ABC):
         namespace: str,
         entity_mapping: Optional[Mapping[str, Mapping[str, str]]] = None,
         entity_type: Optional[str] = None,
+        case_sensitive_signals: bool = False,
     ) -> "ParsedTimeSeriesFile":
         """Read a file and construct a parsed file from the contents."""
-        data = file_parser.parse_file()
+        data = file_parser.parse_file(case_sensitive_signals=case_sensitive_signals)
         return cls.from_data_frame(data, entity_api, namespace, entity_mapping, entity_type)
 
     @classmethod
@@ -710,6 +714,7 @@ class EntitiesInColumns(ParsedTimeSeriesFile):
         namespace: str,
         entity_mapping: Optional[Mapping[str, Mapping[str, str]]] = None,
         entity_type: Optional[str] = None,
+        case_sensitive_signals: bool = False,
     ) -> "ParsedTimeSeriesFile":
         """Read a file and construct a new parser from the contents of that file."""
         if entity_type is not None:
