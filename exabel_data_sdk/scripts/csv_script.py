@@ -8,6 +8,7 @@ import pandas as pd
 from exabel_data_sdk.scripts.actions import DeprecatedArgumentAction
 from exabel_data_sdk.scripts.base_script import BaseScript
 from exabel_data_sdk.services.csv_loading_constants import (
+    DEFAULT_ABORT_THRESHOLD,
     DEFAULT_NUMBER_OF_RETRIES,
     DEFAULT_NUMBER_OF_THREADS,
 )
@@ -76,6 +77,15 @@ class CsvScript(BaseScript):
             help=f"The maximum number of retries to make for each failed request. Defaults to "
             f"{DEFAULT_NUMBER_OF_RETRIES}.",
         )
+        self.parser.add_argument(
+            "--abort-threshold",
+            required=False,
+            type=abort_threshold,
+            metavar="[0.0-1.0]",
+            default=DEFAULT_ABORT_THRESHOLD,
+            help=f"The threshold for the proportion of failed requests that will cause the "
+            f"upload to be aborted. Defaults to {DEFAULT_ABORT_THRESHOLD}.",
+        )
 
     def read_csv(
         self, args: argparse.Namespace, string_columns: Optional[Collection[Union[str, int]]] = None
@@ -85,3 +95,14 @@ class CsvScript(BaseScript):
         if string_columns:
             dtype = {column: str for column in string_columns}
         return pd.read_csv(args.filename, header=0, sep=args.sep, dtype=dtype)
+
+
+def abort_threshold(val: str) -> float:
+    """Convert argument to a valid value for abort_threshold."""
+    try:
+        f = float(val)
+    except ValueError as exc:
+        raise argparse.ArgumentTypeError(f"{val} not a floating-point literal") from exc
+    if not 0.0 <= f <= 1.0:
+        raise argparse.ArgumentTypeError(f"{val} not in range [0.0, 1.0]")
+    return f

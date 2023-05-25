@@ -149,6 +149,7 @@ class LoadTimeSeriesFromFile(CsvScriptWithEntityMapping):
                 batch_size=args.batch_size,
                 skip_validation=args.skip_validation,
                 case_sensitive_signals=args.case_sensitive_signals,
+                abort_threshold=args.abort_threshold,
             )
         except FileLoadingException as e:
             print(e)
