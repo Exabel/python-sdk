@@ -114,7 +114,7 @@ class PredictionModelRun:
             f"PredictionModelRun(name='{self.name}', description='{self.description}', "
             f"configuration={self.configuration}, "
             f"configuration_source='{self.configuration_source}', "
-            f"auto_activate={self.auto_activate}"
+            f"auto_activate={self.auto_activate})"
         )
 
     def __lt__(self, other: object) -> bool:
