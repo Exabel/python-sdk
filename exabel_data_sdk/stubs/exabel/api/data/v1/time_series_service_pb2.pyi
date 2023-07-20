@@ -179,6 +179,7 @@ class ImportTimeSeriesRequest(google.protobuf.message.Message):
     ALLOW_MISSING_FIELD_NUMBER: builtins.int
     CREATE_TAG_FIELD_NUMBER: builtins.int
     STATUS_IN_RESPONSE_FIELD_NUMBER: builtins.int
+    REPLACE_EXISTING_TIME_SERIES_FIELD_NUMBER: builtins.int
     parent: builtins.str
     'The common parent of all time series to import. May include `-` as a wild card.'
 
@@ -198,14 +199,16 @@ class ImportTimeSeriesRequest(google.protobuf.message.Message):
     'Set to `true` to create a "coverage" tag containing all entities that have time series, for\n    this signal and entity type. If this tag already exists, setting `create_tag` to `true` will\n    update it with all entities that have time series.\n    This flag is only relevant if `allow_missing` is set to `true`.\n    '
     status_in_response: builtins.bool
     'Set to `true` to report the status of each time series in the response. If `false`, a failure\n    for one time series will fail the entire request, and a sample of the failures will be\n    reported in the trailers.\n    '
+    replace_existing_time_series: builtins.bool
+    'Set to `true` to first delete all data from existing time series. This means that all historical\n    and point-in-time data for the time series will be destroyed and replaced with the data in this call.\n    Use with care! For instance: If this flag is set, and an import job splits one time series over\n    multiple calls, only the data in the last call will be kept.\n    '
 
-    def __init__(self, *, parent: builtins.str | None=..., time_series: collections.abc.Iterable[exabel.api.data.v1.time_series_messages_pb2.TimeSeries] | None=..., default_known_time: exabel.api.data.v1.time_series_messages_pb2.DefaultKnownTime | None=..., allow_missing: builtins.bool | None=..., create_tag: builtins.bool | None=..., status_in_response: builtins.bool | None=...) -> None:
+    def __init__(self, *, parent: builtins.str | None=..., time_series: collections.abc.Iterable[exabel.api.data.v1.time_series_messages_pb2.TimeSeries] | None=..., default_known_time: exabel.api.data.v1.time_series_messages_pb2.DefaultKnownTime | None=..., allow_missing: builtins.bool | None=..., create_tag: builtins.bool | None=..., status_in_response: builtins.bool | None=..., replace_existing_time_series: builtins.bool | None=...) -> None:
         ...
 
     def HasField(self, field_name: typing_extensions.Literal['default_known_time', b'default_known_time']) -> builtins.bool:
         ...
 
-    def ClearField(self, field_name: typing_extensions.Literal['allow_missing', b'allow_missing', 'create_tag', b'create_tag', 'default_known_time', b'default_known_time', 'parent', b'parent', 'status_in_response', b'status_in_response', 'time_series', b'time_series']) -> None:
+    def ClearField(self, field_name: typing_extensions.Literal['allow_missing', b'allow_missing', 'create_tag', b'create_tag', 'default_known_time', b'default_known_time', 'parent', b'parent', 'replace_existing_time_series', b'replace_existing_time_series', 'status_in_response', b'status_in_response', 'time_series', b'time_series']) -> None:
         ...
 global___ImportTimeSeriesRequest = ImportTimeSeriesRequest
 

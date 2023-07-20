@@ -35,6 +35,14 @@ class ListRelationships(BaseScript):
             type=str,
             help="The resource name of the entity the relationships go to",
         )
+        self.parser.add_argument(
+            "--page-size",
+            required=False,
+            type=int,
+            default=1000,
+            help="The page size to use for retrieving all relationships"
+            " (not applicable when specifying an entity)",
+        )
 
     def run_script(self, client: ExabelClient, args: argparse.Namespace) -> None:
         if args.from_entity and args.to_entity:
@@ -49,20 +57,16 @@ class ListRelationships(BaseScript):
                 return
         relationship_type = args.relationship_type
         if args.from_entity is not None:
-            all_relationships = list(
-                client.relationship_api.get_relationships_from_entity_iterator(
-                    relationship_type, entity
-                )
+            all_relationships = client.relationship_api.get_relationships_from_entity_iterator(
+                relationship_type, entity
             )
         elif args.to_entity is not None:
-            all_relationships = list(
-                client.relationship_api.get_relationships_to_entity_iterator(
-                    relationship_type, entity
-                )
+            all_relationships = client.relationship_api.get_relationships_to_entity_iterator(
+                relationship_type, entity
             )
         else:
-            all_relationships = list(
-                client.relationship_api.get_relationships_iterator(relationship_type)
+            all_relationships = client.relationship_api.get_relationships_iterator(
+                relationship_type, page_size=args.page_size
             )
 
         if not all_relationships:

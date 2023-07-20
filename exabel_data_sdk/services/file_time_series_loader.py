@@ -6,6 +6,7 @@ from google.protobuf.duration_pb2 import Duration
 from exabel_data_sdk import ExabelClient
 from exabel_data_sdk.client.api.bulk_insert import BulkInsertFailedError
 from exabel_data_sdk.client.api.data_classes.signal import Signal
+from exabel_data_sdk.client.api.resource_creation_result import ResourceCreationResults
 from exabel_data_sdk.services.csv_loading_constants import (
     DEFAULT_NUMBER_OF_RETRIES,
     DEFAULT_NUMBER_OF_THREADS,
@@ -65,6 +66,7 @@ class FileTimeSeriesLoader:
         batch_size: Optional[int] = None,
         skip_validation: bool = False,
         case_sensitive_signals: bool = False,
+        replace_existing_time_series: bool = False,
         return_results: bool = True,
         # Deprecated arguments
         namespace: Optional[str] = None,  # pylint: disable=unused-argument
@@ -106,6 +108,7 @@ class FileTimeSeriesLoader:
                 entire file will be read into memory and uploaded in a single batch
             skip_validation: if True, the time series are not validated before uploading
             case_sensitive_signals: if True, signals are case sensitive
+            replace_existing_time_series: if True, any existing time series are replaced
         """
         if batch_size is not None:
             logger.info(
@@ -117,6 +120,7 @@ class FileTimeSeriesLoader:
             entity_mapping_filename, separator=separator
         )
         results = []
+        replaced_time_series: List[str] = []
         for batch_no, parser in enumerate(
             TimeSeriesFileParser.from_file(filename, separator, batch_size), 1
         ):
@@ -142,7 +146,11 @@ class FileTimeSeriesLoader:
                 abort_threshold=abort_threshold,
                 skip_validation=skip_validation,
                 case_sensitive_signals=case_sensitive_signals,
+                replace_existing_time_series=replace_existing_time_series,
+                replaced_time_series=replaced_time_series,
             )
+            if replace_existing_time_series and result.replaced:
+                replaced_time_series.extend(result.replaced)
             if return_results:
                 results.append(result)
         return results
@@ -167,6 +175,8 @@ class FileTimeSeriesLoader:
         abort_threshold: Optional[float] = 0.5,
         skip_validation: bool = False,
         case_sensitive_signals: bool = False,
+        replace_existing_time_series: bool = False,
+        replaced_time_series: Optional[Sequence[str]] = None,
     ) -> TimeSeriesFileLoadingResult:
         """
         Load time series from a parser.
@@ -341,19 +351,68 @@ class FileTimeSeriesLoader:
                 has_known_time=parsed_file.has_known_time(),
             )
         try:
-            result = self._client.time_series_api.bulk_upsert_time_series(
-                series,
-                create_tag=create_tag,
-                threads=threads,
-                default_known_time=default_known_time,
-                retries=retries,
-                abort_threshold=abort_threshold,
-            )
-            if error_on_any_failure and (result.has_failure() or invalid_series):
-                raise FileLoadingException(
-                    "An error occurred while uploading time series.",
-                    failures=[*result.get_failures(), *invalid_series],
+            replaced_in_this_batch = []
+            if replace_existing_time_series:
+                if replaced_time_series is None:
+                    replaced_time_series = []
+                series_to_replace = []
+                series_to_not_replace = []
+                result = ResourceCreationResults(0, abort_threshold=abort_threshold)
+                for ts in series:
+                    if ts.name in replaced_time_series:
+                        series_to_not_replace.append(ts)
+                    else:
+                        series_to_replace.append(ts)
+                if series_to_not_replace:
+                    logger.info("Uploading already replaced time series")
+                    dont_replace_result = self._client.time_series_api.bulk_upsert_time_series(
+                        series_to_not_replace,
+                        create_tag=create_tag,
+                        threads=threads,
+                        default_known_time=default_known_time,
+                        retries=retries,
+                        abort_threshold=abort_threshold,
+                    )
+                    if error_on_any_failure and (
+                        dont_replace_result.has_failure() or invalid_series
+                    ):
+                        raise FileLoadingException(
+                            "An error occurred while uploading time series.",
+                            failures=[*dont_replace_result.get_failures(), *invalid_series],
+                        )
+                    result.update(dont_replace_result)
+                if series_to_replace:
+                    logger.info("Uploading time series to be replaced")
+                    replace_result = self._client.time_series_api.bulk_upsert_time_series(
+                        series_to_replace,
+                        create_tag=create_tag,
+                        threads=threads,
+                        default_known_time=default_known_time,
+                        retries=retries,
+                        abort_threshold=abort_threshold,
+                        replace_existing_time_series=True,
+                    )
+                    if error_on_any_failure and (replace_result.has_failure() or invalid_series):
+                        raise FileLoadingException(
+                            "An error occurred while uploading time series.",
+                            failures=[*replace_result.get_failures(), *invalid_series],
+                        )
+                    replaced_in_this_batch = [series.name for series in series_to_replace]
+                    result.update(replace_result)
+            else:
+                result = self._client.time_series_api.bulk_upsert_time_series(
+                    series,
+                    create_tag=create_tag,
+                    threads=threads,
+                    default_known_time=default_known_time,
+                    retries=retries,
+                    abort_threshold=abort_threshold,
                 )
+                if error_on_any_failure and (result.has_failure() or invalid_series):
+                    raise FileLoadingException(
+                        "An error occurred while uploading time series.",
+                        failures=[*result.get_failures(), *invalid_series],
+                    )
             return TimeSeriesFileLoadingResult(
                 result,
                 warnings=warnings,
@@ -361,6 +420,7 @@ class FileTimeSeriesLoader:
                 created_data_signals=missing_signals,
                 sheet_name=parser.sheet_name(),
                 has_known_time=parsed_file.has_known_time(),
+                replaced=replaced_in_this_batch,
             )
         except BulkInsertFailedError as e:
             # An error summary has already been printed.

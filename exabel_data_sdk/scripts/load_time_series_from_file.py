@@ -129,6 +129,13 @@ class LoadTimeSeriesFromFile(CsvScriptWithEntityMapping):
             "'known_time'. Take care to maintain correct casing in the file when using this "
             "option.",
         )
+        self.parser.add_argument(
+            "--replace-existing-time-series",
+            required=False,
+            action="store_true",
+            default=False,
+            help="Replace any existing time series when importing",
+        )
 
     def run_script(self, client: ExabelClient, args: argparse.Namespace) -> None:
         try:
@@ -150,6 +157,7 @@ class LoadTimeSeriesFromFile(CsvScriptWithEntityMapping):
                 skip_validation=args.skip_validation,
                 case_sensitive_signals=args.case_sensitive_signals,
                 abort_threshold=args.abort_threshold,
+                replace_existing_time_series=args.replace_existing_time_series,
             )
         except FileLoadingException as e:
             print(e)

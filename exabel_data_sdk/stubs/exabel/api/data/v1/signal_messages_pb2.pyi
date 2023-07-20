@@ -35,7 +35,7 @@ class Signal(google.protobuf.message.Message):
     display_name: builtins.str
     'Used when showing the signal in the Exabel app. Required when creating a signal.'
     description: builtins.str
-    'This is currently not used in the Exabel app, but may be in future.'
+    'Used when showing the signal in the Exabel app.'
     downsampling_method: exabel.api.math.aggregation_pb2.Aggregation.ValueType
     'The default downsampling method to use when this signal is re-sampled into larger intervals.\n    When two or more values in an interval needs to be aggregated into a single value, specifies\n    how they are combined.\n    '
     read_only: builtins.bool
