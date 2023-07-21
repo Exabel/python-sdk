@@ -78,6 +78,8 @@ class TimeSeriesFileLoadingResult(FileLoadingResult[pd.Series]):
                                 run
         sheet_name:             the name of the sheet, when applicable
         has_known_time:         whether the file contained a column specifying the known time
+        replaced:               the names of time series requested to be replaced; `None` if
+                                uploading was aborted or it was a dry run
     """
 
     def __init__(
@@ -91,6 +93,7 @@ class TimeSeriesFileLoadingResult(FileLoadingResult[pd.Series]):
         dry_run_results: Optional[Sequence[str]] = None,
         sheet_name: Optional[str] = None,
         has_known_time: bool = False,
+        replaced: Optional[Sequence[str]] = None,
     ):
         super().__init__(results, warnings=warnings, aborted=aborted)
         if entity_mapping_result is None:
@@ -102,6 +105,7 @@ class TimeSeriesFileLoadingResult(FileLoadingResult[pd.Series]):
         self.dry_run_results = dry_run_results
         self.sheet_name = sheet_name
         self.has_known_time = has_known_time
+        self.replaced = replaced
 
     def update(self, other: FileLoadingResult[ResourceT]) -> None:
         raise NotImplementedError("TimeSeriesFileLoadingResult cannot be updated.")

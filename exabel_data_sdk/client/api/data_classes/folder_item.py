@@ -28,10 +28,12 @@ class FolderItemType(Enum):
     TAG = ProtoFolderItemType.TAG
     # Screen.
     SCREEN = ProtoFolderItemType.SCREEN
-    # Financial Model
+    # Financial Model.
     FINANCIAL_MODEL = ProtoFolderItemType.FINANCIAL_MODEL
-    # Chart
+    # Chart.
     CHART = ProtoFolderItemType.CHART
+    # KPI mapping.
+    KPI_MAPPING = ProtoFolderItemType.KPI_MAPPING
 
 
 class FolderItem:

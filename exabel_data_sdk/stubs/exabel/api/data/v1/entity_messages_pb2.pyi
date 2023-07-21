@@ -27,7 +27,7 @@ class EntityType(google.protobuf.message.Message):
     display_name: builtins.str
     'Used when showing the entity type in the Exabel app. Required when creating an entity type.'
     description: builtins.str
-    'This is currently not used in the Exabel app, but may be in future.'
+    'Used when showing the entity type in the Exabel app.'
     read_only: builtins.bool
     'Global entity types and those from data sets that you subscribe to will be read-only.'
     is_associative: builtins.bool
@@ -54,7 +54,7 @@ class Entity(google.protobuf.message.Message):
     display_name: builtins.str
     'Used when showing the entity in the Exabel app. Required when creating an entity.'
     description: builtins.str
-    'This is currently not used in the Exabel app, but may be in future.'
+    'Used when showing the entity in the Exabel app.'
     read_only: builtins.bool
     'Global entities and those from data sets that you subscribe to will be read-only.'
 

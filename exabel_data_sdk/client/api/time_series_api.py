@@ -284,6 +284,7 @@ class TimeSeriesApi(PageableResourceMixin):
         allow_missing: bool = False,
         create_tag: bool = False,
         status_in_response: bool = False,
+        replace_existing_time_series: bool = False,
     ) -> Optional[Sequence[ResourceCreationResult]]:
         """
         Import multiple time series.
@@ -309,6 +310,13 @@ class TimeSeriesApi(PageableResourceMixin):
                             ResourceCreationResult.
                             If set to false, a failure for one time series will fail the entire
                             request, and a sample of the failures will be reported in the exception.
+            replace_existing_time_series:
+                            Set to true to first delete all data from existing time series. This
+                            means that all historical and point-in-time data for the time series
+                            will be destroyed and replaced with the data in this call.
+                            Use with care! For instance: If this flag is set, and an import job
+                            splits one time series over multiple calls, only the data in the last
+                            call will be kept.
         Returns:
             If status_in_response is set to true, a list of ResourceCreationResult will be returned.
             Otherwise, None is returned.
@@ -324,6 +332,7 @@ class TimeSeriesApi(PageableResourceMixin):
                 allow_missing=allow_missing,
                 create_tag=create_tag,
                 status_in_response=status_in_response,
+                replace_existing_time_series=replace_existing_time_series,
             ),
         )
 
@@ -424,6 +433,7 @@ class TimeSeriesApi(PageableResourceMixin):
         create_tag: bool = False,
         threads: int = DEFAULT_NUMBER_OF_THREADS_FOR_IMPORT,
         default_known_time: Optional[DefaultKnownTime] = None,
+        replace_existing_time_series: bool = False,
         retries: int = DEFAULT_NUMBER_OF_RETRIES,
         abort_threshold: Optional[float] = 0.5,
         # Deprecated arguments
@@ -450,6 +460,13 @@ class TimeSeriesApi(PageableResourceMixin):
                             the Known Time for data points where a specific known time timestamp
                             has not been given. If not provided, the Exabel API defaults to the
                             current time (upload time) as the Known Time.
+            replace_existing_time_series:
+                            Set to true to first delete all data from existing time series. This
+                            means that all historical and point-in-time data for the time series
+                            will be destroyed and replaced with the data in this call.
+                            Use with care! For instance: If this flag is set, and an import job
+                            splits one time series over multiple calls, only the data in the last
+                            call will be kept.
             retries:        Maximum number of retries to make for each failed request.
             abort_threshold:
                             The threshold for the proportion of failed requests that will cause the
@@ -467,6 +484,7 @@ class TimeSeriesApi(PageableResourceMixin):
                 allow_missing=True,
                 create_tag=create_tag,
                 status_in_response=True,
+                replace_existing_time_series=replace_existing_time_series,
             )
             assert result is not None
             return result

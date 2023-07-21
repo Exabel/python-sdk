@@ -44,6 +44,8 @@ class _FolderItemTypeEnumTypeWrapper(google.protobuf.internal.enum_type_wrapper.
     'Financial model.'
     CHART: _FolderItemType.ValueType
     'Chart.'
+    KPI_MAPPING: _FolderItemType.ValueType
+    'KPI mapping.'
 
 class FolderItemType(_FolderItemType, metaclass=_FolderItemTypeEnumTypeWrapper):
     """An enum representing the type of a folder item."""
@@ -67,6 +69,8 @@ FINANCIAL_MODEL: FolderItemType.ValueType
 'Financial model.'
 CHART: FolderItemType.ValueType
 'Chart.'
+KPI_MAPPING: FolderItemType.ValueType
+'KPI mapping.'
 global___FolderItemType = FolderItemType
 
 @typing_extensions.final
