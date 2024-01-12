@@ -1,38 +1,23 @@
+import abc
 import logging
-from typing import Any, Iterable, Iterator, Mapping, NewType, Optional, Union
+from typing import Iterable, Iterator, NewType, Optional, Union
 
 import pandas as pd
 
 from exabel_data_sdk.services.file_writer_provider import FileWriterProvider
-from exabel_data_sdk.services.sql.sql_reader_configuration import ConnectionString
-from exabel_data_sdk.util.handle_missing_imports import handle_missing_imports
-
-with handle_missing_imports():
-    from sqlalchemy import create_engine
 
 logger = logging.getLogger(__name__)
 
-BatchSize = NewType("BatchSize", int)
 Query = NewType("Query", str)
 OutputFile = NewType("OutputFile", str)
+OutputFilePrefix = NewType("OutputFilePrefix", str)
+BatchSize = NewType("BatchSize", int)
 
 
-class SqlReader:
-    """Reader of SQL queries."""
-
-    def __init__(
-        self, connection_string: ConnectionString, *, kwargs: Optional[Mapping[str, Any]] = None
-    ) -> None:
-        kwargs = kwargs or {}
-        self.engine = create_engine(connection_string, **kwargs)
-
-    def read_sql_query(self, query: Query) -> pd.DataFrame:
-        """Execute the given query and return the content as a pandas DataFrame."""
-        try:
-            return pd.read_sql_query(query, self.engine)
-        except Exception as e:
-            logger.error("An error occurred while executing the query: %s", str(e))
-            raise
+class SqlReader(abc.ABC):
+    """
+    Abstract class for readers of SQL queries.
+    """
 
     @staticmethod
     def get_data_frame(df: Union[pd.DataFrame, Iterable[pd.DataFrame]]) -> pd.DataFrame:
@@ -43,6 +28,11 @@ class SqlReader:
             return chunk
         return pd.DataFrame()
 
+    @abc.abstractmethod
+    def read_sql_query(self, query: Query) -> pd.DataFrame:
+        """Execute the given query and return the content as a pandas DataFrame."""
+
+    @abc.abstractmethod
     def read_sql_query_in_batches(
         self, query: Query, batch_size: BatchSize
     ) -> Iterator[pd.DataFrame]:
@@ -50,20 +40,6 @@ class SqlReader:
         Execute the given query and return the content as a pandas DataFrame in chunks of the given
         batch size.
         """
-        batch_no = 0
-        try:
-            reader = pd.read_sql_query(query, self.engine, chunksize=batch_size)
-            for batch_no, chunk in enumerate(reader, 1):
-                logger.info("Reading batch no: %d", batch_no)
-                yield chunk
-        except Exception as e:
-            logger.error(
-                "An error occurred in batch number %d while executing the query: %s",
-                batch_no,
-                str(e),
-            )
-            raise
-        logger.info("Finished reading %d batches", batch_no)
 
     def read_sql_query_and_write_result(
         self,

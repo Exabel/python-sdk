@@ -1,6 +1,6 @@
 import argparse
-from dataclasses import dataclass, fields
-from typing import Mapping, NewType, Optional
+from dataclasses import dataclass
+from typing import NewType, Optional
 
 from exabel_data_sdk.services.sql.sql_reader_configuration import (
     ConnectionString,
@@ -53,12 +53,4 @@ class SnowflakeReaderConfiguration(SqlReaderConfiguration):
 
     def get_connection_string(self) -> ConnectionString:
         """Return the connection string."""
-        return URL(**self._get_url_kwargs())
-
-    def _get_url_kwargs(self) -> Mapping[str, str]:
-        """Return the keyword arguments."""
-        return {
-            field.name: getattr(self, field.name)
-            for field in fields(self)
-            if getattr(self, field.name)
-        }
+        return URL(**self.get_connection_args())

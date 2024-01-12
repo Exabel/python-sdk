@@ -14,7 +14,7 @@ common_args = [
 ]
 
 
-class TestdeleteEntityType(unittest.TestCase):
+class TestDeleteEntityType(unittest.TestCase):
     def test_delete_entity_type(self):
         script = DeleteEntityType(common_args, "Delete an entity type.")
         mock_client = mock.create_autospec(ExabelClient)

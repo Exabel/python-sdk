@@ -1,9 +1,10 @@
-from typing import Iterator, Optional, Sequence
+from typing import Iterator, Optional, Sequence, Union
 
+import numpy as np
 import pandas as pd
 from dateutil import tz
 from google.protobuf import timestamp_pb2
-from google.protobuf.wrappers_pb2 import DoubleValue
+from google.protobuf.internal.containers import RepeatedCompositeFieldContainer
 from google.rpc.code_pb2 import Code as CodeProto
 from grpc import StatusCode
 
@@ -11,6 +12,7 @@ from exabel_data_sdk.client.api.api_client.grpc.time_series_grpc_client import T
 from exabel_data_sdk.client.api.bulk_import import bulk_import
 from exabel_data_sdk.client.api.data_classes.paging_result import PagingResult
 from exabel_data_sdk.client.api.data_classes.request_error import ErrorType, RequestError
+from exabel_data_sdk.client.api.data_classes.time_series import TimeSeries
 from exabel_data_sdk.client.api.error_handler import grpc_status_to_error_type
 from exabel_data_sdk.client.api.pageable_resource import PageableResourceMixin
 from exabel_data_sdk.client.api.resource_creation_result import (
@@ -20,6 +22,7 @@ from exabel_data_sdk.client.api.resource_creation_result import (
 )
 from exabel_data_sdk.client.client_config import ClientConfig
 from exabel_data_sdk.services.csv_loading_constants import (
+    DEFAULT_ABORT_THRESHOLD,
     DEFAULT_NUMBER_OF_RETRIES,
     DEFAULT_NUMBER_OF_THREADS_FOR_IMPORT,
 )
@@ -30,12 +33,10 @@ from exabel_data_sdk.stubs.exabel.api.data.v1.all_pb2 import (
     DeleteTimeSeriesRequest,
     GetTimeSeriesRequest,
     ImportTimeSeriesRequest,
+    InsertOptions,
     ListTimeSeriesRequest,
-)
-from exabel_data_sdk.stubs.exabel.api.data.v1.all_pb2 import TimeSeries as ProtoTimeSeries
-from exabel_data_sdk.stubs.exabel.api.data.v1.all_pb2 import (
-    TimeSeriesPoint,
     TimeSeriesView,
+    UpdateOptions,
     UpdateTimeSeriesRequest,
 )
 from exabel_data_sdk.stubs.exabel.api.time.time_range_pb2 import TimeRange
@@ -111,7 +112,8 @@ class TimeSeriesApi(PageableResourceMixin):
         start: Optional[pd.Timestamp] = None,
         end: Optional[pd.Timestamp] = None,
         known_time: Optional[pd.Timestamp] = None,
-    ) -> Optional[pd.Series]:
+        include_metadata: bool = False,
+    ) -> Optional[Union[pd.Series, TimeSeries]]:
         """
         Get one time series.
 
@@ -131,6 +133,9 @@ class TimeSeriesApi(PageableResourceMixin):
             start:      Start of the period to get data for.
             end:        End of the period to get data for.
             known_time: The point-in-time at which to request the time series.
+            include_metadata:
+                        Whether to include the metadata of the time series in the response.
+                        Returns a TimeSeries object if set to True, otherwise a pandas Series.
         """
         time_range = self._get_time_range(start, end)
 
@@ -149,13 +154,21 @@ class TimeSeriesApi(PageableResourceMixin):
                 return None
             raise
 
-        return self._time_series_points_to_series(time_series.points, time_series.name)
+        result = TimeSeries.from_proto(time_series)
+        if not include_metadata:
+            return (
+                result.series.droplevel(level=1)
+                if result.series.index.nlevels > 1
+                else result.series
+            )
+        return result
 
+    @deprecate_arguments(create_tag=None)
     def create_time_series(
         self,
         name: str,
-        series: pd.Series,
-        create_tag: bool = False,
+        series: Union[pd.Series, TimeSeries],
+        create_tag: Optional[bool] = None,  # pylint: disable=unused-argument
         default_known_time: Optional[DefaultKnownTime] = None,
     ) -> None:
         """
@@ -174,29 +187,28 @@ class TimeSeriesApi(PageableResourceMixin):
                         namespaces the customer has access to. If ns2 is not empty, it must be
                         equals to ns3, and if ns1 is not empty, all three namespaces must be equal.
             series:     The time series data
-            create_tag: Set to true to create a tag for every entity type a signal has time series
-                        for. If a tag already exists, it will be updated when time series are
-                        created (or deleted) regardless of the value of this flag.
+            create_tag: Deprecated.
             default_known_time:
                         Specify a default known time policy. This is used to determine
                         the Known Time for data points where a specific known time timestamp
                         has not been given. If not provided, the Exabel API defaults to the
                         current time (upload time) as the Known Time.
         """
-        time_series_points = self._series_to_time_series_points(series)
+        series = self._handle_time_series(name, series)
+
         self.client.create_time_series(
             CreateTimeSeriesRequest(
-                time_series=ProtoTimeSeries(name=name, points=time_series_points),
-                create_tag=create_tag,
+                time_series=series.to_proto(),
                 default_known_time=default_known_time,
             ),
         )
 
+    @deprecate_arguments(create_tag=None)
     def upsert_time_series(
         self,
         name: str,
         series: pd.Series,
-        create_tag: bool = False,
+        create_tag: Optional[bool] = None,  # pylint: disable=unused-argument
         default_known_time: Optional[DefaultKnownTime] = None,
     ) -> None:
         """
@@ -211,9 +223,7 @@ class TimeSeriesApi(PageableResourceMixin):
                         namespaces the customer has access to. If ns2 is not empty, it must be
                         equals to ns3, and if ns1 is not empty, all three namespaces must be equal.
             series:     The time series data
-            create_tag: Set to true to create a tag for every entity type a signal has time series
-                        for. If a tag already exists, it will be updated when time series are
-                        created (or deleted) regardless of the value of this flag.
+            create_tag: Deprecated.
             default_known_time:
                         Specify a default known time policy. This is used to determine
                         the Known Time for data points where a specific known time timestamp
@@ -221,30 +231,20 @@ class TimeSeriesApi(PageableResourceMixin):
                         current time (upload time) as the Known Time.
         """
         self.append_time_series_data(
-            name, series, default_known_time, allow_missing=True, create_tag=create_tag
+            name,
+            series,
+            default_known_time,
+            allow_missing=True,
         )
 
-    def clear_time_series_data(self, name: str, start: pd.Timestamp, end: pd.Timestamp) -> None:
-        """
-        Delete data points in the given interval for the given time series.
-
-        Args:
-            name:   The resource name of the time series.
-            start:  Start of the period to delete data for.
-            end:    End of the period to delete data for.
-        """
-        time_range = self._get_time_range(start, end)
-        self.client.batch_delete_time_series_points(
-            BatchDeleteTimeSeriesPointsRequest(name=name, time_ranges=[time_range]),
-        )
-
+    @deprecate_arguments(create_tag=None)
     def append_time_series_data(
         self,
         name: str,
-        series: pd.Series,
+        series: Union[pd.Series, TimeSeries],
         default_known_time: Optional[DefaultKnownTime] = None,
         allow_missing: bool = False,
-        create_tag: bool = False,
+        create_tag: bool = False,  # pylint: disable=unused-argument
     ) -> None:
         """
         Append data to the given time series.
@@ -262,29 +262,33 @@ class TimeSeriesApi(PageableResourceMixin):
                             current time (upload time) as the Known Time.
             allow_missing:  If set to true, and the resource is not found, a new resource will be
                             created. In this situation, the "update_mask" is ignored.
-            create_tag:     If allow_missing is set to true and the time series does not exist, also
-                            create a tag for every entity type the signal has time series for.
+            create_tag:     Deprecated.
         """
+        series = self._handle_time_series(name, series)
+
         self.client.update_time_series(
             UpdateTimeSeriesRequest(
-                time_series=ProtoTimeSeries(
-                    name=name, points=self._series_to_time_series_points(series)
+                time_series=series.to_proto(),
+                insert_options=InsertOptions(
+                    default_known_time=default_known_time,
                 ),
-                default_known_time=default_known_time,
-                allow_missing=allow_missing,
-                create_tag=create_tag,
+                update_options=UpdateOptions(
+                    allow_missing=allow_missing,
+                ),
             ),
         )
 
+    @deprecate_arguments(create_tag=None)
     def import_time_series(
         self,
         parent: str,
-        series: Sequence[pd.Series],
+        series: Sequence[Union[pd.Series, TimeSeries]],
         default_known_time: Optional[DefaultKnownTime] = None,
         allow_missing: bool = False,
-        create_tag: bool = False,
+        create_tag: Optional[bool] = None,  # pylint: disable=unused-argument
         status_in_response: bool = False,
         replace_existing_time_series: bool = False,
+        replace_existing_data_points: bool = False,
     ) -> Optional[Sequence[ResourceCreationResult]]:
         """
         Import multiple time series.
@@ -302,9 +306,7 @@ class TimeSeriesApi(PageableResourceMixin):
                             used as the default known time (`current_time = true`).
             allow_missing:  If set to true, and a time series is not found, a new time series will
                             be created.
-            create_tag:     Set to true to create a tag for every entity type a signal has time
-                            series for. If a tag already exists, it will be updated when time series
-                            are created (or deleted) regardless of the value of this flag.
+            create_tag:     Deprecated.
             status_in_response:
                             If set to true, the status of each time series will be reported as a
                             ResourceCreationResult.
@@ -316,59 +318,56 @@ class TimeSeriesApi(PageableResourceMixin):
                             will be destroyed and replaced with the data in this call.
                             Use with care! For instance: If this flag is set, and an import job
                             splits one time series over multiple calls, only the data in the last
-                            call will be kept.
+                            call will be kept. Only one of replace_existing_time_series or
+                            replace_existing_data_points can be set to true.
+            replace_existing_data_points:
+                            Set to true to remove all existing known_time data point versions of the
+                            inserted time series points. Data points at times not present in the
+                            request will be left untouched. Only one of replace_existing_data_points
+                            or replace_existing_time_series can be set to true.
         Returns:
             If status_in_response is set to true, a list of ResourceCreationResult will be returned.
             Otherwise, None is returned.
         """
-        response = self.client.import_time_series(
-            ImportTimeSeriesRequest(
-                parent=parent,
-                time_series=[
-                    ProtoTimeSeries(name=ts.name, points=self._series_to_time_series_points(ts))
-                    for ts in series
-                ],
+        if replace_existing_time_series and replace_existing_data_points:
+            raise ValueError(
+                "Only one of replace_existing_time_series or replace_existing_data_points can be "
+                "true"
+            )
+        update_options = UpdateOptions(allow_missing=allow_missing)
+        if replace_existing_time_series:
+            update_options.replace_existing_time_series = replace_existing_time_series
+        elif replace_existing_data_points:
+            update_options.replace_existing_data_points = replace_existing_data_points
+        request = ImportTimeSeriesRequest(
+            parent=parent,
+            time_series=[
+                TimeSeries(ts).to_proto() if isinstance(ts, pd.Series) else ts.to_proto()
+                for ts in series
+            ],
+            status_in_response=status_in_response,
+            insert_options=InsertOptions(
                 default_known_time=default_known_time,
-                allow_missing=allow_missing,
-                create_tag=create_tag,
-                status_in_response=status_in_response,
-                replace_existing_time_series=replace_existing_time_series,
             ),
+            update_options=update_options,
         )
+        response = self.client.import_time_series(request)
 
         if status_in_response:
-            time_series_results = []
-            for single_time_series_response, single_time_series in zip(response.responses, series):
-                # The code (integer) given in the response corresponds to google.rpc.Code enum.
-                status_code = StatusCode[CodeProto.Name(single_time_series_response.status.code)]
-
-                if status_code == StatusCode.OK:
-                    time_series_results.append(
-                        ResourceCreationResult(ResourceCreationStatus.UPSERTED, single_time_series)
-                    )
-                else:
-                    error = RequestError(
-                        error_type=grpc_status_to_error_type(status_code),
-                        message=single_time_series_response.status.message,
-                    )
-                    time_series_results.append(
-                        ResourceCreationResult(
-                            ResourceCreationStatus.FAILED, single_time_series, error
-                        )
-                    )
-
-            return time_series_results
+            return self._handle_time_series_response(response.responses, series)
 
         return None
 
+    @deprecate_arguments(create_tag=None)
     def append_time_series_data_and_return(
         self,
         name: str,
-        series: pd.Series,
+        series: Union[pd.Series, TimeSeries],
         default_known_time: Optional[DefaultKnownTime] = None,
         allow_missing: Optional[bool] = False,
-        create_tag: Optional[bool] = False,
-    ) -> pd.Series:
+        create_tag: Optional[bool] = None,  # pylint: disable=unused-argument
+        include_metadata: Optional[bool] = False,
+    ) -> Union[pd.Series, TimeSeries]:
         """
         Append data to the given time series, and return the full series.
 
@@ -385,25 +384,32 @@ class TimeSeriesApi(PageableResourceMixin):
                             current time (upload time) as the Known Time.
             allow_missing:  If set to true, and the resource is not found, a new resource will be
                             created. In this situation, the "update_mask" is ignored.
-            create_tag:     If allow_missing is set to true and the time series does not exist, also
-                            create a tag for every entity type the signal has time series for.
+            create_tag:     Deprecated.
+            include_metadata:
+                            Whether to include the metadata of the time series in the response.
+                            Returns a TimeSeries object if set to True, otherwise a pandas Series.
 
         Returns:
             A series with all data for the given time series.
         """
+        series = self._handle_time_series(name, series)
+
         # Set empty TimeRange() in request to get back entire time series.
         time_series = self.client.update_time_series(
             UpdateTimeSeriesRequest(
-                time_series=ProtoTimeSeries(
-                    name=name, points=self._series_to_time_series_points(series)
-                ),
+                time_series=series.to_proto(),
                 view=TimeSeriesView(time_range=TimeRange()),
-                default_known_time=default_known_time,
-                allow_missing=allow_missing,
-                create_tag=create_tag,
+                insert_options=InsertOptions(
+                    default_known_time=default_known_time,
+                ),
+                update_options=UpdateOptions(
+                    allow_missing=allow_missing,
+                ),
             ),
         )
-        return self._time_series_points_to_series(time_series.points, time_series.name)
+        if include_metadata:
+            return TimeSeries.from_proto(time_series)
+        return TimeSeries.from_proto(time_series).series
 
     def delete_time_series(self, name: str) -> None:
         """
@@ -426,16 +432,17 @@ class TimeSeriesApi(PageableResourceMixin):
         """
         return self.get_time_series(name) is not None
 
-    @deprecate_arguments(threads_for_import=None)
+    @deprecate_arguments(threads_for_import=None, create_tag=None)
     def bulk_upsert_time_series(
         self,
-        series: Sequence[pd.Series],
-        create_tag: bool = False,
+        series: Sequence[Union[pd.Series, TimeSeries]],
+        create_tag: Optional[bool] = None,  # pylint: disable=unused-argument
         threads: int = DEFAULT_NUMBER_OF_THREADS_FOR_IMPORT,
         default_known_time: Optional[DefaultKnownTime] = None,
         replace_existing_time_series: bool = False,
+        replace_existing_data_points: bool = False,
         retries: int = DEFAULT_NUMBER_OF_RETRIES,
-        abort_threshold: Optional[float] = 0.5,
+        abort_threshold: Optional[float] = DEFAULT_ABORT_THRESHOLD,
         # Deprecated arguments
         threads_for_import: int = 4,  # pylint: disable=unused-argument
     ) -> ResourceCreationResults[pd.Series]:
@@ -450,9 +457,7 @@ class TimeSeriesApi(PageableResourceMixin):
 
         Args:
             series:         The time series to be imported.
-            create_tag:     Set to true to create a tag for every entity type a signal has time
-                            series for. If a tag already exists, it will be updated when time
-                            series are created (or deleted) regardless of the value of this flag.
+            create_tag:     Deprecated.
             threads:        The number of parallel upload threads to use, when falling back to
                             uploading time series individually.
             default_known_time:
@@ -467,6 +472,11 @@ class TimeSeriesApi(PageableResourceMixin):
                             Use with care! For instance: If this flag is set, and an import job
                             splits one time series over multiple calls, only the data in the last
                             call will be kept.
+            replace_existing_data_points:
+                            Set to true to remove all existing known_time data point versions of the
+                            inserted time series points. Data points at times not present in the
+                            request will be left untouched. Only one of replace_existing_data_points
+                            or replace_existing_time_series can be set to true.
             retries:        Maximum number of retries to make for each failed request.
             abort_threshold:
                             The threshold for the proportion of failed requests that will cause the
@@ -476,15 +486,82 @@ class TimeSeriesApi(PageableResourceMixin):
             ResourceCreationResults containing the status for each time series that was imported.
         """
 
-        def import_func(ts_sequence: Sequence[pd.Series]) -> Sequence[ResourceCreationResult]:
+        def import_func(
+            ts_sequence: Sequence[Union[pd.Series, TimeSeries]]
+        ) -> Sequence[ResourceCreationResult]:
             result = self.import_time_series(
                 parent="signals/-",
                 series=ts_sequence,
                 default_known_time=default_known_time,
                 allow_missing=True,
-                create_tag=create_tag,
                 status_in_response=True,
                 replace_existing_time_series=replace_existing_time_series,
+                replace_existing_data_points=replace_existing_data_points,
+            )
+            assert result is not None
+            return result
+
+        return bulk_import(
+            series,
+            import_func,
+            threads,
+            retries,
+            abort_threshold,
+        )
+
+    def delete_time_series_points(
+        self,
+        series: Sequence[pd.Series],
+    ) -> Optional[Sequence[ResourceCreationResult]]:
+        """
+        Delete data points from time series. A data point that is deleted will be removed from the
+        time series at the given date and known_time if it exists with a value or NaN.
+
+        Args:
+            series: The data points to be deleted. The series must have date and known-time. Values
+                    are ignored.
+        """
+        response = self.client.batch_delete_time_series_points(
+            BatchDeleteTimeSeriesPointsRequest(
+                parent="signals/-",
+                time_series=[TimeSeries(ts).to_proto() for ts in series],
+                status_in_response=True,
+            )
+        )
+
+        return self._handle_time_series_response(response.responses, series)
+
+    def batch_delete_time_series_points(
+        self,
+        series: Sequence[pd.Series],
+        threads: int = DEFAULT_NUMBER_OF_THREADS_FOR_IMPORT,
+        retries: int = DEFAULT_NUMBER_OF_RETRIES,
+        abort_threshold: Optional[float] = DEFAULT_ABORT_THRESHOLD,
+    ) -> ResourceCreationResults[pd.Series]:
+        """Delete the provided time series data points in batches.
+
+        Calls batch_delete_time_series_points for each of the provided time series in batches,
+        while catching errors and tracking progress. If any error occurs while deleting a time
+        series point, the time series will be retried individually.
+
+        The name attribute of each time series is taken to be the resource name.
+
+        Args:
+            series:         The time series to be imported.
+            threads:        The number of parallel upload threads to use, when falling back to
+                            uploading time series individually.
+            retries:        Maximum number of retries to make for each failed request.
+            abort_threshold:
+                            The threshold for the proportion of failed requests that will cause the
+                            upload to be aborted; if it is `None`, the upload is never aborted.
+
+        Returns:
+            ResourceCreationResults containing the status for each time series that was deleted.
+        """
+
+        def import_func(ts_sequence: Sequence[pd.Series]) -> Sequence[ResourceCreationResult]:
+            result = self.delete_time_series_points(
+                series=ts_sequence,
             )
             assert result is not None
             return result
@@ -498,41 +575,8 @@ class TimeSeriesApi(PageableResourceMixin):
         )
 
     @staticmethod
-    def _series_to_time_series_points(series: pd.Series) -> Sequence[TimeSeriesPoint]:
-        """Convert a pandas Series to a sequence of TimeSeriesPoint."""
-        points = []
-        for index, value in series.items():
-            if isinstance(index, tuple):
-                # (timestamp, known_time)
-                if len(index) != 2:
-                    raise ValueError(
-                        "A time series with a MultiIndex is expected to have exactly "
-                        f"two elements: (timestamp, known_time), but got {index}"
-                    )
-                timestamp = index[0]
-                known_time = index[1]
-            else:
-                timestamp = index
-                known_time = None
-            points.append(
-                TimeSeriesPoint(
-                    time=TimeSeriesApi._pandas_timestamp_to_proto(timestamp),
-                    value=DoubleValue(value=value),
-                    known_time=TimeSeriesApi._pandas_timestamp_to_proto(known_time),
-                )
-            )
-        return points
-
-    @staticmethod
-    def _time_series_points_to_series(
-        points: Sequence[TimeSeriesPoint], name: Optional[str] = None
-    ) -> pd.Series:
-        """Convert a sequence of TimeSeriesPoint to a pandas Series."""
-        return pd.Series(
-            map(lambda x: x.value.value, points),
-            index=map(lambda x: TimeSeriesApi._proto_timestamp_to_pandas_time(x.time), points),
-            name=name,
-        )
+    def _datetime_index(nanoseconds: Sequence[int]) -> pd.DatetimeIndex:
+        return pd.DatetimeIndex(np.array(nanoseconds).astype("datetime64[ns]"), tz=tz.tzutc())
 
     @staticmethod
     def _get_time_range(
@@ -576,14 +620,39 @@ class TimeSeriesApi(PageableResourceMixin):
         return timestamp_pb2.Timestamp(seconds=timestamp.value // 1000000000)
 
     @staticmethod
-    def _proto_timestamp_to_pandas_time(timestamp: timestamp_pb2.Timestamp) -> pd.Timestamp:
-        """Convert a protobuf Timestamp to a pandas Timestamp."""
-        pts = pd.Timestamp(timestamp.ToJsonString())
-        return TimeSeriesApi._convert_utc(pts)
+    def _handle_time_series_response(
+        responses: RepeatedCompositeFieldContainer, series: Sequence[pd.Series]
+    ) -> Sequence[ResourceCreationResult]:
+        time_series_results = []
+        for single_time_series_response, single_time_series in zip(responses, series):
+            # The code (integer) given in the response corresponds to google.rpc.Code enum.
+            status_code = StatusCode[CodeProto.Name(single_time_series_response.status.code)]
+            if status_code == StatusCode.OK:
+                # We treat a delete of data point(s) as an update of the time series.
+                time_series_results.append(
+                    ResourceCreationResult(ResourceCreationStatus.UPSERTED, single_time_series)
+                )
+            else:
+                error = RequestError(
+                    error_type=grpc_status_to_error_type(status_code),
+                    message=single_time_series_response.status.message,
+                )
+                time_series_results.append(
+                    ResourceCreationResult(ResourceCreationStatus.FAILED, single_time_series, error)
+                )
+
+        return time_series_results
 
     @staticmethod
-    def _convert_utc(timestamp: pd.Timestamp) -> pd.Timestamp:
-        """Return the given timestamp with the UTC time zone."""
-        if timestamp.tz:
-            return timestamp.tz_convert(tz.tzutc())
-        return timestamp.tz_localize(tz.tzutc())
+    def _handle_time_series(name: str, series: Union[pd.Series, TimeSeries]) -> TimeSeries:
+        """
+        Helper function to convert to TimeSeries if necessary,
+        and set the name equal to the given name.
+        """
+        if isinstance(series, pd.Series):
+            series = TimeSeries(series)
+            series.name = name
+        if isinstance(series, TimeSeries) and series.name != name:
+            series = TimeSeries(series.series, series.units)
+            series.name = name
+        return series

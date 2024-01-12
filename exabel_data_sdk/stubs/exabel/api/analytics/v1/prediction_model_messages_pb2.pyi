@@ -30,7 +30,9 @@ class _ModelConfigurationEnumTypeWrapper(google.protobuf.internal.enum_type_wrap
     'Configuration of a specific run. The run number must be specified as well.'
 
 class ModelConfiguration(_ModelConfiguration, metaclass=_ModelConfigurationEnumTypeWrapper):
-    """Specifies which model configuration to use."""
+    """Specifies which model configuration to use. If not specified, the latest model configuration is used.
+    Note that the current signal library is always loaded.
+    """
 MODEL_CONFIGURATION_NOT_SPECIFIED: ModelConfiguration.ValueType
 'Not specified - defaults to use the latest configuration.'
 LATEST: ModelConfiguration.ValueType
@@ -55,7 +57,7 @@ class PredictionModelRun(google.protobuf.message.Message):
     description: builtins.str
     'You may use this to record some notes about the run. This is shown in the prediction model\n    interface when viewing all runs, and when viewing the results of a single run.\n    '
     configuration: global___ModelConfiguration.ValueType
-    'Which model configuration to use.\n    If not specified, the latest model configuration is used.\n    '
+    'Which model configuration to use. If not specified, the latest model configuration is used.\n    Note that the current signal library is always loaded.\n    '
     configuration_source: builtins.int
     'Prediction model run number from which model configuration should be retrieved, e.g. `1`.\n    Only relevant when `configuration` is set to `ModelConfiguration.SPECIFIC_RUN`.\n    '
     auto_activate: builtins.bool

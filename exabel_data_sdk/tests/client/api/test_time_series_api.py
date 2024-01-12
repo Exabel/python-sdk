@@ -7,13 +7,12 @@ from google.protobuf import timestamp_pb2
 from google.protobuf.wrappers_pb2 import DoubleValue
 
 from exabel_data_sdk.client.api.data_classes.paging_result import PagingResult
+from exabel_data_sdk.client.api.data_classes.time_series import TimeSeries
 from exabel_data_sdk.client.api.time_series_api import TimeSeriesApi
 from exabel_data_sdk.client.client_config import ClientConfig
-from exabel_data_sdk.stubs.exabel.api.data.v1.all_pb2 import (
-    ImportTimeSeriesRequest,
-    TimeSeries,
-    TimeSeriesPoint,
-)
+from exabel_data_sdk.stubs.exabel.api.data.v1.all_pb2 import ImportTimeSeriesRequest
+from exabel_data_sdk.stubs.exabel.api.data.v1.all_pb2 import TimeSeries as ProtoTimeSeries
+from exabel_data_sdk.stubs.exabel.api.data.v1.all_pb2 import TimeSeriesPoint
 from exabel_data_sdk.util.import_ import estimate_size, get_batches_for_import
 
 # pylint: disable=protected-access
@@ -28,8 +27,8 @@ class TestTimeSeriesApi(unittest.TestCase):
 
         pd.testing.assert_series_equal(
             series,
-            TimeSeriesApi._time_series_points_to_series(
-                TimeSeriesApi._series_to_time_series_points(series)
+            TimeSeries._time_series_points_to_series(
+                TimeSeries._series_to_time_series_points(series)
             ),
         )
 
@@ -41,10 +40,10 @@ class TestTimeSeriesApi(unittest.TestCase):
             ]
         )
         series = pd.Series([1.0, 2.0], index=index)
-        points = TimeSeriesApi._series_to_time_series_points(series)
+        points = TimeSeries._series_to_time_series_points(series)
         pd.testing.assert_series_equal(
-            series.droplevel(1),
-            TimeSeriesApi._time_series_points_to_series(points),
+            series,
+            TimeSeries._time_series_points_to_series(points),
         )
         base_time = pd.Timestamp("2021-01-01").value // 1000000000
         self.assertEqual(1609459200, base_time)
@@ -74,8 +73,8 @@ class TestTimeSeriesApi(unittest.TestCase):
 
         pd.testing.assert_series_equal(
             expected,
-            TimeSeriesApi._time_series_points_to_series(
-                TimeSeriesApi._series_to_time_series_points(series)
+            TimeSeries._time_series_points_to_series(
+                TimeSeries._series_to_time_series_points(series)
             ),
         )
 
@@ -93,8 +92,8 @@ class TestTimeSeriesApi(unittest.TestCase):
 
         pd.testing.assert_series_equal(
             expected,
-            TimeSeriesApi._time_series_points_to_series(
-                TimeSeriesApi._series_to_time_series_points(series)
+            TimeSeries._time_series_points_to_series(
+                TimeSeries._series_to_time_series_points(series)
             ),
         )
 
@@ -120,9 +119,9 @@ class TestTimeSeriesApi(unittest.TestCase):
         )
 
         self.assertEqual(
-            TimeSeries(
+            ProtoTimeSeries(
                 name=str(series_without_known_time.name),
-                points=TimeSeriesApi._series_to_time_series_points(series_without_known_time),
+                points=TimeSeries._series_to_time_series_points(series_without_known_time),
             ).ByteSize(),
             estimate_size(series_without_known_time),
         )
@@ -138,9 +137,9 @@ class TestTimeSeriesApi(unittest.TestCase):
             ),
         )
         self.assertEqual(
-            TimeSeries(
+            ProtoTimeSeries(
                 name=str(series_with_known_time.name),
-                points=TimeSeriesApi._series_to_time_series_points(series_with_known_time),
+                points=TimeSeries._series_to_time_series_points(series_with_known_time),
             ).ByteSize(),
             estimate_size(series_with_known_time),
         )
@@ -161,9 +160,9 @@ class TestTimeSeriesApi(unittest.TestCase):
 
         request = ImportTimeSeriesRequest(
             time_series=[
-                TimeSeries(
+                ProtoTimeSeries(
                     name=str(series.name),
-                    points=TimeSeriesApi._series_to_time_series_points(series),
+                    points=TimeSeries._series_to_time_series_points(series),
                 )
                 for series in batches[0]
             ]

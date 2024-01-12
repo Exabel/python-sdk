@@ -22,7 +22,7 @@ class LoadRelationshipsFromCsv(CsvScriptWithEntityMapping):
     they can also be specified explicitly with the --from-entity-type and --to-entity-type
     arguments. When entity types are explicitly set, the --from-identifier-type and
     --to-identifier-type arguments can be used to specify the identifier type used to look up the
-    entities. Currently, only company identifiers are supported.
+    entities. Currently, only company and security identifiers are supported.
 
     If neither --from-entity-column nor --to-entity-column are specified,
     names of the first and second column in the file will be used respectively.

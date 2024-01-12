@@ -7,8 +7,6 @@ from exabel_data_sdk.util.warnings import ExabelDeprecationWarning
 FunctionT = TypeVar("FunctionT", bound=Callable[..., Any])
 
 
-# Pylint flags '__func' as an invalid argument name, but we want the '__' prefix to make Mypy
-# interpret it as a positional-only argument. Therefore, we disable the check for this argument.
 @overload
 def deprecate_arguments(
     **deprecation_replacements: Optional[str],
@@ -32,6 +30,8 @@ def deprecate_arguments(
     ...
 
 
+# Pylint flags '__func' as an invalid argument name, but we want the '__' prefix to make Mypy
+# interpret it as a positional-only argument. Therefore, we disable the check for this argument.
 def deprecate_arguments(
     __func: Optional[FunctionT] = None,  # pylint: disable=invalid-name
     **deprecation_replacements: Optional[str],
@@ -80,6 +80,74 @@ def deprecate_arguments(
                 else:
                     new_kwargs[arg_name] = arg_value
             return func(*args, **new_kwargs)
+
+        return wrapper  # type: ignore[return-value]
+
+    if __func:
+        return decorator(__func)
+    return decorator  # type: ignore[return-value]
+
+
+# Pylint flags '__func' as an invalid argument name, but we want the '__' prefix to make Mypy
+# interpret it as a positional-only argument. Therefore, we disable the check for this argument.
+@overload
+def deprecate_argument_value(
+    **deprecated_values: object,
+) -> Callable[[FunctionT], FunctionT]:
+    ...
+
+
+@overload
+def deprecate_argument_value(
+    __func: None,  # pylint: disable=invalid-name
+    **deprecated_values: object,
+) -> Callable[[FunctionT], FunctionT]:
+    ...
+
+
+@overload
+def deprecate_argument_value(
+    __func: FunctionT,  # pylint: disable=invalid-name
+    **deprecated_values: object,
+) -> FunctionT:
+    ...
+
+
+def deprecate_argument_value(
+    __func: Optional[FunctionT] = None,  # pylint: disable=invalid-name
+    **deprecated_values: object,
+) -> FunctionT:
+    """
+    Decorator for warning about keyword argument values which are no longer supported.
+
+    Only works for deprecating [keyword-only arguments](https://peps.python.org/pep-3102/).
+
+    Args:
+        deprecated_values: a mapping from deprecated argument names to the value which is
+            deprecated.
+    """
+
+    if not deprecated_values:
+        raise ValueError("No deprecations specified")
+
+    def decorator(func: FunctionT) -> FunctionT:
+        @functools.wraps(func)
+        def wrapper(*args: Any, **kwargs: Any) -> Any:
+            func_name = func.__qualname__
+            module_name = func.__module__
+            if module_name != "__main__":
+                func_name = f"{module_name}.{func_name}"
+            for arg_name, arg_value in kwargs.items():
+                if arg_name in deprecated_values and arg_value == deprecated_values[arg_name]:
+                    warning_message = (
+                        f"Option '{arg_name}={arg_value}' is deprecated in '{func_name}' and will "
+                        f"be removed in a future release."
+                    )
+                    warnings.warn(
+                        warning_message,
+                        ExabelDeprecationWarning,
+                    )
+            return func(*args, **kwargs)
 
         return wrapper  # type: ignore[return-value]
 

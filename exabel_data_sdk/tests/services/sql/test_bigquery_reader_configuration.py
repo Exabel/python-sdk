@@ -109,6 +109,7 @@ class TestBigQueryReaderConfiguration(unittest.TestCase):
         )
         mock_bq_client.assert_called_once_with(
             credentials="credentials",
+            project="project",
         )
 
     @mock.patch(

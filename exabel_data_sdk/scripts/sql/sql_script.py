@@ -2,8 +2,8 @@ import abc
 from typing import Sequence, Type
 
 from exabel_data_sdk.scripts.command_line_script import CommandLineScript
-from exabel_data_sdk.services.sql.sql_reader import SqlReader
 from exabel_data_sdk.services.sql.sql_reader_configuration import SqlReaderConfiguration
+from exabel_data_sdk.services.sql.sqlalchemy_reader import SQLAlchemyReader
 
 
 class SqlScript(CommandLineScript, abc.ABC):
@@ -46,7 +46,7 @@ class SqlScript(CommandLineScript, abc.ABC):
         self.setup_logging()
         configuration = self.reader_configuration_class.from_args(args)
         connection_string, connect_args = configuration.get_connection_string_and_kwargs()
-        reader = SqlReader(connection_string, kwargs=connect_args)
+        reader = SQLAlchemyReader(connection_string, kwargs=connect_args)
         reader.read_sql_query_and_write_result(
             args.query, args.output_file, batch_size=args.batch_size
         )

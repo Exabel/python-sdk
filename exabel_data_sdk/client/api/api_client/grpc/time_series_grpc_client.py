@@ -5,6 +5,7 @@ from exabel_data_sdk.client.api.error_handler import handle_grpc_error
 from exabel_data_sdk.client.client_config import ClientConfig
 from exabel_data_sdk.stubs.exabel.api.data.v1.all_pb2 import (
     BatchDeleteTimeSeriesPointsRequest,
+    BatchDeleteTimeSeriesPointsResponse,
     CreateTimeSeriesRequest,
     DeleteTimeSeriesRequest,
     GetTimeSeriesRequest,
@@ -66,7 +67,9 @@ class TimeSeriesGrpcClient(TimeSeriesApiClient, BaseGrpcClient):
         self.stub.DeleteTimeSeries(request, metadata=self.metadata, timeout=self.config.timeout)
 
     @handle_grpc_error
-    def batch_delete_time_series_points(self, request: BatchDeleteTimeSeriesPointsRequest) -> None:
-        self.stub.BatchDeleteTimeSeriesPoints(
+    def batch_delete_time_series_points(
+        self, request: BatchDeleteTimeSeriesPointsRequest
+    ) -> BatchDeleteTimeSeriesPointsResponse:
+        return self.stub.BatchDeleteTimeSeriesPoints(
             request, metadata=self.metadata, timeout=self.config.timeout
         )

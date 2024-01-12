@@ -9,7 +9,10 @@ import pandas as pd
 
 from exabel_data_sdk.client.api.data_classes.entity_type import EntityType
 from exabel_data_sdk.client.api.entity_api import EntityApi
-from exabel_data_sdk.client.api.search_service import COMPANY_SEARCH_TERM_FIELDS
+from exabel_data_sdk.client.api.search_service import (
+    COMPANY_SEARCH_TERM_FIELDS,
+    SECURITY_SEARCH_TERM_FIELDS,
+)
 from exabel_data_sdk.stubs.exabel.api.data.v1.all_pb2 import SearchTerm
 from exabel_data_sdk.util.batcher import batcher
 from exabel_data_sdk.util.warnings import ExabelDeprecationWarning
@@ -272,6 +275,7 @@ def to_entity_resource_names(
     entity_mapping: Optional[Mapping[str, Mapping[str, str]]] = None,
     check_entity_types: bool = True,
     preserve_namespace: bool = False,
+    entity_type: Optional[str] = None,
 ) -> EntityResourceNames:
     """
     Turns the given identifiers into entity resource names.
@@ -287,7 +291,7 @@ def to_entity_resource_names(
      - isin
         The given identifiers are ISIN numbers.
         The ISIN numbers are looked up with the Exabel API, and the Exabel resource identifiers
-        for the associated companies are returned.
+        for the associated companies or securities are returned.
 
      - factset_identifier
         The given identifiers are FactSet IDs.
@@ -320,6 +324,11 @@ def to_entity_resource_names(
             XNYS:GE refers to General Electric Co. on the New York Stock Exchange
             XOSL:TEL refers to Telenor ASA on the Oslo Stock Exchange
 
+     - cusip
+        The given identifiers are CUSIPs (Committee on Uniform Securities Identification
+        Procedures). The CUSIPs are looked up with the Exabel API, and the Exabel resource
+        identifiers are returned.
+
      - any known entity type, e.g. "brand" or "product_type":
         The given identifiers are customer provided names.
         The names are first normalized (using the normalize_resource_name method)
@@ -342,30 +351,39 @@ def to_entity_resource_names(
               be mapped is set to None
             * a sequence of warnings for entities that could not be uniquely identified
     """
-    entity_type = identifiers.name
-    if entity_type in ("entity", "entity_from", "entity_to"):
+    identifier_type = identifiers.name
+    if identifier_type in ("entity", "entity_from", "entity_to"):
         # Already resource identifiers, nothing to be done
-        if entity_type in ("entity_from", "entity_to"):
+        if identifier_type in ("entity_from", "entity_to"):
             warnings.warn(
                 "The 'entity_from' and 'entity_to' columns with full resource names are "
                 "deprecated. Please specify the entity types explicitly and use resource "
                 "identifiers instead.",
                 ExabelDeprecationWarning,
             )
-        return EntityResourceNames(identifiers, [], {}, entity_type)
+        return EntityResourceNames(identifiers, [], {}, identifier_type)
 
     search_result_warnings: MutableSequence[EntitySearchResultWarning] = []
     unique_ids = identifiers.unique().tolist()
     mapping: MutableMapping[str, str] = {}
-    if entity_mapping and entity_mapping.get(entity_type):
-        mapping.update(entity_mapping[entity_type])
+    if entity_mapping and entity_mapping.get(identifier_type):
+        mapping.update(entity_mapping[identifier_type])
         unique_ids = [unique_id for unique_id in unique_ids if unique_id not in mapping]
 
-    if entity_type in COMPANY_SEARCH_TERM_FIELDS:
+    if entity_type == "security" and identifier_type in SECURITY_SEARCH_TERM_FIELDS:
         _mapping, _search_result_warnings = _search_entities(
             entity_api=entity_api,
             identifiers=unique_ids,
-            identifier_type=entity_type,
+            identifier_type=identifier_type,
+            entity_type="security",
+        )
+        mapping.update(_mapping)
+        search_result_warnings.extend(_search_result_warnings)
+    elif identifier_type in COMPANY_SEARCH_TERM_FIELDS:
+        _mapping, _search_result_warnings = _search_entities(
+            entity_api=entity_api,
+            identifiers=unique_ids,
+            identifier_type=identifier_type,
             entity_type="company",
         )
         mapping.update(_mapping)
@@ -374,7 +392,7 @@ def to_entity_resource_names(
         _mapping = _get_resource_names(
             entity_api=entity_api,
             identifiers=unique_ids,
-            entity_type=entity_type,
+            entity_type=entity_type or identifier_type,
             namespace=namespace,
             check_entity_types=check_entity_types,
             preserve_namespace=preserve_namespace,
@@ -383,7 +401,7 @@ def to_entity_resource_names(
 
     result = identifiers.map(mapping)
     result.name = "entity"
-    return EntityResourceNames(result, search_result_warnings, mapping, entity_type)
+    return EntityResourceNames(result, search_result_warnings, mapping, identifier_type)
 
 
 def validate_signal_name(name: str) -> None:

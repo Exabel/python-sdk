@@ -7,5 +7,6 @@ FULL_CSV_EXTENSIONS = set(
     for csv_ext, comp_ext in itertools.product(_CSV_EXTENSIONS, _CSV_COMPRESSION_EXTENSIONS)
 )
 EXCEL_EXTENSIONS = {".xlsx"}
+FEATHER_EXTENSIONS = {".feather"}
 GLOBAL_ENTITY_TYPE = "global"
 GLOBAL_ENTITY_NAME = f"entityTypes/{GLOBAL_ENTITY_TYPE}/entities/global"

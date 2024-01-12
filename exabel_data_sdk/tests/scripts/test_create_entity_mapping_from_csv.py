@@ -194,6 +194,29 @@ class TestCreateEntityMappingFromCsv(unittest.TestCase):
             "Arguments not as expected",
         )
 
+    def test_create_mapping_cusip(self):
+        args = [
+            "script-name",
+            "--filename-input",
+            "./exabel_data_sdk/tests/resources/data/mapping_cusip.csv",
+            "--filename-output",
+            self.temp_file.name,
+            "--api-key",
+            "123",
+        ]
+
+        script = CreateEntityMappingFromCsv(args, "MappingTestCUSIP")
+        script.run_script(self.client, script.parse_arguments())
+
+        # first call - entity = "entityType/company" cusip = 'Y01234567'
+        call_args = self.client.entity_api.search_for_entities.call_args_list[0]
+        _, kwargs = call_args
+        self.assertEqual(
+            {"entity_type": "entityTypes/company", "cusip": "Y01234567"},
+            kwargs,
+            "Arguments not as expected",
+        )
+
 
 if __name__ == "__main__":
     unittest.main()

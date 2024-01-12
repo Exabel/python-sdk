@@ -40,6 +40,7 @@ class CreateEntityMappingFromCsv(BaseScript):
         * factset_identifier - a factset identifier
         * bloomberg_ticker   - a Bloomberg symbol
         * figi - a FIGI (formerly Bloomberg ID)
+        * cusip - a CUSIP
 
     Output is on the same format as the input but with 'entity' added as a column.
 
@@ -101,7 +102,7 @@ class CreateEntityMappingFromCsv(BaseScript):
             (
                 column
                 for column in mapping_input
-                if column in {"isin", "factset_identifier", "bloomberg_ticker", "figi"}
+                if column in {"isin", "factset_identifier", "bloomberg_ticker", "figi", "cusip"}
             ),
             None,
         )

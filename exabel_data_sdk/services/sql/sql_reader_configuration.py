@@ -1,6 +1,6 @@
 import abc
 import argparse
-from dataclasses import dataclass
+from dataclasses import asdict, dataclass
 from typing import Any, Mapping, NamedTuple, NewType
 
 ConnectionString = NewType("ConnectionString", str)
@@ -29,3 +29,7 @@ class SqlReaderConfiguration(abc.ABC):
     def get_connection_string_and_kwargs(self) -> EngineArgs:
         """Return the connection string and additional key-word arguments."""
         return EngineArgs(self.get_connection_string(), {})
+
+    def get_connection_args(self) -> Mapping[str, Any]:
+        """Return the keyword arguments."""
+        return {k: v for k, v in asdict(self).items() if v is not None}

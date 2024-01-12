@@ -19,7 +19,7 @@ class TestSqlScript(unittest.TestCase):
             "SELECT 1 AS A",
         ]
 
-    @mock.patch("exabel_data_sdk.scripts.sql.sql_script.SqlReader")
+    @mock.patch("exabel_data_sdk.scripts.sql.sql_script.SQLAlchemyReader")
     def test_sql_script_without_output_file(self, mock_reader):
         mock_config_class = mock.create_autospec(SqlReaderConfiguration)
         mock_config_instance = mock_config_class()
@@ -43,7 +43,7 @@ class TestSqlScript(unittest.TestCase):
             "SELECT 1 AS A", None, batch_size=None
         )
 
-    @mock.patch("exabel_data_sdk.scripts.sql.sql_script.SqlReader")
+    @mock.patch("exabel_data_sdk.scripts.sql.sql_script.SQLAlchemyReader")
     def test_sql_script_with_output_file(self, mock_reader):
         mock_config_class = mock.create_autospec(SqlReaderConfiguration)
         mock_config_instance = mock_config_class()

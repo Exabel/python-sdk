@@ -292,7 +292,7 @@ class SearchItemsResponse(google.protobuf.message.Message):
     def results(self) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[exabel.api.management.v1.folder_messages_pb2.SearchResult]:
         """Search results."""
     next_page_token: builtins.str
-    'Continuation token.'
+    'Continuation token. If non-empty, there may be more results to retrieve.'
 
     def __init__(self, *, results: collections.abc.Iterable[exabel.api.management.v1.folder_messages_pb2.SearchResult] | None=..., next_page_token: builtins.str | None=...) -> None:
         ...

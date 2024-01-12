@@ -2,6 +2,7 @@ from typing import Optional
 
 from exabel_data_sdk import ExabelClient
 from exabel_data_sdk.services.csv_loading_constants import (
+    DEFAULT_ABORT_THRESHOLD,
     DEFAULT_NUMBER_OF_RETRIES,
     DEFAULT_NUMBER_OF_THREADS_FOR_IMPORT,
 )
@@ -18,7 +19,7 @@ class CsvTimeSeriesLoader:
     def __init__(self, client: ExabelClient):
         self._client = client
 
-    @deprecate_arguments(namespace=None)
+    @deprecate_arguments(namespace=None, create_tag=None)
     def load_time_series(
         self,
         *,
@@ -28,17 +29,17 @@ class CsvTimeSeriesLoader:
         pit_current_time: bool = False,
         pit_offset: Optional[int] = None,
         create_missing_signals: bool = False,
-        create_tag: bool = True,
         create_library_signal: bool = True,
         global_time_series: Optional[bool] = None,
         threads: int = DEFAULT_NUMBER_OF_THREADS_FOR_IMPORT,
         dry_run: bool = False,
         error_on_any_failure: bool = False,
         retries: int = DEFAULT_NUMBER_OF_RETRIES,
-        abort_threshold: Optional[float] = 0.5,
+        abort_threshold: Optional[float] = DEFAULT_ABORT_THRESHOLD,
         skip_validation: bool = False,
         case_sensitive_signals: bool = False,
         # Deprecated arguments
+        create_tag: Optional[bool] = None,  # pylint: disable=unused-argument
         namespace: Optional[str] = None,  # pylint: disable=unused-argument
     ) -> FileLoadingResult:
         """
@@ -55,8 +56,6 @@ class CsvTimeSeriesLoader:
                 point, plus the specified number of days as an offset; for example, if the data is
                 available to the user the day after, this value should be 1
             create_missing_signals: whether signals that are not already present should be
-                automatically created
-            create_tag: whether a tag containing the entities which have time series should be
                 automatically created
             create_library_signal: whether a library signal should be automatically created
             global_time_series: whether to import the time series on the global entity, if not set
@@ -79,7 +78,6 @@ class CsvTimeSeriesLoader:
             pit_current_time=pit_current_time,
             pit_offset=pit_offset,
             create_missing_signals=create_missing_signals,
-            create_tag=create_tag,
             create_library_signal=create_library_signal,
             global_time_series=global_time_series,
             threads=threads,

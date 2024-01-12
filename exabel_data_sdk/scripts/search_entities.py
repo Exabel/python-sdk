@@ -68,6 +68,12 @@ class SearchEntities(BaseScript):
             type=str,
             help="Term for free text search",
         )
+        self.parser.add_argument(
+            "--cusip",
+            required=False,
+            type=str,
+            help="The CUSIP (Committee on Uniform Securities Identification Procedures)",
+        )
 
     def run_script(self, client: ExabelClient, args: argparse.Namespace) -> None:
         terms = {}
@@ -87,6 +93,8 @@ class SearchEntities(BaseScript):
             terms["factset_identifier"] = args.factset_identifier
         if args.text is not None:
             terms["text"] = args.text
+        if args.cusip is not None:
+            terms["cusip"] = args.cusip
 
         entities = client.entity_api.search_for_entities(entity_type=args.entity_type, **terms)
 
