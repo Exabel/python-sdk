@@ -77,7 +77,7 @@ line_length = 100
 ensure_newline_before_comments = true
 
 [tool.mypy]
-python_version = 3.7
+python_version = "3.8"
 # Searching for installed packages in mypy apparently does not play well with pipenv.
 ignore_missing_imports = true
 check_untyped_defs = true
@@ -85,9 +85,10 @@ disallow_untyped_defs = true
 show_error_codes = true
 strict_equality = true
 warn_unreachable = true
-warn_unused_ignores = true
 namespace_packages = true
 local_partial_types = true
+# Warning disabled due to inconsistent behaviour depending on whether .mypy_cache exists or not.
+warn_unused_ignores = false
 
 [[tool.mypy.overrides]]
 module = "*.tests.*"
