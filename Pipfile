@@ -23,6 +23,7 @@ snowflake-connector-python = "*"
 snowflake-sqlalchemy = "*"
 sqlalchemy = "*"
 sqlalchemy-bigquery = "*"
+tqdm = "*"
 twine = "*"
 types-protobuf = "*"
 types-python-dateutil = "*"
@@ -32,4 +33,4 @@ wheel = "*"
 [dev-packages]
 
 [requires]
-python_version = "3.7"
+python_version = "3.8"
