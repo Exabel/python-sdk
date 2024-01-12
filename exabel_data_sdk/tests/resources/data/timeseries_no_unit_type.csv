@@ -1,0 +1,3 @@
+entity;signal;description
+entityTypes/company/entities/company_A;signal1;percent
+entityTypes/company/entities/company_A;signal2;ratio
