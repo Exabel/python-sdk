@@ -45,6 +45,7 @@ setuptools.setup(
         "pyarrow",
         "protobuf>=4",
         "requests",
+        "tqdm",
     ],
     extras_require={
         "snowflake": _SNOWFLAKE_REQUIREMENTS,
