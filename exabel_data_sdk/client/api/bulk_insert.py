@@ -11,6 +11,7 @@ from exabel_data_sdk.client.api.resource_creation_result import (
     ResourceT,
 )
 from exabel_data_sdk.services.csv_loading_constants import (
+    DEFAULT_ABORT_THRESHOLD,
     DEFAULT_NUMBER_OF_RETRIES,
     DEFAULT_NUMBER_OF_THREADS,
 )
@@ -114,7 +115,7 @@ def bulk_insert(
     insert_func: Callable[[ResourceT], ResourceCreationStatus],
     retries: int = DEFAULT_NUMBER_OF_RETRIES,
     threads: int = DEFAULT_NUMBER_OF_THREADS,
-    abort_threshold: Optional[float] = 0.5,
+    abort_threshold: Optional[float] = DEFAULT_ABORT_THRESHOLD,
 ) -> ResourceCreationResults[ResourceT]:
     """
     Calls the provided insert function with each of the provided resources,

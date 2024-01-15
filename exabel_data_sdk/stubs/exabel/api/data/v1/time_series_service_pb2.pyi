@@ -88,6 +88,68 @@ class GetTimeSeriesRequest(google.protobuf.message.Message):
 global___GetTimeSeriesRequest = GetTimeSeriesRequest
 
 @typing_extensions.final
+class InsertOptions(google.protobuf.message.Message):
+    """Common options when insert time series values."""
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    DEFAULT_KNOWN_TIME_FIELD_NUMBER: builtins.int
+    CREATE_TAG_FIELD_NUMBER: builtins.int
+    SHOULD_OPTIMISE_FIELD_NUMBER: builtins.int
+
+    @property
+    def default_known_time(self) -> exabel.api.data.v1.time_series_messages_pb2.DefaultKnownTime:
+        """The specification of the default known time to use for points that don't explicitly have a
+        known time set. If not set, the time of insertion is used as the default known time
+        (`current_time = true`).
+        """
+    create_tag: builtins.bool
+    'This field is not in use anymore.'
+    should_optimise: builtins.bool
+    'Whether time series storage optimisation should be enabled or not. If not set, optimisation is\n    at the discretion of the server.\n    '
+
+    def __init__(self, *, default_known_time: exabel.api.data.v1.time_series_messages_pb2.DefaultKnownTime | None=..., create_tag: builtins.bool | None=..., should_optimise: builtins.bool | None=...) -> None:
+        ...
+
+    def HasField(self, field_name: typing_extensions.Literal['_should_optimise', b'_should_optimise', 'default_known_time', b'default_known_time', 'should_optimise', b'should_optimise']) -> builtins.bool:
+        ...
+
+    def ClearField(self, field_name: typing_extensions.Literal['_should_optimise', b'_should_optimise', 'create_tag', b'create_tag', 'default_known_time', b'default_known_time', 'should_optimise', b'should_optimise']) -> None:
+        ...
+
+    def WhichOneof(self, oneof_group: typing_extensions.Literal['_should_optimise', b'_should_optimise']) -> typing_extensions.Literal['should_optimise'] | None:
+        ...
+global___InsertOptions = InsertOptions
+
+@typing_extensions.final
+class UpdateOptions(google.protobuf.message.Message):
+    """Common options when updating one or more time series."""
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    ALLOW_MISSING_FIELD_NUMBER: builtins.int
+    REPLACE_EXISTING_TIME_SERIES_FIELD_NUMBER: builtins.int
+    REPLACE_KNOWN_TIME_FIELD_NUMBER: builtins.int
+    REPLACE_EXISTING_DATA_POINTS_FIELD_NUMBER: builtins.int
+    allow_missing: builtins.bool
+    'If set to `true`, new time series will be created if they did not exist.'
+    replace_existing_time_series: builtins.bool
+    'Set to `true` to first delete all data from existing time series, including units. This means\n    that all historical, point-in-time and units data for the time series will be destroyed and\n    replaced with the data in this call.\n    Use with care! For instance: If this flag is set, and an import job splits one time series\n    over multiple calls, only the data in the last call will be kept.\n    '
+    replace_known_time: builtins.bool
+    'Specifies that the known times of _all_ inserted points are a fixed timestamp specified in\n    `insert_options.default_known_time`, and additionally that all existing values of the\n    time series should be unset at this timestamp. If this is set, either\n    `insert_options.default_known_time.current_time` or\n    `insert_options.default_known_time.known_time` must be set, and it is an error to specify the\n    known time of any inserted points.\n    Use with care! For instance: If this flag is set, and an import job splits one time series\n    over multiple calls, only the data in the last call will be kept.\n    '
+    replace_existing_data_points: builtins.bool
+    'Whether to remove existing data points for other known times of the the inserted time series\n    points. Data points for times not present in the request will be left untouched.\n    '
+
+    def __init__(self, *, allow_missing: builtins.bool | None=..., replace_existing_time_series: builtins.bool | None=..., replace_known_time: builtins.bool | None=..., replace_existing_data_points: builtins.bool | None=...) -> None:
+        ...
+
+    def HasField(self, field_name: typing_extensions.Literal['replace_existing_data_points', b'replace_existing_data_points', 'replace_existing_time_series', b'replace_existing_time_series', 'replace_known_time', b'replace_known_time', 'replace_options', b'replace_options']) -> builtins.bool:
+        ...
+
+    def ClearField(self, field_name: typing_extensions.Literal['allow_missing', b'allow_missing', 'replace_existing_data_points', b'replace_existing_data_points', 'replace_existing_time_series', b'replace_existing_time_series', 'replace_known_time', b'replace_known_time', 'replace_options', b'replace_options']) -> None:
+        ...
+
+    def WhichOneof(self, oneof_group: typing_extensions.Literal['replace_options', b'replace_options']) -> typing_extensions.Literal['replace_existing_time_series', 'replace_known_time', 'replace_existing_data_points'] | None:
+        ...
+global___UpdateOptions = UpdateOptions
+
+@typing_extensions.final
 class CreateTimeSeriesRequest(google.protobuf.message.Message):
     """The request to create one time series. The parents of the time series will be inferred from
     `time_series.name`. The returned time series will contain its canonical name.
@@ -95,8 +157,10 @@ class CreateTimeSeriesRequest(google.protobuf.message.Message):
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
     TIME_SERIES_FIELD_NUMBER: builtins.int
     VIEW_FIELD_NUMBER: builtins.int
+    INSERT_OPTIONS_FIELD_NUMBER: builtins.int
     DEFAULT_KNOWN_TIME_FIELD_NUMBER: builtins.int
     CREATE_TAG_FIELD_NUMBER: builtins.int
+    SHOULD_OPTIMISE_FIELD_NUMBER: builtins.int
 
     @property
     def time_series(self) -> exabel.api.data.v1.time_series_messages_pb2.TimeSeries:
@@ -107,21 +171,27 @@ class CreateTimeSeriesRequest(google.protobuf.message.Message):
         """Specifies which parts of the time series should be returned in the request."""
 
     @property
+    def insert_options(self) -> global___InsertOptions:
+        """Insert options for this request."""
+
+    @property
     def default_known_time(self) -> exabel.api.data.v1.time_series_messages_pb2.DefaultKnownTime:
-        """The specification of the default known time to use for points that don't explicitly have a
-        known time set. If not set, the time of insertion is used as the default known time
-        (`current_time = true`).
-        """
+        """This field is deprecated and replaced with insert_options.default_known_time."""
     create_tag: builtins.bool
-    'Set to `true` to create a "coverage" tag containing all entities that have time series, for\n    this signal and entity type. If this tag already exists, setting `create_tag` to `true` will\n    update it with all entities that have time series.\n    '
+    'This field is not in use anymore.'
+    should_optimise: builtins.bool
+    'This field is deprecated and replaced with insert_options.should_optimise.'
 
-    def __init__(self, *, time_series: exabel.api.data.v1.time_series_messages_pb2.TimeSeries | None=..., view: exabel.api.data.v1.time_series_messages_pb2.TimeSeriesView | None=..., default_known_time: exabel.api.data.v1.time_series_messages_pb2.DefaultKnownTime | None=..., create_tag: builtins.bool | None=...) -> None:
+    def __init__(self, *, time_series: exabel.api.data.v1.time_series_messages_pb2.TimeSeries | None=..., view: exabel.api.data.v1.time_series_messages_pb2.TimeSeriesView | None=..., insert_options: global___InsertOptions | None=..., default_known_time: exabel.api.data.v1.time_series_messages_pb2.DefaultKnownTime | None=..., create_tag: builtins.bool | None=..., should_optimise: builtins.bool | None=...) -> None:
         ...
 
-    def HasField(self, field_name: typing_extensions.Literal['default_known_time', b'default_known_time', 'time_series', b'time_series', 'view', b'view']) -> builtins.bool:
+    def HasField(self, field_name: typing_extensions.Literal['_should_optimise', b'_should_optimise', 'default_known_time', b'default_known_time', 'insert_options', b'insert_options', 'should_optimise', b'should_optimise', 'time_series', b'time_series', 'view', b'view']) -> builtins.bool:
         ...
 
-    def ClearField(self, field_name: typing_extensions.Literal['create_tag', b'create_tag', 'default_known_time', b'default_known_time', 'time_series', b'time_series', 'view', b'view']) -> None:
+    def ClearField(self, field_name: typing_extensions.Literal['_should_optimise', b'_should_optimise', 'create_tag', b'create_tag', 'default_known_time', b'default_known_time', 'insert_options', b'insert_options', 'should_optimise', b'should_optimise', 'time_series', b'time_series', 'view', b'view']) -> None:
+        ...
+
+    def WhichOneof(self, oneof_group: typing_extensions.Literal['_should_optimise', b'_should_optimise']) -> typing_extensions.Literal['should_optimise'] | None:
         ...
 global___CreateTimeSeriesRequest = CreateTimeSeriesRequest
 
@@ -131,9 +201,13 @@ class UpdateTimeSeriesRequest(google.protobuf.message.Message):
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
     TIME_SERIES_FIELD_NUMBER: builtins.int
     VIEW_FIELD_NUMBER: builtins.int
+    INSERT_OPTIONS_FIELD_NUMBER: builtins.int
+    UPDATE_OPTIONS_FIELD_NUMBER: builtins.int
     DEFAULT_KNOWN_TIME_FIELD_NUMBER: builtins.int
     ALLOW_MISSING_FIELD_NUMBER: builtins.int
     CREATE_TAG_FIELD_NUMBER: builtins.int
+    SHOULD_OPTIMISE_FIELD_NUMBER: builtins.int
+    REPLACE_KNOWN_TIME_FIELD_NUMBER: builtins.int
 
     @property
     def time_series(self) -> exabel.api.data.v1.time_series_messages_pb2.TimeSeries:
@@ -147,23 +221,35 @@ class UpdateTimeSeriesRequest(google.protobuf.message.Message):
         """Specifies which parts of the time series should be returned in the request."""
 
     @property
+    def insert_options(self) -> global___InsertOptions:
+        """Insert options for this request."""
+
+    @property
+    def update_options(self) -> global___UpdateOptions:
+        """Update uptions for this request."""
+
+    @property
     def default_known_time(self) -> exabel.api.data.v1.time_series_messages_pb2.DefaultKnownTime:
-        """The specification of the default known time to use for points that don't explicitly have a
-        known time set. If not set, the time of insertion is used as the default known time
-        (`current_time = true`).
-        """
+        """This field is deprecated and replaced with insert_options.default_known_time."""
     allow_missing: builtins.bool
-    'If set to `true`, a new time series will be created if it did not exist.'
+    'This field is deprecated and replaced with update_options.allow_missing.'
     create_tag: builtins.bool
-    'Set to `true` to create a "coverage" tag containing all entities that have time series, for\n    this signal and entity type. If this tag already exists, setting `create_tag` to `true` will\n    update it with all entities that have time series.\n    This flag is only relevant if `allow_missing` is set to `true`.\n    '
+    'This field is not in use anymore.'
+    should_optimise: builtins.bool
+    'This field is deprecated and replaced with insert_options.should_optimise.'
+    replace_known_time: builtins.bool
+    'This field is deprecated and replaced with update_options.replace_known_time.'
 
-    def __init__(self, *, time_series: exabel.api.data.v1.time_series_messages_pb2.TimeSeries | None=..., view: exabel.api.data.v1.time_series_messages_pb2.TimeSeriesView | None=..., default_known_time: exabel.api.data.v1.time_series_messages_pb2.DefaultKnownTime | None=..., allow_missing: builtins.bool | None=..., create_tag: builtins.bool | None=...) -> None:
+    def __init__(self, *, time_series: exabel.api.data.v1.time_series_messages_pb2.TimeSeries | None=..., view: exabel.api.data.v1.time_series_messages_pb2.TimeSeriesView | None=..., insert_options: global___InsertOptions | None=..., update_options: global___UpdateOptions | None=..., default_known_time: exabel.api.data.v1.time_series_messages_pb2.DefaultKnownTime | None=..., allow_missing: builtins.bool | None=..., create_tag: builtins.bool | None=..., should_optimise: builtins.bool | None=..., replace_known_time: builtins.bool | None=...) -> None:
         ...
 
-    def HasField(self, field_name: typing_extensions.Literal['default_known_time', b'default_known_time', 'time_series', b'time_series', 'view', b'view']) -> builtins.bool:
+    def HasField(self, field_name: typing_extensions.Literal['_should_optimise', b'_should_optimise', 'default_known_time', b'default_known_time', 'insert_options', b'insert_options', 'should_optimise', b'should_optimise', 'time_series', b'time_series', 'update_options', b'update_options', 'view', b'view']) -> builtins.bool:
         ...
 
-    def ClearField(self, field_name: typing_extensions.Literal['allow_missing', b'allow_missing', 'create_tag', b'create_tag', 'default_known_time', b'default_known_time', 'time_series', b'time_series', 'view', b'view']) -> None:
+    def ClearField(self, field_name: typing_extensions.Literal['_should_optimise', b'_should_optimise', 'allow_missing', b'allow_missing', 'create_tag', b'create_tag', 'default_known_time', b'default_known_time', 'insert_options', b'insert_options', 'replace_known_time', b'replace_known_time', 'should_optimise', b'should_optimise', 'time_series', b'time_series', 'update_options', b'update_options', 'view', b'view']) -> None:
+        ...
+
+    def WhichOneof(self, oneof_group: typing_extensions.Literal['_should_optimise', b'_should_optimise']) -> typing_extensions.Literal['should_optimise'] | None:
         ...
 global___UpdateTimeSeriesRequest = UpdateTimeSeriesRequest
 
@@ -175,40 +261,56 @@ class ImportTimeSeriesRequest(google.protobuf.message.Message):
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
     PARENT_FIELD_NUMBER: builtins.int
     TIME_SERIES_FIELD_NUMBER: builtins.int
+    STATUS_IN_RESPONSE_FIELD_NUMBER: builtins.int
+    INSERT_OPTIONS_FIELD_NUMBER: builtins.int
+    UPDATE_OPTIONS_FIELD_NUMBER: builtins.int
     DEFAULT_KNOWN_TIME_FIELD_NUMBER: builtins.int
     ALLOW_MISSING_FIELD_NUMBER: builtins.int
     CREATE_TAG_FIELD_NUMBER: builtins.int
-    STATUS_IN_RESPONSE_FIELD_NUMBER: builtins.int
     REPLACE_EXISTING_TIME_SERIES_FIELD_NUMBER: builtins.int
+    SHOULD_OPTIMISE_FIELD_NUMBER: builtins.int
+    REPLACE_KNOWN_TIME_FIELD_NUMBER: builtins.int
     parent: builtins.str
     'The common parent of all time series to import. May include `-` as a wild card.'
 
     @property
     def time_series(self) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[exabel.api.data.v1.time_series_messages_pb2.TimeSeries]:
         """One or more time series to import."""
+    status_in_response: builtins.bool
+    'Set to `true` to report the status of each time series in the response. If `false`, a failure\n    for one time series will fail the entire request, and a sample of the failures will be\n    reported in the trailers.\n    '
+
+    @property
+    def insert_options(self) -> global___InsertOptions:
+        """Insert options for this request."""
+
+    @property
+    def update_options(self) -> global___UpdateOptions:
+        """Update uptions for this request."""
 
     @property
     def default_known_time(self) -> exabel.api.data.v1.time_series_messages_pb2.DefaultKnownTime:
-        """The specification of the default known time to use for points that don't explicitly have a
-        known time set. If not set, the time of insertion is used as the default known time
-        (`current_time = true`).
-        """
+        """This field is deprecated and replaced with insert_options.default_known_time."""
     allow_missing: builtins.bool
-    'If set to `true`, new time series will be created if they did not exist.'
+    'This field is deprecated and replaced with update_options.allow_missing.'
     create_tag: builtins.bool
-    'Set to `true` to create a "coverage" tag containing all entities that have time series, for\n    this signal and entity type. If this tag already exists, setting `create_tag` to `true` will\n    update it with all entities that have time series.\n    This flag is only relevant if `allow_missing` is set to `true`.\n    '
-    status_in_response: builtins.bool
-    'Set to `true` to report the status of each time series in the response. If `false`, a failure\n    for one time series will fail the entire request, and a sample of the failures will be\n    reported in the trailers.\n    '
+    'This field is not in use anymore.'
     replace_existing_time_series: builtins.bool
-    'Set to `true` to first delete all data from existing time series. This means that all historical\n    and point-in-time data for the time series will be destroyed and replaced with the data in this call.\n    Use with care! For instance: If this flag is set, and an import job splits one time series over\n    multiple calls, only the data in the last call will be kept.\n    '
+    'This field is deprecated and replaced with update_options.replace_existing_time_series.'
+    should_optimise: builtins.bool
+    'This field is deprecated and replaced with insert_options.should_optimise.'
+    replace_known_time: builtins.bool
+    'This field is deprecated and replaced with update_options.replace_known_time.'
 
-    def __init__(self, *, parent: builtins.str | None=..., time_series: collections.abc.Iterable[exabel.api.data.v1.time_series_messages_pb2.TimeSeries] | None=..., default_known_time: exabel.api.data.v1.time_series_messages_pb2.DefaultKnownTime | None=..., allow_missing: builtins.bool | None=..., create_tag: builtins.bool | None=..., status_in_response: builtins.bool | None=..., replace_existing_time_series: builtins.bool | None=...) -> None:
+    def __init__(self, *, parent: builtins.str | None=..., time_series: collections.abc.Iterable[exabel.api.data.v1.time_series_messages_pb2.TimeSeries] | None=..., status_in_response: builtins.bool | None=..., insert_options: global___InsertOptions | None=..., update_options: global___UpdateOptions | None=..., default_known_time: exabel.api.data.v1.time_series_messages_pb2.DefaultKnownTime | None=..., allow_missing: builtins.bool | None=..., create_tag: builtins.bool | None=..., replace_existing_time_series: builtins.bool | None=..., should_optimise: builtins.bool | None=..., replace_known_time: builtins.bool | None=...) -> None:
         ...
 
-    def HasField(self, field_name: typing_extensions.Literal['default_known_time', b'default_known_time']) -> builtins.bool:
+    def HasField(self, field_name: typing_extensions.Literal['_should_optimise', b'_should_optimise', 'default_known_time', b'default_known_time', 'insert_options', b'insert_options', 'should_optimise', b'should_optimise', 'update_options', b'update_options']) -> builtins.bool:
         ...
 
-    def ClearField(self, field_name: typing_extensions.Literal['allow_missing', b'allow_missing', 'create_tag', b'create_tag', 'default_known_time', b'default_known_time', 'parent', b'parent', 'replace_existing_time_series', b'replace_existing_time_series', 'status_in_response', b'status_in_response', 'time_series', b'time_series']) -> None:
+    def ClearField(self, field_name: typing_extensions.Literal['_should_optimise', b'_should_optimise', 'allow_missing', b'allow_missing', 'create_tag', b'create_tag', 'default_known_time', b'default_known_time', 'insert_options', b'insert_options', 'parent', b'parent', 'replace_existing_time_series', b'replace_existing_time_series', 'replace_known_time', b'replace_known_time', 'should_optimise', b'should_optimise', 'status_in_response', b'status_in_response', 'time_series', b'time_series', 'update_options', b'update_options']) -> None:
+        ...
+
+    def WhichOneof(self, oneof_group: typing_extensions.Literal['_should_optimise', b'_should_optimise']) -> typing_extensions.Literal['should_optimise'] | None:
         ...
 global___ImportTimeSeriesRequest = ImportTimeSeriesRequest
 
@@ -272,22 +374,70 @@ global___DeleteTimeSeriesRequest = DeleteTimeSeriesRequest
 
 @typing_extensions.final
 class BatchDeleteTimeSeriesPointsRequest(google.protobuf.message.Message):
-    """The request to delete parts of one time series."""
+    """The request to batch delete specific points of one or more time series."""
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
-    NAME_FIELD_NUMBER: builtins.int
-    TIME_RANGES_FIELD_NUMBER: builtins.int
-    name: builtins.str
-    'The resource name of the time series to be deleted, for example\n    `entityTypes/ns.type1/entities/ns.entity1/signals/ns.signal1` or\n    `signals/ns.signal1/entityTypes/ns.type1/entities/ns.entity1`.\n    '
+    PARENT_FIELD_NUMBER: builtins.int
+    TIME_SERIES_FIELD_NUMBER: builtins.int
+    STATUS_IN_RESPONSE_FIELD_NUMBER: builtins.int
+    parent: builtins.str
+    'The common parent of all time series to delete points from, for example\n    `entityTypes/ns.type1/entities/ns.entity1/signals/ns.signal1` or\n    `signals/ns.signal1/entityTypes/ns.type1/entities/ns.entity1`.\n    May include `-` as a wild card.\n    '
 
     @property
-    def time_ranges(self) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[exabel.api.time.time_range_pb2.TimeRange]:
-        """The list of time ranges to delete from the time series. Each time range may
-        be expanded to whole hours (UTC time).
+    def time_series(self) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[exabel.api.data.v1.time_series_messages_pb2.TimeSeries]:
+        """The list of time series points to delete. If a `known_time` is empty, _all_ data for the time
+        series at that time is deleted. For all points, `value` is ignored. Trying to delete points
+        from a non-existing time series will result in an error, but trying to delete a non-existing
+        point from an existing time series will _not_ result in an error.
         """
+    status_in_response: builtins.bool
+    'Set to `true` to report the status of each time series in the response. If `false`, a failure\n    for one time series will fail the entire request, and a sample of the failures will be\n    reported in the trailers.\n    '
 
-    def __init__(self, *, name: builtins.str | None=..., time_ranges: collections.abc.Iterable[exabel.api.time.time_range_pb2.TimeRange] | None=...) -> None:
+    def __init__(self, *, parent: builtins.str | None=..., time_series: collections.abc.Iterable[exabel.api.data.v1.time_series_messages_pb2.TimeSeries] | None=..., status_in_response: builtins.bool | None=...) -> None:
         ...
 
-    def ClearField(self, field_name: typing_extensions.Literal['name', b'name', 'time_ranges', b'time_ranges']) -> None:
+    def ClearField(self, field_name: typing_extensions.Literal['parent', b'parent', 'status_in_response', b'status_in_response', 'time_series', b'time_series']) -> None:
         ...
 global___BatchDeleteTimeSeriesPointsRequest = BatchDeleteTimeSeriesPointsRequest
+
+@typing_extensions.final
+class BatchDeleteTimeSeriesPointsResponse(google.protobuf.message.Message):
+    """The response to batch delete multiple time series points."""
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    @typing_extensions.final
+    class BatchDeleteTimeSeriesResponse(google.protobuf.message.Message):
+        """The status for one time series."""
+        DESCRIPTOR: google.protobuf.descriptor.Descriptor
+        TIME_SERIES_NAME_FIELD_NUMBER: builtins.int
+        STATUS_FIELD_NUMBER: builtins.int
+        time_series_name: builtins.str
+        'The resource name of the time series, for example\n        `entityTypes/store/entities/ns.apple_store_fifth_avenue/signals/ns.visitors`.\n        '
+
+        @property
+        def status(self) -> google.rpc.status_pb2.Status:
+            """The status for this time series. A `status.code = OK` indicates that all time series points
+            was deleted successfully.
+            """
+
+        def __init__(self, *, time_series_name: builtins.str | None=..., status: google.rpc.status_pb2.Status | None=...) -> None:
+            ...
+
+        def HasField(self, field_name: typing_extensions.Literal['status', b'status']) -> builtins.bool:
+            ...
+
+        def ClearField(self, field_name: typing_extensions.Literal['status', b'status', 'time_series_name', b'time_series_name']) -> None:
+            ...
+    RESPONSES_FIELD_NUMBER: builtins.int
+
+    @property
+    def responses(self) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[global___BatchDeleteTimeSeriesPointsResponse.BatchDeleteTimeSeriesResponse]:
+        """One response for each time series, in order. This list is populated if and only if
+        `status_in_response` was set to `true` in the request.
+        """
+
+    def __init__(self, *, responses: collections.abc.Iterable[global___BatchDeleteTimeSeriesPointsResponse.BatchDeleteTimeSeriesResponse] | None=...) -> None:
+        ...
+
+    def ClearField(self, field_name: typing_extensions.Literal['responses', b'responses']) -> None:
+        ...
+global___BatchDeleteTimeSeriesPointsResponse = BatchDeleteTimeSeriesPointsResponse

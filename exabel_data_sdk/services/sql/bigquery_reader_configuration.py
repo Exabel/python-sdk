@@ -68,6 +68,8 @@ class BigQueryReaderConfiguration(SqlReaderConfiguration):
                     "Failed to parse service account credentials. Please check that the credentials"
                     " are valid."
                 ) from e
-            client = BigQueryClient(credentials=credentials)
+            client = BigQueryClient(
+                project=self.project or credentials.project_id, credentials=credentials
+            )
             return EngineArgs(self.get_connection_string(), {"connect_args": {"client": client}})
         return super().get_connection_string_and_kwargs()

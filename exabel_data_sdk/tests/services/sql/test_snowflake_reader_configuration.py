@@ -67,3 +67,18 @@ class TestSnowflakeReaderConfiguration(unittest.TestCase):
                 password="password",
             ).get_connection_string(),
         )
+
+    def test_snowflake_reader_configuration_get_connection_args(self):
+        self.assertEqual(
+            {
+                "account": "account",
+                "user": "username",
+                "password": "password",
+                "warehouse": "warehouse",
+                "database": "database",
+                "schema": "schema",
+                "role": "role",
+                "login_timeout": 15,
+            },
+            self.config.get_connection_args(),
+        )

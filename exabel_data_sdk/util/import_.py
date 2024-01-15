@@ -4,6 +4,7 @@ import pandas as pd
 
 from exabel_data_sdk.client.api.data_classes.entity import Entity
 from exabel_data_sdk.client.api.data_classes.relationship import Relationship
+from exabel_data_sdk.client.api.data_classes.time_series import TimeSeries
 from exabel_data_sdk.client.api.resource_creation_result import ResourceT
 
 
@@ -39,6 +40,10 @@ def estimate_size(resource: ResourceT) -> int:
     if isinstance(resource, (Entity, Relationship)):
         raise NotImplementedError("Cannot estimate size for entities and relationships.")
 
+    if isinstance(resource, TimeSeries):
+        resource = resource.series
+
+    assert isinstance(resource, pd.Series)
     # 1 byte for each character in the time series name
     # + 27/19 bytes for each data point (depends on whether known-time is specified)
     # + 7 bytes overhead.

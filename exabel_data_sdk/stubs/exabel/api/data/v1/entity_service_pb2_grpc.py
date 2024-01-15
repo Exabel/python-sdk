@@ -144,7 +144,7 @@ class EntityServiceServicer(object):
     def SearchEntities(self, request, context):
         """Search for entities.
 
-        Currently, only companies, securities and listings can be searched.
+        Currently, only companies, securities, and listings can be searched.
 
         If multiple search terms are present, each search is performed individually, with results
         returned in separate `SearchResult` objects.
@@ -154,6 +154,7 @@ class EntityServiceServicer(object):
         * `mic` (Market Identifier Code) and `ticker`
         * `bloomberg_ticker` (eg `AAPL US`)
         * `bloomberg_symbol` (eg `AAPL US Equity`)
+        * `cusip` (Committee on Uniform Securities Identification Procedures)
         * `figi` (Financial Instruments Global Identifier)
         * `factset_identifier`: either FactSet entity identifier or FactSet permanent identifier ("FSYM_ID")
         * `text`
@@ -165,8 +166,13 @@ class EntityServiceServicer(object):
         search term is sufficiently long, a prefix search will be performed. Up to five companies are
         returned for each search.
 
-        Securities may be searched by `isin` or `mic`/`ticker`. Listings may be searched by
-        `mic`/`ticker`.
+        Securities may be searched by any of the following fields:
+        * `isin`
+        * `mic` and `ticker`
+        * `cusip`
+
+        Listings may be searched by any of the following fields:
+        * `mic` and `ticker`
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')

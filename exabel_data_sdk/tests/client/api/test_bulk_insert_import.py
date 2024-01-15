@@ -15,9 +15,8 @@ from exabel_data_sdk.client.api.data_classes.request_error import (
     RequestError,
     Violation,
 )
-from exabel_data_sdk.client.api.data_classes.time_series import TimeSeriesResourceName
+from exabel_data_sdk.client.api.data_classes.time_series import TimeSeries, TimeSeriesResourceName
 from exabel_data_sdk.client.api.resource_creation_result import ResourceCreationStatus
-from exabel_data_sdk.client.api.time_series_api import TimeSeriesApi
 
 logger = logging.getLogger(__name__)
 
@@ -82,7 +81,7 @@ class TestBulkInsert(unittest.TestCase):
         self.assertCountEqual(expected_failed_resources, actual_failed_resources)
 
     def test_bulk_insert_with_invalid_proto_data_points_should_fail(self):
-        insert_func = TimeSeriesApi._series_to_time_series_points
+        insert_func = TimeSeries._series_to_time_series_points
         series = [
             pd.Series(
                 [1.01, 1.1, "not_numeric", 1.3],
@@ -151,7 +150,7 @@ class TestBulkImport(unittest.TestCase):
     def test_bulk_import_with_invalid_proto_data_points_should_fail(self):
         def import_func(resources: Sequence[pd.Series]) -> None:
             for resource in resources:
-                TimeSeriesApi._series_to_time_series_points(resource)
+                TimeSeries._series_to_time_series_points(resource)
 
         no_data_points = 4000
         series = [

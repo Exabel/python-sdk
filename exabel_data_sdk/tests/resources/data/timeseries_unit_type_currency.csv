@@ -1,0 +1,4 @@
+entity;signal;currency;description
+entityTypes/company/entities/company_A;signal1;USD;
+entityTypes/company/entities/company_A;signal2;EUR;millions
+entityTypes/company/entities/company_B;signal1;NOK;

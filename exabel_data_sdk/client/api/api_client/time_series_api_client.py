@@ -2,6 +2,7 @@ from abc import ABC, abstractmethod
 
 from exabel_data_sdk.stubs.exabel.api.data.v1.all_pb2 import (
     BatchDeleteTimeSeriesPointsRequest,
+    BatchDeleteTimeSeriesPointsResponse,
     CreateTimeSeriesRequest,
     DeleteTimeSeriesRequest,
     GetTimeSeriesRequest,
@@ -44,5 +45,7 @@ class TimeSeriesApiClient(ABC):
         """Delete a time series."""
 
     @abstractmethod
-    def batch_delete_time_series_points(self, request: BatchDeleteTimeSeriesPointsRequest) -> None:
-        """Delette part of a time series."""
+    def batch_delete_time_series_points(
+        self, request: BatchDeleteTimeSeriesPointsRequest
+    ) -> BatchDeleteTimeSeriesPointsResponse:
+        """Delete multiple time series points in batches."""

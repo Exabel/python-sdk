@@ -1,0 +1,10 @@
+entity;date;known_time;signal;value
+entityTypes/company/entities/company_A;2021-01-01;2021-01-01;signal1;
+entityTypes/company/entities/company_A;2021-01-02;2021-01-02;signal1;
+entityTypes/company/entities/company_B;2021-01-01;2021-01-01;signal1;
+entityTypes/company/entities/company_B;2021-01-03;2021-01-03;signal1;
+entityTypes/company/entities/company_A;2021-01-01;2021-01-01;signal2;
+entityTypes/company/entities/company_A;2021-01-02;2021-01-02;signal2;
+entityTypes/company/entities/company_B;2021-01-01;2021-01-01;signal2;
+entityTypes/company/entities/company_B;2021-01-03;2021-01-03;signal2;
+entityTypes/company/entities/company_B;2021-01-04;2021-01-04;signal2;

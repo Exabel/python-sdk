@@ -498,33 +498,6 @@ class TestUploadTimeSeries(unittest.TestCase):
         with self.assertRaises(SystemExit):
             script.run_script(self.client, script.parse_arguments())
 
-    def test_valid_no_create_tag(self):
-        args = common_args + [
-            "--filename",
-            "./exabel_data_sdk/tests/resources/data/timeseries_known_time.csv",
-            "--namespace",
-            "ns",
-            "--no-create-tag",
-        ]
-        script = LoadTimeSeriesFromFile(args)
-        script.run_script(self.client, script.parse_arguments())
-
-        call_args_list = self.client.time_series_api.bulk_upsert_time_series.call_args_list
-        create_tag_status = call_args_list[0][1]["create_tag"]
-        self.assertFalse(create_tag_status)
-
-    def test_valid_create_tag(self):
-        args = common_args + [
-            "--filename",
-            "./exabel_data_sdk/tests/resources/data/timeseries_known_time.csv",
-        ]
-        script = LoadTimeSeriesFromFile(args)
-        script.run_script(self.client, script.parse_arguments())
-
-        call_args_list = self.client.time_series_api.bulk_upsert_time_series.call_args_list
-        create_tag_status = call_args_list[0][1]["create_tag"]
-        self.assertTrue(create_tag_status)
-
     def test_valid_no_create_library_signal(self):
         args = common_args + [
             "--filename",
@@ -569,7 +542,7 @@ class TestUploadTimeSeries(unittest.TestCase):
         replace_existing_tine_series_status = call_args_list[0][1]["replace_existing_time_series"]
         self.assertTrue(replace_existing_tine_series_status)
 
-    def test_replace_existing_time_series_accross_batches(self):
+    def test_replace_existing_time_series_across_batches(self):
         args = common_args + [
             "--filename",
             "./exabel_data_sdk/tests/resources/data/timeseries.csv",
@@ -605,6 +578,34 @@ class TestUploadTimeSeries(unittest.TestCase):
         self.assertEqual(
             "entityTypes/company/entities/company_B/signals/acme.signal1",
             call_args_list[3][0][0][0].name,
+        )
+
+    def test_replace_existing_data_points_across_batches(self):
+        args = common_args + [
+            "--filename",
+            "./exabel_data_sdk/tests/resources/data/timeseries.csv",
+            "--create-missing-signals",
+            "--pit-offset",
+            "0",
+            "--replace-existing-data-points",
+            "--batch-size",
+            "3",
+        ]
+        script = LoadTimeSeriesFromFile(args)
+        self.client.namespace = "acme"
+        script.run_script(self.client, script.parse_arguments())
+
+        call_args_list = self.client.time_series_api.bulk_upsert_time_series.call_args_list
+        self.assertEqual(3, len(call_args_list))
+        self.assertTrue(call_args_list[0][1]["replace_existing_data_points"])
+        self.assertEqual(
+            "entityTypes/company/entities/company_A/signals/acme.signal1",
+            call_args_list[0][0][0][0].name,
+        )
+        self.assertTrue(call_args_list[2][1]["replace_existing_data_points"])
+        self.assertEqual(
+            "entityTypes/company/entities/company_B/signals/acme.signal1",
+            call_args_list[2][0][0][0].name,
         )
 
     @property

@@ -3,7 +3,12 @@ from typing import Type
 
 from exabel_data_sdk.services.csv_writer import CsvWriter
 from exabel_data_sdk.services.excel_writer import ExcelWriter
-from exabel_data_sdk.services.file_constants import EXCEL_EXTENSIONS, FULL_CSV_EXTENSIONS
+from exabel_data_sdk.services.feather_writer import FeatherWriter
+from exabel_data_sdk.services.file_constants import (
+    EXCEL_EXTENSIONS,
+    FEATHER_EXTENSIONS,
+    FULL_CSV_EXTENSIONS,
+)
 from exabel_data_sdk.services.file_writer import FileWriter
 
 
@@ -24,4 +29,6 @@ class FileWriterProvider:
             return CsvWriter
         if extension in EXCEL_EXTENSIONS:
             return ExcelWriter
+        if extension in FEATHER_EXTENSIONS:
+            return FeatherWriter
         raise ValueError(f"Unknown file extension: {extension}")

@@ -24,7 +24,9 @@ class LoadTimeSeriesFromFile(CsvScriptWithEntityMapping):
     See the Exabel Help pages for a full documentation, and further examples.
 
     To import data on companies, set the entity header to one of: isin, factset_identifier,
-    bloomberg_symbol, bloomberg_ticker, figi or mic:ticker
+    bloomberg_symbol, bloomberg_ticker, figi, mic:ticker or cusip, or use the identifier_type
+    argument.
+    Supported identifier types for security entities are isin, mic:ticker and cusip.
 
     To import data on generic entities, set it either to the entity type identifier, for example
     `brand`, or set it to the constant `entity`. If set to `entity` the entities must be identified
@@ -95,14 +97,6 @@ class LoadTimeSeriesFromFile(CsvScriptWithEntityMapping):
             default=True,
             help="Set to not create library signal DSL expressions.",
         )
-        self.parser.add_argument(
-            "--no-create-tag",
-            dest="create_tag",
-            required=False,
-            action="store_false",
-            default=True,
-            help="Set to not create a tag for every entity type a signal has time series for.",
-        )
         self.parser.set_defaults(threads=DEFAULT_NUMBER_OF_THREADS_FOR_IMPORT)
         self.parser.add_argument(
             "--batch-size",
@@ -124,7 +118,7 @@ class LoadTimeSeriesFromFile(CsvScriptWithEntityMapping):
             required=False,
             action="store_true",
             default=False,
-            help="If set, signal names are treated case sensitive. Note that this will disable "
+            help="If set, signal names are treated as case sensitive. Note that this will disable "
             "lowercasing of other column headers as well, as entities, 'date', and "
             "'known_time'. Take care to maintain correct casing in the file when using this "
             "option.",
@@ -135,6 +129,13 @@ class LoadTimeSeriesFromFile(CsvScriptWithEntityMapping):
             action="store_true",
             default=False,
             help="Replace any existing time series when importing",
+        )
+        self.parser.add_argument(
+            "--replace-existing-data-points",
+            required=False,
+            action="store_true",
+            default=False,
+            help="Replace any existing data points on the specified dates when importing",
         )
 
     def run_script(self, client: ExabelClient, args: argparse.Namespace) -> None:
@@ -148,7 +149,6 @@ class LoadTimeSeriesFromFile(CsvScriptWithEntityMapping):
                 pit_current_time=args.pit_current_time,
                 pit_offset=args.pit_offset,
                 create_missing_signals=args.create_missing_signals,
-                create_tag=args.create_tag,
                 create_library_signal=args.create_library_signal,
                 threads=args.threads,
                 dry_run=args.dry_run,
@@ -158,6 +158,7 @@ class LoadTimeSeriesFromFile(CsvScriptWithEntityMapping):
                 case_sensitive_signals=args.case_sensitive_signals,
                 abort_threshold=args.abort_threshold,
                 replace_existing_time_series=args.replace_existing_time_series,
+                replace_existing_data_points=args.replace_existing_data_points,
             )
         except FileLoadingException as e:
             print(e)

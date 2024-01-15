@@ -4,13 +4,13 @@ from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass
 from itertools import chain
 from time import sleep, time
-from typing import Callable, Generic, Mapping, Optional, Sequence, Union
+from typing import Callable, Generic, Mapping, Optional, Sequence, Union, overload
 
 import pandas as pd
 
 from exabel_data_sdk.client.api.bulk_insert import BulkInsertFailedError, _get_backoff, _raise_error
 from exabel_data_sdk.client.api.data_classes.request_error import ErrorType, RequestError, Violation
-from exabel_data_sdk.client.api.data_classes.time_series import TimeSeriesResourceName
+from exabel_data_sdk.client.api.data_classes.time_series import TimeSeries, TimeSeriesResourceName
 from exabel_data_sdk.client.api.resource_creation_result import (
     ResourceCreationResult,
     ResourceCreationResults,
@@ -18,6 +18,7 @@ from exabel_data_sdk.client.api.resource_creation_result import (
     ResourceT,
 )
 from exabel_data_sdk.services.csv_loading_constants import (
+    DEFAULT_ABORT_THRESHOLD,
     DEFAULT_NUMBER_OF_RETRIES,
     DEFAULT_NUMBER_OF_THREADS_FOR_IMPORT,
     MAX_THREADS_FOR_IMPORT,
@@ -43,9 +44,23 @@ class ResourceFailureHandler(Generic[ResourceT]):
             }
 
     @staticmethod
+    @overload
+    def get_time_series_result_from_violations(
+        resource: TimeSeries, violations: Mapping[str, Violation]
+    ) -> ResourceCreationResult[TimeSeries]:
+        ...
+
+    @staticmethod
+    @overload
     def get_time_series_result_from_violations(
         resource: pd.Series, violations: Mapping[str, Violation]
     ) -> ResourceCreationResult[pd.Series]:
+        ...
+
+    @staticmethod
+    def get_time_series_result_from_violations(
+        resource: Union[pd.Series, TimeSeries], violations: Mapping[str, Violation]
+    ) -> Union[ResourceCreationResult[pd.Series], ResourceCreationResult[TimeSeries]]:
         """Get a time series creation result from precondition failure violations."""
         resource_name = TimeSeriesResourceName.from_string(resource.name)
         entity_name = resource_name.entity_name
@@ -69,7 +84,7 @@ class ResourceFailureHandler(Generic[ResourceT]):
         cls, resource: ResourceT, violations: Mapping[str, Violation]
     ) -> ResourceCreationResult[ResourceT]:
         """Get a resource creation result from precondition failure violations."""
-        if isinstance(resource, pd.Series):
+        if isinstance(resource, (pd.Series, TimeSeries)):
             return cls.get_time_series_result_from_violations(resource, violations)
         raise NotImplementedError(
             f"Handling precondition failure violations for resource type {resource.__class__} is "
@@ -122,7 +137,10 @@ def _process(
     except RequestError as error:
         failure_handler = ResourceFailureHandler(error)
         for resource in resources:
-            results.add(failure_handler.get_resource_creation_result(resource))
+            results.add(
+                failure_handler.get_resource_creation_result(resource)  # type: ignore[arg-type]
+            )
+
     except TypeError as error:
         # Raised when proto message is not constructable (as a result of invalid argument types).
         for resource in resources:
@@ -146,7 +164,7 @@ def bulk_import(
     ],
     threads: int = DEFAULT_NUMBER_OF_THREADS_FOR_IMPORT,
     retries: int = DEFAULT_NUMBER_OF_RETRIES,
-    abort_threshold: Optional[float] = 0.5,
+    abort_threshold: Optional[float] = DEFAULT_ABORT_THRESHOLD,
     # Deprecated arguments
     resources_batches: Optional[  # pylint: disable=unused-argument
         Sequence[Sequence[ResourceT]]
@@ -253,7 +271,7 @@ def _bulk_import(
                     executor.submit(
                         _process,
                         results,  # type: ignore[arg-type]
-                        resource_batch,
+                        resource_batch,  # type: ignore[arg-type]
                         import_func,  # type: ignore[arg-type]
                         # Python 3.9 added support for the shutdown argument 'cancel_futures'.
                         # We should set this argument to True once we have moved to this python

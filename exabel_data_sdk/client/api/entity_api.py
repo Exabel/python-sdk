@@ -15,6 +15,11 @@ from exabel_data_sdk.client.api.resource_creation_result import (
 )
 from exabel_data_sdk.client.api.search_service import SearchService
 from exabel_data_sdk.client.client_config import ClientConfig
+from exabel_data_sdk.services.csv_loading_constants import (
+    DEFAULT_ABORT_THRESHOLD,
+    DEFAULT_NUMBER_OF_RETRIES,
+    DEFAULT_NUMBER_OF_THREADS,
+)
 from exabel_data_sdk.stubs.exabel.api.data.v1.all_pb2 import (
     CreateEntityRequest,
     CreateEntityTypeRequest,
@@ -277,10 +282,10 @@ class EntityApi(PageableResourceMixin):
         self,
         entities: Sequence[Entity],
         entity_type: str,
-        threads: int = 40,
+        threads: int = DEFAULT_NUMBER_OF_THREADS,
         upsert: bool = False,
-        retries: int = 5,
-        abort_threshold: Optional[float] = 0.5,
+        retries: int = DEFAULT_NUMBER_OF_RETRIES,
+        abort_threshold: Optional[float] = DEFAULT_ABORT_THRESHOLD,
     ) -> ResourceCreationResults[Entity]:
         """
         Check if the provided entities exist, and create them if they don't.

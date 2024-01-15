@@ -11,11 +11,15 @@ import pandas as pd
 from exabel_data_sdk.client.api.data_classes.entity import Entity
 from exabel_data_sdk.client.api.data_classes.relationship import Relationship
 from exabel_data_sdk.client.api.data_classes.request_error import RequestError
-from exabel_data_sdk.services.csv_loading_constants import DEFAULT_BULK_LOAD_CHECKPOINTS
+from exabel_data_sdk.client.api.data_classes.time_series import TimeSeries
+from exabel_data_sdk.services.csv_loading_constants import (
+    DEFAULT_ABORT_THRESHOLD,
+    DEFAULT_BULK_LOAD_CHECKPOINTS,
+)
 
 logger = logging.getLogger(__name__)
 
-ResourceT = TypeVar("ResourceT", Entity, Relationship, pd.Series)
+ResourceT = TypeVar("ResourceT", Entity, Relationship, pd.Series, TimeSeries)
 
 
 def get_resource_name(resource: ResourceT) -> str:
@@ -25,6 +29,8 @@ def get_resource_name(resource: ResourceT) -> str:
     if isinstance(resource, Relationship):
         return f"{resource.relationship_type}/{resource.from_entity}/{resource.to_entity}"
     if isinstance(resource, pd.Series):
+        return resource.name
+    if isinstance(resource, TimeSeries):
         return resource.name
     raise TypeError(f"Unknown resource type: {type(resource)}")
 
@@ -55,7 +61,7 @@ class ResourceCreationResult(Generic[ResourceT]):
     def __init__(
         self,
         status: ResourceCreationStatus,
-        resource: ResourceT,
+        resource: Optional[ResourceT] = None,
         error: Optional[RequestError] = None,
     ):
         self.status = status
@@ -73,7 +79,11 @@ class ResourceCreationResult(Generic[ResourceT]):
         Return a printable resource representation string. Return only the name of the series for
         ResourceCreationResult of type pd.Series
         """
-        return self.resource.name if isinstance(self.resource, pd.Series) else self.resource
+        if isinstance(self.resource, pd.Series):
+            return self.resource.name
+        if isinstance(self.resource, TimeSeries):
+            return self.resource.name
+        return str(self.resource)
 
     def get_printable_error(self) -> str:
         """
@@ -89,7 +99,10 @@ class ResourceCreationResults(Generic[ResourceT]):
     """
 
     def __init__(
-        self, total_count: int, print_status: bool = True, abort_threshold: Optional[float] = 0.5
+        self,
+        total_count: int,
+        print_status: bool = True,
+        abort_threshold: Optional[float] = DEFAULT_ABORT_THRESHOLD,
     ) -> None:
         """
         Args:

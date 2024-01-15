@@ -1,12 +1,17 @@
 import unittest
 from typing import Optional
 
-from exabel_data_sdk.util.deprecate_arguments import deprecate_arguments
+from exabel_data_sdk.util.deprecate_arguments import deprecate_argument_value, deprecate_arguments
 from exabel_data_sdk.util.warnings import ExabelDeprecationWarning
 
 
 @deprecate_arguments(old_arg="new_arg")
 def _test_func(*, new_arg: Optional[str] = None, old_arg: Optional[str] = None) -> Optional[str]:
+    return new_arg or old_arg
+
+
+@deprecate_argument_value(old_arg="illegal")
+def _test_func_2(*, new_arg: Optional[str] = None, old_arg: Optional[str] = None) -> Optional[str]:
     return new_arg or old_arg
 
 
@@ -71,3 +76,36 @@ class TestDeprecateArguments(unittest.TestCase):
 
         wrapped_local_func = deprecate_arguments(_test_func, old_arg="new_arg")
         self.assertEqual(wrapped_local_func(new_arg="test"), "test")
+
+
+class TestDeprecateArgumentValue(unittest.TestCase):
+    @deprecate_argument_value(old_arg="illegal")
+    def _test_method(
+        self, *, new_arg: Optional[str] = None, old_arg: Optional[str] = None
+    ) -> Optional[str]:
+        return new_arg or old_arg
+
+    def test_deprecate_argument_value(self):
+        self.assertEqual(_test_func_2(new_arg="test"), "test")
+        self.assertEqual(_test_func_2(old_arg="illegal"), "illegal")
+
+        self.assertEqual(self._test_method(new_arg="test"), "test")
+        self.assertEqual(self._test_method(old_arg="illegal"), "illegal")
+        self.assertIsNone(self._test_method())
+
+    def test_deprecate_argument_value__raises_warning(self):
+        with self.assertWarns(ExabelDeprecationWarning) as cm:
+            _test_func_2(old_arg="illegal")
+        self.assertRegex(
+            str(cm.warning),
+            r"Option 'old_arg=illegal' is deprecated in '.*_test_func_2' and will be removed in a "
+            r"future release.",
+        )
+
+        with self.assertWarns(ExabelDeprecationWarning) as cm:
+            self._test_method(old_arg="illegal")
+        self.assertRegex(
+            str(cm.warning),
+            r"Option 'old_arg=illegal' is deprecated in '.*TestDeprecateArgumentValue._test_method'"
+            r" and will be removed in a future release.",
+        )

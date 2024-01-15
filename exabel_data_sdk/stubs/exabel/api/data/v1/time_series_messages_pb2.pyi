@@ -8,11 +8,14 @@ from ..... import exabel
 import google.protobuf.descriptor
 import google.protobuf.duration_pb2
 import google.protobuf.internal.containers
+import google.protobuf.internal.enum_type_wrapper
 import google.protobuf.message
 import google.protobuf.timestamp_pb2
 import google.protobuf.wrappers_pb2
+import google.type.decimal_pb2
 import sys
-if sys.version_info >= (3, 8):
+import typing
+if sys.version_info >= (3, 10):
     import typing as typing_extensions
 else:
     import typing_extensions
@@ -31,6 +34,7 @@ class TimeSeries(google.protobuf.message.Message):
     NAME_FIELD_NUMBER: builtins.int
     POINTS_FIELD_NUMBER: builtins.int
     READ_ONLY_FIELD_NUMBER: builtins.int
+    UNITS_FIELD_NUMBER: builtins.int
     name: builtins.str
     'The resource name of the time series, for example\n    `entityTypes/ns1.type/entities/ns2.entities/signals/ns3.signal`.\n    An alternative name for the same time series is\n    `signals/ns3.signal/entityTypes/ns1.type/entities/ns2.entity`, but the former is the canonical\n    version which always will be returned by the server. The namespaces must be empty (being\n    global) or one of the predetermined namespaces the customer has access to. If ns2 is not empty,\n    it must be equals to ns3, and if ns1 is not empty, all three namespaces must be equal.\n    '
 
@@ -42,10 +46,19 @@ class TimeSeries(google.protobuf.message.Message):
     read_only: builtins.bool
     'Global time series and those from data sets that you subscribe to will be read-only.'
 
-    def __init__(self, *, name: builtins.str | None=..., points: collections.abc.Iterable[global___TimeSeriesPoint] | None=..., read_only: builtins.bool | None=...) -> None:
+    @property
+    def units(self) -> global___Units:
+        """The units of this time series. Not all time series have known units, in which case this field
+        is not present. Once set, only the `description` field of `units` may be updated.
+        """
+
+    def __init__(self, *, name: builtins.str | None=..., points: collections.abc.Iterable[global___TimeSeriesPoint] | None=..., read_only: builtins.bool | None=..., units: global___Units | None=...) -> None:
         ...
 
-    def ClearField(self, field_name: typing_extensions.Literal['name', b'name', 'points', b'points', 'read_only', b'read_only']) -> None:
+    def HasField(self, field_name: typing_extensions.Literal['units', b'units']) -> builtins.bool:
+        ...
+
+    def ClearField(self, field_name: typing_extensions.Literal['name', b'name', 'points', b'points', 'read_only', b'read_only', 'units', b'units']) -> None:
         ...
 global___TimeSeries = TimeSeries
 
@@ -147,3 +160,94 @@ class DefaultKnownTime(google.protobuf.message.Message):
     def WhichOneof(self, oneof_group: typing_extensions.Literal['specification', b'specification']) -> typing_extensions.Literal['current_time', 'known_time', 'time_offset'] | None:
         ...
 global___DefaultKnownTime = DefaultKnownTime
+
+@typing_extensions.final
+class Units(google.protobuf.message.Message):
+    """The units of a time series. Not all time series have known units, in which case its `units`
+    field is not present. If present, but empty, the unit of the time series is known to be
+    dimensionless and unscaled.
+    """
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    UNITS_FIELD_NUMBER: builtins.int
+    MULTIPLIER_FIELD_NUMBER: builtins.int
+    DESCRIPTION_FIELD_NUMBER: builtins.int
+
+    @property
+    def units(self) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[global___Unit]:
+        """The product of all individual unit parts of this unit. For instance, if a time series measures
+        speed and is given in meters per second, it would have one unit
+        `{ dimension: DIMENSION_LENGTH, unit: 'm' }` and one unit
+        `{ dimension: DIMENSION_TIME, unit: 's', exponent: -1 }. And if a time series measures a
+        monetary amount and is specified in United States dollars, it would have the single unit
+        `{ dimension: DIMENSION_CURRENCY, unit: 'USD' }`.
+        """
+
+    @property
+    def multiplier(self) -> google.type.decimal_pb2.Decimal:
+        """The multiplier of the time series, with default value "1". For instance, if the time series is
+        measured in millions, the multiplier would be "1000000" or "1e6", or if the time series is
+        measured in percent, but given as values from 0 to 100, the multiplier would be "0.01".
+        """
+    description: builtins.str
+    'Optionally a more detailed description of the units of this time series,\n    for instance "Number of customers" or "Gross value in millions (EUR)".\n    '
+
+    def __init__(self, *, units: collections.abc.Iterable[global___Unit] | None=..., multiplier: google.type.decimal_pb2.Decimal | None=..., description: builtins.str | None=...) -> None:
+        ...
+
+    def HasField(self, field_name: typing_extensions.Literal['multiplier', b'multiplier']) -> builtins.bool:
+        ...
+
+    def ClearField(self, field_name: typing_extensions.Literal['description', b'description', 'multiplier', b'multiplier', 'units', b'units']) -> None:
+        ...
+global___Units = Units
+
+@typing_extensions.final
+class Unit(google.protobuf.message.Message):
+    """An individual unit, measuring one dimension."""
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    class _Dimension:
+        ValueType = typing.NewType('ValueType', builtins.int)
+        V: typing_extensions.TypeAlias = ValueType
+
+    class _DimensionEnumTypeWrapper(google.protobuf.internal.enum_type_wrapper._EnumTypeWrapper[Unit._Dimension.ValueType], builtins.type):
+        DESCRIPTOR: google.protobuf.descriptor.EnumDescriptor
+        DIMENSION_UNKNOWN: Unit._Dimension.ValueType
+        "The dimension of this unit is unknown, but may be inferred from the unit's symbol."
+        DIMENSION_CURRENCY: Unit._Dimension.ValueType
+        'The dimension is a monetary currency. A unit of this dimension must be one of the ISO-4217\n        three letter currency codes.\n        '
+        DIMENSION_MASS: Unit._Dimension.ValueType
+        'The dimension is a mass. The SI unit of mass is "kg", but other units may also be used.'
+        DIMENSION_LENGTH: Unit._Dimension.ValueType
+        'The dimension is a one dimensional size. The SI unit of length is "m", but other units may\n        also be used.\n        '
+        DIMENSION_TIME: Unit._Dimension.ValueType
+        'The dimension is an amount of time. The SI unit of time is "s", but other units may also be\n        used.\n        '
+
+    class Dimension(_Dimension, metaclass=_DimensionEnumTypeWrapper):
+        """The supported dimensions in the Exabel platform."""
+    DIMENSION_UNKNOWN: Unit.Dimension.ValueType
+    "The dimension of this unit is unknown, but may be inferred from the unit's symbol."
+    DIMENSION_CURRENCY: Unit.Dimension.ValueType
+    'The dimension is a monetary currency. A unit of this dimension must be one of the ISO-4217\n    three letter currency codes.\n    '
+    DIMENSION_MASS: Unit.Dimension.ValueType
+    'The dimension is a mass. The SI unit of mass is "kg", but other units may also be used.'
+    DIMENSION_LENGTH: Unit.Dimension.ValueType
+    'The dimension is a one dimensional size. The SI unit of length is "m", but other units may\n    also be used.\n    '
+    DIMENSION_TIME: Unit.Dimension.ValueType
+    'The dimension is an amount of time. The SI unit of time is "s", but other units may also be\n    used.\n    '
+    DIMENSION_FIELD_NUMBER: builtins.int
+    UNIT_FIELD_NUMBER: builtins.int
+    EXPONENT_FIELD_NUMBER: builtins.int
+    dimension: global___Unit.Dimension.ValueType
+    'The dimension of this unit.'
+    unit: builtins.str
+    'The short hand symbol of a dimension of this unit, for instance "m" or "EUR".'
+    exponent: builtins.int
+    "The exponent (power) of this unit. It can be positive or negative, but if it is 0, the unit's\n    exponent defaults to the value 1.\n    "
+
+    def __init__(self, *, dimension: global___Unit.Dimension.ValueType | None=..., unit: builtins.str | None=..., exponent: builtins.int | None=...) -> None:
+        ...
+
+    def ClearField(self, field_name: typing_extensions.Literal['dimension', b'dimension', 'exponent', b'exponent', 'unit', b'unit']) -> None:
+        ...
+global___Unit = Unit

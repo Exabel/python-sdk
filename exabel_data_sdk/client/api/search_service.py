@@ -20,6 +20,13 @@ COMPANY_SEARCH_TERM_FIELDS = {
     "bloomberg_ticker",
     "mic:ticker",
     "figi",
+    "cusip",
+}
+
+SECURITY_SEARCH_TERM_FIELDS = {
+    "isin",
+    "mic:ticker",
+    "cusip",
 }
 
 KeyT = TypeVar("KeyT")
@@ -133,6 +140,24 @@ class SearchService:
         objects as values. MICs and tickers which did not return any results, are not included.
         """
         return self._by_mic_and_ticker(_LISTING_ENTITY_TYPE, *mic_and_ticker)
+
+    def company_by_cusip(self, *cusips: str) -> Mapping[str, Entity]:
+        """
+        Look up companies by CUSIP (Committee on Uniform Securities Identification Procedures).
+
+        The return value is a dict with the input values as keys and with the corresponding Entity
+        objects as values. CUSIPs which did not return any results, are not included.
+        """
+        return self._company_by_field("cusip", *cusips)
+
+    def security_by_cusip(self, *cusips: str) -> Mapping[str, Entity]:
+        """
+        Look up securities by CUSIP (Committee on Uniform Securities Identification Procedures).
+
+        The return value is a dict with the input values as keys and with the corresponding Entity
+        objects as values. CUSIPs which did not return any results, are not included.
+        """
+        return self._security_by_field("cusip", *cusips)
 
     def entities_by_terms(
         self, entity_type: str, terms: Sequence[Union[SearchTerm, Tuple[str, str]]]

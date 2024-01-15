@@ -8,7 +8,12 @@ from pandas import DataFrame
 from exabel_data_sdk import ExabelClient
 from exabel_data_sdk.client.api.bulk_insert import BulkInsertFailedError
 from exabel_data_sdk.client.api.data_classes.relationship import Relationship
+from exabel_data_sdk.client.api.search_service import (
+    COMPANY_SEARCH_TERM_FIELDS,
+    SECURITY_SEARCH_TERM_FIELDS,
+)
 from exabel_data_sdk.services.csv_loading_constants import (
+    DEFAULT_ABORT_THRESHOLD,
     DEFAULT_NUMBER_OF_RETRIES,
     DEFAULT_NUMBER_OF_THREADS,
 )
@@ -33,11 +38,14 @@ class EntityColumnConfiguration:
     Args:
         entity_type:    The entity type of the entities in this column, if `None` the entity type
                         should be inferred from the column name or index.
+        identifier_type:The identifier type used to look up an entity. Only valid for 'company' or
+                        'security'
         name:           The name of the column.
         index:          The index of the column.
     """
 
     entity_type: Optional[str] = None
+    identifier_type: Optional[str] = None
     name: Optional[str] = None
     index: Optional[int] = None
 
@@ -107,21 +115,39 @@ class RelationshipLoaderColumnConfiguration:
             )
 
         # from and to identifier types can only be specified in combination with from and to entity
-        # types.
-        if from_identifier_type and from_entity_type != "company":
+        # types. Also check supported search identifier types.
+        if from_identifier_type:
             if from_entity_type is None:
                 raise ValueError(
                     "from_identifier_type can only be specified in combination with "
                     "from_entity_type."
                 )
-            raise ValueError("Only company entities can be mapped by identifier type.")
-        if to_identifier_type and to_entity_type != "company":
+            if from_entity_type == "company":
+                if from_identifier_type not in COMPANY_SEARCH_TERM_FIELDS:
+                    raise ValueError("Unsupported identifier type for company.")
+            elif from_entity_type == "security":
+                if from_identifier_type not in SECURITY_SEARCH_TERM_FIELDS:
+                    raise ValueError("Unsupported identifier type for security.")
+            else:
+                raise ValueError(
+                    "Only company or security entities can be mapped by identifier type."
+                )
+        if to_identifier_type:
             if to_entity_type is None:
                 raise ValueError(
                     "to_identifier_type can only be specified in combination with "
                     "to_entity_type."
                 )
-            raise ValueError("Only company entities can be mapped by identifier type.")
+            if to_entity_type == "company":
+                if to_identifier_type not in COMPANY_SEARCH_TERM_FIELDS:
+                    raise ValueError("Unsupported identifier type for company.")
+            elif to_entity_type == "security":
+                if to_identifier_type not in SECURITY_SEARCH_TERM_FIELDS:
+                    raise ValueError("Unsupported identifier type for security.")
+            else:
+                raise ValueError(
+                    "Only company or security entities can be mapped by identifier type."
+                )
 
     @classmethod
     def _from_default_values(cls) -> "RelationshipLoaderColumnConfiguration":
@@ -145,23 +171,26 @@ class RelationshipLoaderColumnConfiguration:
     ) -> "RelationshipLoaderColumnConfiguration":
         """Create configuration from specified entity types."""
         logger.debug("Creating column configuration from entity types.")
-        if from_identifier_type:
-            from_entity_type = from_identifier_type
-        if to_identifier_type:
-            to_entity_type = to_identifier_type
         if from_entity_column and to_entity_column:
             return cls(
                 from_column=EntityColumnConfiguration(
                     entity_type=from_entity_type,
+                    identifier_type=from_identifier_type,
                     name=from_entity_column,
                 ),
                 to_column=EntityColumnConfiguration(
-                    entity_type=to_entity_type, name=to_entity_column
+                    entity_type=to_entity_type,
+                    identifier_type=to_identifier_type,
+                    name=to_entity_column,
                 ),
             )
         return cls(
-            from_column=EntityColumnConfiguration(entity_type=from_entity_type, index=0),
-            to_column=EntityColumnConfiguration(entity_type=to_entity_type, index=1),
+            from_column=EntityColumnConfiguration(
+                entity_type=from_entity_type, identifier_type=from_identifier_type, index=0
+            ),
+            to_column=EntityColumnConfiguration(
+                entity_type=to_entity_type, identifier_type=to_identifier_type, index=1
+            ),
         )
 
     @classmethod
@@ -273,7 +302,7 @@ class CsvRelationshipLoader:
         dry_run: bool = False,
         error_on_any_failure: bool = False,
         retries: int = DEFAULT_NUMBER_OF_RETRIES,
-        abort_threshold: Optional[float] = 0.5,
+        abort_threshold: Optional[float] = DEFAULT_ABORT_THRESHOLD,
         batch_size: Optional[int] = None,
         return_results: bool = True,
         # Deprecated arguments:
@@ -400,7 +429,7 @@ class CsvRelationshipLoader:
         dry_run: bool = False,
         error_on_any_failure: bool = False,
         retries: int = DEFAULT_NUMBER_OF_RETRIES,
-        abort_threshold: Optional[float] = 0.5,
+        abort_threshold: Optional[float] = DEFAULT_ABORT_THRESHOLD,
     ) -> FileLoadingResult:
         from_entity_column_name, to_entity_column_name = config.get_from_and_to_column_names(
             data_frame.columns
@@ -413,25 +442,27 @@ class CsvRelationshipLoader:
         )
 
         from_entity_series = data_frame[from_entity_column_name]
-        if config.from_column.entity_type is not None:
-            from_entity_series = from_entity_series.rename(config.from_column.entity_type)
+        if config.from_column.identifier_type is not None:
+            from_entity_series = from_entity_series.rename(config.from_column.identifier_type)
         from_entity_result = to_entity_resource_names(
             self._client.entity_api,
             from_entity_series,
             namespace=self._client.namespace,
             entity_mapping=entity_mapping,
             preserve_namespace=config.from_column.entity_type is not None,
+            entity_type=config.from_column.entity_type or from_entity_column_name,
         )
         data_frame[from_entity_column_name] = from_entity_result.names
         to_entity_series = data_frame[to_entity_column_name]
-        if config.to_column.entity_type is not None:
-            to_entity_series = to_entity_series.rename(config.to_column.entity_type)
+        if config.to_column.identifier_type is not None:
+            to_entity_series = to_entity_series.rename(config.to_column.identifier_type)
         to_entity_result = to_entity_resource_names(
             self._client.entity_api,
             to_entity_series,
             namespace=self._client.namespace,
             entity_mapping=entity_mapping,
             preserve_namespace=config.to_column.entity_type is not None,
+            entity_type=config.to_column.entity_type or to_entity_column_name,
         )
         data_frame[to_entity_column_name] = to_entity_result.names
         warnings = list(chain(from_entity_result.warnings, to_entity_result.warnings))

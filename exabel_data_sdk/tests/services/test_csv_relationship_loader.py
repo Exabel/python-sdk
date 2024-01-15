@@ -48,7 +48,7 @@ class TestRelationshipLoaderColumnConfiguration(unittest.TestCase):
         RelationshipLoaderColumnConfiguration._validate_argument_combination(
             from_entity_type="company",
             from_entity_column="from_entity_column",
-            from_identifier_type="from_identifier_type",
+            from_identifier_type="isin",
             to_entity_type="to_entity_type",
             to_entity_column="to_entity_column",
         )
@@ -57,7 +57,21 @@ class TestRelationshipLoaderColumnConfiguration(unittest.TestCase):
             from_entity_column="from_entity_column",
             to_entity_type="company",
             to_entity_column="to_entity_column",
-            to_identifier_type="to_identifier_type",
+            to_identifier_type="isin",
+        )
+        RelationshipLoaderColumnConfiguration._validate_argument_combination(
+            from_entity_type="security",
+            from_entity_column="from_entity_column",
+            from_identifier_type="cusip",
+            to_entity_type="to_entity_type",
+            to_entity_column="to_entity_column",
+        )
+        RelationshipLoaderColumnConfiguration._validate_argument_combination(
+            from_entity_type="from_entity_type",
+            from_entity_column="from_entity_column",
+            to_entity_type="security",
+            to_entity_column="to_entity_column",
+            to_identifier_type="cusip",
         )
 
     def test_validate_argument_combination__invalid_combinations(self):
@@ -87,15 +101,25 @@ class TestRelationshipLoaderColumnConfiguration(unittest.TestCase):
             )
         with self.assertRaises(ValueError):
             RelationshipLoaderColumnConfiguration._validate_argument_combination(
-                from_entity_type="not_company",
+                from_entity_type="neither_company_nor_security",
                 from_identifier_type="from_identifier_type",
                 to_entity_type="to_entity_type",
             )
         with self.assertRaises(ValueError):
             RelationshipLoaderColumnConfiguration._validate_argument_combination(
                 from_entity_type="from_entity_type",
-                to_entity_type="not_company",
+                to_entity_type="neither_company_nor_security",
                 to_identifier_type="to_identifier_type",
+            )
+        with self.assertRaises(ValueError):
+            RelationshipLoaderColumnConfiguration._validate_argument_combination(
+                from_entity_type="company",
+                from_identifier_type="telephone_number",
+            )
+        with self.assertRaises(ValueError):
+            RelationshipLoaderColumnConfiguration._validate_argument_combination(
+                from_entity_type="security",
+                from_identifier_type="figi",
             )
 
     def test_from_default_values(self):
@@ -129,13 +153,15 @@ class TestRelationshipLoaderColumnConfiguration(unittest.TestCase):
     def test_from_entity_types__with_identifiers(self):
         config = RelationshipLoaderColumnConfiguration._from_entity_types(
             from_entity_type="company",
-            from_identifier_type="from_identifier_type",
+            from_identifier_type="isin",
             to_entity_type="company",
-            to_identifier_type="to_identifier_type",
+            to_identifier_type="isin",
         )
-        self.assertEqual("from_identifier_type", config.from_column.entity_type)
+        self.assertEqual("company", config.from_column.entity_type)
+        self.assertEqual("isin", config.from_column.identifier_type)
         self.assertEqual(0, config.from_column.index)
-        self.assertEqual("to_identifier_type", config.to_column.entity_type)
+        self.assertEqual("company", config.to_column.entity_type)
+        self.assertEqual("isin", config.to_column.identifier_type)
         self.assertEqual(1, config.to_column.index)
 
     def test_from_specified_columns(self):
@@ -151,14 +177,16 @@ class TestRelationshipLoaderColumnConfiguration(unittest.TestCase):
         config = RelationshipLoaderColumnConfiguration.from_arguments(
             from_entity_type="company",
             from_entity_column="from_entity_column",
-            from_identifier_type="from_identifier_type",
+            from_identifier_type="isin",
             to_entity_type="company",
             to_entity_column="to_entity_column",
-            to_identifier_type="to_identifier_type",
+            to_identifier_type="isin",
         )
-        self.assertEqual("from_identifier_type", config.from_column.entity_type)
+        self.assertEqual("company", config.from_column.entity_type)
+        self.assertEqual("isin", config.from_column.identifier_type)
         self.assertEqual("from_entity_column", config.from_column.name)
-        self.assertEqual("to_identifier_type", config.to_column.entity_type)
+        self.assertEqual("company", config.to_column.entity_type)
+        self.assertEqual("isin", config.to_column.identifier_type)
         self.assertEqual("to_entity_column", config.to_column.name)
 
 
@@ -419,11 +447,16 @@ class TestCsvRelationshipLoader(unittest.TestCase):
         if "from_identifier_type" in csv_loader_kwargs:
             client.entity_api.search.entities_by_terms.return_value = [
                 SearchEntitiesResponse.SearchResult(
-                    terms=[SearchTerm(field="isin", query="identifier")],
+                    terms=[
+                        SearchTerm(
+                            field=csv_loader_kwargs["from_identifier_type"], query="identifier"
+                        )
+                    ],
                     entities=[
                         Entity(
-                            name="entityTypes/company/entities/the_company",
-                            display_name="The Company",
+                            name=f"entityTypes/{csv_loader_kwargs['from_entity_type']}"
+                            f"/entities/the_{csv_loader_kwargs['from_entity_type']}",
+                            display_name=f"The {csv_loader_kwargs['from_entity_type']}",
                         )
                     ],
                 )
@@ -525,6 +558,28 @@ class TestCsvRelationshipLoader(unittest.TestCase):
             relationship_type="ns.HAS_BRAND",
             from_entity_type="company",
             from_identifier_type="isin",
+            to_entity_type="ns.brand",
+        )
+
+    @mock.patch("exabel_data_sdk.services.csv_relationship_loader.CsvReader")
+    def test_load_relationships__with_entity_types__security_identifier_mappings(self, mock_reader):
+        csv_df = pd.DataFrame([{"from": "identifier", "to": "brand"}])
+        expected_relationships = [
+            Relationship(
+                relationship_type="relationshipTypes/ns.HAS_BRAND",
+                from_entity="entityTypes/security/entities/the_security",
+                to_entity="entityTypes/ns.brand/entities/ns.brand",
+            )
+        ]
+        self._check_load_with_entity_types(
+            mock_reader,
+            csv_df,
+            expected_relationships,
+            filename="filename",
+            namespace="ns",
+            relationship_type="ns.HAS_BRAND",
+            from_entity_type="security",
+            from_identifier_type="cusip",
             to_entity_type="ns.brand",
         )
 

@@ -5,6 +5,7 @@ from typing import Sequence
 import pandas as pd
 
 from exabel_data_sdk import ExabelClient
+from exabel_data_sdk.client.api.data_classes.time_series import TimeSeries
 from exabel_data_sdk.scripts.base_script import BaseScript
 
 
@@ -48,8 +49,34 @@ class GetTimeSeries(BaseScript):
         start = pd.Timestamp(args.start) if args.start is not None else None
         end = pd.Timestamp(args.end) if args.end is not None else None
         known_time = pd.Timestamp(args.known_time) if args.known_time is not None else None
+
         result = client.time_series_api.get_time_series(
-            args.name, start=start, end=end, known_time=known_time
+            args.name,
+            start=start,
+            end=end,
+            known_time=known_time,
+            include_metadata=True,
+        )
+        if result is None:
+            print("Time series was not found")
+            return
+
+        assert isinstance(result, TimeSeries)
+        if result.series.index.nlevels == 2:
+            result.series.index = pd.MultiIndex.from_tuples(
+                [(t.strftime("%Y-%m-%d"), k.strftime("%Y-%m-%d")) for t, k in result.series.index],
+                names=["date", "known_time"],
+            )
+            if not known_time:
+                result.series = result.series.droplevel("known_time")
+        else:
+            result.series.index = pd.Index(
+                [t.strftime("%Y-%m-%d") for t in result.series.index], name="date"
+            )
+
+        pd.set_option("display.max_rows", None)
+        pd.set_option(
+            "display.float_format", "{:}".format  # pylint: disable=consider-using-f-string
         )
         print(result)
 

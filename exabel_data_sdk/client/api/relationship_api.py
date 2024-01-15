@@ -17,6 +17,11 @@ from exabel_data_sdk.client.api.resource_creation_result import (
     ResourceCreationStatus,
 )
 from exabel_data_sdk.client.client_config import ClientConfig
+from exabel_data_sdk.services.csv_loading_constants import (
+    DEFAULT_ABORT_THRESHOLD,
+    DEFAULT_NUMBER_OF_RETRIES,
+    DEFAULT_NUMBER_OF_THREADS,
+)
 from exabel_data_sdk.stubs.exabel.api.data.v1.all_pb2 import (
     CreateRelationshipRequest,
     CreateRelationshipTypeRequest,
@@ -371,10 +376,10 @@ class RelationshipApi(PageableResourceMixin):
     def bulk_create_relationships(
         self,
         relationships: Sequence[Relationship],
-        threads: int = 40,
+        threads: int = DEFAULT_NUMBER_OF_THREADS,
         upsert: bool = False,
-        retries: int = 5,
-        abort_threshold: Optional[float] = 0.5,
+        retries: int = DEFAULT_NUMBER_OF_RETRIES,
+        abort_threshold: Optional[float] = DEFAULT_ABORT_THRESHOLD,
     ) -> ResourceCreationResults[Relationship]:
         """
         Check if the provided relationships exist, and create them if they don't.

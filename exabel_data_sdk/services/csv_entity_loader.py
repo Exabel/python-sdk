@@ -8,6 +8,7 @@ from exabel_data_sdk import ExabelClient
 from exabel_data_sdk.client.api.bulk_insert import BulkInsertFailedError
 from exabel_data_sdk.client.api.data_classes.entity import Entity
 from exabel_data_sdk.services.csv_loading_constants import (
+    DEFAULT_ABORT_THRESHOLD,
     DEFAULT_NUMBER_OF_RETRIES,
     DEFAULT_NUMBER_OF_THREADS,
 )
@@ -47,7 +48,7 @@ class CsvEntityLoader:
         dry_run: bool = False,
         error_on_any_failure: bool = False,
         retries: int = DEFAULT_NUMBER_OF_RETRIES,
-        abort_threshold: Optional[float] = 0.5,
+        abort_threshold: Optional[float] = DEFAULT_ABORT_THRESHOLD,
         batch_size: Optional[int] = None,
         return_results: bool = True,
         # Deprecated arguments
@@ -164,7 +165,7 @@ class CsvEntityLoader:
         dry_run: bool = False,
         error_on_any_failure: bool = False,
         retries: int = DEFAULT_NUMBER_OF_RETRIES,
-        abort_threshold: Optional[float] = 0.5,
+        abort_threshold: Optional[float] = DEFAULT_ABORT_THRESHOLD,
     ) -> FileLoadingResult:
         # Entity types are reversed because we want to match the first entity type returned by the
         # API lexicographically.

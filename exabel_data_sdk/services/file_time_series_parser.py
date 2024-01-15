@@ -2,10 +2,21 @@ import abc
 import collections
 import logging
 import re
-from collections import defaultdict
+from collections import Counter, defaultdict
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Iterable, Iterator, Mapping, NamedTuple, Optional, Sequence, Set, Tuple
+from typing import (
+    Any,
+    Iterable,
+    Iterator,
+    Mapping,
+    NamedTuple,
+    Optional,
+    Sequence,
+    Set,
+    Tuple,
+    Union,
+)
 
 import numpy as np
 import pandas as pd
@@ -13,6 +24,7 @@ from dateutil import tz
 from pandas.core.dtypes.common import is_numeric_dtype
 
 from exabel_data_sdk.client.api.data_classes.request_error import ErrorType, RequestError
+from exabel_data_sdk.client.api.data_classes.time_series import Dimension, TimeSeries, Unit, Units
 from exabel_data_sdk.client.api.entity_api import EntityApi
 from exabel_data_sdk.client.api.resource_creation_result import (
     ResourceCreationResult,
@@ -20,6 +32,7 @@ from exabel_data_sdk.client.api.resource_creation_result import (
 )
 from exabel_data_sdk.services import file_constants
 from exabel_data_sdk.services.csv_reader import CsvReader
+from exabel_data_sdk.services.feather_reader import FeatherReader
 from exabel_data_sdk.services.file_loading_exception import FileLoadingException
 from exabel_data_sdk.util.handle_missing_imports import handle_missing_imports
 from exabel_data_sdk.util.resource_name_normalization import (
@@ -38,6 +51,7 @@ ENTITY_COLUMNS = {
     "bloomberg_ticker",
     "figi",
     "mic:ticker",
+    "cusip",
 }
 EMPTY_HEADER_PATTERN = re.compile(r"^[Uu]nnamed: ([0-9]+)$")
 
@@ -47,7 +61,7 @@ class TimeSeriesFileParser:
     """
     A parser for a file containing time series.
 
-    For CSV imports, we force the first column to be a string column. This means that signal values
+    For file imports, we force the first column to be a string column. This means that signal values
     should not be put in this column. Entity identifiers which start with numbers must be in the
     first column.
     """
@@ -79,7 +93,22 @@ class TimeSeriesFileParser:
                 import openpyxl
             workbook = openpyxl.load_workbook(filename, read_only=True)
             return (TimeSeriesFileParser(filename, None, s, None) for s in workbook.sheetnames)
+        if Path(filename).suffix.lower() in file_constants.FEATHER_EXTENSIONS:
+            if batch_size is not None:
+                logger.info(
+                    "Reading in batches from Feather file. Batch size will be set to the "
+                    "batch size fixed in the Feather file."
+                )
+                return (
+                    TimeSeriesFileParser(filename, None, None, df)
+                    for df in FeatherReader.read_file_in_batches(
+                        filename=filename, string_columns=[0]
+                    )
+                )
+
+            return iter([TimeSeriesFileParser(filename, None, None, None)])
         if batch_size is not None:
+            logger.info("Reading input data in batches of %d rows. ", batch_size)
             return (
                 TimeSeriesFileParser(filename, separator, None, df)
                 for df in CsvReader.read_file(  # pylint: disable=not-an-iterable
@@ -137,9 +166,11 @@ class TimeSeriesFileParser:
                 dtype={0: str},
                 engine="openpyxl",
             )
+        elif extension in file_constants.FEATHER_EXTENSIONS:
+            df = FeatherReader.read_file(self.filename, string_columns=[0])
         else:
             raise FileLoadingException(f"Unknown file extension '{extension}'")
-        if not df.empty and not case_sensitive_signals:
+        if not df.columns.empty and not case_sensitive_signals:
             df = df.rename(lambda n: n.lower(), axis="columns", level=0)
         return df
 
@@ -194,8 +225,10 @@ class ParsedTimeSeriesFile(abc.ABC):
     class ValidatedTimeSeries(NamedTuple):
         """A tuple of valid time series and failures that did not pass validation."""
 
-        valid_series: Sequence[pd.Series]
-        failures: Sequence[ResourceCreationResult[pd.Series]]
+        valid_series: Sequence[Union[pd.Series, TimeSeries]]
+        failures: Sequence[
+            Union[ResourceCreationResult[pd.Series], ResourceCreationResult[TimeSeries]]
+        ]
 
     def __init__(self, data: pd.DataFrame, entity_lookup_result: EntityResourceNames):
         self._data = data
@@ -220,10 +253,14 @@ class ParsedTimeSeriesFile(abc.ABC):
         entity_mapping: Optional[Mapping[str, Mapping[str, str]]] = None,
         entity_type: Optional[str] = None,
         case_sensitive_signals: bool = False,
+        identifier_type: Optional[str] = None,
     ) -> "ParsedTimeSeriesFile":
         """Read a file and construct a parsed file from the contents."""
         data = file_parser.parse_file(case_sensitive_signals=case_sensitive_signals)
-        return cls.from_data_frame(data, entity_api, namespace, entity_mapping, entity_type)
+        logger.info("Data loaded successfully and contains %d rows", len(data))
+        return cls.from_data_frame(
+            data, entity_api, namespace, entity_mapping, entity_type, identifier_type
+        )
 
     @classmethod
     def from_data_frame(
@@ -233,11 +270,12 @@ class ParsedTimeSeriesFile(abc.ABC):
         namespace: str,
         entity_mapping: Optional[Mapping[str, Mapping[str, str]]] = None,
         entity_type: Optional[str] = None,
+        identifier_type: Optional[str] = None,
     ) -> "ParsedTimeSeriesFile":
         """Construct a new parsed file from a data frame."""
         data = cls._set_index(data)
         data, entity_lookup_result = cls._map_entities(
-            data, entity_api, namespace, entity_mapping, entity_type
+            data, entity_api, namespace, entity_mapping, entity_type, identifier_type
         )
         return cls(data, entity_lookup_result)
 
@@ -336,6 +374,7 @@ class ParsedTimeSeriesFile(abc.ABC):
         namespace: str,
         entity_mapping: Optional[Mapping[str, Mapping[str, str]]] = None,
         entity_type: Optional[str] = None,
+        identifier_type: Optional[str] = None,
     ) -> Tuple[pd.DataFrame, EntityResourceNames]:
         """Map the entities of the data, and return any warnings."""
 
@@ -378,6 +417,7 @@ class ParsedTimeSeriesFile(abc.ABC):
         namespace: str,
         entity_mapping: Optional[Mapping[str, Mapping[str, str]]] = None,
         preserve_namespace: bool = False,
+        entity_type: Optional[str] = None,
     ) -> EntityResourceNames:
         """Look up the entity identifier, and throw an exception if no entities are found."""
         if not all(isinstance(i, str) for i in identifiers):
@@ -395,11 +435,12 @@ class ParsedTimeSeriesFile(abc.ABC):
                 namespace=namespace,
                 entity_mapping=entity_mapping,
                 preserve_namespace=preserve_namespace,
+                entity_type=entity_type,
             )
         except ValueError as e:
             raise FileLoadingException(str(e)) from e
         if not identifiers.empty and entity_resource_names.names.dropna().empty:
-            raise FileLoadingException("Not able to identify any of the entities.")
+            logger.warning("Not able to identify any of the entities.")
         return entity_resource_names
 
 
@@ -510,6 +551,7 @@ class SignalNamesInRows(DateParsingMixin, ParsedTimeSeriesFile):
         namespace: str,
         entity_mapping: Optional[Mapping[str, Mapping[str, str]]] = None,
         entity_type: Optional[str] = None,
+        identifier_type: Optional[str] = None,
     ) -> Tuple[pd.DataFrame, EntityResourceNames]:
         if not any(
             _is_valid_entity_column(column, cls.RESERVED_COLUMNS) for column in data.columns
@@ -517,13 +559,14 @@ class SignalNamesInRows(DateParsingMixin, ParsedTimeSeriesFile):
             data.insert(0, "entity", file_constants.GLOBAL_ENTITY_NAME)
         entity_column = cls._entity_column(data)
         identifiers = data[entity_column]
-        identifiers.name = entity_type or entity_column
+        identifiers.name = identifier_type or entity_column
         lookup_result = cls._lookup_entities(
             identifiers,
             entity_api,
             namespace,
             entity_mapping,
             preserve_namespace=entity_type is not None,
+            entity_type=entity_type,
         )
         data[entity_column] = lookup_result.names
         data.rename(columns={entity_column: "entity"}, inplace=True)
@@ -610,16 +653,18 @@ class SignalNamesInColumns(DateParsingMixin, ParsedTimeSeriesFile):
         namespace: str,
         entity_mapping: Optional[Mapping[str, Mapping[str, str]]] = None,
         entity_type: Optional[str] = None,
+        identifier_type: Optional[str] = None,
     ) -> Tuple[pd.DataFrame, EntityResourceNames]:
         entity_column = data.columns[0]
         identifiers = data[entity_column]
-        identifiers.name = entity_type or entity_column
+        identifiers.name = identifier_type or entity_column
         lookup_result = cls._lookup_entities(
             identifiers,
             entity_api,
             namespace,
             entity_mapping,
             preserve_namespace=entity_type is not None,
+            entity_type=entity_type,
         )
         data[entity_column] = lookup_result.names
         data = data.loc[~data[entity_column].isnull()]
@@ -673,6 +718,7 @@ class SignalNamesInColumnsGlobalEntity(SignalNamesInColumns):
         namespace: str,
         entity_mapping: Optional[Mapping[str, Mapping[str, str]]] = None,
         entity_type: Optional[str] = None,
+        identifier_type: Optional[str] = None,
     ) -> Tuple[pd.DataFrame, EntityResourceNames]:
         if entity_type is not None and entity_type != file_constants.GLOBAL_ENTITY_TYPE:
             raise FileLoadingException(
@@ -680,7 +726,14 @@ class SignalNamesInColumnsGlobalEntity(SignalNamesInColumns):
             )
         data.insert(0, "entity", "entityTypes/global/entities/global")
         identifiers = data.iloc[:, 0]
-        lookup_result = cls._lookup_entities(identifiers, entity_api, namespace, entity_mapping)
+        lookup_result = cls._lookup_entities(
+            identifiers,
+            entity_api,
+            namespace,
+            entity_mapping,
+            preserve_namespace=False,
+            entity_type=entity_type,
+        )
         return data, lookup_result
 
 
@@ -715,6 +768,7 @@ class EntitiesInColumns(ParsedTimeSeriesFile):
         entity_mapping: Optional[Mapping[str, Mapping[str, str]]] = None,
         entity_type: Optional[str] = None,
         case_sensitive_signals: bool = False,
+        identifier_type: Optional[str] = None,
     ) -> "ParsedTimeSeriesFile":
         """Read a file and construct a new parser from the contents of that file."""
         if entity_type is not None:
@@ -791,10 +845,18 @@ class EntitiesInColumns(ParsedTimeSeriesFile):
         namespace: str,
         entity_mapping: Optional[Mapping[str, Mapping[str, str]]] = None,
         entity_type: Optional[str] = None,
+        identifier_type: Optional[str] = None,
     ) -> Tuple[pd.DataFrame, EntityResourceNames]:
         identifiers = pd.Series(data.columns.get_level_values(1))
-        identifiers.name = entity_type
-        lookup_result = cls._lookup_entities(identifiers, entity_api, namespace, entity_mapping)
+        identifiers.name = identifier_type or entity_type
+        lookup_result = cls._lookup_entities(
+            identifiers,
+            entity_api,
+            namespace,
+            entity_mapping,
+            preserve_namespace=False,
+            entity_type=entity_type,
+        )
         duplicates = lookup_result.get_duplicates()
         if len(duplicates) > 0:
             raise FileLoadingException(
@@ -805,6 +867,139 @@ class EntitiesInColumns(ParsedTimeSeriesFile):
         )
         data = data.loc[:, ~data.columns.get_level_values(1).isnull()]
         return data, lookup_result
+
+
+class MetaDataSignalNamesInRows(SignalNamesInRows):
+    """
+    Container for metadata files which have a row for each combination of signal and entity.
+
+    +-----------------------+----------+-----------------+-------------+
+    | entity / figi / etc   | signal   | unit / currency | description |
+    +-----------------------+----------+-----------------+-------------+
+    | AAPL US               | my_sig   | USD             | million     |
+    | MSFT US               | my_sig   | EUR             |             |
+    +-----------------------+----------+-----------------+-------------+
+
+    The unit, dimension and description columns are optional.
+    """
+
+    RESERVED_COLUMNS = {"signal", "unit", "dimension", "description"}
+    UNIT_TYPE_COLUMNS = {"currency"}
+    VALID_COLUMNS = RESERVED_COLUMNS.union(UNIT_TYPE_COLUMNS)
+
+    @classmethod
+    def is_valid(cls, data: pd.DataFrame) -> bool:
+        if "signal" not in data.columns:
+            return False
+        entity_column = None
+        for column in data.columns:
+            if column in cls.VALID_COLUMNS:
+                continue
+            if entity_column is None and _is_valid_entity_column(
+                column=column, invalid=cls.VALID_COLUMNS
+            ):
+                entity_column = column
+                continue
+            return False
+        if _has_duplicate_columns(data.columns):
+            return False
+        return True
+
+    def validate_numeric(self) -> None:
+        return None
+
+    def get_series(
+        self, prefix: str, *, skip_validation: bool = False, unit_type: Optional[str] = None
+    ) -> ParsedTimeSeriesFile.ValidatedTimeSeries:
+        series = self._get_series_with_potential_duplicates(prefix, unit_type)
+        failures = []
+        if not skip_validation:
+            series_names_counter = Counter([ts.name for ts in series])
+            series_with_duplicate_names = []
+            series_deduplicated = []
+            for ts in series:
+                if series_names_counter[ts.name] > 1:
+                    series_with_duplicate_names.append(ts)
+                else:
+                    series_deduplicated.append(ts)
+            duplicates = self._entity_lookup_result.get_duplicates()
+            failures.extend(
+                [
+                    ResourceCreationResult(
+                        ResourceCreationStatus.FAILED,
+                        ts,
+                        RequestError(
+                            ErrorType.INVALID_ARGUMENT,
+                            message=self._format_duplicate_message(str(ts.name), duplicates),
+                        ),
+                    )
+                    for ts in series_with_duplicate_names
+                ]
+            )
+            return self.ValidatedTimeSeries(series_deduplicated, failures)
+        return self.ValidatedTimeSeries(series, failures)
+
+    def _get_series_with_potential_duplicates(
+        self, prefix: str, unit_type: Optional[str] = None
+    ) -> Sequence[TimeSeries]:
+        """
+        Creates a list of time series, one for each combination of entity and signal.
+        The name of the time series is constructed from the entity and signal columns.
+        The units of the time series are constructed from the unit and dimension
+        columns. If a column name matches one of the unit types, that unit type takes
+        precedence over the unit type argument.
+
+        The time series are empty, as this format does not contain any data points.
+        """
+        series = []
+        unit_column = "unit"
+
+        for _, row in self._data.iterrows():
+            entity, signal = row["entity"], row["signal"]
+            row = row.dropna()
+            unit = []
+
+            for col in row.index:
+                if col in self.UNIT_TYPE_COLUMNS:
+                    unit_column = unit_type = col
+                    break
+
+            if row.get(unit_column):
+                unit.append(
+                    Unit(
+                        dimension=Dimension.from_string(unit_type)
+                        if unit_type
+                        else Dimension.DIMENSION_UNKNOWN,
+                        unit=row.get(unit_column),
+                    )
+                )
+
+            series.append(
+                TimeSeries(
+                    series=pd.Series(data=[], name=f"{entity}/{prefix}{signal}", dtype=object),
+                    units=Units(
+                        units=unit,
+                        description=row.get("description"),
+                    )
+                    if (unit or row.get("description"))
+                    else None,
+                )
+            )
+        return series
+
+    @classmethod
+    def _set_index(cls, data: pd.DataFrame) -> pd.DataFrame:
+        return data
+
+    @staticmethod
+    def _format_duplicate_message(name: str, duplicates: Mapping[str, Sequence[str]]) -> str:
+        entity_name = "/".join(name.split("/")[0:4])
+        if entity_name in duplicates:
+            return (
+                f"Duplicate entries for {name}. Multiple identifiers map to the same entity: "
+                f"{', '.join(duplicates[entity_name][:5])}."
+            )
+        return f"Duplicate entries for {name}."
 
 
 def _check_non_numeric_error(non_numeric_signals: Mapping[str, Sequence[str]]) -> None:

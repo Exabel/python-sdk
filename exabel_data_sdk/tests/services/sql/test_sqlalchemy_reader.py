@@ -5,8 +5,8 @@ import pandas as pd
 import pandas.testing as pdt
 
 from exabel_data_sdk.services.file_writer import FileWriter
-from exabel_data_sdk.services.sql.sql_reader import SqlReader
 from exabel_data_sdk.services.sql.sql_reader_configuration import ConnectionString
+from exabel_data_sdk.services.sql.sqlalchemy_reader import SQLAlchemyReader
 from exabel_data_sdk.tests.decorators import requires_modules
 from exabel_data_sdk.util.handle_missing_imports import handle_missing_imports
 
@@ -15,19 +15,19 @@ with handle_missing_imports():
 
 
 @requires_modules("sqlalchemy")
-class TestSqlReader(unittest.TestCase):
+class TestSQLAlchemyReader(unittest.TestCase):
     class _MockFileWriter(FileWriter):
         @staticmethod
         def write_file(df: pd.DataFrame, filepath: str) -> None:
             raise NotImplementedError()
 
     def setUp(self) -> None:
-        self.reader = SqlReader(ConnectionString("sqlite:///:memory:"))
+        self.reader = SQLAlchemyReader(ConnectionString("sqlite:///:memory:"))
 
-    @mock.patch("exabel_data_sdk.services.sql.sql_reader.create_engine")
-    def test_sql_reader_constructor(self, mock_create_engine):
+    @mock.patch("exabel_data_sdk.services.sql.sqlalchemy_reader.create_engine")
+    def test_sqlalchemy_reader_constructor(self, mock_create_engine):
         mock_create_engine.return_value = None
-        SqlReader(
+        SQLAlchemyReader(
             ConnectionString("connnection-string"), kwargs={"kwarg1": "value1", "kwarg2": "value2"}
         )
         mock_create_engine.assert_called_once_with(
