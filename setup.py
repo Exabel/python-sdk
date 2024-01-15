@@ -42,6 +42,7 @@ setuptools.setup(
         "grpcio",
         "openpyxl",
         "pandas",
+        "pyarrow",
         "protobuf>=4",
         "requests",
     ],
