@@ -2,6 +2,7 @@ import sys
 from typing import Sequence
 
 from exabel_data_sdk.scripts.sql.sql_script import SqlScript
+from exabel_data_sdk.services.sql.snowflake_reader import SnowflakeReader
 from exabel_data_sdk.services.sql.snowflake_reader_configuration import SnowflakeReaderConfiguration
 
 
@@ -44,6 +45,15 @@ class ReadSnowflake(SqlScript):
         self.parser.add_argument(
             "--role",
             help="The role to use. Required if no default is set for the user.",
+        )
+
+    def run(self) -> None:
+        args = self.parse_arguments()
+        self.setup_logging()
+        configuration = self.reader_configuration_class.from_args(args)
+        reader = SnowflakeReader(configuration.get_connection_args())
+        reader.read_sql_query_and_write_result(
+            args.query, args.output_file, batch_size=args.batch_size
         )
 
 

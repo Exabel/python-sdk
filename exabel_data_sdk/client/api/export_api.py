@@ -11,6 +11,7 @@ from exabel_data_sdk.query.column import Column
 from exabel_data_sdk.query.predicate import Predicate
 from exabel_data_sdk.query.query import Query
 from exabel_data_sdk.query.signals import Signals
+from exabel_data_sdk.scripts.utils import conditional_progress_bar
 
 
 class ExportApi:
@@ -80,7 +81,7 @@ class ExportApi:
         error_message = response.content.decode()
         if error_message.startswith('"') and error_message.endswith('"'):
             error_message = error_message[1:-1]
-        error_message = f"{response.status_code}: {error_message}"
+        error_message = f"Got {response.status_code}: {error_message} for query {query}"
         raise ValueError(error_message)
 
     def run_query(self, query: Union[str, Query]) -> pd.DataFrame:
@@ -225,6 +226,7 @@ class ExportApi:
         end_time: Optional[Union[str, pd.Timestamp]] = None,
         identifier: Optional[Union[Column, Sequence[Column]]] = None,
         version: Optional[Union[str, pd.Timestamp, Sequence[str], Sequence[pd.Timestamp]]] = None,
+        show_progress: bool = False,
     ) -> Union[pd.Series, pd.DataFrame]:
         """
         Run a query for one or more signals.
@@ -271,6 +273,8 @@ class ExportApi:
                 version=version,
                 **{entity_identifier: entities[i : i + batch_size]},
             )
-            for i in range(0, len(entities), batch_size)
+            for i in conditional_progress_bar(
+                range(0, len(entities), batch_size), show_progress=show_progress
+            )
         ]
         return pd.concat(results)

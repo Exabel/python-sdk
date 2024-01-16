@@ -7,7 +7,7 @@ from exabel_data_sdk.client.user_login import UserLogin
 
 
 class ExportData:
-    """Script for exporting data from the Exabel API."""
+    """Script for exporting data from the Exabel API with a user-provided query string."""
 
     def __init__(self, argv: Sequence[str]):
         self.argv = argv
