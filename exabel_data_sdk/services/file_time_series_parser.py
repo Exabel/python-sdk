@@ -32,7 +32,6 @@ from exabel_data_sdk.client.api.resource_creation_result import (
 )
 from exabel_data_sdk.services import file_constants
 from exabel_data_sdk.services.csv_reader import CsvReader
-from exabel_data_sdk.services.feather_reader import FeatherReader
 from exabel_data_sdk.services.file_loading_exception import FileLoadingException
 from exabel_data_sdk.util.handle_missing_imports import handle_missing_imports
 from exabel_data_sdk.util.resource_name_normalization import (
@@ -95,6 +94,8 @@ class TimeSeriesFileParser:
             return (TimeSeriesFileParser(filename, None, s, None) for s in workbook.sheetnames)
         if Path(filename).suffix.lower() in file_constants.FEATHER_EXTENSIONS:
             if batch_size is not None:
+                from exabel_data_sdk.services.feather_reader import FeatherReader
+
                 logger.info(
                     "Reading in batches from Feather file. Batch size will be set to the "
                     "batch size fixed in the Feather file."
@@ -167,6 +168,8 @@ class TimeSeriesFileParser:
                 engine="openpyxl",
             )
         elif extension in file_constants.FEATHER_EXTENSIONS:
+            from exabel_data_sdk.services.feather_reader import FeatherReader
+
             df = FeatherReader.read_file(self.filename, string_columns=[0])
         else:
             raise FileLoadingException(f"Unknown file extension '{extension}'")

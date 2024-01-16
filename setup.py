@@ -1,3 +1,5 @@
+import itertools
+
 import setuptools
 
 with open("README.md", "r", encoding="utf-8") as fh:
@@ -16,7 +18,7 @@ _BIGQUERY_REQUIREMENTS = [
 ]
 
 _SNOWFLAKE_REQUIREMENTS = _SQLALCHEMY_REQUIREMENTS + [
-    "snowflake-connector-python",
+    "snowflake-connector-python[pandas]",
     "snowflake-sqlalchemy",
 ]
 
@@ -24,6 +26,14 @@ _ATHENA_REQUIREMENTS = _SQLALCHEMY_REQUIREMENTS + [
     "pyathena",
     "pyarrow",
 ]
+
+extras = {
+    "snowflake": _SNOWFLAKE_REQUIREMENTS,
+    "bigquery": _BIGQUERY_REQUIREMENTS,
+    "athena": _ATHENA_REQUIREMENTS,
+}
+extras["all"] = list(itertools.chain.from_iterable(extras.values()))
+
 
 setuptools.setup(
     name="exabel-data-sdk",
@@ -44,12 +54,9 @@ setuptools.setup(
         "pandas",
         "protobuf>=4",
         "requests",
+        "tqdm",
     ],
-    extras_require={
-        "snowflake": _SNOWFLAKE_REQUIREMENTS,
-        "bigquery": _BIGQUERY_REQUIREMENTS,
-        "athena": _ATHENA_REQUIREMENTS,
-    },
+    extras_require=extras,
     python_requires=">=3.8",
     classifiers=[
         "Development Status :: 5 - Production/Stable",
@@ -58,6 +65,7 @@ setuptools.setup(
         "Programming Language :: Python :: 3.9",
         "Programming Language :: Python :: 3.10",
         "Programming Language :: Python :: 3.11",
+        "Programming Language :: Python :: 3.12",
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
     ],

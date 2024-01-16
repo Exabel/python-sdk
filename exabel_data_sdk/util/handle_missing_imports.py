@@ -10,6 +10,7 @@ _OPTIONAL_DEPENDENCIES = {
     "openpyxl": "openpyxl",
     "google.cloud.bigquery": "google-cloud-bigquery",
     "google.oauth2.service_account": "google-cloud-bigquery",
+    "pyarrow": "pyarrow",
 }
 
 
