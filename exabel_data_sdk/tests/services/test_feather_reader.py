@@ -4,7 +4,6 @@ from typing import Iterable
 
 import pandas as pd
 
-from exabel_data_sdk.services.feather_reader import FeatherReader
 from exabel_data_sdk.tests.decorators import requires_modules
 
 
@@ -16,6 +15,8 @@ class TestFeatherReader(unittest.TestCase):
         string_columns: Iterable[int],
     ):
         with tempfile.TemporaryDirectory() as tmp:
+            from exabel_data_sdk.services.feather_reader import FeatherReader
+
             file = f"{tmp}/file.feather"
             pd.DataFrame(content[1:], columns=content[0]).to_feather(file)
             return FeatherReader.read_file(filename=file, string_columns=string_columns)
@@ -47,6 +48,8 @@ class TestFeatherReader(unittest.TestCase):
     def test_read_feather_in_batches(self):
         df = pd.DataFrame({"A": range(100000), "B": range(100000)})
         with tempfile.TemporaryDirectory() as tmp:
+            from exabel_data_sdk.services.feather_reader import FeatherReader
+
             file = f"{tmp}/file_for_batch_reading.feather"
             df.to_feather(file)
             df = df.astype({"A": str})
