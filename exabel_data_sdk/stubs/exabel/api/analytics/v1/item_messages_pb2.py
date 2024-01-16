@@ -11,17 +11,17 @@ _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
 _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'exabel.api.analytics.v1.item_messages_pb2', _globals)
 if _descriptor._USE_C_DESCRIPTORS == False:
-    DESCRIPTOR._options = None
-    DESCRIPTOR._serialized_options = b'\n\x1bcom.exabel.api.analytics.v1B\x11ItemMessagesProtoP\x01Z\x1bexabel.com/api/analytics/v1'
-    _ITEMMETADATA.fields_by_name['create_time']._options = None
-    _ITEMMETADATA.fields_by_name['create_time']._serialized_options = b'\xe2A\x01\x03'
-    _ITEMMETADATA.fields_by_name['update_time']._options = None
-    _ITEMMETADATA.fields_by_name['update_time']._serialized_options = b'\xe2A\x01\x03'
-    _ITEMMETADATA.fields_by_name['created_by']._options = None
-    _ITEMMETADATA.fields_by_name['created_by']._serialized_options = b'\xe2A\x01\x03'
-    _ITEMMETADATA.fields_by_name['updated_by']._options = None
-    _ITEMMETADATA.fields_by_name['updated_by']._serialized_options = b'\xe2A\x01\x03'
-    _ITEMMETADATA.fields_by_name['write_access']._options = None
-    _ITEMMETADATA.fields_by_name['write_access']._serialized_options = b'\xe2A\x01\x03'
+    _globals['DESCRIPTOR']._options = None
+    _globals['DESCRIPTOR']._serialized_options = b'\n\x1bcom.exabel.api.analytics.v1B\x11ItemMessagesProtoP\x01Z\x1bexabel.com/api/analytics/v1'
+    _globals['_ITEMMETADATA'].fields_by_name['create_time']._options = None
+    _globals['_ITEMMETADATA'].fields_by_name['create_time']._serialized_options = b'\xe2A\x01\x03'
+    _globals['_ITEMMETADATA'].fields_by_name['update_time']._options = None
+    _globals['_ITEMMETADATA'].fields_by_name['update_time']._serialized_options = b'\xe2A\x01\x03'
+    _globals['_ITEMMETADATA'].fields_by_name['created_by']._options = None
+    _globals['_ITEMMETADATA'].fields_by_name['created_by']._serialized_options = b'\xe2A\x01\x03'
+    _globals['_ITEMMETADATA'].fields_by_name['updated_by']._options = None
+    _globals['_ITEMMETADATA'].fields_by_name['updated_by']._serialized_options = b'\xe2A\x01\x03'
+    _globals['_ITEMMETADATA'].fields_by_name['write_access']._options = None
+    _globals['_ITEMMETADATA'].fields_by_name['write_access']._serialized_options = b'\xe2A\x01\x03'
     _globals['_ITEMMETADATA']._serialized_start = 139
     _globals['_ITEMMETADATA']._serialized_end = 365

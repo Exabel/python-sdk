@@ -15,26 +15,26 @@ _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
 _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'exabel.api.data.v1.data_set_service_pb2', _globals)
 if _descriptor._USE_C_DESCRIPTORS == False:
-    DESCRIPTOR._options = None
-    DESCRIPTOR._serialized_options = b'\n\x16com.exabel.api.data.v1B\x13DataSetServiceProtoP\x01Z\x16exabel.com/api/data/v1'
-    _GETDATASETREQUEST.fields_by_name['name']._options = None
-    _GETDATASETREQUEST.fields_by_name['name']._serialized_options = b'\x92A\x11\xca>\x0e\xfa\x02\x0bdataSetName\xe2A\x01\x02'
-    _CREATEDATASETREQUEST.fields_by_name['data_set']._options = None
-    _CREATEDATASETREQUEST.fields_by_name['data_set']._serialized_options = b'\xe2A\x01\x02'
-    _UPDATEDATASETREQUEST.fields_by_name['data_set']._options = None
-    _UPDATEDATASETREQUEST.fields_by_name['data_set']._serialized_options = b'\xe2A\x01\x02'
-    _DELETEDATASETREQUEST.fields_by_name['name']._options = None
-    _DELETEDATASETREQUEST.fields_by_name['name']._serialized_options = b'\x92A\x11\xca>\x0e\xfa\x02\x0bdataSetName\xe2A\x01\x02'
-    _DATASETSERVICE.methods_by_name['ListDataSets']._options = None
-    _DATASETSERVICE.methods_by_name['ListDataSets']._serialized_options = b'\x92A\x10\x12\x0eList data sets\x82\xd3\xe4\x93\x02\x0e\x12\x0c/v1/dataSets'
-    _DATASETSERVICE.methods_by_name['GetDataSet']._options = None
-    _DATASETSERVICE.methods_by_name['GetDataSet']._serialized_options = b'\x92A\x0e\x12\x0cGet data set\x82\xd3\xe4\x93\x02\x17\x12\x15/v1/{name=dataSets/*}'
-    _DATASETSERVICE.methods_by_name['CreateDataSet']._options = None
-    _DATASETSERVICE.methods_by_name['CreateDataSet']._serialized_options = b'\x92A\x11\x12\x0fCreate data set\x82\xd3\xe4\x93\x02\x18"\x0c/v1/dataSets:\x08data_set'
-    _DATASETSERVICE.methods_by_name['UpdateDataSet']._options = None
-    _DATASETSERVICE.methods_by_name['UpdateDataSet']._serialized_options = b'\x92A\x11\x12\x0fUpdate data set\x82\xd3\xe4\x93\x02*2\x1e/v1/{data_set.name=dataSets/*}:\x08data_set'
-    _DATASETSERVICE.methods_by_name['DeleteDataSet']._options = None
-    _DATASETSERVICE.methods_by_name['DeleteDataSet']._serialized_options = b'\x92A\x11\x12\x0fDelete data set\x82\xd3\xe4\x93\x02\x17*\x15/v1/{name=dataSets/*}'
+    _globals['DESCRIPTOR']._options = None
+    _globals['DESCRIPTOR']._serialized_options = b'\n\x16com.exabel.api.data.v1B\x13DataSetServiceProtoP\x01Z\x16exabel.com/api/data/v1'
+    _globals['_GETDATASETREQUEST'].fields_by_name['name']._options = None
+    _globals['_GETDATASETREQUEST'].fields_by_name['name']._serialized_options = b'\x92A\x11\xca>\x0e\xfa\x02\x0bdataSetName\xe2A\x01\x02'
+    _globals['_CREATEDATASETREQUEST'].fields_by_name['data_set']._options = None
+    _globals['_CREATEDATASETREQUEST'].fields_by_name['data_set']._serialized_options = b'\xe2A\x01\x02'
+    _globals['_UPDATEDATASETREQUEST'].fields_by_name['data_set']._options = None
+    _globals['_UPDATEDATASETREQUEST'].fields_by_name['data_set']._serialized_options = b'\xe2A\x01\x02'
+    _globals['_DELETEDATASETREQUEST'].fields_by_name['name']._options = None
+    _globals['_DELETEDATASETREQUEST'].fields_by_name['name']._serialized_options = b'\x92A\x11\xca>\x0e\xfa\x02\x0bdataSetName\xe2A\x01\x02'
+    _globals['_DATASETSERVICE'].methods_by_name['ListDataSets']._options = None
+    _globals['_DATASETSERVICE'].methods_by_name['ListDataSets']._serialized_options = b'\x92A\x10\x12\x0eList data sets\x82\xd3\xe4\x93\x02\x0e\x12\x0c/v1/dataSets'
+    _globals['_DATASETSERVICE'].methods_by_name['GetDataSet']._options = None
+    _globals['_DATASETSERVICE'].methods_by_name['GetDataSet']._serialized_options = b'\x92A\x0e\x12\x0cGet data set\x82\xd3\xe4\x93\x02\x17\x12\x15/v1/{name=dataSets/*}'
+    _globals['_DATASETSERVICE'].methods_by_name['CreateDataSet']._options = None
+    _globals['_DATASETSERVICE'].methods_by_name['CreateDataSet']._serialized_options = b'\x92A\x11\x12\x0fCreate data set\x82\xd3\xe4\x93\x02\x18"\x0c/v1/dataSets:\x08data_set'
+    _globals['_DATASETSERVICE'].methods_by_name['UpdateDataSet']._options = None
+    _globals['_DATASETSERVICE'].methods_by_name['UpdateDataSet']._serialized_options = b'\x92A\x11\x12\x0fUpdate data set\x82\xd3\xe4\x93\x02*2\x1e/v1/{data_set.name=dataSets/*}:\x08data_set'
+    _globals['_DATASETSERVICE'].methods_by_name['DeleteDataSet']._options = None
+    _globals['_DATASETSERVICE'].methods_by_name['DeleteDataSet']._serialized_options = b'\x92A\x11\x12\x0fDelete data set\x82\xd3\xe4\x93\x02\x17*\x15/v1/{name=dataSets/*}'
     _globals['_LISTDATASETSREQUEST']._serialized_start = 283
     _globals['_LISTDATASETSREQUEST']._serialized_end = 304
     _globals['_LISTDATASETSRESPONSE']._serialized_start = 306

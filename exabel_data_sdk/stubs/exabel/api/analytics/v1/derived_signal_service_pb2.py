@@ -15,24 +15,24 @@ _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
 _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'exabel.api.analytics.v1.derived_signal_service_pb2', _globals)
 if _descriptor._USE_C_DESCRIPTORS == False:
-    DESCRIPTOR._options = None
-    DESCRIPTOR._serialized_options = b'\n\x1bcom.exabel.api.analytics.v1B\x19DerivedSignalServiceProtoP\x01Z\x1bexabel.com/api/analytics/v1'
-    _GETDERIVEDSIGNALREQUEST.fields_by_name['name']._options = None
-    _GETDERIVEDSIGNALREQUEST.fields_by_name['name']._serialized_options = b'\x92A\x17\xca>\x14\xfa\x02\x11derivedSignalName\xe2A\x01\x02'
-    _CREATEDERIVEDSIGNALREQUEST.fields_by_name['signal']._options = None
-    _CREATEDERIVEDSIGNALREQUEST.fields_by_name['signal']._serialized_options = b'\xe2A\x01\x02'
-    _UPDATEDERIVEDSIGNALREQUEST.fields_by_name['signal']._options = None
-    _UPDATEDERIVEDSIGNALREQUEST.fields_by_name['signal']._serialized_options = b'\xe2A\x01\x02'
-    _DELETEDERIVEDSIGNALREQUEST.fields_by_name['name']._options = None
-    _DELETEDERIVEDSIGNALREQUEST.fields_by_name['name']._serialized_options = b'\x92A\x17\xca>\x14\xfa\x02\x11derivedSignalName\xe2A\x01\x02'
-    _DERIVEDSIGNALSERVICE.methods_by_name['GetDerivedSignal']._options = None
-    _DERIVEDSIGNALSERVICE.methods_by_name['GetDerivedSignal']._serialized_options = b'\x92A\x14\x12\x12Get derived signal\x82\xd3\xe4\x93\x02\x1d\x12\x1b/v1/{name=derivedSignals/*}'
-    _DERIVEDSIGNALSERVICE.methods_by_name['CreateDerivedSignal']._options = None
-    _DERIVEDSIGNALSERVICE.methods_by_name['CreateDerivedSignal']._serialized_options = b'\x92A\x17\x12\x15Create derived signal\x82\xd3\xe4\x93\x02\x1c"\x12/v1/derivedSignals:\x06signal'
-    _DERIVEDSIGNALSERVICE.methods_by_name['UpdateDerivedSignal']._options = None
-    _DERIVEDSIGNALSERVICE.methods_by_name['UpdateDerivedSignal']._serialized_options = b'\x92A\x17\x12\x15Update derived signal\x82\xd3\xe4\x93\x02,2"/v1/{signal.name=derivedSignals/*}:\x06signal'
-    _DERIVEDSIGNALSERVICE.methods_by_name['DeleteDerivedSignal']._options = None
-    _DERIVEDSIGNALSERVICE.methods_by_name['DeleteDerivedSignal']._serialized_options = b'\x92A\x17\x12\x15Delete derived signal\x82\xd3\xe4\x93\x02\x1d*\x1b/v1/{name=derivedSignals/*}'
+    _globals['DESCRIPTOR']._options = None
+    _globals['DESCRIPTOR']._serialized_options = b'\n\x1bcom.exabel.api.analytics.v1B\x19DerivedSignalServiceProtoP\x01Z\x1bexabel.com/api/analytics/v1'
+    _globals['_GETDERIVEDSIGNALREQUEST'].fields_by_name['name']._options = None
+    _globals['_GETDERIVEDSIGNALREQUEST'].fields_by_name['name']._serialized_options = b'\x92A\x17\xca>\x14\xfa\x02\x11derivedSignalName\xe2A\x01\x02'
+    _globals['_CREATEDERIVEDSIGNALREQUEST'].fields_by_name['signal']._options = None
+    _globals['_CREATEDERIVEDSIGNALREQUEST'].fields_by_name['signal']._serialized_options = b'\xe2A\x01\x02'
+    _globals['_UPDATEDERIVEDSIGNALREQUEST'].fields_by_name['signal']._options = None
+    _globals['_UPDATEDERIVEDSIGNALREQUEST'].fields_by_name['signal']._serialized_options = b'\xe2A\x01\x02'
+    _globals['_DELETEDERIVEDSIGNALREQUEST'].fields_by_name['name']._options = None
+    _globals['_DELETEDERIVEDSIGNALREQUEST'].fields_by_name['name']._serialized_options = b'\x92A\x17\xca>\x14\xfa\x02\x11derivedSignalName\xe2A\x01\x02'
+    _globals['_DERIVEDSIGNALSERVICE'].methods_by_name['GetDerivedSignal']._options = None
+    _globals['_DERIVEDSIGNALSERVICE'].methods_by_name['GetDerivedSignal']._serialized_options = b'\x92A\x14\x12\x12Get derived signal\x82\xd3\xe4\x93\x02\x1d\x12\x1b/v1/{name=derivedSignals/*}'
+    _globals['_DERIVEDSIGNALSERVICE'].methods_by_name['CreateDerivedSignal']._options = None
+    _globals['_DERIVEDSIGNALSERVICE'].methods_by_name['CreateDerivedSignal']._serialized_options = b'\x92A\x17\x12\x15Create derived signal\x82\xd3\xe4\x93\x02\x1c"\x12/v1/derivedSignals:\x06signal'
+    _globals['_DERIVEDSIGNALSERVICE'].methods_by_name['UpdateDerivedSignal']._options = None
+    _globals['_DERIVEDSIGNALSERVICE'].methods_by_name['UpdateDerivedSignal']._serialized_options = b'\x92A\x17\x12\x15Update derived signal\x82\xd3\xe4\x93\x02,2"/v1/{signal.name=derivedSignals/*}:\x06signal'
+    _globals['_DERIVEDSIGNALSERVICE'].methods_by_name['DeleteDerivedSignal']._options = None
+    _globals['_DERIVEDSIGNALSERVICE'].methods_by_name['DeleteDerivedSignal']._serialized_options = b'\x92A\x17\x12\x15Delete derived signal\x82\xd3\xe4\x93\x02\x1d*\x1b/v1/{name=derivedSignals/*}'
     _globals['_GETDERIVEDSIGNALREQUEST']._serialized_start = 310
     _globals['_GETDERIVEDSIGNALREQUEST']._serialized_end = 381
     _globals['_CREATEDERIVEDSIGNALREQUEST']._serialized_start = 383

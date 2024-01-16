@@ -12,12 +12,12 @@ _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
 _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'exabel.api.data.v1.import_job_service_pb2', _globals)
 if _descriptor._USE_C_DESCRIPTORS == False:
-    DESCRIPTOR._options = None
-    DESCRIPTOR._serialized_options = b'\n\x16com.exabel.api.data.v1B\x16ImportJobsServiceProtoP\x01Z\x16exabel.com/api/data/v1'
-    _RUNTASKREQUEST.fields_by_name['name']._options = None
-    _RUNTASKREQUEST.fields_by_name['name']._serialized_options = b'\x92A\x0e\xca>\x0b\xfa\x02\x08taskName\xe2A\x01\x02'
-    _IMPORTJOBSERVICE.methods_by_name['RunTask']._options = None
-    _IMPORTJOBSERVICE.methods_by_name['RunTask']._serialized_options = b'\x92A\x11\x12\x0fRun import task\x82\xd3\xe4\x93\x02\x1b"\x16/v1/{name=tasks/*}:run:\x01*'
+    _globals['DESCRIPTOR']._options = None
+    _globals['DESCRIPTOR']._serialized_options = b'\n\x16com.exabel.api.data.v1B\x16ImportJobsServiceProtoP\x01Z\x16exabel.com/api/data/v1'
+    _globals['_RUNTASKREQUEST'].fields_by_name['name']._options = None
+    _globals['_RUNTASKREQUEST'].fields_by_name['name']._serialized_options = b'\x92A\x0e\xca>\x0b\xfa\x02\x08taskName\xe2A\x01\x02'
+    _globals['_IMPORTJOBSERVICE'].methods_by_name['RunTask']._options = None
+    _globals['_IMPORTJOBSERVICE'].methods_by_name['RunTask']._serialized_options = b'\x92A\x11\x12\x0fRun import task\x82\xd3\xe4\x93\x02\x1b"\x16/v1/{name=tasks/*}:run:\x01*'
     _globals['_RUNTASKREQUEST']._serialized_start = 178
     _globals['_RUNTASKREQUEST']._serialized_end = 231
     _globals['_RUNTASKRESPONSE']._serialized_start = 233

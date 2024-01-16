@@ -10,12 +10,12 @@ _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
 _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'exabel.api.management.v1.user_messages_pb2', _globals)
 if _descriptor._USE_C_DESCRIPTORS == False:
-    DESCRIPTOR._options = None
-    DESCRIPTOR._serialized_options = b'\n\x1ccom.exabel.api.management.v1B\x11UserMessagesProtoP\x01Z\x1cexabel.com/api/management/v1'
-    _USER.fields_by_name['name']._options = None
-    _USER.fields_by_name['name']._serialized_options = b'\xe2A\x01\x03'
-    _GROUP.fields_by_name['name']._options = None
-    _GROUP.fields_by_name['name']._serialized_options = b'\xe2A\x01\x03'
+    _globals['DESCRIPTOR']._options = None
+    _globals['DESCRIPTOR']._serialized_options = b'\n\x1ccom.exabel.api.management.v1B\x11UserMessagesProtoP\x01Z\x1cexabel.com/api/management/v1'
+    _globals['_USER'].fields_by_name['name']._options = None
+    _globals['_USER'].fields_by_name['name']._serialized_options = b'\xe2A\x01\x03'
+    _globals['_GROUP'].fields_by_name['name']._options = None
+    _globals['_GROUP'].fields_by_name['name']._serialized_options = b'\xe2A\x01\x03'
     _globals['_USER']._serialized_start = 107
     _globals['_USER']._serialized_end = 165
     _globals['_GROUP']._serialized_start = 167

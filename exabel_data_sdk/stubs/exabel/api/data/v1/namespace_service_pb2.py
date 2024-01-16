@@ -12,10 +12,10 @@ _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
 _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'exabel.api.data.v1.namespace_service_pb2', _globals)
 if _descriptor._USE_C_DESCRIPTORS == False:
-    DESCRIPTOR._options = None
-    DESCRIPTOR._serialized_options = b'\n\x16com.exabel.api.data.v1B\x15NamespaceServiceProtoP\x01Z\x16exabel.com/api/data/v1'
-    _NAMESPACESERVICE.methods_by_name['ListNamespaces']._options = None
-    _NAMESPACESERVICE.methods_by_name['ListNamespaces']._serialized_options = b'\x92A\x11\x12\x0fList namespaces\x82\xd3\xe4\x93\x02\x10\x12\x0e/v1/namespaces'
+    _globals['DESCRIPTOR']._options = None
+    _globals['DESCRIPTOR']._serialized_options = b'\n\x16com.exabel.api.data.v1B\x15NamespaceServiceProtoP\x01Z\x16exabel.com/api/data/v1'
+    _globals['_NAMESPACESERVICE'].methods_by_name['ListNamespaces']._options = None
+    _globals['_NAMESPACESERVICE'].methods_by_name['ListNamespaces']._serialized_options = b'\x92A\x11\x12\x0fList namespaces\x82\xd3\xe4\x93\x02\x10\x12\x0e/v1/namespaces'
     _globals['_LISTNAMESPACESREQUEST']._serialized_start = 190
     _globals['_LISTNAMESPACESREQUEST']._serialized_end = 213
     _globals['_LISTNAMESPACESRESPONSE']._serialized_start = 215

@@ -12,18 +12,18 @@ _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
 _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'exabel.api.analytics.v1.derived_signal_messages_pb2', _globals)
 if _descriptor._USE_C_DESCRIPTORS == False:
-    DESCRIPTOR._options = None
-    DESCRIPTOR._serialized_options = b'\n\x1bcom.exabel.api.analytics.v1B\x1aDerivedSignalMessagesProtoP\x01Z\x1bexabel.com/api/analytics/v1'
-    _DERIVEDSIGNAL.fields_by_name['name']._options = None
-    _DERIVEDSIGNAL.fields_by_name['name']._serialized_options = b'\x92A-J\x14"derivedSignals/123"\xca>\x14\xfa\x02\x11derivedSignalName\xe2A\x01\x05'
-    _DERIVEDSIGNAL.fields_by_name['label']._options = None
-    _DERIVEDSIGNAL.fields_by_name['label']._serialized_options = b'\x92A)J\x11"close_price_ma7"\x8a\x01\x13^[a-zA-Z_]\\w{0,99}$'
-    _DERIVEDSIGNAL.fields_by_name['expression']._options = None
-    _DERIVEDSIGNAL.fields_by_name['expression']._serialized_options = b'\x92A#J!"close_price().moving_average(7)"'
-    _DERIVEDSIGNAL.fields_by_name['description']._options = None
-    _DERIVEDSIGNAL.fields_by_name['description']._serialized_options = b'\x92A$J""Close price 7 day moving average"'
-    _DERIVEDSIGNALMETADATA.fields_by_name['type']._options = None
-    _DERIVEDSIGNALMETADATA.fields_by_name['type']._serialized_options = b'\xe2A\x01\x03'
+    _globals['DESCRIPTOR']._options = None
+    _globals['DESCRIPTOR']._serialized_options = b'\n\x1bcom.exabel.api.analytics.v1B\x1aDerivedSignalMessagesProtoP\x01Z\x1bexabel.com/api/analytics/v1'
+    _globals['_DERIVEDSIGNAL'].fields_by_name['name']._options = None
+    _globals['_DERIVEDSIGNAL'].fields_by_name['name']._serialized_options = b'\x92A-J\x14"derivedSignals/123"\xca>\x14\xfa\x02\x11derivedSignalName\xe2A\x01\x05'
+    _globals['_DERIVEDSIGNAL'].fields_by_name['label']._options = None
+    _globals['_DERIVEDSIGNAL'].fields_by_name['label']._serialized_options = b'\x92A)J\x11"close_price_ma7"\x8a\x01\x13^[a-zA-Z_]\\w{0,99}$'
+    _globals['_DERIVEDSIGNAL'].fields_by_name['expression']._options = None
+    _globals['_DERIVEDSIGNAL'].fields_by_name['expression']._serialized_options = b'\x92A#J!"close_price().moving_average(7)"'
+    _globals['_DERIVEDSIGNAL'].fields_by_name['description']._options = None
+    _globals['_DERIVEDSIGNAL'].fields_by_name['description']._serialized_options = b'\x92A$J""Close price 7 day moving average"'
+    _globals['_DERIVEDSIGNALMETADATA'].fields_by_name['type']._options = None
+    _globals['_DERIVEDSIGNALMETADATA'].fields_by_name['type']._serialized_options = b'\xe2A\x01\x03'
     _globals['_DERIVEDSIGNALUNIT']._serialized_start = 725
     _globals['_DERIVEDSIGNALUNIT']._serialized_end = 822
     _globals['_DERIVEDSIGNALTYPE']._serialized_start = 825

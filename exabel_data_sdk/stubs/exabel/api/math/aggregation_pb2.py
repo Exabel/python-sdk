@@ -9,7 +9,7 @@ _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
 _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'exabel.api.math.aggregation_pb2', _globals)
 if _descriptor._USE_C_DESCRIPTORS == False:
-    DESCRIPTOR._options = None
-    DESCRIPTOR._serialized_options = b'\n\x13com.exabel.api.mathB\x10AggregationProtoP\x01Z\x13exabel.com/api/math'
+    _globals['DESCRIPTOR']._options = None
+    _globals['DESCRIPTOR']._serialized_options = b'\n\x13com.exabel.api.mathB\x10AggregationProtoP\x01Z\x13exabel.com/api/math'
     _globals['_AGGREGATION']._serialized_start = 54
     _globals['_AGGREGATION']._serialized_end = 150

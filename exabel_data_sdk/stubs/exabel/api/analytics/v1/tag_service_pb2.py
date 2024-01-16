@@ -15,38 +15,38 @@ _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
 _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'exabel.api.analytics.v1.tag_service_pb2', _globals)
 if _descriptor._USE_C_DESCRIPTORS == False:
-    DESCRIPTOR._options = None
-    DESCRIPTOR._serialized_options = b'\n\x1bcom.exabel.api.analytics.v1B\x0fTagServiceProtoP\x01Z\x1bexabel.com/api/analytics/v1'
-    _CREATETAGREQUEST.fields_by_name['tag']._options = None
-    _CREATETAGREQUEST.fields_by_name['tag']._serialized_options = b'\xe2A\x01\x02'
-    _GETTAGREQUEST.fields_by_name['name']._options = None
-    _GETTAGREQUEST.fields_by_name['name']._serialized_options = b'\x92A\r\xca>\n\xfa\x02\x07tagName\xe2A\x01\x02'
-    _UPDATETAGREQUEST.fields_by_name['tag']._options = None
-    _UPDATETAGREQUEST.fields_by_name['tag']._serialized_options = b'\xe2A\x01\x02'
-    _DELETETAGREQUEST.fields_by_name['name']._options = None
-    _DELETETAGREQUEST.fields_by_name['name']._serialized_options = b'\x92A\r\xca>\n\xfa\x02\x07tagName\xe2A\x01\x02'
-    _ADDENTITIESREQUEST.fields_by_name['name']._options = None
-    _ADDENTITIESREQUEST.fields_by_name['name']._serialized_options = b'\x92A\r\xca>\n\xfa\x02\x07tagName\xe2A\x01\x02'
-    _REMOVEENTITIESREQUEST.fields_by_name['name']._options = None
-    _REMOVEENTITIESREQUEST.fields_by_name['name']._serialized_options = b'\x92A\r\xca>\n\xfa\x02\x07tagName\xe2A\x01\x02'
-    _LISTTAGENTITIESREQUEST.fields_by_name['parent']._options = None
-    _LISTTAGENTITIESREQUEST.fields_by_name['parent']._serialized_options = b'\x92A\r\xca>\n\xfa\x02\x07tagName\xe2A\x01\x02'
-    _TAGSERVICE.methods_by_name['CreateTag']._options = None
-    _TAGSERVICE.methods_by_name['CreateTag']._serialized_options = b'\x92A\x0c\x12\nCreate tag\x82\xd3\xe4\x93\x02\x0f"\x08/v1/tags:\x03tag'
-    _TAGSERVICE.methods_by_name['GetTag']._options = None
-    _TAGSERVICE.methods_by_name['GetTag']._serialized_options = b'\x92A\t\x12\x07Get tag\x82\xd3\xe4\x93\x02\x13\x12\x11/v1/{name=tags/*}'
-    _TAGSERVICE.methods_by_name['UpdateTag']._options = None
-    _TAGSERVICE.methods_by_name['UpdateTag']._serialized_options = b'\x92A\x0c\x12\nUpdate tag\x82\xd3\xe4\x93\x02\x1c2\x15/v1/{tag.name=tags/*}:\x03tag'
-    _TAGSERVICE.methods_by_name['DeleteTag']._options = None
-    _TAGSERVICE.methods_by_name['DeleteTag']._serialized_options = b'\x92A\x0c\x12\nDelete tag\x82\xd3\xe4\x93\x02\x13*\x11/v1/{name=tags/*}'
-    _TAGSERVICE.methods_by_name['ListTags']._options = None
-    _TAGSERVICE.methods_by_name['ListTags']._serialized_options = b'\x92A\x0b\x12\tList tags\x82\xd3\xe4\x93\x02\n\x12\x08/v1/tags'
-    _TAGSERVICE.methods_by_name['AddEntities']._options = None
-    _TAGSERVICE.methods_by_name['AddEntities']._serialized_options = b'\x92A\x15\x12\x13Add entities to tag\x82\xd3\xe4\x93\x02""\x1d/v1/{name=tags/*}:addEntities:\x01*'
-    _TAGSERVICE.methods_by_name['RemoveEntities']._options = None
-    _TAGSERVICE.methods_by_name['RemoveEntities']._serialized_options = b'\x92A\x1a\x12\x18Remove entities from tag\x82\xd3\xe4\x93\x02%" /v1/{name=tags/*}:removeEntities:\x01*'
-    _TAGSERVICE.methods_by_name['ListTagEntities']._options = None
-    _TAGSERVICE.methods_by_name['ListTagEntities']._serialized_options = b'\x92A\x16\x12\x14List entities in tag\x82\xd3\xe4\x93\x02\x1e\x12\x1c/v1/{parent=tags/*}/entities'
+    _globals['DESCRIPTOR']._options = None
+    _globals['DESCRIPTOR']._serialized_options = b'\n\x1bcom.exabel.api.analytics.v1B\x0fTagServiceProtoP\x01Z\x1bexabel.com/api/analytics/v1'
+    _globals['_CREATETAGREQUEST'].fields_by_name['tag']._options = None
+    _globals['_CREATETAGREQUEST'].fields_by_name['tag']._serialized_options = b'\xe2A\x01\x02'
+    _globals['_GETTAGREQUEST'].fields_by_name['name']._options = None
+    _globals['_GETTAGREQUEST'].fields_by_name['name']._serialized_options = b'\x92A\r\xca>\n\xfa\x02\x07tagName\xe2A\x01\x02'
+    _globals['_UPDATETAGREQUEST'].fields_by_name['tag']._options = None
+    _globals['_UPDATETAGREQUEST'].fields_by_name['tag']._serialized_options = b'\xe2A\x01\x02'
+    _globals['_DELETETAGREQUEST'].fields_by_name['name']._options = None
+    _globals['_DELETETAGREQUEST'].fields_by_name['name']._serialized_options = b'\x92A\r\xca>\n\xfa\x02\x07tagName\xe2A\x01\x02'
+    _globals['_ADDENTITIESREQUEST'].fields_by_name['name']._options = None
+    _globals['_ADDENTITIESREQUEST'].fields_by_name['name']._serialized_options = b'\x92A\r\xca>\n\xfa\x02\x07tagName\xe2A\x01\x02'
+    _globals['_REMOVEENTITIESREQUEST'].fields_by_name['name']._options = None
+    _globals['_REMOVEENTITIESREQUEST'].fields_by_name['name']._serialized_options = b'\x92A\r\xca>\n\xfa\x02\x07tagName\xe2A\x01\x02'
+    _globals['_LISTTAGENTITIESREQUEST'].fields_by_name['parent']._options = None
+    _globals['_LISTTAGENTITIESREQUEST'].fields_by_name['parent']._serialized_options = b'\x92A\r\xca>\n\xfa\x02\x07tagName\xe2A\x01\x02'
+    _globals['_TAGSERVICE'].methods_by_name['CreateTag']._options = None
+    _globals['_TAGSERVICE'].methods_by_name['CreateTag']._serialized_options = b'\x92A\x0c\x12\nCreate tag\x82\xd3\xe4\x93\x02\x0f"\x08/v1/tags:\x03tag'
+    _globals['_TAGSERVICE'].methods_by_name['GetTag']._options = None
+    _globals['_TAGSERVICE'].methods_by_name['GetTag']._serialized_options = b'\x92A\t\x12\x07Get tag\x82\xd3\xe4\x93\x02\x13\x12\x11/v1/{name=tags/*}'
+    _globals['_TAGSERVICE'].methods_by_name['UpdateTag']._options = None
+    _globals['_TAGSERVICE'].methods_by_name['UpdateTag']._serialized_options = b'\x92A\x0c\x12\nUpdate tag\x82\xd3\xe4\x93\x02\x1c2\x15/v1/{tag.name=tags/*}:\x03tag'
+    _globals['_TAGSERVICE'].methods_by_name['DeleteTag']._options = None
+    _globals['_TAGSERVICE'].methods_by_name['DeleteTag']._serialized_options = b'\x92A\x0c\x12\nDelete tag\x82\xd3\xe4\x93\x02\x13*\x11/v1/{name=tags/*}'
+    _globals['_TAGSERVICE'].methods_by_name['ListTags']._options = None
+    _globals['_TAGSERVICE'].methods_by_name['ListTags']._serialized_options = b'\x92A\x0b\x12\tList tags\x82\xd3\xe4\x93\x02\n\x12\x08/v1/tags'
+    _globals['_TAGSERVICE'].methods_by_name['AddEntities']._options = None
+    _globals['_TAGSERVICE'].methods_by_name['AddEntities']._serialized_options = b'\x92A\x15\x12\x13Add entities to tag\x82\xd3\xe4\x93\x02""\x1d/v1/{name=tags/*}:addEntities:\x01*'
+    _globals['_TAGSERVICE'].methods_by_name['RemoveEntities']._options = None
+    _globals['_TAGSERVICE'].methods_by_name['RemoveEntities']._serialized_options = b'\x92A\x1a\x12\x18Remove entities from tag\x82\xd3\xe4\x93\x02%" /v1/{name=tags/*}:removeEntities:\x01*'
+    _globals['_TAGSERVICE'].methods_by_name['ListTagEntities']._options = None
+    _globals['_TAGSERVICE'].methods_by_name['ListTagEntities']._serialized_options = b'\x92A\x16\x12\x14List entities in tag\x82\xd3\xe4\x93\x02\x1e\x12\x1c/v1/{parent=tags/*}/entities'
     _globals['_CREATETAGREQUEST']._serialized_start = 288
     _globals['_CREATETAGREQUEST']._serialized_end = 371
     _globals['_GETTAGREQUEST']._serialized_start = 373

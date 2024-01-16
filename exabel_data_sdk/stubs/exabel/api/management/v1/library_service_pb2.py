@@ -15,60 +15,60 @@ _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
 _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'exabel.api.management.v1.library_service_pb2', _globals)
 if _descriptor._USE_C_DESCRIPTORS == False:
-    DESCRIPTOR._options = None
-    DESCRIPTOR._serialized_options = b'\n\x1ccom.exabel.api.management.v1B\x13LibraryServiceProtoP\x01Z\x1cexabel.com/api/management/v1'
-    _GETFOLDERREQUEST.fields_by_name['name']._options = None
-    _GETFOLDERREQUEST.fields_by_name['name']._serialized_options = b'\x92A\x10\xca>\r\xfa\x02\nfolderName\xe2A\x01\x02'
-    _CREATEFOLDERREQUEST.fields_by_name['folder']._options = None
-    _CREATEFOLDERREQUEST.fields_by_name['folder']._serialized_options = b'\xe2A\x01\x02'
-    _UPDATEFOLDERREQUEST.fields_by_name['folder']._options = None
-    _UPDATEFOLDERREQUEST.fields_by_name['folder']._serialized_options = b'\xe2A\x01\x02'
-    _DELETEFOLDERREQUEST.fields_by_name['name']._options = None
-    _DELETEFOLDERREQUEST.fields_by_name['name']._serialized_options = b'\x92A\x10\xca>\r\xfa\x02\nfolderName\xe2A\x01\x02'
-    _LISTITEMSREQUEST.fields_by_name['parent']._options = None
-    _LISTITEMSREQUEST.fields_by_name['parent']._serialized_options = b'\x92A\x1fJ\r"folders/123"\xca>\r\xfa\x02\nfolderName\xe2A\x01\x01'
-    _MOVEITEMSREQUEST.fields_by_name['items']._options = None
-    _MOVEITEMSREQUEST.fields_by_name['items']._serialized_options = b'\xe2A\x01\x02'
-    _MOVEITEMSREQUEST.fields_by_name['target_folder']._options = None
-    _MOVEITEMSREQUEST.fields_by_name['target_folder']._serialized_options = b'\x92A\x10\xca>\r\xfa\x02\nfolderName\xe2A\x01\x02'
-    _LISTFOLDERACCESSORSREQUEST.fields_by_name['name']._options = None
-    _LISTFOLDERACCESSORSREQUEST.fields_by_name['name']._serialized_options = b'\x92A\x10\xca>\r\xfa\x02\nfolderName'
-    _SHAREFOLDERREQUEST.fields_by_name['folder']._options = None
-    _SHAREFOLDERREQUEST.fields_by_name['folder']._serialized_options = b'\x92A\x1fJ\r"folders/123"\xca>\r\xfa\x02\nfolderName'
-    _SHAREFOLDERREQUEST.fields_by_name['group']._options = None
-    _SHAREFOLDERREQUEST.fields_by_name['group']._serialized_options = b'\x92A\x0eJ\x0c"groups/123"'
-    _UNSHAREFOLDERREQUEST.fields_by_name['folder']._options = None
-    _UNSHAREFOLDERREQUEST.fields_by_name['folder']._serialized_options = b'\x92A\x1fJ\r"folders/123"\xca>\r\xfa\x02\nfolderName'
-    _UNSHAREFOLDERREQUEST.fields_by_name['group']._options = None
-    _UNSHAREFOLDERREQUEST.fields_by_name['group']._serialized_options = b'\x92A\x0eJ\x0c"groups/123"'
-    _SEARCHITEMSREQUEST.fields_by_name['folder']._options = None
-    _SEARCHITEMSREQUEST.fields_by_name['folder']._serialized_options = b'\x92A\'J\x0b"folders/-"\xca>\x17\xfa\x02\x14folderNameAllFolders\xe2A\x01\x02'
-    _SEARCHITEMSREQUEST.fields_by_name['query']._options = None
-    _SEARCHITEMSREQUEST.fields_by_name['query']._serialized_options = b'\xe2A\x01\x02'
-    _SEARCHITEMSREQUEST.fields_by_name['item_type']._options = None
-    _SEARCHITEMSREQUEST.fields_by_name['item_type']._serialized_options = b'\xe2A\x01\x01'
-    _LIBRARYSERVICE.methods_by_name['ListFolders']._options = None
-    _LIBRARYSERVICE.methods_by_name['ListFolders']._serialized_options = b'\x92A\x0e\x12\x0cList folders\x82\xd3\xe4\x93\x02\r\x12\x0b/v1/folders'
-    _LIBRARYSERVICE.methods_by_name['GetFolder']._options = None
-    _LIBRARYSERVICE.methods_by_name['GetFolder']._serialized_options = b'\x92A\x0c\x12\nGet folder\x82\xd3\xe4\x93\x02\x16\x12\x14/v1/{name=folders/*}'
-    _LIBRARYSERVICE.methods_by_name['CreateFolder']._options = None
-    _LIBRARYSERVICE.methods_by_name['CreateFolder']._serialized_options = b'\x92A\x0f\x12\rCreate folder\x82\xd3\xe4\x93\x02\x15"\x0b/v1/folders:\x06folder'
-    _LIBRARYSERVICE.methods_by_name['UpdateFolder']._options = None
-    _LIBRARYSERVICE.methods_by_name['UpdateFolder']._serialized_options = b'\x92A\x0f\x12\rUpdate folder\x82\xd3\xe4\x93\x02%2\x1b/v1/{folder.name=folders/*}:\x06folder'
-    _LIBRARYSERVICE.methods_by_name['DeleteFolder']._options = None
-    _LIBRARYSERVICE.methods_by_name['DeleteFolder']._serialized_options = b'\x92A\x0f\x12\rDelete folder\x82\xd3\xe4\x93\x02\x16*\x14/v1/{name=folders/*}'
-    _LIBRARYSERVICE.methods_by_name['ListItems']._options = None
-    _LIBRARYSERVICE.methods_by_name['ListItems']._serialized_options = b'\x92A\x13\x12\x11List folder items\x82\xd3\xe4\x93\x02\x1e\x12\x1c/v1/{parent=folders/*}/items'
-    _LIBRARYSERVICE.methods_by_name['MoveItems']._options = None
-    _LIBRARYSERVICE.methods_by_name['MoveItems']._serialized_options = b'\x92A\x13\x12\x11Move folder items\x82\xd3\xe4\x93\x02)"\'/v1/{target_folder=folders/*}:moveItems'
-    _LIBRARYSERVICE.methods_by_name['ListFolderAccessors']._options = None
-    _LIBRARYSERVICE.methods_by_name['ListFolderAccessors']._serialized_options = b'\x92A\x17\x12\x15List folder accessors\x82\xd3\xe4\x93\x02 \x12\x1e/v1/{name=folders/*}/accessors'
-    _LIBRARYSERVICE.methods_by_name['ShareFolder']._options = None
-    _LIBRARYSERVICE.methods_by_name['ShareFolder']._serialized_options = b'\x92A\x0e\x12\x0cShare folder\x82\xd3\xe4\x93\x02!"\x1c/v1/{folder=folders/*}:share:\x01*'
-    _LIBRARYSERVICE.methods_by_name['UnshareFolder']._options = None
-    _LIBRARYSERVICE.methods_by_name['UnshareFolder']._serialized_options = b'\x92A\x10\x12\x0eUnshare folder\x82\xd3\xe4\x93\x02#"\x1e/v1/{folder=folders/*}:unshare:\x01*'
-    _LIBRARYSERVICE.methods_by_name['SearchItems']._options = None
-    _LIBRARYSERVICE.methods_by_name['SearchItems']._serialized_options = b'\x92A\x19\x12\x17Search for folder items\x82\xd3\xe4\x93\x02%\x12#/v1/{folder=folders/*}/items:search'
+    _globals['DESCRIPTOR']._options = None
+    _globals['DESCRIPTOR']._serialized_options = b'\n\x1ccom.exabel.api.management.v1B\x13LibraryServiceProtoP\x01Z\x1cexabel.com/api/management/v1'
+    _globals['_GETFOLDERREQUEST'].fields_by_name['name']._options = None
+    _globals['_GETFOLDERREQUEST'].fields_by_name['name']._serialized_options = b'\x92A\x10\xca>\r\xfa\x02\nfolderName\xe2A\x01\x02'
+    _globals['_CREATEFOLDERREQUEST'].fields_by_name['folder']._options = None
+    _globals['_CREATEFOLDERREQUEST'].fields_by_name['folder']._serialized_options = b'\xe2A\x01\x02'
+    _globals['_UPDATEFOLDERREQUEST'].fields_by_name['folder']._options = None
+    _globals['_UPDATEFOLDERREQUEST'].fields_by_name['folder']._serialized_options = b'\xe2A\x01\x02'
+    _globals['_DELETEFOLDERREQUEST'].fields_by_name['name']._options = None
+    _globals['_DELETEFOLDERREQUEST'].fields_by_name['name']._serialized_options = b'\x92A\x10\xca>\r\xfa\x02\nfolderName\xe2A\x01\x02'
+    _globals['_LISTITEMSREQUEST'].fields_by_name['parent']._options = None
+    _globals['_LISTITEMSREQUEST'].fields_by_name['parent']._serialized_options = b'\x92A\x1fJ\r"folders/123"\xca>\r\xfa\x02\nfolderName\xe2A\x01\x01'
+    _globals['_MOVEITEMSREQUEST'].fields_by_name['items']._options = None
+    _globals['_MOVEITEMSREQUEST'].fields_by_name['items']._serialized_options = b'\xe2A\x01\x02'
+    _globals['_MOVEITEMSREQUEST'].fields_by_name['target_folder']._options = None
+    _globals['_MOVEITEMSREQUEST'].fields_by_name['target_folder']._serialized_options = b'\x92A\x10\xca>\r\xfa\x02\nfolderName\xe2A\x01\x02'
+    _globals['_LISTFOLDERACCESSORSREQUEST'].fields_by_name['name']._options = None
+    _globals['_LISTFOLDERACCESSORSREQUEST'].fields_by_name['name']._serialized_options = b'\x92A\x10\xca>\r\xfa\x02\nfolderName'
+    _globals['_SHAREFOLDERREQUEST'].fields_by_name['folder']._options = None
+    _globals['_SHAREFOLDERREQUEST'].fields_by_name['folder']._serialized_options = b'\x92A\x1fJ\r"folders/123"\xca>\r\xfa\x02\nfolderName'
+    _globals['_SHAREFOLDERREQUEST'].fields_by_name['group']._options = None
+    _globals['_SHAREFOLDERREQUEST'].fields_by_name['group']._serialized_options = b'\x92A\x0eJ\x0c"groups/123"'
+    _globals['_UNSHAREFOLDERREQUEST'].fields_by_name['folder']._options = None
+    _globals['_UNSHAREFOLDERREQUEST'].fields_by_name['folder']._serialized_options = b'\x92A\x1fJ\r"folders/123"\xca>\r\xfa\x02\nfolderName'
+    _globals['_UNSHAREFOLDERREQUEST'].fields_by_name['group']._options = None
+    _globals['_UNSHAREFOLDERREQUEST'].fields_by_name['group']._serialized_options = b'\x92A\x0eJ\x0c"groups/123"'
+    _globals['_SEARCHITEMSREQUEST'].fields_by_name['folder']._options = None
+    _globals['_SEARCHITEMSREQUEST'].fields_by_name['folder']._serialized_options = b'\x92A\'J\x0b"folders/-"\xca>\x17\xfa\x02\x14folderNameAllFolders\xe2A\x01\x02'
+    _globals['_SEARCHITEMSREQUEST'].fields_by_name['query']._options = None
+    _globals['_SEARCHITEMSREQUEST'].fields_by_name['query']._serialized_options = b'\xe2A\x01\x02'
+    _globals['_SEARCHITEMSREQUEST'].fields_by_name['item_type']._options = None
+    _globals['_SEARCHITEMSREQUEST'].fields_by_name['item_type']._serialized_options = b'\xe2A\x01\x01'
+    _globals['_LIBRARYSERVICE'].methods_by_name['ListFolders']._options = None
+    _globals['_LIBRARYSERVICE'].methods_by_name['ListFolders']._serialized_options = b'\x92A\x0e\x12\x0cList folders\x82\xd3\xe4\x93\x02\r\x12\x0b/v1/folders'
+    _globals['_LIBRARYSERVICE'].methods_by_name['GetFolder']._options = None
+    _globals['_LIBRARYSERVICE'].methods_by_name['GetFolder']._serialized_options = b'\x92A\x0c\x12\nGet folder\x82\xd3\xe4\x93\x02\x16\x12\x14/v1/{name=folders/*}'
+    _globals['_LIBRARYSERVICE'].methods_by_name['CreateFolder']._options = None
+    _globals['_LIBRARYSERVICE'].methods_by_name['CreateFolder']._serialized_options = b'\x92A\x0f\x12\rCreate folder\x82\xd3\xe4\x93\x02\x15"\x0b/v1/folders:\x06folder'
+    _globals['_LIBRARYSERVICE'].methods_by_name['UpdateFolder']._options = None
+    _globals['_LIBRARYSERVICE'].methods_by_name['UpdateFolder']._serialized_options = b'\x92A\x0f\x12\rUpdate folder\x82\xd3\xe4\x93\x02%2\x1b/v1/{folder.name=folders/*}:\x06folder'
+    _globals['_LIBRARYSERVICE'].methods_by_name['DeleteFolder']._options = None
+    _globals['_LIBRARYSERVICE'].methods_by_name['DeleteFolder']._serialized_options = b'\x92A\x0f\x12\rDelete folder\x82\xd3\xe4\x93\x02\x16*\x14/v1/{name=folders/*}'
+    _globals['_LIBRARYSERVICE'].methods_by_name['ListItems']._options = None
+    _globals['_LIBRARYSERVICE'].methods_by_name['ListItems']._serialized_options = b'\x92A\x13\x12\x11List folder items\x82\xd3\xe4\x93\x02\x1e\x12\x1c/v1/{parent=folders/*}/items'
+    _globals['_LIBRARYSERVICE'].methods_by_name['MoveItems']._options = None
+    _globals['_LIBRARYSERVICE'].methods_by_name['MoveItems']._serialized_options = b'\x92A\x13\x12\x11Move folder items\x82\xd3\xe4\x93\x02)"\'/v1/{target_folder=folders/*}:moveItems'
+    _globals['_LIBRARYSERVICE'].methods_by_name['ListFolderAccessors']._options = None
+    _globals['_LIBRARYSERVICE'].methods_by_name['ListFolderAccessors']._serialized_options = b'\x92A\x17\x12\x15List folder accessors\x82\xd3\xe4\x93\x02 \x12\x1e/v1/{name=folders/*}/accessors'
+    _globals['_LIBRARYSERVICE'].methods_by_name['ShareFolder']._options = None
+    _globals['_LIBRARYSERVICE'].methods_by_name['ShareFolder']._serialized_options = b'\x92A\x0e\x12\x0cShare folder\x82\xd3\xe4\x93\x02!"\x1c/v1/{folder=folders/*}:share:\x01*'
+    _globals['_LIBRARYSERVICE'].methods_by_name['UnshareFolder']._options = None
+    _globals['_LIBRARYSERVICE'].methods_by_name['UnshareFolder']._serialized_options = b'\x92A\x10\x12\x0eUnshare folder\x82\xd3\xe4\x93\x02#"\x1e/v1/{folder=folders/*}:unshare:\x01*'
+    _globals['_LIBRARYSERVICE'].methods_by_name['SearchItems']._options = None
+    _globals['_LIBRARYSERVICE'].methods_by_name['SearchItems']._serialized_options = b'\x92A\x19\x12\x17Search for folder items\x82\xd3\xe4\x93\x02%\x12#/v1/{folder=folders/*}/items:search'
     _globals['_LISTFOLDERSREQUEST']._serialized_start = 298
     _globals['_LISTFOLDERSREQUEST']._serialized_end = 318
     _globals['_LISTFOLDERSRESPONSE']._serialized_start = 320
