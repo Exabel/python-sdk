@@ -29,32 +29,28 @@ class GetTimeSeries(BaseScript):
         self.parser.add_argument(
             "--start",
             required=False,
-            type=str,
+            type=pd.Timestamp,
             help="The first date of the time series",
         )
         self.parser.add_argument(
             "--end",
             required=False,
-            type=str,
+            type=pd.Timestamp,
             help="The last date of the time series",
         )
         self.parser.add_argument(
             "--known-time",
             required=False,
-            type=str,
+            type=pd.Timestamp,
             help="The point-in-time to retrieve the time series at",
         )
 
     def run_script(self, client: ExabelClient, args: argparse.Namespace) -> None:
-        start = pd.Timestamp(args.start) if args.start is not None else None
-        end = pd.Timestamp(args.end) if args.end is not None else None
-        known_time = pd.Timestamp(args.known_time) if args.known_time is not None else None
-
         result = client.time_series_api.get_time_series(
             args.name,
-            start=start,
-            end=end,
-            known_time=known_time,
+            start=args.start,
+            end=args.end,
+            known_time=args.known_time,
             include_metadata=True,
         )
         if result is None:
@@ -67,7 +63,7 @@ class GetTimeSeries(BaseScript):
                 [(t.strftime("%Y-%m-%d"), k.strftime("%Y-%m-%d")) for t, k in result.series.index],
                 names=["date", "known_time"],
             )
-            if not known_time:
+            if not args.known_time:
                 result.series = result.series.droplevel("known_time")
         else:
             result.series.index = pd.Index(

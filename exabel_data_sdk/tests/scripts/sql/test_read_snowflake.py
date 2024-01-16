@@ -5,7 +5,7 @@ from exabel_data_sdk.scripts.sql.read_snowflake import ReadSnowflake
 from exabel_data_sdk.tests.decorators import requires_modules
 
 
-@requires_modules("snowflake.sqlalchemy", "sqlalchemy")
+@requires_modules("snowflake.connector")
 class TestReadSnowflake(unittest.TestCase):
     def test_read_snowflake_parse_args(self):
         args = [
