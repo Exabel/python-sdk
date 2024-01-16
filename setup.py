@@ -22,7 +22,6 @@ _SNOWFLAKE_REQUIREMENTS = _SQLALCHEMY_REQUIREMENTS + [
 
 _ATHENA_REQUIREMENTS = _SQLALCHEMY_REQUIREMENTS + [
     "pyathena",
-    "pyarrow",
 ]
 
 setuptools.setup(
@@ -42,8 +41,8 @@ setuptools.setup(
         "grpcio",
         "openpyxl",
         "pandas",
-        "pyarrow",
         "protobuf>=4",
+        "pyarrow",
         "requests",
         "tqdm",
     ],
