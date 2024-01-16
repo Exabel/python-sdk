@@ -12,19 +12,19 @@ _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
 _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'exabel.api.data.v1.signal_messages_pb2', _globals)
 if _descriptor._USE_C_DESCRIPTORS == False:
-    DESCRIPTOR._options = None
-    DESCRIPTOR._serialized_options = b'\n\x16com.exabel.api.data.v1B\x13SignalMessagesProtoP\x01Z\x16exabel.com/api/data/v1'
-    _SIGNAL.fields_by_name['name']._options = None
-    _SIGNAL.fields_by_name['name']._serialized_options = b'\x92A%J\x13"signals/ns.signal"\xca>\r\xfa\x02\nsignalName\xe2A\x02\x05\x02'
-    _SIGNAL.fields_by_name['entity_type']._options = None
-    _SIGNAL.fields_by_name['entity_type']._serialized_options = b'\x18\x01'
-    _SIGNAL.fields_by_name['display_name']._options = None
-    _SIGNAL.fields_by_name['display_name']._serialized_options = b'\x92A\rJ\x0b"My signal"'
-    _SIGNAL.fields_by_name['description']._options = None
-    _SIGNAL.fields_by_name['description']._serialized_options = b'\x92A\x17J\x15"Describes my signal"'
-    _SIGNAL.fields_by_name['read_only']._options = None
-    _SIGNAL.fields_by_name['read_only']._serialized_options = b'\xe2A\x01\x03'
-    _SIGNAL.fields_by_name['entity_types']._options = None
-    _SIGNAL.fields_by_name['entity_types']._serialized_options = b'\x92A2J0["entityTypes/ns.type1", "entityTypes/ns.type2"]\xe2A\x01\x03'
+    _globals['DESCRIPTOR']._options = None
+    _globals['DESCRIPTOR']._serialized_options = b'\n\x16com.exabel.api.data.v1B\x13SignalMessagesProtoP\x01Z\x16exabel.com/api/data/v1'
+    _globals['_SIGNAL'].fields_by_name['name']._options = None
+    _globals['_SIGNAL'].fields_by_name['name']._serialized_options = b'\x92A%J\x13"signals/ns.signal"\xca>\r\xfa\x02\nsignalName\xe2A\x02\x05\x02'
+    _globals['_SIGNAL'].fields_by_name['entity_type']._options = None
+    _globals['_SIGNAL'].fields_by_name['entity_type']._serialized_options = b'\x18\x01'
+    _globals['_SIGNAL'].fields_by_name['display_name']._options = None
+    _globals['_SIGNAL'].fields_by_name['display_name']._serialized_options = b'\x92A\rJ\x0b"My signal"'
+    _globals['_SIGNAL'].fields_by_name['description']._options = None
+    _globals['_SIGNAL'].fields_by_name['description']._serialized_options = b'\x92A\x17J\x15"Describes my signal"'
+    _globals['_SIGNAL'].fields_by_name['read_only']._options = None
+    _globals['_SIGNAL'].fields_by_name['read_only']._serialized_options = b'\xe2A\x01\x03'
+    _globals['_SIGNAL'].fields_by_name['entity_types']._options = None
+    _globals['_SIGNAL'].fields_by_name['entity_types']._serialized_options = b'\x92A2J0["entityTypes/ns.type1", "entityTypes/ns.type2"]\xe2A\x01\x03'
     _globals['_SIGNAL']._serialized_start = 181
     _globals['_SIGNAL']._serialized_end = 529

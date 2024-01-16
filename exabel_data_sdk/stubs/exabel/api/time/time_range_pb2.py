@@ -10,7 +10,7 @@ _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
 _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'exabel.api.time.time_range_pb2', _globals)
 if _descriptor._USE_C_DESCRIPTORS == False:
-    DESCRIPTOR._options = None
-    DESCRIPTOR._serialized_options = b'\n\x13com.exabel.api.timeB\x0eTimeRangeProtoP\x01Z\x13exabel.com/api/time'
+    _globals['DESCRIPTOR']._options = None
+    _globals['DESCRIPTOR']._serialized_options = b'\n\x13com.exabel.api.timeB\x0eTimeRangeProtoP\x01Z\x13exabel.com/api/time'
     _globals['_TIMERANGE']._serialized_start = 87
     _globals['_TIMERANGE']._serialized_end = 232

@@ -12,17 +12,17 @@ _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
 _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'exabel.api.analytics.v1.tag_messages_pb2', _globals)
 if _descriptor._USE_C_DESCRIPTORS == False:
-    DESCRIPTOR._options = None
-    DESCRIPTOR._serialized_options = b'\n\x1bcom.exabel.api.analytics.v1B\x10TagMessagesProtoP\x01Z\x1bexabel.com/api/analytics/v1'
-    _TAG.fields_by_name['name']._options = None
-    _TAG.fields_by_name['name']._serialized_options = b'\xe2A\x01\x03'
-    _TAG.fields_by_name['display_name']._options = None
-    _TAG.fields_by_name['display_name']._serialized_options = b'\x92A\nJ\x08"My tag"'
-    _TAG.fields_by_name['description']._options = None
-    _TAG.fields_by_name['description']._serialized_options = b'\x92A\x16J\x14"My tag description"'
-    _TAG.fields_by_name['entity_type']._options = None
-    _TAG.fields_by_name['entity_type']._serialized_options = b'\xe2A\x01\x03'
-    _TAG.fields_by_name['metadata']._options = None
-    _TAG.fields_by_name['metadata']._serialized_options = b'\xe2A\x01\x03'
+    _globals['DESCRIPTOR']._options = None
+    _globals['DESCRIPTOR']._serialized_options = b'\n\x1bcom.exabel.api.analytics.v1B\x10TagMessagesProtoP\x01Z\x1bexabel.com/api/analytics/v1'
+    _globals['_TAG'].fields_by_name['name']._options = None
+    _globals['_TAG'].fields_by_name['name']._serialized_options = b'\xe2A\x01\x03'
+    _globals['_TAG'].fields_by_name['display_name']._options = None
+    _globals['_TAG'].fields_by_name['display_name']._serialized_options = b'\x92A\nJ\x08"My tag"'
+    _globals['_TAG'].fields_by_name['description']._options = None
+    _globals['_TAG'].fields_by_name['description']._serialized_options = b'\x92A\x16J\x14"My tag description"'
+    _globals['_TAG'].fields_by_name['entity_type']._options = None
+    _globals['_TAG'].fields_by_name['entity_type']._serialized_options = b'\xe2A\x01\x03'
+    _globals['_TAG'].fields_by_name['metadata']._options = None
+    _globals['_TAG'].fields_by_name['metadata']._serialized_options = b'\xe2A\x01\x03'
     _globals['_TAG']._serialized_start = 198
     _globals['_TAG']._serialized_end = 398

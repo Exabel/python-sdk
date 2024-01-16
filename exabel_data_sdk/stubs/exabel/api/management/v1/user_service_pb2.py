@@ -12,12 +12,12 @@ _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
 _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'exabel.api.management.v1.user_service_pb2', _globals)
 if _descriptor._USE_C_DESCRIPTORS == False:
-    DESCRIPTOR._options = None
-    DESCRIPTOR._serialized_options = b'\n\x1ccom.exabel.api.management.v1B\x10UserServiceProtoP\x01Z\x1cexabel.com/api/management/v1'
-    _USERSERVICE.methods_by_name['ListGroups']._options = None
-    _USERSERVICE.methods_by_name['ListGroups']._serialized_options = b'\x92A\r\x12\x0bList groups\x82\xd3\xe4\x93\x02\x0c\x12\n/v1/groups'
-    _USERSERVICE.methods_by_name['ListUsers']._options = None
-    _USERSERVICE.methods_by_name['ListUsers']._serialized_options = b'\x92A\x0c\x12\nList users\x82\xd3\xe4\x93\x02\x0b\x12\t/v1/users'
+    _globals['DESCRIPTOR']._options = None
+    _globals['DESCRIPTOR']._serialized_options = b'\n\x1ccom.exabel.api.management.v1B\x10UserServiceProtoP\x01Z\x1cexabel.com/api/management/v1'
+    _globals['_USERSERVICE'].methods_by_name['ListGroups']._options = None
+    _globals['_USERSERVICE'].methods_by_name['ListGroups']._serialized_options = b'\x92A\r\x12\x0bList groups\x82\xd3\xe4\x93\x02\x0c\x12\n/v1/groups'
+    _globals['_USERSERVICE'].methods_by_name['ListUsers']._options = None
+    _globals['_USERSERVICE'].methods_by_name['ListUsers']._serialized_options = b'\x92A\x0c\x12\nList users\x82\xd3\xe4\x93\x02\x0b\x12\t/v1/users'
     _globals['_LISTGROUPSREQUEST']._serialized_start = 197
     _globals['_LISTGROUPSREQUEST']._serialized_end = 216
     _globals['_LISTGROUPSRESPONSE']._serialized_start = 218

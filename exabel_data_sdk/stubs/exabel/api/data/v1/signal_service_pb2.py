@@ -15,26 +15,26 @@ _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
 _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'exabel.api.data.v1.signal_service_pb2', _globals)
 if _descriptor._USE_C_DESCRIPTORS == False:
-    DESCRIPTOR._options = None
-    DESCRIPTOR._serialized_options = b'\n\x16com.exabel.api.data.v1B\x12SignalServiceProtoP\x01Z\x16exabel.com/api/data/v1'
-    _GETSIGNALREQUEST.fields_by_name['name']._options = None
-    _GETSIGNALREQUEST.fields_by_name['name']._serialized_options = b'\x92A\x10\xca>\r\xfa\x02\nsignalName\xe2A\x01\x02'
-    _CREATESIGNALREQUEST.fields_by_name['signal']._options = None
-    _CREATESIGNALREQUEST.fields_by_name['signal']._serialized_options = b'\xe2A\x01\x02'
-    _UPDATESIGNALREQUEST.fields_by_name['signal']._options = None
-    _UPDATESIGNALREQUEST.fields_by_name['signal']._serialized_options = b'\xe2A\x01\x02'
-    _DELETESIGNALREQUEST.fields_by_name['name']._options = None
-    _DELETESIGNALREQUEST.fields_by_name['name']._serialized_options = b'\x92A\x10\xca>\r\xfa\x02\nsignalName\xe2A\x01\x02'
-    _SIGNALSERVICE.methods_by_name['ListSignals']._options = None
-    _SIGNALSERVICE.methods_by_name['ListSignals']._serialized_options = b'\x92A\x0e\x12\x0cList signals\x82\xd3\xe4\x93\x02\r\x12\x0b/v1/signals'
-    _SIGNALSERVICE.methods_by_name['GetSignal']._options = None
-    _SIGNALSERVICE.methods_by_name['GetSignal']._serialized_options = b'\x92A\x0c\x12\nGet signal\x82\xd3\xe4\x93\x02\x16\x12\x14/v1/{name=signals/*}'
-    _SIGNALSERVICE.methods_by_name['CreateSignal']._options = None
-    _SIGNALSERVICE.methods_by_name['CreateSignal']._serialized_options = b'\x92A\x0f\x12\rCreate signal\x82\xd3\xe4\x93\x02\x15"\x0b/v1/signals:\x06signal'
-    _SIGNALSERVICE.methods_by_name['UpdateSignal']._options = None
-    _SIGNALSERVICE.methods_by_name['UpdateSignal']._serialized_options = b'\x92A\x0f\x12\rUpdate signal\x82\xd3\xe4\x93\x02%2\x1b/v1/{signal.name=signals/*}:\x06signal'
-    _SIGNALSERVICE.methods_by_name['DeleteSignal']._options = None
-    _SIGNALSERVICE.methods_by_name['DeleteSignal']._serialized_options = b'\x92A\x0f\x12\rDelete signal\x82\xd3\xe4\x93\x02\x16*\x14/v1/{name=signals/*}'
+    _globals['DESCRIPTOR']._options = None
+    _globals['DESCRIPTOR']._serialized_options = b'\n\x16com.exabel.api.data.v1B\x12SignalServiceProtoP\x01Z\x16exabel.com/api/data/v1'
+    _globals['_GETSIGNALREQUEST'].fields_by_name['name']._options = None
+    _globals['_GETSIGNALREQUEST'].fields_by_name['name']._serialized_options = b'\x92A\x10\xca>\r\xfa\x02\nsignalName\xe2A\x01\x02'
+    _globals['_CREATESIGNALREQUEST'].fields_by_name['signal']._options = None
+    _globals['_CREATESIGNALREQUEST'].fields_by_name['signal']._serialized_options = b'\xe2A\x01\x02'
+    _globals['_UPDATESIGNALREQUEST'].fields_by_name['signal']._options = None
+    _globals['_UPDATESIGNALREQUEST'].fields_by_name['signal']._serialized_options = b'\xe2A\x01\x02'
+    _globals['_DELETESIGNALREQUEST'].fields_by_name['name']._options = None
+    _globals['_DELETESIGNALREQUEST'].fields_by_name['name']._serialized_options = b'\x92A\x10\xca>\r\xfa\x02\nsignalName\xe2A\x01\x02'
+    _globals['_SIGNALSERVICE'].methods_by_name['ListSignals']._options = None
+    _globals['_SIGNALSERVICE'].methods_by_name['ListSignals']._serialized_options = b'\x92A\x0e\x12\x0cList signals\x82\xd3\xe4\x93\x02\r\x12\x0b/v1/signals'
+    _globals['_SIGNALSERVICE'].methods_by_name['GetSignal']._options = None
+    _globals['_SIGNALSERVICE'].methods_by_name['GetSignal']._serialized_options = b'\x92A\x0c\x12\nGet signal\x82\xd3\xe4\x93\x02\x16\x12\x14/v1/{name=signals/*}'
+    _globals['_SIGNALSERVICE'].methods_by_name['CreateSignal']._options = None
+    _globals['_SIGNALSERVICE'].methods_by_name['CreateSignal']._serialized_options = b'\x92A\x0f\x12\rCreate signal\x82\xd3\xe4\x93\x02\x15"\x0b/v1/signals:\x06signal'
+    _globals['_SIGNALSERVICE'].methods_by_name['UpdateSignal']._options = None
+    _globals['_SIGNALSERVICE'].methods_by_name['UpdateSignal']._serialized_options = b'\x92A\x0f\x12\rUpdate signal\x82\xd3\xe4\x93\x02%2\x1b/v1/{signal.name=signals/*}:\x06signal'
+    _globals['_SIGNALSERVICE'].methods_by_name['DeleteSignal']._options = None
+    _globals['_SIGNALSERVICE'].methods_by_name['DeleteSignal']._serialized_options = b'\x92A\x0f\x12\rDelete signal\x82\xd3\xe4\x93\x02\x16*\x14/v1/{name=signals/*}'
     _globals['_LISTSIGNALSREQUEST']._serialized_start = 279
     _globals['_LISTSIGNALSREQUEST']._serialized_end = 338
     _globals['_LISTSIGNALSRESPONSE']._serialized_start = 340

@@ -15,54 +15,54 @@ _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
 _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'exabel.api.data.v1.relationship_service_pb2', _globals)
 if _descriptor._USE_C_DESCRIPTORS == False:
-    DESCRIPTOR._options = None
-    DESCRIPTOR._serialized_options = b'\n\x16com.exabel.api.data.v1B\x18RelationshipServiceProtoP\x01Z\x16exabel.com/api/data/v1'
-    _CREATERELATIONSHIPTYPEREQUEST.fields_by_name['relationship_type']._options = None
-    _CREATERELATIONSHIPTYPEREQUEST.fields_by_name['relationship_type']._serialized_options = b'\xe2A\x01\x02'
-    _UPDATERELATIONSHIPTYPEREQUEST.fields_by_name['relationship_type']._options = None
-    _UPDATERELATIONSHIPTYPEREQUEST.fields_by_name['relationship_type']._serialized_options = b'\xe2A\x01\x02'
-    _DELETERELATIONSHIPTYPEREQUEST.fields_by_name['name']._options = None
-    _DELETERELATIONSHIPTYPEREQUEST.fields_by_name['name']._serialized_options = b'\x92A\x1a\xca>\x17\xfa\x02\x14relationshipTypeName\xe2A\x01\x02'
-    _GETRELATIONSHIPTYPEREQUEST.fields_by_name['name']._options = None
-    _GETRELATIONSHIPTYPEREQUEST.fields_by_name['name']._serialized_options = b'\x92A\x1a\xca>\x17\xfa\x02\x14relationshipTypeName\xe2A\x01\x02'
-    _LISTRELATIONSHIPSREQUEST.fields_by_name['parent']._options = None
-    _LISTRELATIONSHIPSREQUEST.fields_by_name['parent']._serialized_options = b'\x92A\x1a\xca>\x17\xfa\x02\x14relationshipTypeName\xe2A\x01\x02'
-    _GETRELATIONSHIPREQUEST.fields_by_name['parent']._options = None
-    _GETRELATIONSHIPREQUEST.fields_by_name['parent']._serialized_options = b'\x92A\x1a\xca>\x17\xfa\x02\x14relationshipTypeName\xe2A\x01\x02'
-    _GETRELATIONSHIPREQUEST.fields_by_name['from_entity']._options = None
-    _GETRELATIONSHIPREQUEST.fields_by_name['from_entity']._serialized_options = b'\xe2A\x01\x02'
-    _GETRELATIONSHIPREQUEST.fields_by_name['to_entity']._options = None
-    _GETRELATIONSHIPREQUEST.fields_by_name['to_entity']._serialized_options = b'\xe2A\x01\x02'
-    _CREATERELATIONSHIPREQUEST.fields_by_name['relationship']._options = None
-    _CREATERELATIONSHIPREQUEST.fields_by_name['relationship']._serialized_options = b'\xe2A\x01\x02'
-    _UPDATERELATIONSHIPREQUEST.fields_by_name['relationship']._options = None
-    _UPDATERELATIONSHIPREQUEST.fields_by_name['relationship']._serialized_options = b'\xe2A\x01\x02'
-    _DELETERELATIONSHIPREQUEST.fields_by_name['parent']._options = None
-    _DELETERELATIONSHIPREQUEST.fields_by_name['parent']._serialized_options = b'\x92A\x1a\xca>\x17\xfa\x02\x14relationshipTypeName\xe2A\x01\x02'
-    _DELETERELATIONSHIPREQUEST.fields_by_name['from_entity']._options = None
-    _DELETERELATIONSHIPREQUEST.fields_by_name['from_entity']._serialized_options = b'\xe2A\x01\x02'
-    _DELETERELATIONSHIPREQUEST.fields_by_name['to_entity']._options = None
-    _DELETERELATIONSHIPREQUEST.fields_by_name['to_entity']._serialized_options = b'\xe2A\x01\x02'
-    _RELATIONSHIPSERVICE.methods_by_name['ListRelationshipTypes']._options = None
-    _RELATIONSHIPSERVICE.methods_by_name['ListRelationshipTypes']._serialized_options = b'\x92A\x19\x12\x17List relationship types\x82\xd3\xe4\x93\x02\x17\x12\x15/v1/relationshipTypes'
-    _RELATIONSHIPSERVICE.methods_by_name['GetRelationshipType']._options = None
-    _RELATIONSHIPSERVICE.methods_by_name['GetRelationshipType']._serialized_options = b'\x92A\x17\x12\x15Get relationship type\x82\xd3\xe4\x93\x02 \x12\x1e/v1/{name=relationshipTypes/*}'
-    _RELATIONSHIPSERVICE.methods_by_name['CreateRelationshipType']._options = None
-    _RELATIONSHIPSERVICE.methods_by_name['CreateRelationshipType']._serialized_options = b'\x92A\x1a\x12\x18Create relationship type\x82\xd3\xe4\x93\x02*"\x15/v1/relationshipTypes:\x11relationship_type'
-    _RELATIONSHIPSERVICE.methods_by_name['UpdateRelationshipType']._options = None
-    _RELATIONSHIPSERVICE.methods_by_name['UpdateRelationshipType']._serialized_options = b'\x92A\x1a\x12\x18Update relationship type\x82\xd3\xe4\x93\x02E20/v1/{relationship_type.name=relationshipTypes/*}:\x11relationship_type'
-    _RELATIONSHIPSERVICE.methods_by_name['DeleteRelationshipType']._options = None
-    _RELATIONSHIPSERVICE.methods_by_name['DeleteRelationshipType']._serialized_options = b'\x92A\x1a\x12\x18Delete relationship type\x82\xd3\xe4\x93\x02 *\x1e/v1/{name=relationshipTypes/*}'
-    _RELATIONSHIPSERVICE.methods_by_name['ListRelationships']._options = None
-    _RELATIONSHIPSERVICE.methods_by_name['ListRelationships']._serialized_options = b'\x92A\x14\x12\x12List relationships\x82\xd3\xe4\x93\x020\x12./v1/{parent=relationshipTypes/*}/relationships'
-    _RELATIONSHIPSERVICE.methods_by_name['GetRelationship']._options = None
-    _RELATIONSHIPSERVICE.methods_by_name['GetRelationship']._serialized_options = b'\x92A\x12\x12\x10Get relationship\x82\xd3\xe4\x93\x02|\x12z/v1/{parent=relationshipTypes/*}/relationships/{from_entity=entityTypes/*/entities/*}/{to_entity=entityTypes/*/entities/*}'
-    _RELATIONSHIPSERVICE.methods_by_name['CreateRelationship']._options = None
-    _RELATIONSHIPSERVICE.methods_by_name['CreateRelationship']._serialized_options = b'\x92A\x15\x12\x13Create relationship\x82\xd3\xe4\x93\x02K";/v1/{relationship.parent=relationshipTypes/*}/relationships:\x0crelationship'
-    _RELATIONSHIPSERVICE.methods_by_name['UpdateRelationship']._options = None
-    _RELATIONSHIPSERVICE.methods_by_name['UpdateRelationship']._serialized_options = b'\x92A\x15\x12\x13Update relationship\x82\xd3\xe4\x93\x02\x80\x022;/v1/{relationship.parent=relationshipTypes/*}/relationships:\x0crelationshipZ\xb2\x012\xa1\x01/v1/{relationship.parent=relationshipTypes/*}/relationships/{relationship.from_entity=entityTypes/*/entities/*}/{relationship.to_entity=entityTypes/*/entities/*}:\x0crelationship'
-    _RELATIONSHIPSERVICE.methods_by_name['DeleteRelationship']._options = None
-    _RELATIONSHIPSERVICE.methods_by_name['DeleteRelationship']._serialized_options = b'\x92A\x15\x12\x13Delete relationship\x82\xd3\xe4\x93\x02\xae\x01*./v1/{parent=relationshipTypes/*}/relationshipsZ|*z/v1/{parent=relationshipTypes/*}/relationships/{from_entity=entityTypes/*/entities/*}/{to_entity=entityTypes/*/entities/*}'
+    _globals['DESCRIPTOR']._options = None
+    _globals['DESCRIPTOR']._serialized_options = b'\n\x16com.exabel.api.data.v1B\x18RelationshipServiceProtoP\x01Z\x16exabel.com/api/data/v1'
+    _globals['_CREATERELATIONSHIPTYPEREQUEST'].fields_by_name['relationship_type']._options = None
+    _globals['_CREATERELATIONSHIPTYPEREQUEST'].fields_by_name['relationship_type']._serialized_options = b'\xe2A\x01\x02'
+    _globals['_UPDATERELATIONSHIPTYPEREQUEST'].fields_by_name['relationship_type']._options = None
+    _globals['_UPDATERELATIONSHIPTYPEREQUEST'].fields_by_name['relationship_type']._serialized_options = b'\xe2A\x01\x02'
+    _globals['_DELETERELATIONSHIPTYPEREQUEST'].fields_by_name['name']._options = None
+    _globals['_DELETERELATIONSHIPTYPEREQUEST'].fields_by_name['name']._serialized_options = b'\x92A\x1a\xca>\x17\xfa\x02\x14relationshipTypeName\xe2A\x01\x02'
+    _globals['_GETRELATIONSHIPTYPEREQUEST'].fields_by_name['name']._options = None
+    _globals['_GETRELATIONSHIPTYPEREQUEST'].fields_by_name['name']._serialized_options = b'\x92A\x1a\xca>\x17\xfa\x02\x14relationshipTypeName\xe2A\x01\x02'
+    _globals['_LISTRELATIONSHIPSREQUEST'].fields_by_name['parent']._options = None
+    _globals['_LISTRELATIONSHIPSREQUEST'].fields_by_name['parent']._serialized_options = b'\x92A\x1a\xca>\x17\xfa\x02\x14relationshipTypeName\xe2A\x01\x02'
+    _globals['_GETRELATIONSHIPREQUEST'].fields_by_name['parent']._options = None
+    _globals['_GETRELATIONSHIPREQUEST'].fields_by_name['parent']._serialized_options = b'\x92A\x1a\xca>\x17\xfa\x02\x14relationshipTypeName\xe2A\x01\x02'
+    _globals['_GETRELATIONSHIPREQUEST'].fields_by_name['from_entity']._options = None
+    _globals['_GETRELATIONSHIPREQUEST'].fields_by_name['from_entity']._serialized_options = b'\xe2A\x01\x02'
+    _globals['_GETRELATIONSHIPREQUEST'].fields_by_name['to_entity']._options = None
+    _globals['_GETRELATIONSHIPREQUEST'].fields_by_name['to_entity']._serialized_options = b'\xe2A\x01\x02'
+    _globals['_CREATERELATIONSHIPREQUEST'].fields_by_name['relationship']._options = None
+    _globals['_CREATERELATIONSHIPREQUEST'].fields_by_name['relationship']._serialized_options = b'\xe2A\x01\x02'
+    _globals['_UPDATERELATIONSHIPREQUEST'].fields_by_name['relationship']._options = None
+    _globals['_UPDATERELATIONSHIPREQUEST'].fields_by_name['relationship']._serialized_options = b'\xe2A\x01\x02'
+    _globals['_DELETERELATIONSHIPREQUEST'].fields_by_name['parent']._options = None
+    _globals['_DELETERELATIONSHIPREQUEST'].fields_by_name['parent']._serialized_options = b'\x92A\x1a\xca>\x17\xfa\x02\x14relationshipTypeName\xe2A\x01\x02'
+    _globals['_DELETERELATIONSHIPREQUEST'].fields_by_name['from_entity']._options = None
+    _globals['_DELETERELATIONSHIPREQUEST'].fields_by_name['from_entity']._serialized_options = b'\xe2A\x01\x02'
+    _globals['_DELETERELATIONSHIPREQUEST'].fields_by_name['to_entity']._options = None
+    _globals['_DELETERELATIONSHIPREQUEST'].fields_by_name['to_entity']._serialized_options = b'\xe2A\x01\x02'
+    _globals['_RELATIONSHIPSERVICE'].methods_by_name['ListRelationshipTypes']._options = None
+    _globals['_RELATIONSHIPSERVICE'].methods_by_name['ListRelationshipTypes']._serialized_options = b'\x92A\x19\x12\x17List relationship types\x82\xd3\xe4\x93\x02\x17\x12\x15/v1/relationshipTypes'
+    _globals['_RELATIONSHIPSERVICE'].methods_by_name['GetRelationshipType']._options = None
+    _globals['_RELATIONSHIPSERVICE'].methods_by_name['GetRelationshipType']._serialized_options = b'\x92A\x17\x12\x15Get relationship type\x82\xd3\xe4\x93\x02 \x12\x1e/v1/{name=relationshipTypes/*}'
+    _globals['_RELATIONSHIPSERVICE'].methods_by_name['CreateRelationshipType']._options = None
+    _globals['_RELATIONSHIPSERVICE'].methods_by_name['CreateRelationshipType']._serialized_options = b'\x92A\x1a\x12\x18Create relationship type\x82\xd3\xe4\x93\x02*"\x15/v1/relationshipTypes:\x11relationship_type'
+    _globals['_RELATIONSHIPSERVICE'].methods_by_name['UpdateRelationshipType']._options = None
+    _globals['_RELATIONSHIPSERVICE'].methods_by_name['UpdateRelationshipType']._serialized_options = b'\x92A\x1a\x12\x18Update relationship type\x82\xd3\xe4\x93\x02E20/v1/{relationship_type.name=relationshipTypes/*}:\x11relationship_type'
+    _globals['_RELATIONSHIPSERVICE'].methods_by_name['DeleteRelationshipType']._options = None
+    _globals['_RELATIONSHIPSERVICE'].methods_by_name['DeleteRelationshipType']._serialized_options = b'\x92A\x1a\x12\x18Delete relationship type\x82\xd3\xe4\x93\x02 *\x1e/v1/{name=relationshipTypes/*}'
+    _globals['_RELATIONSHIPSERVICE'].methods_by_name['ListRelationships']._options = None
+    _globals['_RELATIONSHIPSERVICE'].methods_by_name['ListRelationships']._serialized_options = b'\x92A\x14\x12\x12List relationships\x82\xd3\xe4\x93\x020\x12./v1/{parent=relationshipTypes/*}/relationships'
+    _globals['_RELATIONSHIPSERVICE'].methods_by_name['GetRelationship']._options = None
+    _globals['_RELATIONSHIPSERVICE'].methods_by_name['GetRelationship']._serialized_options = b'\x92A\x12\x12\x10Get relationship\x82\xd3\xe4\x93\x02|\x12z/v1/{parent=relationshipTypes/*}/relationships/{from_entity=entityTypes/*/entities/*}/{to_entity=entityTypes/*/entities/*}'
+    _globals['_RELATIONSHIPSERVICE'].methods_by_name['CreateRelationship']._options = None
+    _globals['_RELATIONSHIPSERVICE'].methods_by_name['CreateRelationship']._serialized_options = b'\x92A\x15\x12\x13Create relationship\x82\xd3\xe4\x93\x02K";/v1/{relationship.parent=relationshipTypes/*}/relationships:\x0crelationship'
+    _globals['_RELATIONSHIPSERVICE'].methods_by_name['UpdateRelationship']._options = None
+    _globals['_RELATIONSHIPSERVICE'].methods_by_name['UpdateRelationship']._serialized_options = b'\x92A\x15\x12\x13Update relationship\x82\xd3\xe4\x93\x02\x80\x022;/v1/{relationship.parent=relationshipTypes/*}/relationships:\x0crelationshipZ\xb2\x012\xa1\x01/v1/{relationship.parent=relationshipTypes/*}/relationships/{relationship.from_entity=entityTypes/*/entities/*}/{relationship.to_entity=entityTypes/*/entities/*}:\x0crelationship'
+    _globals['_RELATIONSHIPSERVICE'].methods_by_name['DeleteRelationship']._options = None
+    _globals['_RELATIONSHIPSERVICE'].methods_by_name['DeleteRelationship']._serialized_options = b'\x92A\x15\x12\x13Delete relationship\x82\xd3\xe4\x93\x02\xae\x01*./v1/{parent=relationshipTypes/*}/relationshipsZ|*z/v1/{parent=relationshipTypes/*}/relationships/{from_entity=entityTypes/*/entities/*}/{to_entity=entityTypes/*/entities/*}'
     _globals['_LISTRELATIONSHIPTYPESREQUEST']._serialized_start = 291
     _globals['_LISTRELATIONSHIPTYPESREQUEST']._serialized_end = 360
     _globals['_LISTRELATIONSHIPTYPESRESPONSE']._serialized_start = 363

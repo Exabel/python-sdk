@@ -11,17 +11,17 @@ _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
 _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'exabel.api.data.v1.data_set_messages_pb2', _globals)
 if _descriptor._USE_C_DESCRIPTORS == False:
-    DESCRIPTOR._options = None
-    DESCRIPTOR._serialized_options = b'\n\x16com.exabel.api.data.v1B\x14DataSetMessagesProtoP\x01Z\x16exabel.com/api/data/v1'
-    _DATASET.fields_by_name['name']._options = None
-    _DATASET.fields_by_name['name']._serialized_options = b'\x92A\'J\x14"dataSets/ns.stores"\xca>\x0e\xfa\x02\x0bdataSetName\xe2A\x02\x05\x02'
-    _DATASET.fields_by_name['display_name']._options = None
-    _DATASET.fields_by_name['display_name']._serialized_options = b'\x92A\nJ\x08"Stores"'
-    _DATASET.fields_by_name['description']._options = None
-    _DATASET.fields_by_name['description']._serialized_options = b'\x92A&J$"The data set of all store entities"'
-    _DATASET.fields_by_name['signals']._options = None
-    _DATASET.fields_by_name['signals']._serialized_options = b'\x92A7J5["signals/ns.customer_amount", "signals/ns.visitors"]\xe2A\x01\x06'
-    _DATASET.fields_by_name['read_only']._options = None
-    _DATASET.fields_by_name['read_only']._serialized_options = b'\x92A\x07J\x05false\xe2A\x01\x03'
+    _globals['DESCRIPTOR']._options = None
+    _globals['DESCRIPTOR']._serialized_options = b'\n\x16com.exabel.api.data.v1B\x14DataSetMessagesProtoP\x01Z\x16exabel.com/api/data/v1'
+    _globals['_DATASET'].fields_by_name['name']._options = None
+    _globals['_DATASET'].fields_by_name['name']._serialized_options = b'\x92A\'J\x14"dataSets/ns.stores"\xca>\x0e\xfa\x02\x0bdataSetName\xe2A\x02\x05\x02'
+    _globals['_DATASET'].fields_by_name['display_name']._options = None
+    _globals['_DATASET'].fields_by_name['display_name']._serialized_options = b'\x92A\nJ\x08"Stores"'
+    _globals['_DATASET'].fields_by_name['description']._options = None
+    _globals['_DATASET'].fields_by_name['description']._serialized_options = b'\x92A&J$"The data set of all store entities"'
+    _globals['_DATASET'].fields_by_name['signals']._options = None
+    _globals['_DATASET'].fields_by_name['signals']._serialized_options = b'\x92A7J5["signals/ns.customer_amount", "signals/ns.visitors"]\xe2A\x01\x06'
+    _globals['_DATASET'].fields_by_name['read_only']._options = None
+    _globals['_DATASET'].fields_by_name['read_only']._serialized_options = b'\x92A\x07J\x05false\xe2A\x01\x03'
     _globals['_DATASET']._serialized_start = 148
     _globals['_DATASET']._serialized_end = 437

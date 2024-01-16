@@ -10,5 +10,5 @@ _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
 _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'exabel.api.data.v1.service_pb2', _globals)
 if _descriptor._USE_C_DESCRIPTORS == False:
-    DESCRIPTOR._options = None
-    DESCRIPTOR._serialized_options = b'\n\x16com.exabel.api.data.v1B\x0cServiceProtoP\x01Z\x16exabel.com/api/data/v1\x92A\x84\x02\x12P\n\x0fExabel Data API"5\n\x06Exabel\x12\x17https://www.exabel.com/\x1a\x12support@exabel.com2\x061.0.25\x1a\x13data.api.exabel.com*\x01\x022\x10application/json:\x10application/jsonZ\x1c\n\x1a\n\x07API key\x12\x0f\x08\x02\x1a\tx-api-key \x02b\r\n\x0b\n\x07API key\x12\x00rG\n\x1eMore about the Exabel Data API\x12%https://help.exabel.com/docs/data-api'
+    _globals['DESCRIPTOR']._options = None
+    _globals['DESCRIPTOR']._serialized_options = b'\n\x16com.exabel.api.data.v1B\x0cServiceProtoP\x01Z\x16exabel.com/api/data/v1\x92A\x84\x02\x12P\n\x0fExabel Data API"5\n\x06Exabel\x12\x17https://www.exabel.com/\x1a\x12support@exabel.com2\x061.0.25\x1a\x13data.api.exabel.com*\x01\x022\x10application/json:\x10application/jsonZ\x1c\n\x1a\n\x07API key\x12\x0f\x08\x02\x1a\tx-api-key \x02b\r\n\x0b\n\x07API key\x12\x00rG\n\x1eMore about the Exabel Data API\x12%https://help.exabel.com/docs/data-api'

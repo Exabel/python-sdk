@@ -10,11 +10,11 @@ _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
 _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'exabel.api.data.v1.namespaces_messages_pb2', _globals)
 if _descriptor._USE_C_DESCRIPTORS == False:
-    DESCRIPTOR._options = None
-    DESCRIPTOR._serialized_options = b'\n\x16com.exabel.api.data.v1B\x17NamespacesMessagesProtoP\x01Z\x16exabel.com/api/data/v1'
-    _NAMESPACE.fields_by_name['name']._options = None
-    _NAMESPACE.fields_by_name['name']._serialized_options = b'\xe2A\x01\x03'
-    _NAMESPACE.fields_by_name['writeable']._options = None
-    _NAMESPACE.fields_by_name['writeable']._serialized_options = b'\xe2A\x01\x03'
+    _globals['DESCRIPTOR']._options = None
+    _globals['DESCRIPTOR']._serialized_options = b'\n\x16com.exabel.api.data.v1B\x17NamespacesMessagesProtoP\x01Z\x16exabel.com/api/data/v1'
+    _globals['_NAMESPACE'].fields_by_name['name']._options = None
+    _globals['_NAMESPACE'].fields_by_name['name']._serialized_options = b'\xe2A\x01\x03'
+    _globals['_NAMESPACE'].fields_by_name['writeable']._options = None
+    _globals['_NAMESPACE'].fields_by_name['writeable']._serialized_options = b'\xe2A\x01\x03'
     _globals['_NAMESPACE']._serialized_start = 101
     _globals['_NAMESPACE']._serialized_end = 157

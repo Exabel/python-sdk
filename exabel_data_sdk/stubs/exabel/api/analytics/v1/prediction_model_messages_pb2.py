@@ -11,12 +11,12 @@ _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
 _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'exabel.api.analytics.v1.prediction_model_messages_pb2', _globals)
 if _descriptor._USE_C_DESCRIPTORS == False:
-    DESCRIPTOR._options = None
-    DESCRIPTOR._serialized_options = b'\n\x1bcom.exabel.api.analytics.v1B\x1cPredictionModelMessagesProtoP\x01Z\x1bexabel.com/api/analytics/v1'
-    _PREDICTIONMODELRUN.fields_by_name['name']._options = None
-    _PREDICTIONMODELRUN.fields_by_name['name']._serialized_options = b'\x92A\x1fJ\x1d"predictionModels/123/runs/3"\xe2A\x01\x03'
-    _PREDICTIONMODELRUN.fields_by_name['description']._options = None
-    _PREDICTIONMODELRUN.fields_by_name['description']._serialized_options = b'\x92A\x1cJ\x1a"Initiated by API request"'
+    _globals['DESCRIPTOR']._options = None
+    _globals['DESCRIPTOR']._serialized_options = b'\n\x1bcom.exabel.api.analytics.v1B\x1cPredictionModelMessagesProtoP\x01Z\x1bexabel.com/api/analytics/v1'
+    _globals['_PREDICTIONMODELRUN'].fields_by_name['name']._options = None
+    _globals['_PREDICTIONMODELRUN'].fields_by_name['name']._serialized_options = b'\x92A\x1fJ\x1d"predictionModels/123/runs/3"\xe2A\x01\x03'
+    _globals['_PREDICTIONMODELRUN'].fields_by_name['description']._options = None
+    _globals['_PREDICTIONMODELRUN'].fields_by_name['description']._serialized_options = b'\x92A\x1cJ\x1a"Initiated by API request"'
     _globals['_MODELCONFIGURATION']._serialized_start = 447
     _globals['_MODELCONFIGURATION']._serialized_end = 548
     _globals['_PREDICTIONMODELRUN']._serialized_start = 166

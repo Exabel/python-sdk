@@ -11,12 +11,12 @@ _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
 _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'exabel.api.data.v1.search_messages_pb2', _globals)
 if _descriptor._USE_C_DESCRIPTORS == False:
-    DESCRIPTOR._options = None
-    DESCRIPTOR._serialized_options = b'\n\x16com.exabel.api.data.v1B\x13SearchMessagesProtoP\x01Z\x16exabel.com/api/data/v1'
-    _SEARCHTERM.fields_by_name['field']._options = None
-    _SEARCHTERM.fields_by_name['field']._serialized_options = b'\x92A\x08J\x06"text"\xe2A\x01\x02'
-    _SEARCHTERM.fields_by_name['query']._options = None
-    _SEARCHTERM.fields_by_name['query']._serialized_options = b'\x92A\rJ\x0b"microsoft"\xe2A\x01\x02'
+    _globals['DESCRIPTOR']._options = None
+    _globals['DESCRIPTOR']._serialized_options = b'\n\x16com.exabel.api.data.v1B\x13SearchMessagesProtoP\x01Z\x16exabel.com/api/data/v1'
+    _globals['_SEARCHTERM'].fields_by_name['field']._options = None
+    _globals['_SEARCHTERM'].fields_by_name['field']._serialized_options = b'\x92A\x08J\x06"text"\xe2A\x01\x02'
+    _globals['_SEARCHTERM'].fields_by_name['query']._options = None
+    _globals['_SEARCHTERM'].fields_by_name['query']._serialized_options = b'\x92A\rJ\x0b"microsoft"\xe2A\x01\x02'
     _globals['_SEARCHUNIVERSE']._serialized_start = 299
     _globals['_SEARCHUNIVERSE']._serialized_end = 389
     _globals['_SEARCHTERM']._serialized_start = 145
