@@ -71,6 +71,12 @@ class ExportSignals(BaseScript):
             default=100,
         )
         self.parser.add_argument(
+            "--retries",
+            type=int,
+            help="The number of times to retry each request.",
+            default=3,
+        )
+        self.parser.add_argument(
             "--show-progress",
             required=False,
             action="store_true",
@@ -106,7 +112,7 @@ class ExportSignals(BaseScript):
         if len(tag_results) > 1:
             entities = entities.union(*tag_results[1:])
             print("In total", len(entities), "entities")
-        export_api = ExportApi.from_api_key(api_key)
+        export_api = ExportApi.from_api_key(api_key, retries=args.retries)
         signals = args.signal
         print("Downloading signal(s):", ", ".join(signals))
         logging.getLogger("exabel_data_sdk.client.api.export_api").setLevel(logging.WARNING)

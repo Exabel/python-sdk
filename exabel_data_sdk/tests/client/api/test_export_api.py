@@ -137,9 +137,18 @@ class TestExportApi(unittest.TestCase):
         api_key = "api-key"
         ExportApi.from_api_key(api_key=api_key)
         mock_api.assert_called_with(
-            auth_headers={"x-api-key": api_key}, backend="export.api.exabel.com"
+            auth_headers={"x-api-key": api_key}, backend="export.api.exabel.com", retries=0
         )
-        ExportApi.from_api_key(api_key=api_key, use_test_backend=True)
+        ExportApi.from_api_key(api_key=api_key, use_test_backend=True, retries=3)
         mock_api.assert_called_with(
-            auth_headers={"x-api-key": api_key}, backend="export.api-test.exabel.com"
+            auth_headers={"x-api-key": api_key}, backend="export.api-test.exabel.com", retries=3
         )
+
+    def test_retries(self):
+        # pylint: disable=protected-access
+        export_api = ExportApi(auth_headers={})
+        adapter = export_api._session.get_adapter("https://export.api.exabel.com")
+        self.assertEqual(0, adapter.max_retries.total)
+        export_api = ExportApi(auth_headers={}, retries=3)
+        adapter = export_api._session.get_adapter("https://export.api.exabel.com")
+        self.assertEqual(3, adapter.max_retries.total)
