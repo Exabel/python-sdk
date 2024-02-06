@@ -102,10 +102,18 @@ class TestLoadEntities(unittest.TestCase):
             "--filename",
             "./exabel_data_sdk/tests/resources/data/entities_with_integer_identifiers.csv",
         ]
-        extra_args = [[], ["--name-column", "brand"]]
+        extra_args = [[], ["--entity-column", "brand"]]
         expected_entities = [
-            Entity(name="entityTypes/brand/entities/test.0001", display_name="Spring & Vine"),
-            Entity(name="entityTypes/brand/entities/test.0002", display_name="The Coconut Tree"),
+            Entity(
+                name="entityTypes/brand/entities/test.0001",
+                display_name="Spring & Vine",
+                description="Shampoo bars",
+            ),
+            Entity(
+                name="entityTypes/brand/entities/test.0002",
+                display_name="The Coconut Tree",
+                description="Sri Lankan street food",
+            ),
         ]
         for e_args in extra_args:
             args = file_args + e_args
