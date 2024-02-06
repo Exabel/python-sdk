@@ -256,6 +256,6 @@ class CsvEntityLoader:
         self, columns: Index, property_columns: Optional[Mapping[str, type]]
     ) -> Optional[str]:
         """Get the third column if it exists and it is not a property column"""
-        if len(columns) > 2 and property_columns is not None and columns[2] not in property_columns:
+        if len(columns) > 2 and (property_columns is None or columns[2] not in property_columns):
             return columns[2]
         return None
