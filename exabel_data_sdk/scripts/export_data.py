@@ -33,6 +33,12 @@ class ExportData:
             type=str,
             help="The format",
         )
+        parser.add_argument(
+            "--retries",
+            type=int,
+            help="The number of times to retry each request.",
+            default=0,
+        )
         auth_group = parser.add_mutually_exclusive_group()
         auth_group.add_argument(
             "--reauthenticate",
@@ -62,19 +68,20 @@ class ExportData:
         reauthenticate: bool = False,
         use_test_backend: bool = False,
         user: Optional[str] = None,
+        retries: int = 0,
     ) -> ExportApi:
         """Get an `ExportApi` from an API key or user authentication."""
         if api_key:
-            return ExportApi.from_api_key(api_key, use_test_backend)
+            return ExportApi.from_api_key(api_key, use_test_backend, retries=retries)
         login = UserLogin(reauthenticate, use_test_backend, user)
         headers = login.get_auth_headers()
-        return ExportApi(auth_headers=headers, backend=login.backend)
+        return ExportApi(auth_headers=headers, backend=login.backend, retries=retries)
 
     def run(self) -> None:
         """Download data from the Exabel API and store it to file."""
         args = self.parse_arguments()
         export_api = ExportData.get_export_api(
-            args.api_key, args.reauthenticate, args.use_test_backend, args.user
+            args.api_key, args.reauthenticate, args.use_test_backend, args.user, args.retries
         )
         content = export_api.run_query_bytes(query=args.query, file_format=args.format)
         with open(args.filename, "wb") as file:

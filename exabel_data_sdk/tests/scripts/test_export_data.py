@@ -50,7 +50,7 @@ class TestExportData(unittest.TestCase):
     @mock.patch("exabel_data_sdk.client.api.export_api.ExportApi.from_api_key")
     def test_get_export_api(self, from_api_key_mock):
         """Factory method ExportApi.use_api_key should be called is api-key not None."""
-        ExportData.get_export_api("api-key")
-        from_api_key_mock.assert_called_with("api-key", False)
+        ExportData.get_export_api("api-key", retries=2)
+        from_api_key_mock.assert_called_with("api-key", False, retries=2)
         ExportData.get_export_api("api-key", use_test_backend=True)
-        from_api_key_mock.assert_called_with("api-key", True)
+        from_api_key_mock.assert_called_with("api-key", True, retries=0)

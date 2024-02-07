@@ -4,7 +4,9 @@ from time import time
 from typing import List, Mapping, Optional, Sequence, Union
 
 import pandas as pd
-import requests
+from requests import Session
+from requests.adapters import HTTPAdapter
+from urllib3 import Retry
 
 from exabel_data_sdk.client.user_login import UserLogin
 from exabel_data_sdk.query.column import Column
@@ -28,6 +30,7 @@ class ExportApi:
         reauthenticate: if True, the user will be prompted to log in again.
         user:           the Exabel user to log in as, e.g. `my_user@enterprise.com`. If not
                         provided, the default user will be logged in.
+        retries:        the number of times to retry requests
     """
 
     def __init__(
@@ -37,18 +40,29 @@ class ExportApi:
         backend: str = "endpoints.exabel.com",
         reauthenticate: bool = False,
         user: Optional[str] = None,
+        retries: int = 0,
     ):
         if auth_headers is None:
             # Attempt to log in
             auth_headers = UserLogin(reauthenticate=reauthenticate, user=user).get_auth_headers()
-        self._auth_headers = auth_headers
+        session = Session()
+        session.headers.update(auth_headers)
+        if retries:
+            retry = Retry(
+                total=retries,
+                backoff_factor=1.0,
+                allowed_methods=["POST"],
+                status_forcelist=[500, 502, 503, 504],
+            )
+            session.mount("https://", HTTPAdapter(max_retries=retry))
+        self._session = session
         self._backend = backend
 
     @staticmethod
-    def from_api_key(api_key: str, use_test_backend: bool = False) -> "ExportApi":
+    def from_api_key(api_key: str, use_test_backend: bool = False, retries: int = 0) -> "ExportApi":
         """Create an `ExportApi` from an API key."""
         backend = "export.api-test.exabel.com" if use_test_backend else "export.api.exabel.com"
-        return ExportApi(auth_headers={"x-api-key": api_key}, backend=backend)
+        return ExportApi(auth_headers={"x-api-key": api_key}, backend=backend, retries=retries)
 
     def run_query_bytes(self, query: Union[str, Query], file_format: str) -> bytes:
         """
@@ -68,12 +82,13 @@ class ExportApi:
         data = {"format": file_format, "query": query}
         url = f"https://{self._backend}/v1/export/file"
         start_time = time()
-        response = requests.post(url, headers=self._auth_headers, data=data, timeout=600)
+        response = self._session.post(url, data=data, timeout=600)
         spent_time = time() - start_time
         logging.getLogger(__name__).info(
-            "Query completed in %.1f seconds, received %d bytes: %s",
+            "Query completed in %.1f seconds, received %d bytes, status %d: %s",
             spent_time,
             len(response.content),
+            response.status_code,
             query,
         )
         if response.status_code == 200:

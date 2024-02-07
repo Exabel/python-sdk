@@ -68,8 +68,9 @@ class CsvEntityLoader:
             display_name_column: the column name for the entity’s display name; if not specified,
                 defaults to the second column in the file, or the entity name if the file only
                 contains one column.
-            description_column: the column name for the entity description; if not specified, no
-                description is provided
+            description_column: the column name for the entity description; if not specified,
+                defaults to the third column in the file, or an empty description if the file only
+                contains one or two columns
             property_columns: a mapping of column names to data types for the entity properties;
                 if not specified, no properties are provided
             threads: the number of parallel upload threads to run
@@ -97,6 +98,10 @@ class CsvEntityLoader:
             if len(preview_df.columns) > 1
             else name_col_ref
         )
+        description_col_ref = description_column or self._get_description_column(
+            preview_df.columns, property_columns
+        )
+
         string_columns.add(get_case_insensitive_column(name_col_ref, preview_df.columns))
         string_columns.add(get_case_insensitive_column(display_name_col_ref, preview_df.columns))
         if property_columns is not None:
@@ -104,8 +109,8 @@ class CsvEntityLoader:
                 string_columns.add(get_case_insensitive_column(pc, preview_df.columns))
         else:
             property_columns = {}
-        if description_column:
-            string_columns.add(get_case_insensitive_column(description_column, preview_df.columns))
+        if description_col_ref:
+            string_columns.add(get_case_insensitive_column(description_col_ref, preview_df.columns))
         entities_dfs = CsvReader.read_file(
             filename,
             separator,
@@ -131,7 +136,9 @@ class CsvEntityLoader:
                 if len(entity_df.columns) > 1
                 else name_col
             )
-            description_col = description_column
+            description_col = description_column or self._get_description_column(
+                entity_df.columns, property_columns
+            )
             result = self._load_entities(
                 data_frame=entity_df,
                 name_col=name_col,
@@ -244,3 +251,11 @@ class CsvEntityLoader:
                 duplicated_original_names,
             )
             raise ValueError("Duplicate entities detected")
+
+    def _get_description_column(
+        self, columns: Index, property_columns: Optional[Mapping[str, type]]
+    ) -> Optional[str]:
+        """Get the third column if it exists and it is not a property column"""
+        if len(columns) > 2 and (property_columns is None or columns[2] not in property_columns):
+            return columns[2]
+        return None
