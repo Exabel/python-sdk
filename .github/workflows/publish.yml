@@ -22,11 +22,16 @@ jobs:
       with:
         python-version: ${{ steps.python-version.outputs.VERSION }}
 
-    - name: Install dependencies and build package
+    - name: Install dependencies
       run: |
         pip install pipenv wheel
         pipenv sync --system
-        ./build.sh
+
+    - name: Test package
+      run: ./test.sh
+
+    - name: Build package
+      run: ./build.sh
 
     - name: Cache build
       uses: actions/cache@v4
@@ -34,7 +39,7 @@ jobs:
         path: ./dist
         key: build-cache
 
-  test-package:
+  test-install:
     needs: build-package
     runs-on: ubuntu-latest
     strategy:
@@ -59,16 +64,9 @@ jobs:
         PACKAGE=$(ls ./dist/ | grep -P .+\.whl$)
         pip install ./dist/$PACKAGE --no-cache-dir
 
-    - name: Run unit tests
-      run: |
-        mkdir -p tests/exabel_data_sdk
-        cp -r ./exabel_data_sdk/tests ./tests/exabel_data_sdk/
-        cd ./tests/
-        python -m unittest discover -s ./exabel_data_sdk/tests
-
   publish-package-to-pypi:
     if: always()
-    needs: test-package
+    needs: test-install
     runs-on: ubuntu-latest
 
     steps:
