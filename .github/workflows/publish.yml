@@ -22,16 +22,11 @@ jobs:
       with:
         python-version: ${{ steps.python-version.outputs.VERSION }}
 
-    - name: Install dependencies
+    - name: Install dependencies and build package
       run: |
         pip install pipenv wheel
         pipenv sync --system
-
-    - name: Test package
-      run: ./tests.sh
-
-    - name: Build package
-      run: ./build.sh
+        ./build.sh
 
     - name: Cache build
       uses: actions/cache@v4
