@@ -18,7 +18,7 @@ jobs:
         pipenv sync --system
 
     - name: Test package
-      run: ./test.sh
+      run: ./tests.sh
 
     - name: Build package
       run: ./build.sh
