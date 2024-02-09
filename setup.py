@@ -45,7 +45,7 @@ setuptools.setup(
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/Exabel/python-sdk",
-    packages=setuptools.find_packages(),
+    packages=setuptools.find_packages(exclude=["exabel_data_sdk.tests*"]),
     install_requires=[
         "google-api-core>1.31.3",
         "googleapis-common-protos>=1.56.0",
@@ -69,4 +69,5 @@ setuptools.setup(
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
     ],
+
 )
