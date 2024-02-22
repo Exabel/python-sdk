@@ -89,7 +89,7 @@ jobs:
 
     - name: Post failure to Slack
       if: ${{ failure() || cancelled() }}
-      uses: ravsamhq/notify-slack-action@v2
+      uses: ravsamhq/notify-slack-action@2.5.0
       with:
         status: 'failure'
       env:

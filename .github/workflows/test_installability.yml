@@ -25,7 +25,7 @@ jobs:
         pip install exabel-data-sdk==$VERSION --no-cache-dir
 
     - name: Post to Slack
-      uses: ravsamhq/notify-slack-action@v2
+      uses: ravsamhq/notify-slack-action@2.5.0
       if: failure()
       with:
         status: ${{ job.status }}
