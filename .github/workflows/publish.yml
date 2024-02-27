@@ -34,7 +34,7 @@ jobs:
         path: ./dist
         key: build-cache
 
-  test-install:
+  test-package:
     needs: build-package
     runs-on: ubuntu-latest
     strategy:
@@ -59,9 +59,12 @@ jobs:
         PACKAGE=$(ls ./dist/ | grep -P .+\.whl$)
         pip install ./dist/$PACKAGE --no-cache-dir
 
+    - name: Run unit tests
+      run: ./test_installed.sh
+
   publish-package-to-pypi:
     if: always()
-    needs: test-install
+    needs: test-package
     runs-on: ubuntu-latest
 
     steps:
@@ -81,7 +84,7 @@ jobs:
 
     - name: Post status to Slack
       if: ${{ success() }}
-      uses: ravsamhq/notify-slack-action@v2
+      uses: ravsamhq/notify-slack-action@2.5.0
       with:
         status: ${{ needs.test-package.result == 'success' && 'success' || 'failure' }}
       env:
