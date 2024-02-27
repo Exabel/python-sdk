@@ -1,4 +1,4 @@
-name: Test installability and usability of Python Package
+name: Test installability of Python Package
 
 on:
   schedule:
@@ -15,8 +15,7 @@ jobs:
       fail-fast: true
 
     steps:
-    - uses: actions/checkout@v3
-    - uses: actions/setup-python@v4
+    - uses: actions/setup-python@v5
       with:
         python-version: ${{ matrix.python-version }}
 
@@ -25,15 +24,8 @@ jobs:
         VERSION=$(<VERSION)
         pip install exabel-data-sdk==$VERSION --no-cache-dir
 
-    - name: Run unit tests
-      run: |
-        mkdir -p tests/exabel_data_sdk
-        cp -r ./exabel_data_sdk/tests ./tests/exabel_data_sdk/
-        cd ./tests/
-        python -m unittest discover -s ./exabel_data_sdk/tests
-
     - name: Post to Slack
-      uses: ravsamhq/notify-slack-action@v2
+      uses: ravsamhq/notify-slack-action@2.5.0
       if: failure()
       with:
         status: ${{ job.status }}

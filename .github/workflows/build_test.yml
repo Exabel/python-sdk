@@ -19,7 +19,7 @@ jobs:
         ./build.sh
 
     - name: Cache build
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         path: ./dist
         key: build-cache-${{ github.sha }}
@@ -39,7 +39,7 @@ jobs:
         python-version: ${{ matrix.python-version }}
 
     - name: Recover cache
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         path: ./dist
         key: build-cache-${{ github.sha }}
@@ -50,9 +50,4 @@ jobs:
         pip install ./dist/$PACKAGE --no-cache-dir
 
     - name: Run unit tests
-      run: |
-        mkdir -p tests/exabel_data_sdk
-        cp -r ./exabel_data_sdk/tests ./tests/exabel_data_sdk/
-        cd ./tests/
-        python -m unittest discover -s ./exabel_data_sdk/tests
-
+      run: ./test_installed.sh
