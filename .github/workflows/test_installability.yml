@@ -20,9 +20,7 @@ jobs:
         python-version: ${{ matrix.python-version }}
 
     - name: Install the current SDK version from PyPI
-      run: |
-        VERSION=$(<VERSION)
-        pip install exabel-data-sdk==$VERSION --no-cache-dir
+      run: pip install exabel-data-sdk --no-cache-dir
 
     - name: Post to Slack
       uses: ravsamhq/notify-slack-action@2.5.0
