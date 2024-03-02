@@ -293,7 +293,7 @@ class UserLogin:
 
 
 class TokenHandler(BaseHTTPRequestHandler):
-    """HTTP reponse handler for Auth0 callbacks."""
+    """HTTP response handler for Auth0 callbacks."""
 
     def __init__(self, login: UserLogin, *args: Any, **kwargs: Any):
         self.login = login
