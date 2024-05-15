@@ -112,7 +112,7 @@ class TimeSeriesFileParser:
             logger.info("Reading input data in batches of %d rows. ", batch_size)
             return (
                 TimeSeriesFileParser(filename, separator, None, df)
-                for df in CsvReader.read_file(  # pylint: disable=not-an-iterable
+                for df in CsvReader.read_file(  # pylint: disable=all
                     filename,
                     separator,
                     (0,),

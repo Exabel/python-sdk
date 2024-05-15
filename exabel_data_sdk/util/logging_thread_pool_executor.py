@@ -1,11 +1,9 @@
 import logging
 import threading
 from concurrent.futures import Future, ThreadPoolExecutor
-from typing import Any, Callable, TypeVar
+from typing import Any, Callable
 
 logger = logging.getLogger(__name__)
-
-_T = TypeVar("_T")
 
 
 class LoggingThreadPoolExecutor(ThreadPoolExecutor):
@@ -37,6 +35,6 @@ class LoggingThreadPoolExecutor(ThreadPoolExecutor):
         return wrapped
 
     def submit(  # type: ignore[override]  # pylint: disable=arguments-differ
-        self, function: Callable[..., _T], *args: Any, **kwargs: Any
-    ) -> Future[_T]:
+        self, function: Callable[..., Any], *args: Any, **kwargs: Any
+    ) -> Future:
         return super().submit(self.active_threads_counter(function), *args, **kwargs)

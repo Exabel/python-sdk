@@ -1,6 +1,6 @@
 import abc
 from dataclasses import dataclass
-from typing import Iterable, Union
+from typing import Iterable, Optional, Union
 
 import pandas as pd
 
@@ -14,7 +14,7 @@ class FileWritingResult:
         rows: Number of rows written to a file or a set of files.
     """
 
-    rows: int | None = None
+    rows: Optional[int] = None
 
 
 class FileWriter(abc.ABC):
