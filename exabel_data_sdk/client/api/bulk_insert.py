@@ -93,9 +93,9 @@ def _bulk_insert(
                     # following function call.
                     executor.submit(
                         _process,
-                        results,  # type: ignore[arg-type]
-                        resource,  # type: ignore[arg-type]
-                        insert_func,  # type: ignore[arg-type]
+                        results,
+                        resource,
+                        insert_func,
                         # Python 3.9 added support for the shutdown argument 'cancel_futures'.
                         # We should set this argument to True once we have moved to this python
                         # version.

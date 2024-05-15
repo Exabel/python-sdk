@@ -2,6 +2,7 @@ import logging
 from typing import List, Mapping, MutableSequence, Optional, Sequence, Tuple, Type
 
 from google.protobuf.duration_pb2 import Duration
+from google.protobuf.field_mask_pb2 import FieldMask
 
 from exabel_data_sdk import ExabelClient
 from exabel_data_sdk.client.api.bulk_insert import BulkInsertFailedError
@@ -78,6 +79,8 @@ class FileTimeSeriesLoader:
         replace_existing_time_series: bool = False,
         replace_existing_data_points: bool = False,
         return_results: bool = True,
+        processed_rows: int = 0,
+        total_rows: Optional[int] = None,
         # Deprecated arguments
         create_tag: Optional[bool] = None,  # pylint: disable=unused-argument
         namespace: Optional[str] = None,  # pylint: disable=unused-argument
@@ -121,6 +124,8 @@ class FileTimeSeriesLoader:
             replace_existing_data_points: if True, any existing time series data points are replaced
             return_results: if True, returns a list of TimeSeriesFileLoadingResults
                 or otherwise an empty list.
+            processed_rows: the number of rows already processed
+            total_rows: the total number of rows to be processed
         """
         if replace_existing_time_series and replace_existing_data_points:
             raise ValueError(
@@ -165,6 +170,14 @@ class FileTimeSeriesLoader:
                 replace_existing_data_points=replace_existing_data_points,
                 replaced_time_series=replaced_time_series,
             )
+            if result.processed_rows is not None and total_rows:
+                processed_rows = processed_rows + result.processed_rows
+                logger.info(
+                    "Rows processed: %d / %d. %.1f %%",
+                    processed_rows,
+                    total_rows,
+                    100 * processed_rows / total_rows,
+                )
             if replace_existing_time_series and result.replaced:
                 replaced_time_series.extend(result.replaced)
             if return_results:
@@ -298,7 +311,9 @@ class FileTimeSeriesLoader:
             [w.query for w in parsed_file.get_entity_lookup_result().warnings],
         )
         series, invalid_series = parsed_file.get_series(
-            prefix=self._get_signal_prefix(), skip_validation=skip_validation
+            prefix=self._get_signal_prefix(),
+            skip_validation=skip_validation,
+            replace_existing_time_series=replace_existing_time_series,
         )
 
         if dry_run:
@@ -316,6 +331,7 @@ class FileTimeSeriesLoader:
                 dry_run_results=[str(ts.name) for ts in series],
                 sheet_name=parser.sheet_name(),
                 has_known_time=parsed_file.has_known_time(),
+                processed_rows=len(parsed_file.data),
             )
         try:
             replaced_in_this_batch = []
@@ -386,6 +402,7 @@ class FileTimeSeriesLoader:
                 sheet_name=parser.sheet_name(),
                 has_known_time=parsed_file.has_known_time(),
                 replaced=replaced_in_this_batch,
+                processed_rows=len(parsed_file.data),
             )
         except BulkInsertFailedError as e:
             # An error summary has already been printed.
@@ -417,6 +434,8 @@ class FileTimeSeriesLoader:
         skip_validation: bool = False,
         case_sensitive_signals: bool = False,
         return_results: bool = True,
+        processed_rows: int = 0,
+        total_rows: Optional[int] = None,
     ) -> Sequence[FileLoadingResult]:
         """
         Load a CSV file to delete the time series data points represented in it.
@@ -438,8 +457,10 @@ class FileTimeSeriesLoader:
                  process to be aborted; if it is `None`, the upload is never aborted
             skip_validation: if True, the time series are not validated before deletion
             case_sensitive_signals: if True, signals are case sensitive
-            return_results: if True, returns a list of TimeSeriesFileLoadingResults
+            return_results: if True, returns a list of FileLoadingResults
                 or otherwise an empty list.
+            processed_rows: the number of rows already processed
+            total_rows: the total number of rows to be processed
         """
         if dry_run:
             logger.info("Running dry-run...")
@@ -527,7 +548,21 @@ class FileTimeSeriesLoader:
                 series, threads, retries, abort_threshold
             )
             if return_results:
-                results.append(FileLoadingResult(result, warnings=list(map(str, file_warnings))))
+                results.append(
+                    FileLoadingResult(
+                        result,
+                        warnings=list(map(str, file_warnings)),
+                        processed_rows=len(parsed_file.data),
+                    )
+                )
+            if len(parsed_file.data) is not None and total_rows:
+                processed_rows += len(parsed_file.data)
+                logger.info(
+                    "Rows processed: %d / %d. %.1f %%",
+                    processed_rows,
+                    total_rows,
+                    100 * processed_rows / total_rows,
+                )
         return results
 
     def load_time_series_metadata(
@@ -550,8 +585,9 @@ class FileTimeSeriesLoader:
         skip_validation: bool = False,
         case_sensitive_signals: bool = False,
         return_results: bool = True,
-        unit_type: Optional[str] = None,
-    ) -> Sequence[FileLoadingResult]:
+        processed_rows: int = 0,
+        total_rows: Optional[int] = None,
+    ) -> Sequence[TimeSeriesFileLoadingResult]:
         """
         Load a file and upload the time series metadata to the Exabel Data API
 
@@ -582,9 +618,10 @@ class FileTimeSeriesLoader:
                 entire file will be read into memory and uploaded in a single batch
             skip_validation: if True, the time series are not validated before uploading
             case_sensitive_signals: if True, signals are case sensitive
-            return_results: if True, returns a list of TimeSeriesFileLoadingResults
+            return_results: if True, returns a list of FileLoadingResults
                 or otherwise an empty list.
-            unit_type: the unit type of the time series. E.g. "currency", "time", "mass", etc.
+            processed_rows: the number of rows already processed
+            total_rows: the total number of rows to be processed
         """
         if dry_run:
             logger.info("Running dry-run...")
@@ -643,10 +680,9 @@ class FileTimeSeriesLoader:
                 [w.query for w in parsed_file.get_entity_lookup_result().warnings],
             )
 
-            series, invalid_series = parsed_file.get_series(  # type: ignore[call-arg]
+            series, invalid_series = parsed_file.get_series(
                 prefix=self._get_signal_prefix(),
                 skip_validation=skip_validation,
-                unit_type=unit_type,
             )
             if dry_run:
                 logger.info("Running the script would upsert the following time series:")
@@ -688,6 +724,7 @@ class FileTimeSeriesLoader:
                                 entity_mapping_result=entity_mapping_result,
                                 created_data_signals=missing_signals,
                                 sheet_name=parser.sheet_name(),
+                                processed_rows=len(parsed_file.data),
                             )
                         )
                 except BulkInsertFailedError as e:
@@ -706,6 +743,14 @@ class FileTimeSeriesLoader:
                             has_known_time=parsed_file.has_known_time(),
                         )
                     )
+            if len(parsed_file.data) is not None and total_rows:
+                processed_rows += len(parsed_file.data)
+                logger.info(
+                    "Rows processed: %d / %d. %.1f %%",
+                    processed_rows,
+                    total_rows,
+                    100 * processed_rows / total_rows,
+                )
 
         return results
 
@@ -776,8 +821,10 @@ class FileTimeSeriesLoader:
                 logger.info("Creating the missing signals.")
                 if not dry_run:
                     for signal in missing_signals:
-                        self._client.signal_api.create_signal(
+                        self._client.signal_api.update_signal(
                             Signal(name=signal, display_name=signal),
+                            update_mask=FieldMask(paths=["name"]),
+                            allow_missing=True,
                             create_library_signal=create_library_signal,
                         )
             else:

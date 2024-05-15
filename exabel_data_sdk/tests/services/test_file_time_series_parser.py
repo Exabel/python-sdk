@@ -1,21 +1,38 @@
 import math
 import unittest
 from itertools import zip_longest
+from typing import Sequence
 from unittest import mock
 
 import pandas as pd
 import pandas.testing as pdt
+from dateutil import tz
 
+from exabel_data_sdk.client.api.data_classes.time_series import Dimension, TimeSeries, Unit, Units
+from exabel_data_sdk.client.api.entity_api import EntityApi
+from exabel_data_sdk.client.api.search_service import SearchService
+from exabel_data_sdk.client.exabel_client import ExabelClient
 from exabel_data_sdk.services.file_time_series_parser import (
+    MetaDataSignalNamesInRows,
     ParsedTimeSeriesFile,
     SignalNamesInColumns,
     SignalNamesInRows,
     TimeSeriesFileParser,
     _remove_dot_int,
 )
-from exabel_data_sdk.util.resource_name_normalization import EntityResourceNames
+from exabel_data_sdk.stubs.exabel.api.data.v1.all_pb2 import (
+    Entity,
+    SearchEntitiesResponse,
+    SearchTerm,
+)
+from exabel_data_sdk.util.resource_name_normalization import (
+    EntityResourceNames,
+    EntitySearchResultWarning,
+)
 
 # pylint: disable=protected-access
+
+BLOOMBERG_TICKER_MAPPING = {"AAPL US": "F_000C7F-E", "MSFT US": "F_000Q07-E"}
 
 
 class TestTimeSeriesFileParser(unittest.TestCase):
@@ -218,3 +235,116 @@ class TestParsedTimeSeriesFile(unittest.TestCase):
         ]
         for e in expected:
             pd.testing.assert_series_equal(e, name_to_series[e.name])
+
+    def _entities_by_terms(
+        self, entity_type: str, terms: Sequence[SearchTerm]
+    ) -> Sequence[SearchEntitiesResponse.SearchResult]:
+        results = []
+        for term in terms:
+            entities = []
+            if BLOOMBERG_TICKER_MAPPING.get(term.query):
+                entities.append(
+                    Entity(
+                        name=f"{entity_type}/entities/{BLOOMBERG_TICKER_MAPPING[term.query]}",
+                        display_name=term.query,
+                    )
+                )
+            results.append(
+                SearchEntitiesResponse.SearchResult(
+                    terms=[term],
+                    entities=entities,
+                )
+            )
+
+        return results
+
+    def test_from_data_frame_long_and_medium_format(self):
+        parsers = [SignalNamesInColumns, SignalNamesInRows]
+        data = pd.DataFrame(
+            {
+                "entity": ["AAPL US", "AAPL US", "MSFT US", "unmapped"],
+                "date": ["2021-01-01", "2021-01-02", "2021-01-01", "2021-01-03"],
+                "signal": [1, 2, 4, 5],
+            }
+        )
+
+        client = mock.create_autospec(ExabelClient)
+        client.entity_api = mock.create_autospec(EntityApi)
+        client.entity_api.search = mock.create_autospec(SearchService)
+        client.entity_api.search.entities_by_terms.side_effect = self._entities_by_terms
+
+        for parser in parsers:
+            if parser == SignalNamesInRows:
+                data = data.rename(columns={"signal": "value"})
+                data.loc[:, "signal"] = "signal"
+            parsed_file = parser.from_data_frame(
+                data.copy(),
+                client.entity_api,
+                namespace="ns",
+                entity_type="company",
+                identifier_type="bloomberg_ticker",
+            )
+
+            expected_data = data.copy()
+            expected_data["entity"] = data["entity"].apply(
+                lambda x: (
+                    f"entityTypes/company/entities/{BLOOMBERG_TICKER_MAPPING[x]}"
+                    if BLOOMBERG_TICKER_MAPPING.get(x)
+                    else None
+                )
+            )
+            expected_data = expected_data.set_index("date", drop=True)
+            expected_data.index = pd.DatetimeIndex(expected_data.index, tz=tz.tzutc())
+            expected_data.index.name = None
+            expected_data = expected_data.dropna(subset=["entity"], how="any")
+            pdt.assert_frame_equal(parsed_file.data, expected_data)
+
+            lookup_result = parsed_file.get_entity_lookup_result()
+            self.assertDictEqual(
+                lookup_result.mapping,
+                {
+                    k: f"entityTypes/company/entities/{v}"
+                    for k, v in BLOOMBERG_TICKER_MAPPING.items()
+                },
+            )
+            self.assertListEqual(
+                lookup_result.warnings,
+                [
+                    EntitySearchResultWarning(
+                        field="bloomberg_ticker", query="unmapped", matched_entity_names=[]
+                    )
+                ],
+            )
+
+
+class TestMetaDataSignalNamesInRows(unittest.TestCase):
+    def test_get_deduplicated_series(self):
+        series = [
+            TimeSeries(
+                pd.Series([], name="time_series_1", dtype=object),
+                units=Units(units=[Unit(Dimension.DIMENSION_CURRENCY, unit="USD")]),
+            ),
+            TimeSeries(
+                pd.Series([], name="time_series_1", dtype=object),
+                units=Units(units=[Unit(Dimension.DIMENSION_CURRENCY, unit="USD")]),
+            ),
+            TimeSeries(
+                pd.Series([], name="time_series_2", dtype=object),
+                units=Units(units=[Unit(Dimension.DIMENSION_CURRENCY, unit="USD")]),
+            ),
+            TimeSeries(
+                pd.Series([], name="time_series_2", dtype=object),
+                units=Units(units=[Unit(Dimension.DIMENSION_CURRENCY, unit="GBP")]),
+            ),
+        ]
+        logger = "exabel_data_sdk.services.file_time_series_parser"
+        with self.assertLogs(logger, level="ERROR") as log:
+            series_deduplicated, series_with_duplicate_names = (
+                MetaDataSignalNamesInRows._get_deduplicated_series(series)
+            )
+        self.assertIn(
+            "Time series time_series_2 detected with the following different metadata",
+            log.output[0],
+        )
+        self.assertListEqual([series[0]], series_deduplicated)
+        self.assertListEqual(series[2:], series_with_duplicate_names)

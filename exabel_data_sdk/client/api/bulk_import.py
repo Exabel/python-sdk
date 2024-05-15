@@ -25,6 +25,7 @@ from exabel_data_sdk.services.csv_loading_constants import (
 )
 from exabel_data_sdk.util.deprecate_arguments import deprecate_arguments
 from exabel_data_sdk.util.import_ import get_batches_for_import
+from exabel_data_sdk.util.logging_thread_pool_executor import LoggingThreadPoolExecutor
 
 logger = logging.getLogger(__name__)
 
@@ -47,15 +48,13 @@ class ResourceFailureHandler(Generic[ResourceT]):
     @overload
     def get_time_series_result_from_violations(
         resource: TimeSeries, violations: Mapping[str, Violation]
-    ) -> ResourceCreationResult[TimeSeries]:
-        ...
+    ) -> ResourceCreationResult[TimeSeries]: ...
 
     @staticmethod
     @overload
     def get_time_series_result_from_violations(
         resource: pd.Series, violations: Mapping[str, Violation]
-    ) -> ResourceCreationResult[pd.Series]:
-        ...
+    ) -> ResourceCreationResult[pd.Series]: ...
 
     @staticmethod
     def get_time_series_result_from_violations(
@@ -262,7 +261,11 @@ def _bulk_import(
             )
 
     else:
-        with ThreadPoolExecutor(max_workers=threads) as executor:
+        with (
+            LoggingThreadPoolExecutor(max_workers=threads)
+            if logger.getEffectiveLevel() == logging.DEBUG
+            else ThreadPoolExecutor(max_workers=threads)
+        ) as executor:
             for resource_batch in resource_batches:
                 if not results.abort:
                     # The generic type hints do not guarantee that TResource refers to the same
@@ -270,9 +273,9 @@ def _bulk_import(
                     # following function call.
                     executor.submit(
                         _process,
-                        results,  # type: ignore[arg-type]
-                        resource_batch,  # type: ignore[arg-type]
-                        import_func,  # type: ignore[arg-type]
+                        results,
+                        resource_batch,
+                        import_func,
                         # Python 3.9 added support for the shutdown argument 'cancel_futures'.
                         # We should set this argument to True once we have moved to this python
                         # version.

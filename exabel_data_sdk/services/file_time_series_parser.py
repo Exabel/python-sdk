@@ -2,7 +2,7 @@ import abc
 import collections
 import logging
 import re
-from collections import Counter, defaultdict
+from collections import defaultdict
 from dataclasses import dataclass
 from pathlib import Path
 from typing import (
@@ -301,12 +301,22 @@ class ParsedTimeSeriesFile(abc.ABC):
         """Get the entity resource names."""
 
     @abc.abstractmethod
-    def _get_series_with_potential_duplicate_data_points(self, prefix: str) -> Sequence[pd.Series]:
+    def _get_series_with_potential_duplicate_data_points(
+        self, prefix: str, replace_existing_time_series: bool
+    ) -> Sequence[pd.Series]:
         """Get the time series, with potential duplicate data points."""
 
-    def get_series(self, prefix: str, *, skip_validation: bool = False) -> ValidatedTimeSeries:
+    def get_series(
+        self,
+        prefix: str,
+        *,
+        replace_existing_time_series: bool = False,
+        skip_validation: bool = False,
+    ) -> ValidatedTimeSeries:
         """Get the time series."""
-        series = self._get_series_with_potential_duplicate_data_points(prefix)
+        series = self._get_series_with_potential_duplicate_data_points(
+            prefix, replace_existing_time_series
+        )
         failures = []
         if not skip_validation:
             series_without_duplicate_data_points = [
@@ -532,14 +542,16 @@ class SignalNamesInRows(DateParsingMixin, ParsedTimeSeriesFile):
         if not is_numeric_dtype(values) and any(~values.apply(_is_float)):
             raise FileLoadingException("Found at least one non-numeric value in the value column.")
 
-    def _get_series_with_potential_duplicate_data_points(self, prefix: str) -> Sequence[pd.Series]:
+    def _get_series_with_potential_duplicate_data_points(
+        self, prefix: str, replace_existing_time_series: bool = False
+    ) -> Sequence[pd.Series]:
         series = []
 
         for (entity, signal), group in self._data.groupby(["entity", "signal"]):
             # Do not drop nan values, as this format is the only way to actually delete values
             # by explicitly importing empty values.
             ts = group["value"]
-            if ts.empty:
+            if ts.empty and not replace_existing_time_series:
                 continue
 
             ts.name = f"{entity}/{prefix}{signal}"
@@ -572,7 +584,8 @@ class SignalNamesInRows(DateParsingMixin, ParsedTimeSeriesFile):
             entity_type=entity_type,
         )
         data[entity_column] = lookup_result.names
-        data.rename(columns={entity_column: "entity"}, inplace=True)
+        data = data.loc[~data[entity_column].isnull()]
+        data = data.rename(columns={entity_column: "entity"})
         return data, lookup_result
 
 
@@ -634,14 +647,16 @@ class SignalNamesInColumns(DateParsingMixin, ParsedTimeSeriesFile):
                 ].values
         _check_non_numeric_error(non_numeric_signals)
 
-    def _get_series_with_potential_duplicate_data_points(self, prefix: str) -> Sequence[pd.Series]:
+    def _get_series_with_potential_duplicate_data_points(
+        self, prefix: str, replace_existing_time_series: bool = False
+    ) -> Sequence[pd.Series]:
         series = []
 
         for entity, entity_group in self._data.groupby("entity"):
             for signal in self.get_signals():
                 ts = entity_group[signal]
                 ts.dropna(inplace=True)
-                if ts.empty:
+                if ts.empty and not replace_existing_time_series:
                     continue
 
                 ts.name = f"{entity}/{prefix}{signal}"
@@ -820,12 +835,16 @@ class EntitiesInColumns(ParsedTimeSeriesFile):
 
         _check_non_numeric_error(non_numeric_signals)
 
-    def _get_series_with_potential_duplicate_data_points(self, prefix: str) -> Sequence[pd.Series]:
+    def _get_series_with_potential_duplicate_data_points(
+        self,
+        prefix: str,
+        replace_existing_time_series: bool = False,
+    ) -> Sequence[pd.Series]:
         series = []
 
         for signal, entity in self._data.columns:
             ts = self._data[(signal, entity)].dropna()
-            if ts.empty:
+            if ts.empty and not replace_existing_time_series:
                 continue
 
             ts.name = f"{entity}/{prefix}{signal}"
@@ -881,21 +900,32 @@ class MetaDataSignalNamesInRows(SignalNamesInRows):
     +-----------------------+----------+-----------------+-------------+
     | AAPL US               | my_sig   | USD             | million     |
     | MSFT US               | my_sig   | EUR             |             |
+    | AAPL US               | my_sig2  | ratio           |             |
+    | MSFT US               | my_sig2  | percent         |             |
     +-----------------------+----------+-----------------+-------------+
 
-    The unit, dimension and description columns are optional.
+    At least one of the columns currency, unit, or description must be present.
+    Only one of currency and unit can be set.
     """
 
-    RESERVED_COLUMNS = {"signal", "unit", "dimension", "description"}
+    RESERVED_COLUMNS = {"signal", "unit", "description"}
     UNIT_TYPE_COLUMNS = {"currency"}
+    UNIT_COLUMNS = UNIT_TYPE_COLUMNS.union({"unit"})
+    METADATA_COLUMNS = UNIT_COLUMNS.union({"description"})
     VALID_COLUMNS = RESERVED_COLUMNS.union(UNIT_TYPE_COLUMNS)
+
+    # Units that will be mapped to unit type ratio
+    RATIO_UNITS = {"percent", "ratio", "%"}
 
     @classmethod
     def is_valid(cls, data: pd.DataFrame) -> bool:
         if "signal" not in data.columns:
             return False
         entity_column = None
+        has_metadata_column = False
         for column in data.columns:
+            if column in cls.METADATA_COLUMNS:
+                has_metadata_column = True
             if column in cls.VALID_COLUMNS:
                 continue
             if entity_column is None and _is_valid_entity_column(
@@ -906,26 +936,23 @@ class MetaDataSignalNamesInRows(SignalNamesInRows):
             return False
         if _has_duplicate_columns(data.columns):
             return False
-        return True
+        return has_metadata_column
 
     def validate_numeric(self) -> None:
         return None
 
     def get_series(
-        self, prefix: str, *, skip_validation: bool = False, unit_type: Optional[str] = None
+        self,
+        prefix: str,
+        *,
+        replace_existing_time_series: bool = False,
+        skip_validation: bool = False,
     ) -> ParsedTimeSeriesFile.ValidatedTimeSeries:
-        series = self._get_series_with_potential_duplicates(prefix, unit_type)
+        series: Sequence[TimeSeries] = self._get_series_with_potential_duplicates(prefix)
         failures = []
         if not skip_validation:
-            series_names_counter = Counter([ts.name for ts in series])
-            series_with_duplicate_names = []
-            series_deduplicated = []
-            for ts in series:
-                if series_names_counter[ts.name] > 1:
-                    series_with_duplicate_names.append(ts)
-                else:
-                    series_deduplicated.append(ts)
-            duplicates = self._entity_lookup_result.get_duplicates()
+            series_deduplicated, series_with_duplicate_names = self._get_deduplicated_series(series)
+            duplicate_entities = self._entity_lookup_result.get_duplicates()
             failures.extend(
                 [
                     ResourceCreationResult(
@@ -933,7 +960,9 @@ class MetaDataSignalNamesInRows(SignalNamesInRows):
                         ts,
                         RequestError(
                             ErrorType.INVALID_ARGUMENT,
-                            message=self._format_duplicate_message(str(ts.name), duplicates),
+                            message=self._format_duplicate_message(
+                                str(ts.name), duplicate_entities
+                            ),
                         ),
                     )
                     for ts in series_with_duplicate_names
@@ -942,9 +971,7 @@ class MetaDataSignalNamesInRows(SignalNamesInRows):
             return self.ValidatedTimeSeries(series_deduplicated, failures)
         return self.ValidatedTimeSeries(series, failures)
 
-    def _get_series_with_potential_duplicates(
-        self, prefix: str, unit_type: Optional[str] = None
-    ) -> Sequence[TimeSeries]:
+    def _get_series_with_potential_duplicates(self, prefix: str) -> Sequence[TimeSeries]:
         """
         Creates a list of time series, one for each combination of entity and signal.
         The name of the time series is constructed from the entity and signal columns.
@@ -955,40 +982,80 @@ class MetaDataSignalNamesInRows(SignalNamesInRows):
         The time series are empty, as this format does not contain any data points.
         """
         series = []
-        unit_column = "unit"
 
         for _, row in self._data.iterrows():
             entity, signal = row["entity"], row["signal"]
             row = row.dropna()
-            unit = []
+            unit_column = "unit"
+            unit_type = "unknown"
+            units = []
+            has_unit = False
 
             for col in row.index:
+                if col in self.UNIT_COLUMNS:
+                    if has_unit:
+                        raise FileLoadingException(
+                            f"More than one unit specified for {row['entity']}, {row['signal']}"
+                        )
+                    has_unit = True
                 if col in self.UNIT_TYPE_COLUMNS:
                     unit_column = unit_type = col
-                    break
 
             if row.get(unit_column):
-                unit.append(
+                unit = row.get(unit_column)
+                units.append(
                     Unit(
-                        dimension=Dimension.from_string(unit_type)
-                        if unit_type
-                        else Dimension.DIMENSION_UNKNOWN,
-                        unit=row.get(unit_column),
+                        dimension=(
+                            Dimension.DIMENSION_RATIO
+                            if unit in self.RATIO_UNITS
+                            else Dimension.from_string(unit_type)
+                        ),
+                        unit=unit,
                     )
                 )
 
             series.append(
                 TimeSeries(
                     series=pd.Series(data=[], name=f"{entity}/{prefix}{signal}", dtype=object),
-                    units=Units(
-                        units=unit,
-                        description=row.get("description"),
-                    )
-                    if (unit or row.get("description"))
-                    else None,
+                    units=(
+                        Units(
+                            units=units,
+                            description=row.get("description"),
+                        )
+                        if (units or row.get("description"))
+                        else None
+                    ),
                 )
             )
         return series
+
+    @staticmethod
+    def _get_deduplicated_series(
+        series: Sequence[TimeSeries],
+    ) -> Tuple[Sequence[TimeSeries], Sequence[TimeSeries]]:
+        """Get the deduplicated series and series with duplicate names"""
+        series_dict = defaultdict(list)
+        for ts in series:
+            series_dict[ts.name].append(ts)
+
+        series_with_duplicate_names = []
+        series_deduplicated = []
+        for ts_name, ts_list in series_dict.items():
+            if len(ts_list) > 1:
+                if any(ts != ts_list[0] for ts in ts_list):
+                    logger.error(
+                        "Time series %s detected with the following different metadata", ts_name
+                    )
+                    for ts in ts_list:
+                        logger.error(ts.units)
+                    logger.error("The time series metadata will not be uploaded.")
+                    series_with_duplicate_names.extend(ts_list)
+                else:
+                    series_deduplicated.append(ts_list[0])
+            else:
+                series_deduplicated.extend(ts_list)
+
+        return series_deduplicated, series_with_duplicate_names
 
     @classmethod
     def _set_index(cls, data: pd.DataFrame) -> pd.DataFrame:

@@ -10,24 +10,21 @@ FunctionT = TypeVar("FunctionT", bound=Callable[..., Any])
 @overload
 def deprecate_arguments(
     **deprecation_replacements: Optional[str],
-) -> Callable[[FunctionT], FunctionT]:
-    ...
+) -> Callable[[FunctionT], FunctionT]: ...
 
 
 @overload
 def deprecate_arguments(
     __func: None,  # pylint: disable=invalid-name
     **deprecation_replacements: Optional[str],
-) -> Callable[[FunctionT], FunctionT]:
-    ...
+) -> Callable[[FunctionT], FunctionT]: ...
 
 
 @overload
 def deprecate_arguments(
     __func: FunctionT,  # pylint: disable=invalid-name
     **deprecation_replacements: Optional[str],
-) -> FunctionT:
-    ...
+) -> FunctionT: ...
 
 
 # Pylint flags '__func' as an invalid argument name, but we want the '__' prefix to make Mypy
@@ -93,24 +90,21 @@ def deprecate_arguments(
 @overload
 def deprecate_argument_value(
     **deprecated_values: object,
-) -> Callable[[FunctionT], FunctionT]:
-    ...
+) -> Callable[[FunctionT], FunctionT]: ...
 
 
 @overload
 def deprecate_argument_value(
     __func: None,  # pylint: disable=invalid-name
     **deprecated_values: object,
-) -> Callable[[FunctionT], FunctionT]:
-    ...
+) -> Callable[[FunctionT], FunctionT]: ...
 
 
 @overload
 def deprecate_argument_value(
     __func: FunctionT,  # pylint: disable=invalid-name
     **deprecated_values: object,
-) -> FunctionT:
-    ...
+) -> FunctionT: ...
 
 
 def deprecate_argument_value(

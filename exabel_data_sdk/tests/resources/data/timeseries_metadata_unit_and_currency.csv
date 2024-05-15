@@ -1,0 +1,4 @@
+entity;signal;unit;currency
+entityTypes/company/entities/company_A;signal1;;NOK
+entityTypes/company/entities/company_B;signal1;;USD
+entityTypes/company/entities/company_A;signal2;percent;

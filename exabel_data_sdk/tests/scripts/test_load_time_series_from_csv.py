@@ -509,7 +509,7 @@ class TestUploadTimeSeries(unittest.TestCase):
         self.client.namespace = "acme"
         script.run_script(self.client, script.parse_arguments())
 
-        call_args_list = self.client.signal_api.create_signal.call_args_list
+        call_args_list = self.client.signal_api.update_signal.call_args_list
         create_library_signal_status = call_args_list[0][1]["create_library_signal"]
         self.assertFalse(create_library_signal_status)
 
@@ -523,7 +523,7 @@ class TestUploadTimeSeries(unittest.TestCase):
         self.client.namespace = "acme"
         script.run_script(self.client, script.parse_arguments())
 
-        call_args_list = self.client.signal_api.create_signal.call_args_list
+        call_args_list = self.client.signal_api.update_signal.call_args_list
         create_library_signal_status = call_args_list[0][1]["create_library_signal"]
         self.assertTrue(create_library_signal_status)
 
@@ -539,8 +539,8 @@ class TestUploadTimeSeries(unittest.TestCase):
         script.run_script(self.client, script.parse_arguments())
 
         call_args_list = self.client.time_series_api.bulk_upsert_time_series.call_args_list
-        replace_existing_tine_series_status = call_args_list[0][1]["replace_existing_time_series"]
-        self.assertTrue(replace_existing_tine_series_status)
+        replace_existing_time_series_status = call_args_list[0][1]["replace_existing_time_series"]
+        self.assertTrue(replace_existing_time_series_status)
 
     def test_replace_existing_time_series_across_batches(self):
         args = common_args + [
@@ -663,9 +663,9 @@ class TestUploadTimeSeries(unittest.TestCase):
         self.assertEqual(1, len(call_args_list))
         series = call_args_list[0][0][0]
         self.assertEqual(1, len(series))
-        call_args_list_create_signal = self.client.signal_api.create_signal.call_args_list
-        self.assertEqual(1, len(call_args_list_create_signal))
-        signal = call_args_list_create_signal[0][0][0]
+        call_args_list_update_signal = self.client.signal_api.update_signal.call_args_list
+        self.assertEqual(1, len(call_args_list_update_signal))
+        signal = call_args_list_update_signal[0][0][0]
         self.assertEqual("signals/ns.signal1", signal.name)
 
         pd.testing.assert_series_equal(
@@ -698,7 +698,7 @@ class TestUploadTimeSeries(unittest.TestCase):
 
         call_args_list = self.client.time_series_api.bulk_upsert_time_series.call_args_list
         self.assertEqual(1, len(call_args_list))
-        self.assertEqual(0, len(self.client.signal_api.create_signal.call_args_list))
+        self.assertEqual(0, len(self.client.signal_api.update_signal.call_args_list))
         series = call_args_list[0][0][0]
         self.assertEqual(1, len(series))
 
@@ -733,7 +733,7 @@ class TestUploadTimeSeries(unittest.TestCase):
 
         call_args_list = self.client.time_series_api.bulk_upsert_time_series.call_args_list
         self.assertEqual(1, len(call_args_list))
-        self.assertEqual(0, len(self.client.signal_api.create_signal.call_args_list))
+        self.assertEqual(0, len(self.client.signal_api.update_signal.call_args_list))
         series = call_args_list[0][0][0]
         self.assertEqual(1, len(series))
 
@@ -772,9 +772,9 @@ class TestUploadTimeSeries(unittest.TestCase):
         self.assertEqual(1, len(call_args_list))
         series = call_args_list[0][0][0]
         self.assertEqual(1, len(series))
-        call_args_list_create_signal = self.client.signal_api.create_signal.call_args_list
-        self.assertEqual(1, len(call_args_list_create_signal))
-        signal = call_args_list_create_signal[0][0][0]
+        call_args_list_update_signal = self.client.signal_api.update_signal.call_args_list
+        self.assertEqual(1, len(call_args_list_update_signal))
+        signal = call_args_list_update_signal[0][0][0]
         self.assertEqual("signals/ns.Signal1", signal.name)
 
         pd.testing.assert_series_equal(
@@ -813,9 +813,9 @@ class TestUploadTimeSeries(unittest.TestCase):
         self.assertEqual(1, len(call_args_list))
         series = call_args_list[0][0][0]
         self.assertEqual(1, len(series))
-        call_args_list_create_signal = self.client.signal_api.create_signal.call_args_list
-        self.assertEqual(1, len(call_args_list_create_signal))
-        signal = call_args_list_create_signal[0][0][0]
+        call_args_list_update_signal = self.client.signal_api.update_signal.call_args_list
+        self.assertEqual(1, len(call_args_list_update_signal))
+        signal = call_args_list_update_signal[0][0][0]
         self.assertEqual("signals/ns.Signal1", signal.name)
 
         pd.testing.assert_series_equal(
@@ -847,7 +847,7 @@ class TestUploadTimeSeries(unittest.TestCase):
 
         call_args_list = self.client.time_series_api.bulk_upsert_time_series.call_args_list
         self.assertEqual(1, len(call_args_list))
-        self.assertEqual(0, len(self.client.signal_api.create_signal.call_args_list))
+        self.assertEqual(0, len(self.client.signal_api.update_signal.call_args_list))
         series = call_args_list[0][0][0]
         self.assertEqual(1, len(series))
 
@@ -883,7 +883,7 @@ class TestUploadTimeSeries(unittest.TestCase):
 
         call_args_list = self.client.time_series_api.bulk_upsert_time_series.call_args_list
         self.assertEqual(1, len(call_args_list))
-        self.assertEqual(0, len(self.client.signal_api.create_signal.call_args_list))
+        self.assertEqual(0, len(self.client.signal_api.update_signal.call_args_list))
         series = call_args_list[0][0][0]
         self.assertEqual(1, len(series))
 

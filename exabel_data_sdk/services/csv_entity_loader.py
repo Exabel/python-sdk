@@ -51,6 +51,7 @@ class CsvEntityLoader:
         abort_threshold: Optional[float] = DEFAULT_ABORT_THRESHOLD,
         batch_size: Optional[int] = None,
         return_results: bool = True,
+        total_rows: Optional[int] = None,
         # Deprecated arguments
         name_column: Optional[str] = None,  # pylint: disable=unused-argument
         namespace: Optional[str] = None,  # pylint: disable=unused-argument
@@ -82,6 +83,9 @@ class CsvEntityLoader:
                  upload to be aborted; if it is `None`, the upload is never aborted
             batch_size: the number of entities to upload in each batch; if not specified, the
                 entire file will be read into memory and uploaded in a single batch
+            return_results: if True, returns a FileLoadingResult with info, else returns an
+                empty FileLoadingResult
+            total_rows: the total number of rows to be processed
         """
         if dry_run:
             logger.info("Running dry-run...")
@@ -155,6 +159,13 @@ class CsvEntityLoader:
             )
             if return_results:
                 combined_result.update(result)
+            if combined_result.processed_rows is not None and total_rows:
+                logger.info(
+                    "Rows processed: %d / %d. %.1f %%",
+                    combined_result.processed_rows,
+                    total_rows,
+                    100 * combined_result.processed_rows / total_rows,
+                )
 
         return combined_result
 
@@ -229,7 +240,7 @@ class CsvEntityLoader:
                     "An error occurred while uploading entities.",
                     failures=result.get_failures(),
                 )
-            return FileLoadingResult(result)
+            return FileLoadingResult(result, processed_rows=len(data_frame))
         except BulkInsertFailedError as e:
             # An error summary has already been printed.
             if error_on_any_failure:
