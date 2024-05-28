@@ -38,6 +38,7 @@ class FileLoadingResult(Generic[ResourceT]):
             aborted or it was a dry run
         warnings: a list of warnings
         aborted: whether uploading was aborted
+        processed_rows: the number of rows processed
     """
 
     def __init__(
@@ -46,10 +47,12 @@ class FileLoadingResult(Generic[ResourceT]):
         *,
         warnings: Optional[Sequence[str]] = None,
         aborted: bool = False,
+        processed_rows: Optional[int] = None,
     ):
         self.results: Optional[ResourceCreationResults[ResourceT]] = results
         self.warnings = warnings or []
         self.aborted = aborted
+        self.processed_rows = processed_rows
 
     def update(self, other: FileLoadingResult[ResourceT]) -> None:
         """
@@ -61,6 +64,8 @@ class FileLoadingResult(Generic[ResourceT]):
             self.results.update(other.results)
         self.warnings = (*self.warnings, *other.warnings)
         self.aborted = self.aborted or other.aborted
+        if other.processed_rows is not None:
+            self.processed_rows = (self.processed_rows or 0) + other.processed_rows
 
 
 class TimeSeriesFileLoadingResult(FileLoadingResult[pd.Series]):
@@ -72,6 +77,7 @@ class TimeSeriesFileLoadingResult(FileLoadingResult[pd.Series]):
                                 uploading was aborted or it was a dry run
         warnings:               a list of warnings
         aborted:                whether uploading was aborted
+        rows:                   the number of rows processed
         entity_mapping_result:  results of mapping entities in the input file
         created_data_signals:   resource names of data API signals which did not exist from before
         dry_run_results:        resource names of resources which would be created in case of a dry
@@ -88,6 +94,7 @@ class TimeSeriesFileLoadingResult(FileLoadingResult[pd.Series]):
         *,
         warnings: Optional[Sequence[str]] = None,
         aborted: bool = False,
+        processed_rows: Optional[int] = None,
         entity_mapping_result: Optional[EntityMappingResult] = None,
         created_data_signals: Optional[Sequence[str]] = None,
         dry_run_results: Optional[Sequence[str]] = None,
@@ -95,7 +102,7 @@ class TimeSeriesFileLoadingResult(FileLoadingResult[pd.Series]):
         has_known_time: bool = False,
         replaced: Optional[Sequence[str]] = None,
     ):
-        super().__init__(results, warnings=warnings, aborted=aborted)
+        super().__init__(results, warnings=warnings, aborted=aborted, processed_rows=processed_rows)
         if entity_mapping_result is None:
             raise ValueError("Entity mapping result must be set.")
         self.entity_mapping_result = entity_mapping_result

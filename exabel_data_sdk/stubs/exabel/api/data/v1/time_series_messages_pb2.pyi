@@ -177,7 +177,7 @@ class Units(google.protobuf.message.Message):
         """The product of all individual unit parts of this unit. For instance, if a time series measures
         speed and is given in meters per second, it would have one unit
         `{ dimension: DIMENSION_LENGTH, unit: 'm' }` and one unit
-        `{ dimension: DIMENSION_TIME, unit: 's', exponent: -1 }. And if a time series measures a
+        `{ dimension: DIMENSION_TIME, unit: 's', exponent: -1 }.` And if a time series measures a
         monetary amount and is specified in United States dollars, it would have the single unit
         `{ dimension: DIMENSION_CURRENCY, unit: 'USD' }`.
         """
@@ -222,6 +222,8 @@ class Unit(google.protobuf.message.Message):
         'The dimension is a one dimensional size. The SI unit of length is "m", but other units may\n        also be used.\n        '
         DIMENSION_TIME: Unit._Dimension.ValueType
         'The dimension is an amount of time. The SI unit of time is "s", but other units may also be\n        used.\n        '
+        DIMENSION_RATIO: Unit._Dimension.ValueType
+        'This unit is a ratio (strictly speaking without a dimension). Symbol is typically\n        empty or "%".\n        '
 
     class Dimension(_Dimension, metaclass=_DimensionEnumTypeWrapper):
         """The supported dimensions in the Exabel platform."""
@@ -235,13 +237,15 @@ class Unit(google.protobuf.message.Message):
     'The dimension is a one dimensional size. The SI unit of length is "m", but other units may\n    also be used.\n    '
     DIMENSION_TIME: Unit.Dimension.ValueType
     'The dimension is an amount of time. The SI unit of time is "s", but other units may also be\n    used.\n    '
+    DIMENSION_RATIO: Unit.Dimension.ValueType
+    'This unit is a ratio (strictly speaking without a dimension). Symbol is typically\n    empty or "%".\n    '
     DIMENSION_FIELD_NUMBER: builtins.int
     UNIT_FIELD_NUMBER: builtins.int
     EXPONENT_FIELD_NUMBER: builtins.int
     dimension: global___Unit.Dimension.ValueType
     'The dimension of this unit.'
     unit: builtins.str
-    'The short hand symbol of a dimension of this unit, for instance "m" or "EUR".'
+    'The short hand symbol of a dimension of this unit, for instance "m" or "EUR".\n    Required, except for ratio units.\n    '
     exponent: builtins.int
     "The exponent (power) of this unit. It can be positive or negative, but if it is 0, the unit's\n    exponent defaults to the value 1.\n    "
 

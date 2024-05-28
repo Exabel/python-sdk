@@ -4,7 +4,7 @@ from unittest import mock
 import pandas as pd
 import pandas.testing as pdt
 
-from exabel_data_sdk.services.file_writer import FileWriter
+from exabel_data_sdk.services.file_writer import FileWriter, FileWritingResult
 from exabel_data_sdk.services.sql.sql_reader_configuration import ConnectionString
 from exabel_data_sdk.services.sql.sqlalchemy_reader import SQLAlchemyReader
 from exabel_data_sdk.tests.decorators import requires_modules
@@ -18,7 +18,7 @@ with handle_missing_imports():
 class TestSQLAlchemyReader(unittest.TestCase):
     class _MockFileWriter(FileWriter):
         @staticmethod
-        def write_file(df: pd.DataFrame, filepath: str) -> None:
+        def write_file(df: pd.DataFrame, filepath: str) -> FileWritingResult:
             raise NotImplementedError()
 
     def setUp(self) -> None:

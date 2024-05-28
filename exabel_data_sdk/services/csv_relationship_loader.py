@@ -305,6 +305,7 @@ class CsvRelationshipLoader:
         abort_threshold: Optional[float] = DEFAULT_ABORT_THRESHOLD,
         batch_size: Optional[int] = None,
         return_results: bool = True,
+        total_rows: Optional[int] = None,
         # Deprecated arguments:
         entity_from_column: Optional[str] = None,  # pylint: disable=unused-argument
         entity_to_column: Optional[str] = None,  # pylint: disable=unused-argument
@@ -345,6 +346,9 @@ class CsvRelationshipLoader:
                  upload to be aborted; if it is `None`, the upload is never aborted
             batch_size: the number of relationships to upload in each batch; if not specified, the
                 relationship file will be read into memory and uploaded in a single batch
+            return_results: if True, returns a FileLoadingResult with info, else returns an
+                empty FileLoadingResult
+            total_rows: the total number of rows to be processed
         """
         if dry_run:
             logger.info("Running dry-run...")
@@ -414,6 +418,13 @@ class CsvRelationshipLoader:
             )
             if return_results:
                 combined_result.update(result)
+            if combined_result.processed_rows is not None and total_rows:
+                logger.info(
+                    "Rows processed: %d / %d. %.1f %%",
+                    combined_result.processed_rows,
+                    total_rows,
+                    100 * combined_result.processed_rows / total_rows,
+                )
         return combined_result
 
     def _load_relationships(
@@ -496,7 +507,9 @@ class CsvRelationshipLoader:
         if dry_run:
             logger.info("Loading %d relationships", len(relationships))
             logger.info(relationships)
-            return FileLoadingResult(warnings=list(map(str, warnings)))
+            return FileLoadingResult(
+                warnings=list(map(str, warnings)), processed_rows=len(data_frame)
+            )
 
         try:
             result = self._client.relationship_api.bulk_create_relationships(
@@ -511,7 +524,9 @@ class CsvRelationshipLoader:
                     "An error occurred while uploading relationships.",
                     failures=result.get_failures(),
                 )
-            return FileLoadingResult(result, warnings=list(map(str, warnings)))
+            return FileLoadingResult(
+                result, warnings=list(map(str, warnings)), processed_rows=len(data_frame)
+            )
         except BulkInsertFailedError as e:
             # An error summary has already been printed.
             if error_on_any_failure:

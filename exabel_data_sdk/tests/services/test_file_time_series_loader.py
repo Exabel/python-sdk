@@ -9,6 +9,7 @@ from exabel_data_sdk.client.api.data_classes.entity import Entity
 from exabel_data_sdk.client.api.data_classes.entity_type import EntityType
 from exabel_data_sdk.client.api.data_classes.signal import Signal
 from exabel_data_sdk.services.file_loading_exception import FileLoadingException
+from exabel_data_sdk.services.file_loading_result import FileLoadingResult
 from exabel_data_sdk.services.file_time_series_loader import FileTimeSeriesLoader
 from exabel_data_sdk.stubs.exabel.api.data.v1.all_pb2 import SearchEntitiesResponse, SearchTerm
 from exabel_data_sdk.tests.client.exabel_mock_client import ExabelMockClient
@@ -208,7 +209,9 @@ class TestFileTimeSeriesLoader(unittest.TestCase):
         mock_from_file.return_value = (mock_parser for _ in range(no_batches))
         client = mock.create_autospec(ExabelClient)
         loader = FileTimeSeriesLoader(client)
-        with mock.patch.object(loader, "_load_time_series", return_value="result") as mock_load:
+        with mock.patch.object(
+            loader, "_load_time_series", return_value=FileLoadingResult()
+        ) as mock_load:
             results = loader.load_time_series(
                 filename="filename",
                 batch_size=batch_size,

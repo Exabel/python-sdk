@@ -38,8 +38,7 @@ class PageableResourceMixin:
         resource_count = 0
         while True:
             result = pageable_func(**kwargs, page_token=page_token)
-            for resource in result.results:
-                yield resource
+            yield from result.results
             page_token = result.next_page_token
             resource_count += len(result.results)
             if resource_count >= result.total_size:

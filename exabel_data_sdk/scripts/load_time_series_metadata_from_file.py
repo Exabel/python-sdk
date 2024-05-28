@@ -91,16 +91,6 @@ class LoadTimeSeriesMetaDataFromFile(CsvScriptWithEntityMapping):
             "'known_time'. Take care to maintain correct casing in the file when using this "
             "option.",
         )
-        self.parser.add_argument(
-            "--unit-type",
-            required=False,
-            type=str,
-            default=None,
-            help=(
-                "The unit type of the time series. "
-                "One of 'currency', 'time', 'mass', 'length' or 'unknown'."
-            ),
-        )
 
     def run_script(self, client: ExabelClient, args: argparse.Namespace) -> None:
         try:
@@ -119,7 +109,6 @@ class LoadTimeSeriesMetaDataFromFile(CsvScriptWithEntityMapping):
                 batch_size=args.batch_size,
                 skip_validation=args.skip_validation,
                 case_sensitive_signals=args.case_sensitive_signals,
-                unit_type=args.unit_type,
             )
 
         except FileLoadingException as e:

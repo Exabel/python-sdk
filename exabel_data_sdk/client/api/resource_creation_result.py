@@ -15,6 +15,7 @@ from exabel_data_sdk.client.api.data_classes.time_series import TimeSeries
 from exabel_data_sdk.services.csv_loading_constants import (
     DEFAULT_ABORT_THRESHOLD,
     DEFAULT_BULK_LOAD_CHECKPOINTS,
+    FAILURE_LOG_LIMIT,
 )
 
 logger = logging.getLogger(__name__)
@@ -90,7 +91,11 @@ class ResourceCreationResult(Generic[ResourceT]):
         Return a printable request error message if it is set, otherwise return the string
         representation of the error
         """
-        return self.error.message if self.error and self.error.message else str(self.error)
+        return (
+            f"{self.error.error_type.name}: {self.error.message}"
+            if self.error and self.error.message
+            else str(self.error)
+        )
 
 
 class ResourceCreationResults(Generic[ResourceT]):
@@ -165,7 +170,9 @@ class ResourceCreationResults(Generic[ResourceT]):
         """Return all the failed results."""
         return list(filter(lambda r: r.status == ResourceCreationStatus.FAILED, self.results))
 
-    def extract_retryable_failures(self) -> Sequence[ResourceCreationResult[ResourceT]]:
+    def extract_retryable_failures(
+        self, log_summary: bool = True
+    ) -> Sequence[ResourceCreationResult[ResourceT]]:
         """
         Remove all retryable failures from this result set,
         and return them.
@@ -183,6 +190,14 @@ class ResourceCreationResults(Generic[ResourceT]):
                 rest.append(result)
         self.counter.subtract([result.status for result in failed])
         self.results = rest
+
+        if log_summary and failed:
+            errors = [failure.error for failure in failed if failure.error]
+            error_types = Counter(error.error_type for error in errors)
+
+            logger.info("The following retryable failures were returned:")
+            for error_type, count in error_types.items():
+                logger.info("%d failures with error type: %s", count, error_type.name)
         return failed
 
     def check_failures(self) -> None:
@@ -198,7 +213,7 @@ class ResourceCreationResults(Generic[ResourceT]):
                     self.abort_threshold * 100,
                 )
 
-    def print_summary(self) -> None:
+    def print_summary(self, failure_log_limit: Optional[int] = FAILURE_LOG_LIMIT) -> None:
         """Prints a human legible summary of the resource creation results to screen."""
         if self.counter[ResourceCreationStatus.CREATED]:
             logger.info("%s new resources created", self.counter[ResourceCreationStatus.CREATED])
@@ -208,13 +223,26 @@ class ResourceCreationResults(Generic[ResourceT]):
             logger.info("%s resources upserted", self.counter[ResourceCreationStatus.UPSERTED])
         if self.counter[ResourceCreationStatus.FAILED]:
             logger.warning("%s resources failed", self.counter[ResourceCreationStatus.FAILED])
-            for result in self.results:
-                if result.status == ResourceCreationStatus.FAILED:
+            failures = self.get_failures()
+            for i, failure in enumerate(failures):
+                if failure_log_limit and i > failure_log_limit:
                     logger.warning(
-                        "   %s\n      %s",
-                        result.get_printable_resource(),
-                        result.get_printable_error(),
+                        "%d resources failed. Only %d resources shown.",
+                        len(failures),
+                        failure_log_limit,
                     )
+                    break
+                logger.warning(
+                    "   %s\n      %s",
+                    failure.get_printable_resource(),
+                    failure.get_printable_error(),
+                )
+
+            errors = [failure.error for failure in failures if failure.error]
+            error_types = Counter(error.error_type for error in errors)
+            logger.warning("Summary of the errors for the failed resources:")
+            for error_type, count in error_types.items():
+                logger.warning("   %s: %d", error_type.name, count)
 
     def print_status(self) -> None:
         """

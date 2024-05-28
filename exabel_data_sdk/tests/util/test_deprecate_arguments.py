@@ -58,8 +58,7 @@ class TestDeprecateArguments(unittest.TestCase):
         with self.assertRaises(ValueError):
 
             @deprecate_arguments()
-            def _no_deprecation() -> None:
-                ...
+            def _no_deprecation() -> None: ...
 
     def test_deprecate_argument__removed_argument(self):
         @deprecate_arguments(deprecated_arg=None)

@@ -82,9 +82,11 @@ class PredictionModelRun:
             name=model_run.name,
             description=model_run.description,
             configuration=ModelConfiguration(model_run.configuration),
-            configuration_source=model_run.configuration_source
-            if model_run.HasField("configuration_source")
-            else None,
+            configuration_source=(
+                model_run.configuration_source
+                if model_run.HasField("configuration_source")
+                else None
+            ),
             auto_activate=model_run.auto_activate,
         )
 

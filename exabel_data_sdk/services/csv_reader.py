@@ -15,8 +15,7 @@ class CsvReader:
         *,
         keep_default_na: bool,
         nrows: Optional[int],
-    ) -> pd.DataFrame:
-        ...
+    ) -> pd.DataFrame: ...
 
     @overload
     @staticmethod
@@ -26,8 +25,7 @@ class CsvReader:
         string_columns: Iterable[Union[str, int]],
         *,
         keep_default_na: bool,
-    ) -> pd.DataFrame:
-        ...
+    ) -> pd.DataFrame: ...
 
     @overload
     @staticmethod
@@ -38,8 +36,7 @@ class CsvReader:
         *,
         keep_default_na: bool,
         chunksize: int,
-    ) -> Iterator[pd.DataFrame]:
-        ...
+    ) -> Iterator[pd.DataFrame]: ...
 
     @overload
     @staticmethod
@@ -50,8 +47,7 @@ class CsvReader:
         *,
         keep_default_na: bool,
         chunksize: Optional[int],
-    ) -> Union[pd.DataFrame, Iterator[pd.DataFrame]]:
-        ...
+    ) -> Union[pd.DataFrame, Iterator[pd.DataFrame]]: ...
 
     @staticmethod
     def read_file(

@@ -4,6 +4,7 @@ from typing import Iterable, Iterator, NewType, Optional, Union
 
 import pandas as pd
 
+from exabel_data_sdk.services.file_writer import FileWritingResult
 from exabel_data_sdk.services.file_writer_provider import FileWriterProvider
 
 logger = logging.getLogger(__name__)
@@ -12,6 +13,7 @@ Query = NewType("Query", str)
 OutputFile = NewType("OutputFile", str)
 OutputFilePrefix = NewType("OutputFilePrefix", str)
 BatchSize = NewType("BatchSize", int)
+FileFormat = NewType("FileFormat", str)
 
 
 class SqlReader(abc.ABC):
@@ -47,7 +49,7 @@ class SqlReader(abc.ABC):
         output_file: Optional[OutputFile] = None,
         *,
         batch_size: Optional[BatchSize] = None,
-    ) -> None:
+    ) -> Optional[FileWritingResult]:
         """
         Execute the given query and write the result to the given output file. If no output file is
         given, print a sample instead.
@@ -59,5 +61,5 @@ class SqlReader(abc.ABC):
         if not output_file:
             logger.info("No output file specified. Printing sample.")
             logger.info(self.get_data_frame(df))
-            return
-        FileWriterProvider.get_file_writer(output_file).write_file(df, output_file)
+            return None
+        return FileWriterProvider.get_file_writer(output_file).write_file(df, output_file)

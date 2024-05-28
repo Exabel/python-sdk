@@ -22,6 +22,7 @@ class Dimension(Enum):
     DIMENSION_MASS = ProtoUnit.Dimension.DIMENSION_MASS
     DIMENSION_LENGTH = ProtoUnit.Dimension.DIMENSION_LENGTH
     DIMENSION_TIME = ProtoUnit.Dimension.DIMENSION_TIME
+    DIMENSION_RATIO = ProtoUnit.Dimension.DIMENSION_RATIO
 
     @classmethod
     def from_string(cls, dimension: str) -> Dimension:
@@ -32,7 +33,7 @@ class Dimension(Enum):
         except KeyError as e:
             raise ValueError(
                 f"Unknown dimension: {dimension}. "
-                + "Supported values are: unknown, currency, mass, length, time."
+                + "Supported values are: unknown, currency, mass, length, time, and ratio."
             ) from e
 
 

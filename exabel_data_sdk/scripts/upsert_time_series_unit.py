@@ -35,7 +35,7 @@ class UpsertTimeSeriesUnit(BaseScript):
             default=None,
             help=(
                 "The unit type of the time series. "
-                "One of 'unknown', 'currency', 'mass', 'length', 'time'."
+                "One of 'unknown', 'currency', 'mass', 'length', 'time', 'ratio'."
             ),
         )
         self.parser.add_argument(

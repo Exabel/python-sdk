@@ -38,6 +38,8 @@ class MockSignalApi(SignalApi):
         allow_missing: bool = False,
         create_library_signal: bool = False,
     ) -> Signal:
+        if allow_missing and signal.name not in self.signals.resources and create_library_signal:
+            self.created_library_signals.append(signal)
         return self.signals.update(signal, allow_missing=allow_missing)
 
     def delete_signal(self, name: str) -> None:

@@ -72,9 +72,9 @@ class CheckCompanyIdentifiersInCsv(CsvScript):
             for identifier, entity in entity_resource_names.mapping.items()
         )
         df = pd.DataFrame(all_rows)
-        df.loc[
-            (df["entity"].duplicated(keep=False) & ~df["entity"].isna()), "warning"
-        ] = "Multiple identifiers mapping to the same company"
+        df.loc[(df["entity"].duplicated(keep=False) & ~df["entity"].isna()), "warning"] = (
+            "Multiple identifiers mapping to the same company"
+        )
         if not keep_all_identifiers:
             df = df[df["warning"].notnull()]
         df = df.fillna("").sort_values(["entity", identifier_type])

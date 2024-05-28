@@ -1,0 +1,6 @@
+entity;signal;unit
+entityTypes/company/entities/company_A;signal1;percent
+entityTypes/company/entities/company_A;signal2;bps
+entityTypes/company/entities/company_A;signal3;
+entityTypes/company/entities/company_B;signal1;ratio
+entityTypes/company/entities/company_B;signal2;%
