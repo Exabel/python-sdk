@@ -81,6 +81,8 @@ def grpc_status_to_error_type(status_code: StatusCode) -> ErrorType:
         return ErrorType.UNAVAILABLE
     if status_code == StatusCode.DEADLINE_EXCEEDED:
         return ErrorType.TIMEOUT
+    if status_code == StatusCode.RESOURCE_EXHAUSTED:
+        return ErrorType.RESOURCE_EXHAUSTED
     return ErrorType.INTERNAL
 
 

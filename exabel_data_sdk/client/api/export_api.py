@@ -15,6 +15,8 @@ from exabel_data_sdk.query.query import Query
 from exabel_data_sdk.query.signals import Signals
 from exabel_data_sdk.scripts.utils import conditional_progress_bar
 
+logger = logging.getLogger(__name__)
+
 
 class ExportApi:
     """
@@ -82,9 +84,10 @@ class ExportApi:
         data = {"format": file_format, "query": query}
         url = f"https://{self._backend}/v1/export/file"
         start_time = time()
+        logger.info("Sending query: %s", query)
         response = self._session.post(url, data=data, timeout=600)
         spent_time = time() - start_time
-        logging.getLogger(__name__).info(
+        logger.info(
             "Query completed in %.1f seconds, received %d bytes, status %d: %s",
             spent_time,
             len(response.content),
