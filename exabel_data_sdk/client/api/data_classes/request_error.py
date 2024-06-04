@@ -29,6 +29,8 @@ class ErrorType(Enum):
     UNAVAILABLE = 5
     # Timeout.
     TIMEOUT = 6
+    # Some resource has been exhausted, e.g. too many concurrent requests.
+    RESOURCE_EXHAUSTED = 7
     # Any internal error.
     INTERNAL = 10
     # Any unknown error.
@@ -36,7 +38,12 @@ class ErrorType(Enum):
 
     def retryable(self) -> bool:
         """Return whether it makes sense to retry the request if this error is given."""
-        return self in (ErrorType.UNAVAILABLE, ErrorType.TIMEOUT, ErrorType.INTERNAL)
+        return self in (
+            ErrorType.UNAVAILABLE,
+            ErrorType.TIMEOUT,
+            ErrorType.INTERNAL,
+            ErrorType.RESOURCE_EXHAUSTED,
+        )
 
     @classmethod
     def from_precondition_failure_violation_type(cls, violation_type: str) -> ErrorType:

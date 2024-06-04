@@ -4,12 +4,14 @@ from typing import Optional, Sequence
 
 from exabel_data_sdk.client.api.export_api import ExportApi
 from exabel_data_sdk.client.user_login import UserLogin
+from exabel_data_sdk.scripts.command_line_script import CommandLineScript
 
 
-class ExportData:
+class ExportData(CommandLineScript):
     """Script for exporting data from the Exabel API with a user-provided query string."""
 
-    def __init__(self, argv: Sequence[str]):
+    def __init__(self, argv: Sequence[str], description: str):
+        super().__init__(argv, description)
         self.argv = argv
 
     def parse_arguments(self) -> argparse.Namespace:
@@ -80,6 +82,7 @@ class ExportData:
     def run(self) -> None:
         """Download data from the Exabel API and store it to file."""
         args = self.parse_arguments()
+        self.setup_logging()
         export_api = ExportData.get_export_api(
             args.api_key, args.reauthenticate, args.use_test_backend, args.user, args.retries
         )
@@ -89,4 +92,4 @@ class ExportData:
 
 
 if __name__ == "__main__":
-    ExportData(sys.argv).run()
+    ExportData(sys.argv, "Export data from Exabel").run()

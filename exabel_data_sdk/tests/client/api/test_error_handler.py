@@ -36,6 +36,9 @@ class TestHttpStatusToErrorType(unittest.TestCase):
         )
         self.assertEqual(ErrorType.UNAVAILABLE, grpc_status_to_error_type(StatusCode.UNAVAILABLE))
         self.assertEqual(ErrorType.TIMEOUT, grpc_status_to_error_type(StatusCode.DEADLINE_EXCEEDED))
+        self.assertEqual(
+            ErrorType.RESOURCE_EXHAUSTED, grpc_status_to_error_type(StatusCode.RESOURCE_EXHAUSTED)
+        )
         self.assertEqual(ErrorType.INTERNAL, grpc_status_to_error_type(StatusCode.INTERNAL))
         self.assertEqual(ErrorType.INTERNAL, grpc_status_to_error_type(StatusCode.DATA_LOSS))
 

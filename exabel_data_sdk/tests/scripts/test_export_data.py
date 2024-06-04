@@ -25,25 +25,25 @@ class TestExportData(unittest.TestCase):
         self.assertTrue(args.use_test_backend)
 
     def test_args__api_key(self):
-        script = ExportData(self.common_args + ["--api-key", "api-key"])
+        script = ExportData(self.common_args + ["--api-key", "api-key"], "test")
         args = script.parse_arguments()
         self._assert_common_args(args)
         self.assertEqual(args.api_key, "api-key")
 
     def test_args__reauthenticate(self):
-        script = ExportData(self.common_args + ["--reauthenticate"])
+        script = ExportData(self.common_args + ["--reauthenticate"], "test")
         args = script.parse_arguments()
         self._assert_common_args(args)
         self.assertTrue(args.reauthenticate)
 
     def test_args__defaults(self):
-        script = ExportData(self.common_args)
+        script = ExportData(self.common_args, "test")
         args = script.parse_arguments()
         self._assert_common_args(args)
         self.assertFalse(args.reauthenticate)
 
     def test_args__both_api_key_and_reauthenticate_should_fail(self):
-        script = ExportData(self.common_args + ["--api-key", "api-key", "--reauthenticate"])
+        script = ExportData(self.common_args + ["--api-key", "api-key", "--reauthenticate"], "test")
         with self.assertRaises(SystemExit):
             script.parse_arguments()
 
