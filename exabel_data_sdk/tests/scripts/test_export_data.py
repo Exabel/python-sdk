@@ -25,25 +25,34 @@ class TestExportData(unittest.TestCase):
         self.assertTrue(args.use_test_backend)
 
     def test_args__api_key(self):
-        script = ExportData(self.common_args + ["--api-key", "api-key"], "test")
+        script = ExportData(self.common_args + ["--api-key", "api-key"])
         args = script.parse_arguments()
         self._assert_common_args(args)
         self.assertEqual(args.api_key, "api-key")
 
     def test_args__reauthenticate(self):
-        script = ExportData(self.common_args + ["--reauthenticate"], "test")
+        script = ExportData(self.common_args + ["--reauthenticate"])
         args = script.parse_arguments()
         self._assert_common_args(args)
         self.assertTrue(args.reauthenticate)
 
     def test_args__defaults(self):
-        script = ExportData(self.common_args, "test")
+        script = ExportData(self.common_args)
         args = script.parse_arguments()
         self._assert_common_args(args)
         self.assertFalse(args.reauthenticate)
 
+    def test_description_optional(self):
+        # To maintain backwards compatibility
+        script = ExportData(self.common_args)
+        self.assertIsNotNone(script.parser.description)
+
+    def test_description(self):
+        script = ExportData(self.common_args, "Export")
+        self.assertEqual(script.parser.description, "Export")
+
     def test_args__both_api_key_and_reauthenticate_should_fail(self):
-        script = ExportData(self.common_args + ["--api-key", "api-key", "--reauthenticate"], "test")
+        script = ExportData(self.common_args + ["--api-key", "api-key", "--reauthenticate"])
         with self.assertRaises(SystemExit):
             script.parse_arguments()
 

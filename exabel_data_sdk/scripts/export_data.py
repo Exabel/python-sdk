@@ -10,7 +10,7 @@ from exabel_data_sdk.scripts.command_line_script import CommandLineScript
 class ExportData(CommandLineScript):
     """Script for exporting data from the Exabel API with a user-provided query string."""
 
-    def __init__(self, argv: Sequence[str], description: str):
+    def __init__(self, argv: Sequence[str], description: str = "Export data from Exabel"):
         super().__init__(argv, description)
         self.argv = argv
 
@@ -92,4 +92,4 @@ class ExportData(CommandLineScript):
 
 
 if __name__ == "__main__":
-    ExportData(sys.argv, "Export data from Exabel").run()
+    ExportData(sys.argv).run()

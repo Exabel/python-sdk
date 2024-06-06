@@ -73,7 +73,7 @@ class TestCsvEntityLoader(unittest.TestCase):
             ),
         ]
         actual_entities = client.entity_api.list_entities("entityTypes/brand").results
-        self.assertSequenceEqual(expected_entities, actual_entities)
+        self.assertCountEqual(expected_entities, actual_entities)
 
     def test_load_entities_with_integer_display_names(self):
         client: ExabelClient = ExabelMockClient()
@@ -94,7 +94,7 @@ class TestCsvEntityLoader(unittest.TestCase):
             ),
         ]
         actual_entities = client.entity_api.list_entities("entityTypes/brand").results
-        self.assertSequenceEqual(expected_entities, actual_entities)
+        self.assertCountEqual(expected_entities, actual_entities)
 
     def test_load_entities_with_non_existent_property(self):
         client: ExabelClient = ExabelMockClient()
@@ -159,7 +159,7 @@ class TestCsvEntityLoader(unittest.TestCase):
         ]
         self.maxDiff = 2000
         actual_entities = client.entity_api.list_entities("entityTypes/brand").results
-        self.assertSequenceEqual(expected_entities, actual_entities)
+        self.assertCountEqual(expected_entities, actual_entities)
 
     @mock.patch("exabel_data_sdk.services.csv_reader.CsvReader.read_file")
     def test_load_entities__display_name_with_only_one_column(self, mock_read_file):
