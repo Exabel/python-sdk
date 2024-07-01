@@ -16,7 +16,7 @@ class TagMetaData:
 
     Attributes:
         create_time:   Time when the tag was created.
-        update_time:   Time when the tag was updaed.
+        update_time:   Time when the tag was updated.
         created_by:    Resource name of the user that created the tag.
         updated_by:    Resource name of the user that updated the tag.
         write_access:  Whether the current user has write access to the tag.
