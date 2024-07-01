@@ -1,7 +1,7 @@
 import sys
 from getpass import getpass
 from os import path
-from typing import Sequence
+from typing import Optional, Sequence
 
 from exabel_data_sdk.scripts.sql.sql_script import SqlScript
 from exabel_data_sdk.services.sql.snowflake_reader import SnowflakeReader
@@ -58,7 +58,7 @@ class ReadSnowflake(SqlScript):
             help="The role to use. Required if no default is set for the user.",
         )
 
-    def read_key(self, file: str, passphrase: str | None) -> bytes:
+    def read_key(self, file: str, passphrase: Optional[str]) -> bytes:
         """Read the key from given file. Use the provided passphrase to decrypt the file.
         If not passphrase is provided, promt the user to enter one. Provide an empty
         string as passphrase for unencrypted keys."""
