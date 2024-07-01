@@ -28,6 +28,7 @@ class PageableResourceMixin:
     @staticmethod
     def _get_resource_iterator(
         pageable_func: Callable[..., PagingResult[PageableResourceT]],
+        page_size: int = 1000,
         **kwargs: str,
     ) -> Iterator[PageableResourceT]:
         """
@@ -35,11 +36,9 @@ class PageableResourceMixin:
         results.
         """
         page_token: Optional[str] = None
-        resource_count = 0
         while True:
-            result = pageable_func(**kwargs, page_token=page_token)
+            result = pageable_func(**kwargs, page_token=page_token, page_size=page_size)
             yield from result.results
             page_token = result.next_page_token
-            resource_count += len(result.results)
-            if resource_count >= result.total_size:
+            if len(result.results) < page_size:
                 break
