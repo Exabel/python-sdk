@@ -46,6 +46,8 @@ class _FolderItemTypeEnumTypeWrapper(google.protobuf.internal.enum_type_wrapper.
     'Chart.'
     KPI_MAPPING: _FolderItemType.ValueType
     'KPI mapping.'
+    ALERT: _FolderItemType.ValueType
+    'Alert.'
 
 class FolderItemType(_FolderItemType, metaclass=_FolderItemTypeEnumTypeWrapper):
     """An enum representing the type of a folder item."""
@@ -71,9 +73,11 @@ CHART: FolderItemType.ValueType
 'Chart.'
 KPI_MAPPING: FolderItemType.ValueType
 'KPI mapping.'
+ALERT: FolderItemType.ValueType
+'Alert.'
 global___FolderItemType = FolderItemType
 
-@typing_extensions.final
+@typing.final
 class Folder(google.protobuf.message.Message):
     """A folder."""
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
@@ -98,11 +102,11 @@ class Folder(google.protobuf.message.Message):
     def __init__(self, *, name: builtins.str | None=..., display_name: builtins.str | None=..., description: builtins.str | None=..., write: builtins.bool | None=..., items: collections.abc.Iterable[global___FolderItem] | None=...) -> None:
         ...
 
-    def ClearField(self, field_name: typing_extensions.Literal['description', b'description', 'display_name', b'display_name', 'items', b'items', 'name', b'name', 'write', b'write']) -> None:
+    def ClearField(self, field_name: typing.Literal['description', b'description', 'display_name', b'display_name', 'items', b'items', 'name', b'name', 'write', b'write']) -> None:
         ...
 global___Folder = Folder
 
-@typing_extensions.final
+@typing.final
 class FolderItem(google.protobuf.message.Message):
     """An item in a folder."""
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
@@ -125,6 +129,10 @@ class FolderItem(google.protobuf.message.Message):
     'Appears in the Exabel Library under each item, and when the item is opened.'
     item_type: global___FolderItemType.ValueType
     'Item type.'
+    created_by: builtins.str
+    'Resource name of the user who created the item.'
+    updated_by: builtins.str
+    'Resource name of the user who last updated the item.'
 
     @property
     def create_time(self) -> google.protobuf.timestamp_pb2.Timestamp:
@@ -133,45 +141,41 @@ class FolderItem(google.protobuf.message.Message):
     @property
     def update_time(self) -> google.protobuf.timestamp_pb2.Timestamp:
         """When the item was last updated."""
-    created_by: builtins.str
-    'Resource name of the user who created the item.'
-    updated_by: builtins.str
-    'Resource name of the user who last updated the item.'
 
     def __init__(self, *, parent: builtins.str | None=..., name: builtins.str | None=..., display_name: builtins.str | None=..., description: builtins.str | None=..., item_type: global___FolderItemType.ValueType | None=..., create_time: google.protobuf.timestamp_pb2.Timestamp | None=..., update_time: google.protobuf.timestamp_pb2.Timestamp | None=..., created_by: builtins.str | None=..., updated_by: builtins.str | None=...) -> None:
         ...
 
-    def HasField(self, field_name: typing_extensions.Literal['create_time', b'create_time', 'update_time', b'update_time']) -> builtins.bool:
+    def HasField(self, field_name: typing.Literal['create_time', b'create_time', 'update_time', b'update_time']) -> builtins.bool:
         ...
 
-    def ClearField(self, field_name: typing_extensions.Literal['create_time', b'create_time', 'created_by', b'created_by', 'description', b'description', 'display_name', b'display_name', 'item_type', b'item_type', 'name', b'name', 'parent', b'parent', 'update_time', b'update_time', 'updated_by', b'updated_by']) -> None:
+    def ClearField(self, field_name: typing.Literal['create_time', b'create_time', 'created_by', b'created_by', 'description', b'description', 'display_name', b'display_name', 'item_type', b'item_type', 'name', b'name', 'parent', b'parent', 'update_time', b'update_time', 'updated_by', b'updated_by']) -> None:
         ...
 global___FolderItem = FolderItem
 
-@typing_extensions.final
+@typing.final
 class FolderAccessor(google.protobuf.message.Message):
     """An accessor of a folder."""
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
     GROUP_FIELD_NUMBER: builtins.int
     WRITE_FIELD_NUMBER: builtins.int
+    write: builtins.bool
+    'Whether the user group has write access. Read access is implied.'
 
     @property
     def group(self) -> exabel.api.management.v1.user_messages_pb2.Group:
         """User group that has access to the folder."""
-    write: builtins.bool
-    'Whether the user group has write access. Read access is implied.'
 
     def __init__(self, *, group: exabel.api.management.v1.user_messages_pb2.Group | None=..., write: builtins.bool | None=...) -> None:
         ...
 
-    def HasField(self, field_name: typing_extensions.Literal['group', b'group']) -> builtins.bool:
+    def HasField(self, field_name: typing.Literal['group', b'group']) -> builtins.bool:
         ...
 
-    def ClearField(self, field_name: typing_extensions.Literal['group', b'group', 'write', b'write']) -> None:
+    def ClearField(self, field_name: typing.Literal['group', b'group', 'write', b'write']) -> None:
         ...
 global___FolderAccessor = FolderAccessor
 
-@typing_extensions.final
+@typing.final
 class SearchResult(google.protobuf.message.Message):
     """A search result."""
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
@@ -184,9 +188,9 @@ class SearchResult(google.protobuf.message.Message):
     def __init__(self, *, item: global___FolderItem | None=...) -> None:
         ...
 
-    def HasField(self, field_name: typing_extensions.Literal['item', b'item']) -> builtins.bool:
+    def HasField(self, field_name: typing.Literal['item', b'item']) -> builtins.bool:
         ...
 
-    def ClearField(self, field_name: typing_extensions.Literal['item', b'item']) -> None:
+    def ClearField(self, field_name: typing.Literal['item', b'item']) -> None:
         ...
 global___SearchResult = SearchResult

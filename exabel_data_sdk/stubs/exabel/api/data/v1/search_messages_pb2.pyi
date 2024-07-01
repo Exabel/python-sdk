@@ -37,7 +37,7 @@ ALL_COMPANIES: SearchUniverse.ValueType
 "Search all companies, including companies not in the Exabel company universe. This includes all\nFactSet companies of type 'SUB' and 'PVT'. Only supported for text search for entityTypes/company.\n"
 global___SearchUniverse = SearchUniverse
 
-@typing_extensions.final
+@typing.final
 class SearchTerm(google.protobuf.message.Message):
     """A single search term in a search request."""
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
@@ -51,11 +51,11 @@ class SearchTerm(google.protobuf.message.Message):
     def __init__(self, *, field: builtins.str | None=..., query: builtins.str | None=...) -> None:
         ...
 
-    def ClearField(self, field_name: typing_extensions.Literal['field', b'field', 'query', b'query']) -> None:
+    def ClearField(self, field_name: typing.Literal['field', b'field', 'query', b'query']) -> None:
         ...
 global___SearchTerm = SearchTerm
 
-@typing_extensions.final
+@typing.final
 class SearchOptions(google.protobuf.message.Message):
     """Options on how the search should be performed."""
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
@@ -66,6 +66,6 @@ class SearchOptions(google.protobuf.message.Message):
     def __init__(self, *, universe: global___SearchUniverse.ValueType | None=...) -> None:
         ...
 
-    def ClearField(self, field_name: typing_extensions.Literal['universe', b'universe']) -> None:
+    def ClearField(self, field_name: typing.Literal['universe', b'universe']) -> None:
         ...
 global___SearchOptions = SearchOptions

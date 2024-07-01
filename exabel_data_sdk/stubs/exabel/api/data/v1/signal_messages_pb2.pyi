@@ -8,14 +8,10 @@ from ..... import exabel
 import google.protobuf.descriptor
 import google.protobuf.internal.containers
 import google.protobuf.message
-import sys
-if sys.version_info >= (3, 8):
-    import typing as typing_extensions
-else:
-    import typing_extensions
+import typing
 DESCRIPTOR: google.protobuf.descriptor.FileDescriptor
 
-@typing_extensions.final
+@typing.final
 class Signal(google.protobuf.message.Message):
     """A signal resource in the Data API. Signals are normally associated with a set of entity types,
     but may apply to any entities.
@@ -50,6 +46,6 @@ class Signal(google.protobuf.message.Message):
     def __init__(self, *, name: builtins.str | None=..., entity_type: builtins.str | None=..., display_name: builtins.str | None=..., description: builtins.str | None=..., downsampling_method: exabel.api.math.aggregation_pb2.Aggregation.ValueType | None=..., read_only: builtins.bool | None=..., entity_types: collections.abc.Iterable[builtins.str] | None=...) -> None:
         ...
 
-    def ClearField(self, field_name: typing_extensions.Literal['description', b'description', 'display_name', b'display_name', 'downsampling_method', b'downsampling_method', 'entity_type', b'entity_type', 'entity_types', b'entity_types', 'name', b'name', 'read_only', b'read_only']) -> None:
+    def ClearField(self, field_name: typing.Literal['description', b'description', 'display_name', b'display_name', 'downsampling_method', b'downsampling_method', 'entity_type', b'entity_type', 'entity_types', b'entity_types', 'name', b'name', 'read_only', b'read_only']) -> None:
         ...
 global___Signal = Signal

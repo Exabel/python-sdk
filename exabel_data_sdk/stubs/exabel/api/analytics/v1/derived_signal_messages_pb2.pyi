@@ -73,7 +73,7 @@ PERSISTED_SIGNAL: DerivedSignalType.ValueType
 'A persisted signal that is evaluated and cached daily.\nThe expression refers to a raw signal and cannot be modified.\n'
 global___DerivedSignalType = DerivedSignalType
 
-@typing_extensions.final
+@typing.final
 class DerivedSignal(google.protobuf.message.Message):
     """A derived signal.
 
@@ -102,14 +102,14 @@ class DerivedSignal(google.protobuf.message.Message):
     def __init__(self, *, name: builtins.str | None=..., label: builtins.str | None=..., expression: builtins.str | None=..., description: builtins.str | None=..., metadata: global___DerivedSignalMetadata | None=...) -> None:
         ...
 
-    def HasField(self, field_name: typing_extensions.Literal['metadata', b'metadata']) -> builtins.bool:
+    def HasField(self, field_name: typing.Literal['metadata', b'metadata']) -> builtins.bool:
         ...
 
-    def ClearField(self, field_name: typing_extensions.Literal['description', b'description', 'expression', b'expression', 'label', b'label', 'metadata', b'metadata', 'name', b'name']) -> None:
+    def ClearField(self, field_name: typing.Literal['description', b'description', 'expression', b'expression', 'label', b'label', 'metadata', b'metadata', 'name', b'name']) -> None:
         ...
 global___DerivedSignal = DerivedSignal
 
-@typing_extensions.final
+@typing.final
 class DerivedSignalMetadata(google.protobuf.message.Message):
     """Additional metadata to control formatting (decimals and units).
 
@@ -121,21 +121,21 @@ class DerivedSignalMetadata(google.protobuf.message.Message):
     DECIMALS_FIELD_NUMBER: builtins.int
     UNIT_FIELD_NUMBER: builtins.int
     TYPE_FIELD_NUMBER: builtins.int
-
-    @property
-    def decimals(self) -> google.protobuf.wrappers_pb2.Int32Value:
-        """Number of decimals to use when displaying numeric values."""
     unit: global___DerivedSignalUnit.ValueType
     'Unit of the signal.'
     type: global___DerivedSignalType.ValueType
     'Type of the signal. Not relevant for external use.'
 
+    @property
+    def decimals(self) -> google.protobuf.wrappers_pb2.Int32Value:
+        """Number of decimals to use when displaying numeric values."""
+
     def __init__(self, *, decimals: google.protobuf.wrappers_pb2.Int32Value | None=..., unit: global___DerivedSignalUnit.ValueType | None=..., type: global___DerivedSignalType.ValueType | None=...) -> None:
         ...
 
-    def HasField(self, field_name: typing_extensions.Literal['decimals', b'decimals']) -> builtins.bool:
+    def HasField(self, field_name: typing.Literal['decimals', b'decimals']) -> builtins.bool:
         ...
 
-    def ClearField(self, field_name: typing_extensions.Literal['decimals', b'decimals', 'type', b'type', 'unit', b'unit']) -> None:
+    def ClearField(self, field_name: typing.Literal['decimals', b'decimals', 'type', b'type', 'unit', b'unit']) -> None:
         ...
 global___DerivedSignalMetadata = DerivedSignalMetadata

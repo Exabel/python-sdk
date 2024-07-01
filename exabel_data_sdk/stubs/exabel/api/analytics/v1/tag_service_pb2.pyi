@@ -9,37 +9,33 @@ import google.protobuf.descriptor
 import google.protobuf.field_mask_pb2
 import google.protobuf.internal.containers
 import google.protobuf.message
-import sys
-if sys.version_info >= (3, 8):
-    import typing as typing_extensions
-else:
-    import typing_extensions
+import typing
 DESCRIPTOR: google.protobuf.descriptor.FileDescriptor
 
-@typing_extensions.final
+@typing.final
 class CreateTagRequest(google.protobuf.message.Message):
     """Request to CreateTag."""
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
     TAG_FIELD_NUMBER: builtins.int
     FOLDER_FIELD_NUMBER: builtins.int
+    folder: builtins.str
+    'Resource name of the Library folder to create the signal in, e.g. `folders/123`. If not\n    specified, the signal will be created in an “Analytics API” folder that is shared with the\n    customer user group.\n    '
 
     @property
     def tag(self) -> exabel.api.analytics.v1.tag_messages_pb2.Tag:
         """A tag"""
-    folder: builtins.str
-    'Resource name of the Library folder to create the signal in, e.g. `folders/123`. If not\n    specified, the signal will be created in an “Analytics API” folder that is shared with the\n    customer user group.\n    '
 
     def __init__(self, *, tag: exabel.api.analytics.v1.tag_messages_pb2.Tag | None=..., folder: builtins.str | None=...) -> None:
         ...
 
-    def HasField(self, field_name: typing_extensions.Literal['tag', b'tag']) -> builtins.bool:
+    def HasField(self, field_name: typing.Literal['tag', b'tag']) -> builtins.bool:
         ...
 
-    def ClearField(self, field_name: typing_extensions.Literal['folder', b'folder', 'tag', b'tag']) -> None:
+    def ClearField(self, field_name: typing.Literal['folder', b'folder', 'tag', b'tag']) -> None:
         ...
 global___CreateTagRequest = CreateTagRequest
 
-@typing_extensions.final
+@typing.final
 class GetTagRequest(google.protobuf.message.Message):
     """Request to GetTag."""
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
@@ -50,11 +46,11 @@ class GetTagRequest(google.protobuf.message.Message):
     def __init__(self, *, name: builtins.str | None=...) -> None:
         ...
 
-    def ClearField(self, field_name: typing_extensions.Literal['name', b'name']) -> None:
+    def ClearField(self, field_name: typing.Literal['name', b'name']) -> None:
         ...
 global___GetTagRequest = GetTagRequest
 
-@typing_extensions.final
+@typing.final
 class UpdateTagRequest(google.protobuf.message.Message):
     """Request to UpdateTag."""
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
@@ -76,14 +72,14 @@ class UpdateTagRequest(google.protobuf.message.Message):
     def __init__(self, *, tag: exabel.api.analytics.v1.tag_messages_pb2.Tag | None=..., update_mask: google.protobuf.field_mask_pb2.FieldMask | None=...) -> None:
         ...
 
-    def HasField(self, field_name: typing_extensions.Literal['tag', b'tag', 'update_mask', b'update_mask']) -> builtins.bool:
+    def HasField(self, field_name: typing.Literal['tag', b'tag', 'update_mask', b'update_mask']) -> builtins.bool:
         ...
 
-    def ClearField(self, field_name: typing_extensions.Literal['tag', b'tag', 'update_mask', b'update_mask']) -> None:
+    def ClearField(self, field_name: typing.Literal['tag', b'tag', 'update_mask', b'update_mask']) -> None:
         ...
 global___UpdateTagRequest = UpdateTagRequest
 
-@typing_extensions.final
+@typing.final
 class DeleteTagRequest(google.protobuf.message.Message):
     """Request to DeleteTag."""
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
@@ -94,11 +90,11 @@ class DeleteTagRequest(google.protobuf.message.Message):
     def __init__(self, *, name: builtins.str | None=...) -> None:
         ...
 
-    def ClearField(self, field_name: typing_extensions.Literal['name', b'name']) -> None:
+    def ClearField(self, field_name: typing.Literal['name', b'name']) -> None:
         ...
 global___DeleteTagRequest = DeleteTagRequest
 
-@typing_extensions.final
+@typing.final
 class ListTagsRequest(google.protobuf.message.Message):
     """Request to list tags."""
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
@@ -112,34 +108,34 @@ class ListTagsRequest(google.protobuf.message.Message):
     def __init__(self, *, page_size: builtins.int | None=..., page_token: builtins.str | None=...) -> None:
         ...
 
-    def ClearField(self, field_name: typing_extensions.Literal['page_size', b'page_size', 'page_token', b'page_token']) -> None:
+    def ClearField(self, field_name: typing.Literal['page_size', b'page_size', 'page_token', b'page_token']) -> None:
         ...
 global___ListTagsRequest = ListTagsRequest
 
-@typing_extensions.final
+@typing.final
 class ListTagsResponse(google.protobuf.message.Message):
     """Response to list tags."""
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
     TAGS_FIELD_NUMBER: builtins.int
     NEXT_PAGE_TOKEN_FIELD_NUMBER: builtins.int
     TOTAL_SIZE_FIELD_NUMBER: builtins.int
-
-    @property
-    def tags(self) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[exabel.api.analytics.v1.tag_messages_pb2.Tag]:
-        """The tags in the requested page."""
     next_page_token: builtins.str
     'Token for the next page of results, which can be sent to a subsequent query.\n    The end of the list is reached when the token is empty.\n    '
     total_size: builtins.int
     'Total number of results, irrespective of paging.'
 
+    @property
+    def tags(self) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[exabel.api.analytics.v1.tag_messages_pb2.Tag]:
+        """The tags in the requested page."""
+
     def __init__(self, *, tags: collections.abc.Iterable[exabel.api.analytics.v1.tag_messages_pb2.Tag] | None=..., next_page_token: builtins.str | None=..., total_size: builtins.int | None=...) -> None:
         ...
 
-    def ClearField(self, field_name: typing_extensions.Literal['next_page_token', b'next_page_token', 'tags', b'tags', 'total_size', b'total_size']) -> None:
+    def ClearField(self, field_name: typing.Literal['next_page_token', b'next_page_token', 'tags', b'tags', 'total_size', b'total_size']) -> None:
         ...
 global___ListTagsResponse = ListTagsResponse
 
-@typing_extensions.final
+@typing.final
 class AddEntitiesRequest(google.protobuf.message.Message):
     """Request to add entities to tag."""
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
@@ -157,11 +153,11 @@ class AddEntitiesRequest(google.protobuf.message.Message):
     def __init__(self, *, name: builtins.str | None=..., entity_names: collections.abc.Iterable[builtins.str] | None=...) -> None:
         ...
 
-    def ClearField(self, field_name: typing_extensions.Literal['entity_names', b'entity_names', 'name', b'name']) -> None:
+    def ClearField(self, field_name: typing.Literal['entity_names', b'entity_names', 'name', b'name']) -> None:
         ...
 global___AddEntitiesRequest = AddEntitiesRequest
 
-@typing_extensions.final
+@typing.final
 class AddEntitiesResponse(google.protobuf.message.Message):
     """Response to add entities to a tag"""
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
@@ -170,7 +166,7 @@ class AddEntitiesResponse(google.protobuf.message.Message):
         ...
 global___AddEntitiesResponse = AddEntitiesResponse
 
-@typing_extensions.final
+@typing.final
 class RemoveEntitiesRequest(google.protobuf.message.Message):
     """Request to remove entities from a tag."""
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
@@ -186,11 +182,11 @@ class RemoveEntitiesRequest(google.protobuf.message.Message):
     def __init__(self, *, name: builtins.str | None=..., entity_names: collections.abc.Iterable[builtins.str] | None=...) -> None:
         ...
 
-    def ClearField(self, field_name: typing_extensions.Literal['entity_names', b'entity_names', 'name', b'name']) -> None:
+    def ClearField(self, field_name: typing.Literal['entity_names', b'entity_names', 'name', b'name']) -> None:
         ...
 global___RemoveEntitiesRequest = RemoveEntitiesRequest
 
-@typing_extensions.final
+@typing.final
 class RemoveEntitiesResponse(google.protobuf.message.Message):
     """Response to remove entities from a tag"""
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
@@ -199,7 +195,7 @@ class RemoveEntitiesResponse(google.protobuf.message.Message):
         ...
 global___RemoveEntitiesResponse = RemoveEntitiesResponse
 
-@typing_extensions.final
+@typing.final
 class ListTagEntitiesRequest(google.protobuf.message.Message):
     """Request to list entities in a tag."""
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
@@ -216,29 +212,29 @@ class ListTagEntitiesRequest(google.protobuf.message.Message):
     def __init__(self, *, parent: builtins.str | None=..., page_size: builtins.int | None=..., page_token: builtins.str | None=...) -> None:
         ...
 
-    def ClearField(self, field_name: typing_extensions.Literal['page_size', b'page_size', 'page_token', b'page_token', 'parent', b'parent']) -> None:
+    def ClearField(self, field_name: typing.Literal['page_size', b'page_size', 'page_token', b'page_token', 'parent', b'parent']) -> None:
         ...
 global___ListTagEntitiesRequest = ListTagEntitiesRequest
 
-@typing_extensions.final
+@typing.final
 class ListTagEntitiesResponse(google.protobuf.message.Message):
     """Response to list entities in a tag."""
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
     ENTITY_NAMES_FIELD_NUMBER: builtins.int
     NEXT_PAGE_TOKEN_FIELD_NUMBER: builtins.int
     TOTAL_SIZE_FIELD_NUMBER: builtins.int
-
-    @property
-    def entity_names(self) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[builtins.str]:
-        """List of entity resource names."""
     next_page_token: builtins.str
     'Token for the next page of results, which can be sent to a subsequent query.\n    The end of the list is reached when the token is empty.\n    '
     total_size: builtins.int
     'Total number of results, irrespective of paging.'
 
+    @property
+    def entity_names(self) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[builtins.str]:
+        """List of entity resource names."""
+
     def __init__(self, *, entity_names: collections.abc.Iterable[builtins.str] | None=..., next_page_token: builtins.str | None=..., total_size: builtins.int | None=...) -> None:
         ...
 
-    def ClearField(self, field_name: typing_extensions.Literal['entity_names', b'entity_names', 'next_page_token', b'next_page_token', 'total_size', b'total_size']) -> None:
+    def ClearField(self, field_name: typing.Literal['entity_names', b'entity_names', 'next_page_token', b'next_page_token', 'total_size', b'total_size']) -> None:
         ...
 global___ListTagEntitiesResponse = ListTagEntitiesResponse

@@ -7,14 +7,10 @@ import collections.abc
 import google.protobuf.descriptor
 import google.protobuf.internal.containers
 import google.protobuf.message
-import sys
-if sys.version_info >= (3, 8):
-    import typing as typing_extensions
-else:
-    import typing_extensions
+import typing
 DESCRIPTOR: google.protobuf.descriptor.FileDescriptor
 
-@typing_extensions.final
+@typing.final
 class DataSet(google.protobuf.message.Message):
     """A data set resource in the Data API."""
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
@@ -29,18 +25,18 @@ class DataSet(google.protobuf.message.Message):
     'Used when showing the data set in the Exabel app. Required when creating a data set.'
     description: builtins.str
     'This is currently not used in the Exabel app, but may be in future.'
+    read_only: builtins.bool
+    'Data sets that you subscribe to will be read-only.'
 
     @property
     def signals(self) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[builtins.str]:
         """List of signals comprising the data set. Signals are represented by their resource names,
         e.g. `signals/namespace.signalIdentifier`.
         """
-    read_only: builtins.bool
-    'Data sets that you subscribe to will be read-only.'
 
     def __init__(self, *, name: builtins.str | None=..., display_name: builtins.str | None=..., description: builtins.str | None=..., signals: collections.abc.Iterable[builtins.str] | None=..., read_only: builtins.bool | None=...) -> None:
         ...
 
-    def ClearField(self, field_name: typing_extensions.Literal['description', b'description', 'display_name', b'display_name', 'name', b'name', 'read_only', b'read_only', 'signals', b'signals']) -> None:
+    def ClearField(self, field_name: typing.Literal['description', b'description', 'display_name', b'display_name', 'name', b'name', 'read_only', b'read_only', 'signals', b'signals']) -> None:
         ...
 global___DataSet = DataSet

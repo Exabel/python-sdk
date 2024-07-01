@@ -21,7 +21,7 @@ else:
     import typing_extensions
 DESCRIPTOR: google.protobuf.descriptor.FileDescriptor
 
-@typing_extensions.final
+@typing.final
 class TimeSeries(google.protobuf.message.Message):
     """A time series resource in the Data API. All time series have one entity and one signal as its
     parents. As such, it can be referred to as both `{entity_name}/{signal_name}` and
@@ -37,14 +37,14 @@ class TimeSeries(google.protobuf.message.Message):
     UNITS_FIELD_NUMBER: builtins.int
     name: builtins.str
     'The resource name of the time series, for example\n    `entityTypes/ns1.type/entities/ns2.entities/signals/ns3.signal`.\n    An alternative name for the same time series is\n    `signals/ns3.signal/entityTypes/ns1.type/entities/ns2.entity`, but the former is the canonical\n    version which always will be returned by the server. The namespaces must be empty (being\n    global) or one of the predetermined namespaces the customer has access to. If ns2 is not empty,\n    it must be equals to ns3, and if ns1 is not empty, all three namespaces must be equal.\n    '
+    read_only: builtins.bool
+    'Global time series and those from data sets that you subscribe to will be read-only.'
 
     @property
     def points(self) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[global___TimeSeriesPoint]:
         """List of time series data points. Data points are always returned by Exabel in chronological
         order (earliest first).
         """
-    read_only: builtins.bool
-    'Global time series and those from data sets that you subscribe to will be read-only.'
 
     @property
     def units(self) -> global___Units:
@@ -55,14 +55,14 @@ class TimeSeries(google.protobuf.message.Message):
     def __init__(self, *, name: builtins.str | None=..., points: collections.abc.Iterable[global___TimeSeriesPoint] | None=..., read_only: builtins.bool | None=..., units: global___Units | None=...) -> None:
         ...
 
-    def HasField(self, field_name: typing_extensions.Literal['units', b'units']) -> builtins.bool:
+    def HasField(self, field_name: typing.Literal['units', b'units']) -> builtins.bool:
         ...
 
-    def ClearField(self, field_name: typing_extensions.Literal['name', b'name', 'points', b'points', 'read_only', b'read_only', 'units', b'units']) -> None:
+    def ClearField(self, field_name: typing.Literal['name', b'name', 'points', b'points', 'read_only', b'read_only', 'units', b'units']) -> None:
         ...
 global___TimeSeries = TimeSeries
 
-@typing_extensions.final
+@typing.final
 class TimeSeriesPoint(google.protobuf.message.Message):
     """A time series point of a time series."""
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
@@ -88,14 +88,14 @@ class TimeSeriesPoint(google.protobuf.message.Message):
     def __init__(self, *, time: google.protobuf.timestamp_pb2.Timestamp | None=..., value: google.protobuf.wrappers_pb2.DoubleValue | None=..., known_time: google.protobuf.timestamp_pb2.Timestamp | None=...) -> None:
         ...
 
-    def HasField(self, field_name: typing_extensions.Literal['known_time', b'known_time', 'time', b'time', 'value', b'value']) -> builtins.bool:
+    def HasField(self, field_name: typing.Literal['known_time', b'known_time', 'time', b'time', 'value', b'value']) -> builtins.bool:
         ...
 
-    def ClearField(self, field_name: typing_extensions.Literal['known_time', b'known_time', 'time', b'time', 'value', b'value']) -> None:
+    def ClearField(self, field_name: typing.Literal['known_time', b'known_time', 'time', b'time', 'value', b'value']) -> None:
         ...
 global___TimeSeriesPoint = TimeSeriesPoint
 
-@typing_extensions.final
+@typing.final
 class TimeSeriesView(google.protobuf.message.Message):
     """A view of the time series, specifying which parts of its data to return. The default view is
     to only return the name of the time series.
@@ -121,14 +121,14 @@ class TimeSeriesView(google.protobuf.message.Message):
     def __init__(self, *, time_range: exabel.api.time.time_range_pb2.TimeRange | None=..., known_time: google.protobuf.timestamp_pb2.Timestamp | None=...) -> None:
         ...
 
-    def HasField(self, field_name: typing_extensions.Literal['known_time', b'known_time', 'time_range', b'time_range']) -> builtins.bool:
+    def HasField(self, field_name: typing.Literal['known_time', b'known_time', 'time_range', b'time_range']) -> builtins.bool:
         ...
 
-    def ClearField(self, field_name: typing_extensions.Literal['known_time', b'known_time', 'time_range', b'time_range']) -> None:
+    def ClearField(self, field_name: typing.Literal['known_time', b'known_time', 'time_range', b'time_range']) -> None:
         ...
 global___TimeSeriesView = TimeSeriesView
 
-@typing_extensions.final
+@typing.final
 class DefaultKnownTime(google.protobuf.message.Message):
     """A default known time specification to use when creating or updating time series. If any inserted
     values has a value for its known_time, that value is used instead.
@@ -151,17 +151,17 @@ class DefaultKnownTime(google.protobuf.message.Message):
     def __init__(self, *, current_time: builtins.bool | None=..., known_time: google.protobuf.timestamp_pb2.Timestamp | None=..., time_offset: google.protobuf.duration_pb2.Duration | None=...) -> None:
         ...
 
-    def HasField(self, field_name: typing_extensions.Literal['current_time', b'current_time', 'known_time', b'known_time', 'specification', b'specification', 'time_offset', b'time_offset']) -> builtins.bool:
+    def HasField(self, field_name: typing.Literal['current_time', b'current_time', 'known_time', b'known_time', 'specification', b'specification', 'time_offset', b'time_offset']) -> builtins.bool:
         ...
 
-    def ClearField(self, field_name: typing_extensions.Literal['current_time', b'current_time', 'known_time', b'known_time', 'specification', b'specification', 'time_offset', b'time_offset']) -> None:
+    def ClearField(self, field_name: typing.Literal['current_time', b'current_time', 'known_time', b'known_time', 'specification', b'specification', 'time_offset', b'time_offset']) -> None:
         ...
 
-    def WhichOneof(self, oneof_group: typing_extensions.Literal['specification', b'specification']) -> typing_extensions.Literal['current_time', 'known_time', 'time_offset'] | None:
+    def WhichOneof(self, oneof_group: typing.Literal['specification', b'specification']) -> typing.Literal['current_time', 'known_time', 'time_offset'] | None:
         ...
 global___DefaultKnownTime = DefaultKnownTime
 
-@typing_extensions.final
+@typing.final
 class Units(google.protobuf.message.Message):
     """The units of a time series. Not all time series have known units, in which case its `units`
     field is not present. If present, but empty, the unit of the time series is known to be
@@ -171,6 +171,8 @@ class Units(google.protobuf.message.Message):
     UNITS_FIELD_NUMBER: builtins.int
     MULTIPLIER_FIELD_NUMBER: builtins.int
     DESCRIPTION_FIELD_NUMBER: builtins.int
+    description: builtins.str
+    'Optionally a more detailed description of the units of this time series,\n    for instance "Number of customers" or "Gross value in millions (EUR)".\n    '
 
     @property
     def units(self) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[global___Unit]:
@@ -188,20 +190,18 @@ class Units(google.protobuf.message.Message):
         measured in millions, the multiplier would be "1000000" or "1e6", or if the time series is
         measured in percent, but given as values from 0 to 100, the multiplier would be "0.01".
         """
-    description: builtins.str
-    'Optionally a more detailed description of the units of this time series,\n    for instance "Number of customers" or "Gross value in millions (EUR)".\n    '
 
     def __init__(self, *, units: collections.abc.Iterable[global___Unit] | None=..., multiplier: google.type.decimal_pb2.Decimal | None=..., description: builtins.str | None=...) -> None:
         ...
 
-    def HasField(self, field_name: typing_extensions.Literal['multiplier', b'multiplier']) -> builtins.bool:
+    def HasField(self, field_name: typing.Literal['multiplier', b'multiplier']) -> builtins.bool:
         ...
 
-    def ClearField(self, field_name: typing_extensions.Literal['description', b'description', 'multiplier', b'multiplier', 'units', b'units']) -> None:
+    def ClearField(self, field_name: typing.Literal['description', b'description', 'multiplier', b'multiplier', 'units', b'units']) -> None:
         ...
 global___Units = Units
 
-@typing_extensions.final
+@typing.final
 class Unit(google.protobuf.message.Message):
     """An individual unit, measuring one dimension."""
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
@@ -252,6 +252,6 @@ class Unit(google.protobuf.message.Message):
     def __init__(self, *, dimension: global___Unit.Dimension.ValueType | None=..., unit: builtins.str | None=..., exponent: builtins.int | None=...) -> None:
         ...
 
-    def ClearField(self, field_name: typing_extensions.Literal['dimension', b'dimension', 'exponent', b'exponent', 'unit', b'unit']) -> None:
+    def ClearField(self, field_name: typing.Literal['dimension', b'dimension', 'exponent', b'exponent', 'unit', b'unit']) -> None:
         ...
 global___Unit = Unit

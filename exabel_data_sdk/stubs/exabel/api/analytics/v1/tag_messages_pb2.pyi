@@ -6,14 +6,10 @@ import builtins
 from ..... import exabel
 import google.protobuf.descriptor
 import google.protobuf.message
-import sys
-if sys.version_info >= (3, 8):
-    import typing as typing_extensions
-else:
-    import typing_extensions
+import typing
 DESCRIPTOR: google.protobuf.descriptor.FileDescriptor
 
-@typing_extensions.final
+@typing.final
 class Tag(google.protobuf.message.Message):
     """Represents a tag."""
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
@@ -38,9 +34,9 @@ class Tag(google.protobuf.message.Message):
     def __init__(self, *, name: builtins.str | None=..., display_name: builtins.str | None=..., description: builtins.str | None=..., entity_type: builtins.str | None=..., metadata: exabel.api.analytics.v1.item_messages_pb2.ItemMetadata | None=...) -> None:
         ...
 
-    def HasField(self, field_name: typing_extensions.Literal['metadata', b'metadata']) -> builtins.bool:
+    def HasField(self, field_name: typing.Literal['metadata', b'metadata']) -> builtins.bool:
         ...
 
-    def ClearField(self, field_name: typing_extensions.Literal['description', b'description', 'display_name', b'display_name', 'entity_type', b'entity_type', 'metadata', b'metadata', 'name', b'name']) -> None:
+    def ClearField(self, field_name: typing.Literal['description', b'description', 'display_name', b'display_name', 'entity_type', b'entity_type', 'metadata', b'metadata', 'name', b'name']) -> None:
         ...
 global___Tag = Tag
