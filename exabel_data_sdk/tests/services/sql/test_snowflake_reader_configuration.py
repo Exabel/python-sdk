@@ -5,6 +5,7 @@ from exabel_data_sdk.services.sql.snowflake_reader_configuration import (
     Account,
     Database,
     Password,
+    PrivateKey,
     Role,
     Schema,
     SnowflakeReaderConfiguration,
@@ -21,6 +22,7 @@ class TestSnowflakeReaderConfiguration(unittest.TestCase):
             account=Account("account"),
             user=Username("username"),
             password=Password("password"),
+            private_key=PrivateKey("private_key".encode()),
             warehouse=Warehouse("warehouse"),
             database=Database("database"),
             schema=Schema("schema"),
@@ -30,10 +32,10 @@ class TestSnowflakeReaderConfiguration(unittest.TestCase):
     def test_snowflake_reader_configuration_should_fail(self):
         with self.assertRaises(ValueError):
             SnowflakeReaderConfiguration(
-                account="account",
-                user="username",
-                password="password",
-                schema="schema",
+                account=Account("account"),
+                user=Username("username"),
+                password=Password("password"),
+                schema=Schema("schema"),
             )
 
     def test_snowflake_reader_configuration_from_args(self):
@@ -41,6 +43,7 @@ class TestSnowflakeReaderConfiguration(unittest.TestCase):
             account="account",
             username="username",
             password="password",
+            private_key="private_key".encode(),
             warehouse="warehouse",
             database="database",
             schema="schema",
@@ -53,19 +56,22 @@ class TestSnowflakeReaderConfiguration(unittest.TestCase):
             snowflake_reader_configuration,
         )
 
-    def test_snowflake_reader_configuration_get_connection_string(self):
+    def test_snowflake_reader_configuration_get_connection_string_and_kwargs(self):
         self.assertEqual(
-            "snowflake://username:password@account/database/schema"
-            "?login_timeout=15&role=role&warehouse=warehouse",
-            self.config.get_connection_string(),
+            (
+                "snowflake://username:password@account/database/schema"
+                "?login_timeout=15&role=role&warehouse=warehouse",
+                {"connect_args": {"private_key": "private_key".encode()}},
+            ),
+            self.config.get_connection_string_and_kwargs(),
         )
         self.assertEqual(
-            "snowflake://username:password@account/?login_timeout=15",
+            ("snowflake://username:password@account/?login_timeout=15", {}),
             SnowflakeReaderConfiguration(
-                account="account",
-                user="username",
-                password="password",
-            ).get_connection_string(),
+                account=Account("account"),
+                user=Username("username"),
+                password=Password("password"),
+            ).get_connection_string_and_kwargs(),
         )
 
     def test_snowflake_reader_configuration_get_connection_args(self):
@@ -74,6 +80,7 @@ class TestSnowflakeReaderConfiguration(unittest.TestCase):
                 "account": "account",
                 "user": "username",
                 "password": "password",
+                "private_key": "private_key".encode(),
                 "warehouse": "warehouse",
                 "database": "database",
                 "schema": "schema",
