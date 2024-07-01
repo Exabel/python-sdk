@@ -178,46 +178,40 @@ class TestTimeSeriesApi(unittest.TestCase):
 
     def test_get_signal_time_series_iterator(self):
         ts_api = TimeSeriesApi(ClientConfig("api-key"))
-        ts_1 = "ts_1"
-        ts_2 = "ts_2"
-        ts_3 = "ts_3"
         ts_api.get_signal_time_series = mock.MagicMock()
         ts_api.get_signal_time_series.side_effect = [
-            PagingResult([ts_1], next_page_token="1", total_size=3),
-            PagingResult([ts_2], next_page_token="2", total_size=3),
-            PagingResult([ts_3], next_page_token=None, total_size=3),
+            PagingResult([f"ts_{i}" for i in range(1000)], next_page_token="1000", total_size=1100),
+            PagingResult(
+                [f"ts_{i}" for i in range(1000, 1100)], next_page_token="1000", total_size=1100
+            ),
             AssertionError("Should not be called"),
         ]
         ts = list(ts_api.get_signal_time_series_iterator("signal"))
-        self.assertEqual(3, len(ts))
-        self.assertSequenceEqual([ts_1, ts_2, ts_3], ts)
+        self.assertEqual(1100, len(ts))
+        self.assertSequenceEqual([f"ts_{i}" for i in range(1100)], ts)
         ts_api.get_signal_time_series.assert_has_calls(
             [
-                mock.call(signal="signal", page_token=None),
-                mock.call(signal="signal", page_token="1"),
-                mock.call(signal="signal", page_token="2"),
+                mock.call(signal="signal", page_token=None, page_size=1000),
+                mock.call(signal="signal", page_token="1000", page_size=1000),
             ]
         )
 
     def test_get_entity_time_series_iterator(self):
         ts_api = TimeSeriesApi(ClientConfig("api-key"))
-        ts_1 = "ts_1"
-        ts_2 = "ts_2"
-        ts_3 = "ts_3"
         ts_api.get_entity_time_series = mock.MagicMock()
         ts_api.get_entity_time_series.side_effect = [
-            PagingResult([ts_1], next_page_token="1", total_size=3),
-            PagingResult([ts_2], next_page_token="2", total_size=3),
-            PagingResult([ts_3], next_page_token=None, total_size=3),
+            PagingResult([f"ts_{i}" for i in range(1000)], next_page_token="1000", total_size=1100),
+            PagingResult(
+                [f"ts_{i}" for i in range(1000, 1100)], next_page_token="1000", total_size=1100
+            ),
             AssertionError("Should not be called"),
         ]
         ts = list(ts_api.get_entity_time_series_iterator("entity"))
-        self.assertEqual(3, len(ts))
-        self.assertSequenceEqual([ts_1, ts_2, ts_3], ts)
+        self.assertEqual(1100, len(ts))
+        self.assertSequenceEqual([f"ts_{i}" for i in range(1100)], ts)
         ts_api.get_entity_time_series.assert_has_calls(
             [
-                mock.call(entity="entity", page_token=None),
-                mock.call(entity="entity", page_token="1"),
-                mock.call(entity="entity", page_token="2"),
+                mock.call(entity="entity", page_token=None, page_size=1000),
+                mock.call(entity="entity", page_token="1000", page_size=1000),
             ]
         )

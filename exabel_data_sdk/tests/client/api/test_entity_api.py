@@ -41,46 +41,40 @@ class TestEntityApi(unittest.TestCase):
 
     def test_get_entity_type_iterator(self):
         entity_api = EntityApi(ClientConfig("api-key"))
-        entity_type_1 = mock.create_autospec(EntityType)
-        entity_type_2 = mock.create_autospec(EntityType)
-        entity_type_3 = mock.create_autospec(EntityType)
+        entity_type = mock.create_autospec(EntityType)
         entity_api.list_entity_types = mock.MagicMock()
         entity_api.list_entity_types.side_effect = [
-            PagingResult([entity_type_1], next_page_token="1", total_size=3),
-            PagingResult([entity_type_2], next_page_token="2", total_size=3),
-            PagingResult([entity_type_3], next_page_token=None, total_size=3),
+            PagingResult([entity_type] * 1000, next_page_token="1000", total_size=2555),
+            PagingResult([entity_type] * 1000, next_page_token="2000", total_size=2555),
+            PagingResult([entity_type] * 555, next_page_token="~~~", total_size=2555),
             AssertionError("Should not be called"),
         ]
         entity_types = list(entity_api.get_entity_type_iterator())
-        self.assertEqual(3, len(entity_types))
-        self.assertSequenceEqual([entity_type_1, entity_type_2, entity_type_3], entity_types)
+        self.assertEqual(2555, len(entity_types))
+        self.assertSequenceEqual([entity_type] * 2555, entity_types)
         entity_api.list_entity_types.assert_has_calls(
             [
-                mock.call(page_token=None),
-                mock.call(page_token="1"),
-                mock.call(page_token="2"),
+                mock.call(page_token=None, page_size=1000),
+                mock.call(page_token="1000", page_size=1000),
+                mock.call(page_token="2000", page_size=1000),
             ]
         )
 
     def test_get_entities_iterator(self):
         entity_api = EntityApi(ClientConfig("api-key"))
-        entity_1 = mock.create_autospec(Entity)
-        entity_2 = mock.create_autospec(Entity)
-        entity_3 = mock.create_autospec(Entity)
+        entity = mock.create_autospec(Entity)
         entity_api.list_entities = mock.MagicMock()
         entity_api.list_entities.side_effect = [
-            PagingResult([entity_1], next_page_token="1", total_size=3),
-            PagingResult([entity_2], next_page_token="2", total_size=3),
-            PagingResult([entity_3], next_page_token=None, total_size=3),
+            PagingResult([entity] * 1000, next_page_token="1000", total_size=1100),
+            PagingResult([entity] * 100, next_page_token="~~~", total_size=1100),
             AssertionError("Should not be called"),
         ]
         entities = list(entity_api.get_entities_iterator("entity_type"))
-        self.assertEqual(3, len(entities))
-        self.assertSequenceEqual([entity_1, entity_2, entity_3], entities)
+        self.assertEqual(1100, len(entities))
+        self.assertSequenceEqual([entity] * 1100, entities)
         entity_api.list_entities.assert_has_calls(
             [
-                mock.call(entity_type="entity_type", page_token=None),
-                mock.call(entity_type="entity_type", page_token="1"),
-                mock.call(entity_type="entity_type", page_token="2"),
+                mock.call(entity_type="entity_type", page_token=None, page_size=1000),
+                mock.call(entity_type="entity_type", page_token="1000", page_size=1000),
             ]
         )

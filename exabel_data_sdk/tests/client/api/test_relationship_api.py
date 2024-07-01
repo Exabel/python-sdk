@@ -49,85 +49,81 @@ class TestRelationshipApi(unittest.TestCase):
 
     def test_get_relationships_from_entity_iterator(self):
         relationship_api = RelationshipApi(ClientConfig("api-key"))
-        relationship_1 = mock.create_autospec(Relationship)
-        relationship_2 = mock.create_autospec(Relationship)
-        relationship_3 = mock.create_autospec(Relationship)
+        relationship = mock.create_autospec(Relationship)
         relationship_api.get_relationships_from_entity = mock.MagicMock()
         relationship_api.get_relationships_from_entity.side_effect = [
-            PagingResult([relationship_1], next_page_token="1", total_size=3),
-            PagingResult([relationship_2], next_page_token="2", total_size=3),
-            PagingResult([relationship_3], next_page_token=None, total_size=3),
+            PagingResult([relationship] * 1000, next_page_token="1000", total_size=1100),
+            PagingResult([relationship] * 100, next_page_token="~~~", total_size=1100),
             AssertionError("Should not be called"),
         ]
         relationships = list(
             relationship_api.get_relationships_from_entity_iterator("relationship_type", "entity")
         )
-        self.assertEqual(3, len(relationships))
-        self.assertSequenceEqual([relationship_1, relationship_2, relationship_3], relationships)
+        self.assertEqual(1100, len(relationships))
+        self.assertSequenceEqual([relationship] * 1100, relationships)
         relationship_api.get_relationships_from_entity.assert_has_calls(
             [
                 mock.call(
-                    relationship_type="relationship_type", from_entity="entity", page_token=None
+                    relationship_type="relationship_type",
+                    from_entity="entity",
+                    page_token=None,
+                    page_size=1000,
                 ),
                 mock.call(
-                    relationship_type="relationship_type", from_entity="entity", page_token="1"
-                ),
-                mock.call(
-                    relationship_type="relationship_type", from_entity="entity", page_token="2"
+                    relationship_type="relationship_type",
+                    from_entity="entity",
+                    page_token="1000",
+                    page_size=1000,
                 ),
             ]
         )
 
     def test_get_relationships_to_entity_iterator(self):
         relationship_api = RelationshipApi(ClientConfig("api-key"))
-        relationship_1 = mock.create_autospec(Relationship)
-        relationship_2 = mock.create_autospec(Relationship)
-        relationship_3 = mock.create_autospec(Relationship)
+        relationship = mock.create_autospec(Relationship)
         relationship_api.get_relationships_to_entity = mock.MagicMock()
         relationship_api.get_relationships_to_entity.side_effect = [
-            PagingResult([relationship_1], next_page_token="1", total_size=3),
-            PagingResult([relationship_2], next_page_token="2", total_size=3),
-            PagingResult([relationship_3], next_page_token=None, total_size=3),
+            PagingResult([relationship] * 1000, next_page_token="1000", total_size=1100),
+            PagingResult([relationship] * 100, next_page_token="~~~", total_size=1100),
             AssertionError("Should not be called"),
         ]
         relationships = list(
             relationship_api.get_relationships_to_entity_iterator("relationship_type", "entity")
         )
-        self.assertEqual(3, len(relationships))
-        self.assertSequenceEqual([relationship_1, relationship_2, relationship_3], relationships)
+        self.assertEqual(1100, len(relationships))
+        self.assertSequenceEqual([relationship] * 1100, relationships)
         relationship_api.get_relationships_to_entity.assert_has_calls(
             [
                 mock.call(
-                    relationship_type="relationship_type", to_entity="entity", page_token=None
+                    relationship_type="relationship_type",
+                    to_entity="entity",
+                    page_token=None,
+                    page_size=1000,
                 ),
                 mock.call(
-                    relationship_type="relationship_type", to_entity="entity", page_token="1"
-                ),
-                mock.call(
-                    relationship_type="relationship_type", to_entity="entity", page_token="2"
+                    relationship_type="relationship_type",
+                    to_entity="entity",
+                    page_token="1000",
+                    page_size=1000,
                 ),
             ]
         )
 
     def test_get_relationships_iterator(self):
         relationship_api = RelationshipApi(ClientConfig("api-key"))
-        relationship_1 = mock.create_autospec(Relationship)
-        relationship_2 = mock.create_autospec(Relationship)
-        relationship_3 = mock.create_autospec(Relationship)
+        relationship = mock.create_autospec(Relationship)
         relationship_api.list_relationships = mock.MagicMock()
         relationship_api.list_relationships.side_effect = [
-            PagingResult([relationship_1], next_page_token="1", total_size=3),
-            PagingResult([relationship_2], next_page_token="2", total_size=3),
-            PagingResult([relationship_3], next_page_token=None, total_size=3),
+            PagingResult([relationship] * 1000, next_page_token="1000", total_size=1100),
+            PagingResult([relationship] * 100, next_page_token="~~~", total_size=1100),
             AssertionError("Should not be called"),
         ]
         relationships = list(relationship_api.get_relationships_iterator("relationship_type"))
-        self.assertEqual(3, len(relationships))
-        self.assertSequenceEqual([relationship_1, relationship_2, relationship_3], relationships)
+        self.assertEqual(1100, len(relationships))
+        self.assertSequenceEqual([relationship] * 1100, relationships)
         relationship_api.list_relationships.assert_has_calls(
             [
                 mock.call(relationship_type="relationship_type", page_token=None, page_size=1000),
-                mock.call(relationship_type="relationship_type", page_token="1", page_size=1000),
-                mock.call(relationship_type="relationship_type", page_token="2", page_size=1000),
+                mock.call(relationship_type="relationship_type", page_token="1000", page_size=1000),
             ]
         )
