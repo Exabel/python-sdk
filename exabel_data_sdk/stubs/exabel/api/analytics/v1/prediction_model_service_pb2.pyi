@@ -6,14 +6,10 @@ import builtins
 from ..... import exabel
 import google.protobuf.descriptor
 import google.protobuf.message
-import sys
-if sys.version_info >= (3, 8):
-    import typing as typing_extensions
-else:
-    import typing_extensions
+import typing
 DESCRIPTOR: google.protobuf.descriptor.FileDescriptor
 
-@typing_extensions.final
+@typing.final
 class CreatePredictionModelRunRequest(google.protobuf.message.Message):
     """Request to CreatePredictionModelRun."""
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
@@ -29,9 +25,9 @@ class CreatePredictionModelRunRequest(google.protobuf.message.Message):
     def __init__(self, *, parent: builtins.str | None=..., run: exabel.api.analytics.v1.prediction_model_messages_pb2.PredictionModelRun | None=...) -> None:
         ...
 
-    def HasField(self, field_name: typing_extensions.Literal['run', b'run']) -> builtins.bool:
+    def HasField(self, field_name: typing.Literal['run', b'run']) -> builtins.bool:
         ...
 
-    def ClearField(self, field_name: typing_extensions.Literal['parent', b'parent', 'run', b'run']) -> None:
+    def ClearField(self, field_name: typing.Literal['parent', b'parent', 'run', b'run']) -> None:
         ...
 global___CreatePredictionModelRunRequest = CreatePredictionModelRunRequest

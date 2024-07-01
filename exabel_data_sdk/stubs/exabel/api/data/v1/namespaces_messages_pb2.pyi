@@ -5,14 +5,10 @@ Copyright (c) 2019-2022 Exabel AS. All rights reserved."""
 import builtins
 import google.protobuf.descriptor
 import google.protobuf.message
-import sys
-if sys.version_info >= (3, 8):
-    import typing as typing_extensions
-else:
-    import typing_extensions
+import typing
 DESCRIPTOR: google.protobuf.descriptor.FileDescriptor
 
-@typing_extensions.final
+@typing.final
 class Namespace(google.protobuf.message.Message):
     """A namespace resource in the Data API."""
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
@@ -26,6 +22,6 @@ class Namespace(google.protobuf.message.Message):
     def __init__(self, *, name: builtins.str | None=..., writeable: builtins.bool | None=...) -> None:
         ...
 
-    def ClearField(self, field_name: typing_extensions.Literal['name', b'name', 'writeable', b'writeable']) -> None:
+    def ClearField(self, field_name: typing.Literal['name', b'name', 'writeable', b'writeable']) -> None:
         ...
 global___Namespace = Namespace

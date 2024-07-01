@@ -43,7 +43,7 @@ SPECIFIC_RUN: ModelConfiguration.ValueType
 'Configuration of a specific run. The run number must be specified as well.'
 global___ModelConfiguration = ModelConfiguration
 
-@typing_extensions.final
+@typing.final
 class PredictionModelRun(google.protobuf.message.Message):
     """A prediction model run."""
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
@@ -66,12 +66,12 @@ class PredictionModelRun(google.protobuf.message.Message):
     def __init__(self, *, name: builtins.str | None=..., description: builtins.str | None=..., configuration: global___ModelConfiguration.ValueType | None=..., configuration_source: builtins.int | None=..., auto_activate: builtins.bool | None=...) -> None:
         ...
 
-    def HasField(self, field_name: typing_extensions.Literal['_configuration_source', b'_configuration_source', 'configuration_source', b'configuration_source']) -> builtins.bool:
+    def HasField(self, field_name: typing.Literal['_configuration_source', b'_configuration_source', 'configuration_source', b'configuration_source']) -> builtins.bool:
         ...
 
-    def ClearField(self, field_name: typing_extensions.Literal['_configuration_source', b'_configuration_source', 'auto_activate', b'auto_activate', 'configuration', b'configuration', 'configuration_source', b'configuration_source', 'description', b'description', 'name', b'name']) -> None:
+    def ClearField(self, field_name: typing.Literal['_configuration_source', b'_configuration_source', 'auto_activate', b'auto_activate', 'configuration', b'configuration', 'configuration_source', b'configuration_source', 'description', b'description', 'name', b'name']) -> None:
         ...
 
-    def WhichOneof(self, oneof_group: typing_extensions.Literal['_configuration_source', b'_configuration_source']) -> typing_extensions.Literal['configuration_source'] | None:
+    def WhichOneof(self, oneof_group: typing.Literal['_configuration_source', b'_configuration_source']) -> typing.Literal['configuration_source'] | None:
         ...
 global___PredictionModelRun = PredictionModelRun

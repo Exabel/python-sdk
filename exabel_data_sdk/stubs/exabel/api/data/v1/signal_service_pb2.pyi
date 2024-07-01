@@ -9,14 +9,10 @@ import google.protobuf.descriptor
 import google.protobuf.field_mask_pb2
 import google.protobuf.internal.containers
 import google.protobuf.message
-import sys
-if sys.version_info >= (3, 8):
-    import typing as typing_extensions
-else:
-    import typing_extensions
+import typing
 DESCRIPTOR: google.protobuf.descriptor.FileDescriptor
 
-@typing_extensions.final
+@typing.final
 class ListSignalsRequest(google.protobuf.message.Message):
     """The request to list signals."""
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
@@ -30,34 +26,34 @@ class ListSignalsRequest(google.protobuf.message.Message):
     def __init__(self, *, page_size: builtins.int | None=..., page_token: builtins.str | None=...) -> None:
         ...
 
-    def ClearField(self, field_name: typing_extensions.Literal['page_size', b'page_size', 'page_token', b'page_token']) -> None:
+    def ClearField(self, field_name: typing.Literal['page_size', b'page_size', 'page_token', b'page_token']) -> None:
         ...
 global___ListSignalsRequest = ListSignalsRequest
 
-@typing_extensions.final
+@typing.final
 class ListSignalsResponse(google.protobuf.message.Message):
     """The response to list signals. Returns all known signals."""
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
     SIGNALS_FIELD_NUMBER: builtins.int
     NEXT_PAGE_TOKEN_FIELD_NUMBER: builtins.int
     TOTAL_SIZE_FIELD_NUMBER: builtins.int
-
-    @property
-    def signals(self) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[exabel.api.data.v1.signal_messages_pb2.Signal]:
-        """List of signals."""
     next_page_token: builtins.str
     'Token for the next page of results, which can be sent to a subsequent query.\n    The end of the list is reached when the number of results is less than the page size\n    (NOT when the token is empty).\n    '
     total_size: builtins.int
     'Total number of results, irrespective of paging.'
 
+    @property
+    def signals(self) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[exabel.api.data.v1.signal_messages_pb2.Signal]:
+        """List of signals."""
+
     def __init__(self, *, signals: collections.abc.Iterable[exabel.api.data.v1.signal_messages_pb2.Signal] | None=..., next_page_token: builtins.str | None=..., total_size: builtins.int | None=...) -> None:
         ...
 
-    def ClearField(self, field_name: typing_extensions.Literal['next_page_token', b'next_page_token', 'signals', b'signals', 'total_size', b'total_size']) -> None:
+    def ClearField(self, field_name: typing.Literal['next_page_token', b'next_page_token', 'signals', b'signals', 'total_size', b'total_size']) -> None:
         ...
 global___ListSignalsResponse = ListSignalsResponse
 
-@typing_extensions.final
+@typing.final
 class GetSignalRequest(google.protobuf.message.Message):
     """The request to get one signal."""
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
@@ -68,34 +64,34 @@ class GetSignalRequest(google.protobuf.message.Message):
     def __init__(self, *, name: builtins.str | None=...) -> None:
         ...
 
-    def ClearField(self, field_name: typing_extensions.Literal['name', b'name']) -> None:
+    def ClearField(self, field_name: typing.Literal['name', b'name']) -> None:
         ...
 global___GetSignalRequest = GetSignalRequest
 
-@typing_extensions.final
+@typing.final
 class CreateSignalRequest(google.protobuf.message.Message):
     """The request to create one signal."""
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
     SIGNAL_FIELD_NUMBER: builtins.int
     CREATE_LIBRARY_SIGNAL_FIELD_NUMBER: builtins.int
+    create_library_signal: builtins.bool
+    'Set to `true` to also create a derived signal in the Library, referencing this new raw data\n    signal. This will be created in the "Upload" folder.\n    '
 
     @property
     def signal(self) -> exabel.api.data.v1.signal_messages_pb2.Signal:
         """The signal to create."""
-    create_library_signal: builtins.bool
-    'Set to `true` to also create a derived signal in the Library, referencing this new raw data\n    signal. This will be created in the "Upload" folder.\n    '
 
     def __init__(self, *, signal: exabel.api.data.v1.signal_messages_pb2.Signal | None=..., create_library_signal: builtins.bool | None=...) -> None:
         ...
 
-    def HasField(self, field_name: typing_extensions.Literal['signal', b'signal']) -> builtins.bool:
+    def HasField(self, field_name: typing.Literal['signal', b'signal']) -> builtins.bool:
         ...
 
-    def ClearField(self, field_name: typing_extensions.Literal['create_library_signal', b'create_library_signal', 'signal', b'signal']) -> None:
+    def ClearField(self, field_name: typing.Literal['create_library_signal', b'create_library_signal', 'signal', b'signal']) -> None:
         ...
 global___CreateSignalRequest = CreateSignalRequest
 
-@typing_extensions.final
+@typing.final
 class UpdateSignalRequest(google.protobuf.message.Message):
     """The request to update one signal."""
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
@@ -103,6 +99,10 @@ class UpdateSignalRequest(google.protobuf.message.Message):
     UPDATE_MASK_FIELD_NUMBER: builtins.int
     ALLOW_MISSING_FIELD_NUMBER: builtins.int
     CREATE_LIBRARY_SIGNAL_FIELD_NUMBER: builtins.int
+    allow_missing: builtins.bool
+    'If set to `true`, a new raw data signal will be created if it did not exist, and `update_mask`\n    is ignored.\n    '
+    create_library_signal: builtins.bool
+    'Set to `true` to also create a derived signal in the Library, referencing this new raw data\n    signal. This will be created in the "Upload" folder. This is only applicable if a new raw\n    data signal has been created (with `allow_missing` set to `true`).\n    '
 
     @property
     def signal(self) -> exabel.api.data.v1.signal_messages_pb2.Signal:
@@ -115,22 +115,18 @@ class UpdateSignalRequest(google.protobuf.message.Message):
 
         For REST requests, this is a comma-separated string.
         """
-    allow_missing: builtins.bool
-    'If set to `true`, a new raw data signal will be created if it did not exist, and `update_mask`\n    is ignored.\n    '
-    create_library_signal: builtins.bool
-    'Set to `true` to also create a derived signal in the Library, referencing this new raw data\n    signal. This will be created in the "Upload" folder. This is only applicable if a new raw\n    data signal has been created (with `allow_missing` set to `true`).\n    '
 
     def __init__(self, *, signal: exabel.api.data.v1.signal_messages_pb2.Signal | None=..., update_mask: google.protobuf.field_mask_pb2.FieldMask | None=..., allow_missing: builtins.bool | None=..., create_library_signal: builtins.bool | None=...) -> None:
         ...
 
-    def HasField(self, field_name: typing_extensions.Literal['signal', b'signal', 'update_mask', b'update_mask']) -> builtins.bool:
+    def HasField(self, field_name: typing.Literal['signal', b'signal', 'update_mask', b'update_mask']) -> builtins.bool:
         ...
 
-    def ClearField(self, field_name: typing_extensions.Literal['allow_missing', b'allow_missing', 'create_library_signal', b'create_library_signal', 'signal', b'signal', 'update_mask', b'update_mask']) -> None:
+    def ClearField(self, field_name: typing.Literal['allow_missing', b'allow_missing', 'create_library_signal', b'create_library_signal', 'signal', b'signal', 'update_mask', b'update_mask']) -> None:
         ...
 global___UpdateSignalRequest = UpdateSignalRequest
 
-@typing_extensions.final
+@typing.final
 class DeleteSignalRequest(google.protobuf.message.Message):
     """The request to delete one signal."""
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
@@ -141,6 +137,6 @@ class DeleteSignalRequest(google.protobuf.message.Message):
     def __init__(self, *, name: builtins.str | None=...) -> None:
         ...
 
-    def ClearField(self, field_name: typing_extensions.Literal['name', b'name']) -> None:
+    def ClearField(self, field_name: typing.Literal['name', b'name']) -> None:
         ...
 global___DeleteSignalRequest = DeleteSignalRequest

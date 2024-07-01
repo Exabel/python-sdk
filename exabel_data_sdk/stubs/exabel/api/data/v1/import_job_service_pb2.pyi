@@ -5,14 +5,10 @@ Copyright (c) 2019-2022 Exabel AS. All rights reserved."""
 import builtins
 import google.protobuf.descriptor
 import google.protobuf.message
-import sys
-if sys.version_info >= (3, 8):
-    import typing as typing_extensions
-else:
-    import typing_extensions
+import typing
 DESCRIPTOR: google.protobuf.descriptor.FileDescriptor
 
-@typing_extensions.final
+@typing.final
 class RunTaskRequest(google.protobuf.message.Message):
     """The request run task."""
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
@@ -23,11 +19,11 @@ class RunTaskRequest(google.protobuf.message.Message):
     def __init__(self, *, name: builtins.str | None=...) -> None:
         ...
 
-    def ClearField(self, field_name: typing_extensions.Literal['name', b'name']) -> None:
+    def ClearField(self, field_name: typing.Literal['name', b'name']) -> None:
         ...
 global___RunTaskRequest = RunTaskRequest
 
-@typing_extensions.final
+@typing.final
 class RunTaskResponse(google.protobuf.message.Message):
     """The response to run task."""
     DESCRIPTOR: google.protobuf.descriptor.Descriptor

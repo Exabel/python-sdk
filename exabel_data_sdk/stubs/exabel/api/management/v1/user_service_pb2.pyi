@@ -8,14 +8,10 @@ from ..... import exabel
 import google.protobuf.descriptor
 import google.protobuf.internal.containers
 import google.protobuf.message
-import sys
-if sys.version_info >= (3, 8):
-    import typing as typing_extensions
-else:
-    import typing_extensions
+import typing
 DESCRIPTOR: google.protobuf.descriptor.FileDescriptor
 
-@typing_extensions.final
+@typing.final
 class ListGroupsRequest(google.protobuf.message.Message):
     """Request to ListGroups."""
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
@@ -24,7 +20,7 @@ class ListGroupsRequest(google.protobuf.message.Message):
         ...
 global___ListGroupsRequest = ListGroupsRequest
 
-@typing_extensions.final
+@typing.final
 class ListGroupsResponse(google.protobuf.message.Message):
     """Response from ListGroups."""
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
@@ -37,11 +33,11 @@ class ListGroupsResponse(google.protobuf.message.Message):
     def __init__(self, *, groups: collections.abc.Iterable[exabel.api.management.v1.user_messages_pb2.Group] | None=...) -> None:
         ...
 
-    def ClearField(self, field_name: typing_extensions.Literal['groups', b'groups']) -> None:
+    def ClearField(self, field_name: typing.Literal['groups', b'groups']) -> None:
         ...
 global___ListGroupsResponse = ListGroupsResponse
 
-@typing_extensions.final
+@typing.final
 class ListUsersRequest(google.protobuf.message.Message):
     """Request to ListUsers."""
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
@@ -50,7 +46,7 @@ class ListUsersRequest(google.protobuf.message.Message):
         ...
 global___ListUsersRequest = ListUsersRequest
 
-@typing_extensions.final
+@typing.final
 class ListUsersResponse(google.protobuf.message.Message):
     """Response from ListUsers."""
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
@@ -63,6 +59,6 @@ class ListUsersResponse(google.protobuf.message.Message):
     def __init__(self, *, users: collections.abc.Iterable[exabel.api.management.v1.user_messages_pb2.User] | None=...) -> None:
         ...
 
-    def ClearField(self, field_name: typing_extensions.Literal['users', b'users']) -> None:
+    def ClearField(self, field_name: typing.Literal['users', b'users']) -> None:
         ...
 global___ListUsersResponse = ListUsersResponse

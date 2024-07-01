@@ -7,14 +7,10 @@ import collections.abc
 import google.protobuf.descriptor
 import google.protobuf.internal.containers
 import google.protobuf.message
-import sys
-if sys.version_info >= (3, 8):
-    import typing as typing_extensions
-else:
-    import typing_extensions
+import typing
 DESCRIPTOR: google.protobuf.descriptor.FileDescriptor
 
-@typing_extensions.final
+@typing.final
 class User(google.protobuf.message.Message):
     """A user."""
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
@@ -31,11 +27,11 @@ class User(google.protobuf.message.Message):
     def __init__(self, *, name: builtins.str | None=..., email: builtins.str | None=..., blocked: builtins.bool | None=...) -> None:
         ...
 
-    def ClearField(self, field_name: typing_extensions.Literal['blocked', b'blocked', 'email', b'email', 'name', b'name']) -> None:
+    def ClearField(self, field_name: typing.Literal['blocked', b'blocked', 'email', b'email', 'name', b'name']) -> None:
         ...
 global___User = User
 
-@typing_extensions.final
+@typing.final
 class Group(google.protobuf.message.Message):
     """A group."""
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
@@ -56,6 +52,6 @@ class Group(google.protobuf.message.Message):
     def __init__(self, *, name: builtins.str | None=..., display_name: builtins.str | None=..., users: collections.abc.Iterable[global___User] | None=...) -> None:
         ...
 
-    def ClearField(self, field_name: typing_extensions.Literal['display_name', b'display_name', 'name', b'name', 'users', b'users']) -> None:
+    def ClearField(self, field_name: typing.Literal['display_name', b'display_name', 'name', b'name', 'users', b'users']) -> None:
         ...
 global___Group = Group

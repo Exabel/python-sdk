@@ -7,14 +7,10 @@ from ..... import exabel
 import google.protobuf.descriptor
 import google.protobuf.field_mask_pb2
 import google.protobuf.message
-import sys
-if sys.version_info >= (3, 8):
-    import typing as typing_extensions
-else:
-    import typing_extensions
+import typing
 DESCRIPTOR: google.protobuf.descriptor.FileDescriptor
 
-@typing_extensions.final
+@typing.final
 class GetDerivedSignalRequest(google.protobuf.message.Message):
     """Request to GetDerivedSignal."""
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
@@ -25,34 +21,34 @@ class GetDerivedSignalRequest(google.protobuf.message.Message):
     def __init__(self, *, name: builtins.str | None=...) -> None:
         ...
 
-    def ClearField(self, field_name: typing_extensions.Literal['name', b'name']) -> None:
+    def ClearField(self, field_name: typing.Literal['name', b'name']) -> None:
         ...
 global___GetDerivedSignalRequest = GetDerivedSignalRequest
 
-@typing_extensions.final
+@typing.final
 class CreateDerivedSignalRequest(google.protobuf.message.Message):
     """Request to CreateDerivedSignal."""
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
     SIGNAL_FIELD_NUMBER: builtins.int
     FOLDER_FIELD_NUMBER: builtins.int
+    folder: builtins.str
+    'Resource name of the Library folder to create the signal in, e.g. `folders/123`. If not\n    specified, the signal will be created in an “Analytics API” folder that is shared with the\n    customer user group.\n    '
 
     @property
     def signal(self) -> exabel.api.analytics.v1.derived_signal_messages_pb2.DerivedSignal:
         """A derived signal."""
-    folder: builtins.str
-    'Resource name of the Library folder to create the signal in, e.g. `folders/123`. If not\n    specified, the signal will be created in an “Analytics API” folder that is shared with the\n    customer user group.\n    '
 
     def __init__(self, *, signal: exabel.api.analytics.v1.derived_signal_messages_pb2.DerivedSignal | None=..., folder: builtins.str | None=...) -> None:
         ...
 
-    def HasField(self, field_name: typing_extensions.Literal['signal', b'signal']) -> builtins.bool:
+    def HasField(self, field_name: typing.Literal['signal', b'signal']) -> builtins.bool:
         ...
 
-    def ClearField(self, field_name: typing_extensions.Literal['folder', b'folder', 'signal', b'signal']) -> None:
+    def ClearField(self, field_name: typing.Literal['folder', b'folder', 'signal', b'signal']) -> None:
         ...
 global___CreateDerivedSignalRequest = CreateDerivedSignalRequest
 
-@typing_extensions.final
+@typing.final
 class UpdateDerivedSignalRequest(google.protobuf.message.Message):
     """Request to UpdateDerivedSignal."""
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
@@ -74,14 +70,14 @@ class UpdateDerivedSignalRequest(google.protobuf.message.Message):
     def __init__(self, *, signal: exabel.api.analytics.v1.derived_signal_messages_pb2.DerivedSignal | None=..., update_mask: google.protobuf.field_mask_pb2.FieldMask | None=...) -> None:
         ...
 
-    def HasField(self, field_name: typing_extensions.Literal['signal', b'signal', 'update_mask', b'update_mask']) -> builtins.bool:
+    def HasField(self, field_name: typing.Literal['signal', b'signal', 'update_mask', b'update_mask']) -> builtins.bool:
         ...
 
-    def ClearField(self, field_name: typing_extensions.Literal['signal', b'signal', 'update_mask', b'update_mask']) -> None:
+    def ClearField(self, field_name: typing.Literal['signal', b'signal', 'update_mask', b'update_mask']) -> None:
         ...
 global___UpdateDerivedSignalRequest = UpdateDerivedSignalRequest
 
-@typing_extensions.final
+@typing.final
 class DeleteDerivedSignalRequest(google.protobuf.message.Message):
     """Request to DeleteDerivedSignal."""
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
@@ -92,6 +88,6 @@ class DeleteDerivedSignalRequest(google.protobuf.message.Message):
     def __init__(self, *, name: builtins.str | None=...) -> None:
         ...
 
-    def ClearField(self, field_name: typing_extensions.Literal['name', b'name']) -> None:
+    def ClearField(self, field_name: typing.Literal['name', b'name']) -> None:
         ...
 global___DeleteDerivedSignalRequest = DeleteDerivedSignalRequest

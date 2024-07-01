@@ -8,14 +8,10 @@ from ..... import exabel
 import google.protobuf.descriptor
 import google.protobuf.internal.containers
 import google.protobuf.message
-import sys
-if sys.version_info >= (3, 8):
-    import typing as typing_extensions
-else:
-    import typing_extensions
+import typing
 DESCRIPTOR: google.protobuf.descriptor.FileDescriptor
 
-@typing_extensions.final
+@typing.final
 class ListNamespacesRequest(google.protobuf.message.Message):
     """The request to list namespaces."""
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
@@ -24,7 +20,7 @@ class ListNamespacesRequest(google.protobuf.message.Message):
         ...
 global___ListNamespacesRequest = ListNamespacesRequest
 
-@typing_extensions.final
+@typing.final
 class ListNamespacesResponse(google.protobuf.message.Message):
     """The response to list namespaces."""
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
@@ -39,6 +35,6 @@ class ListNamespacesResponse(google.protobuf.message.Message):
     def __init__(self, *, namespaces: collections.abc.Iterable[exabel.api.data.v1.namespaces_messages_pb2.Namespace] | None=...) -> None:
         ...
 
-    def ClearField(self, field_name: typing_extensions.Literal['namespaces', b'namespaces']) -> None:
+    def ClearField(self, field_name: typing.Literal['namespaces', b'namespaces']) -> None:
         ...
 global___ListNamespacesResponse = ListNamespacesResponse

@@ -6,14 +6,10 @@ import builtins
 import google.protobuf.descriptor
 import google.protobuf.message
 import google.protobuf.struct_pb2
-import sys
-if sys.version_info >= (3, 8):
-    import typing as typing_extensions
-else:
-    import typing_extensions
+import typing
 DESCRIPTOR: google.protobuf.descriptor.FileDescriptor
 
-@typing_extensions.final
+@typing.final
 class EntityType(google.protobuf.message.Message):
     """An entity type resource in the Data API."""
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
@@ -36,11 +32,11 @@ class EntityType(google.protobuf.message.Message):
     def __init__(self, *, name: builtins.str | None=..., display_name: builtins.str | None=..., description: builtins.str | None=..., read_only: builtins.bool | None=..., is_associative: builtins.bool | None=...) -> None:
         ...
 
-    def ClearField(self, field_name: typing_extensions.Literal['description', b'description', 'display_name', b'display_name', 'is_associative', b'is_associative', 'name', b'name', 'read_only', b'read_only']) -> None:
+    def ClearField(self, field_name: typing.Literal['description', b'description', 'display_name', b'display_name', 'is_associative', b'is_associative', 'name', b'name', 'read_only', b'read_only']) -> None:
         ...
 global___EntityType = EntityType
 
-@typing_extensions.final
+@typing.final
 class Entity(google.protobuf.message.Message):
     """An entity resource in the Data API. All entities have one entity type as its parent."""
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
@@ -67,9 +63,9 @@ class Entity(google.protobuf.message.Message):
     def __init__(self, *, name: builtins.str | None=..., display_name: builtins.str | None=..., description: builtins.str | None=..., read_only: builtins.bool | None=..., properties: google.protobuf.struct_pb2.Struct | None=...) -> None:
         ...
 
-    def HasField(self, field_name: typing_extensions.Literal['properties', b'properties']) -> builtins.bool:
+    def HasField(self, field_name: typing.Literal['properties', b'properties']) -> builtins.bool:
         ...
 
-    def ClearField(self, field_name: typing_extensions.Literal['description', b'description', 'display_name', b'display_name', 'name', b'name', 'properties', b'properties', 'read_only', b'read_only']) -> None:
+    def ClearField(self, field_name: typing.Literal['description', b'description', 'display_name', b'display_name', 'name', b'name', 'properties', b'properties', 'read_only', b'read_only']) -> None:
         ...
 global___Entity = Entity

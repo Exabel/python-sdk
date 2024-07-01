@@ -6,14 +6,10 @@ import builtins
 import google.protobuf.descriptor
 import google.protobuf.message
 import google.protobuf.struct_pb2
-import sys
-if sys.version_info >= (3, 8):
-    import typing as typing_extensions
-else:
-    import typing_extensions
+import typing
 DESCRIPTOR: google.protobuf.descriptor.FileDescriptor
 
-@typing_extensions.final
+@typing.final
 class RelationshipType(google.protobuf.message.Message):
     """A relationship type resource in the Data API."""
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
@@ -40,14 +36,14 @@ class RelationshipType(google.protobuf.message.Message):
     def __init__(self, *, name: builtins.str | None=..., description: builtins.str | None=..., read_only: builtins.bool | None=..., is_ownership: builtins.bool | None=..., properties: google.protobuf.struct_pb2.Struct | None=...) -> None:
         ...
 
-    def HasField(self, field_name: typing_extensions.Literal['properties', b'properties']) -> builtins.bool:
+    def HasField(self, field_name: typing.Literal['properties', b'properties']) -> builtins.bool:
         ...
 
-    def ClearField(self, field_name: typing_extensions.Literal['description', b'description', 'is_ownership', b'is_ownership', 'name', b'name', 'properties', b'properties', 'read_only', b'read_only']) -> None:
+    def ClearField(self, field_name: typing.Literal['description', b'description', 'is_ownership', b'is_ownership', 'name', b'name', 'properties', b'properties', 'read_only', b'read_only']) -> None:
         ...
 global___RelationshipType = RelationshipType
 
-@typing_extensions.final
+@typing.final
 class Relationship(google.protobuf.message.Message):
     """A relationship resource in the Data API. All relationships have one relationship type as its
     parent. Relationships do not have resource names, but are identified by their (type, from, to)
@@ -82,9 +78,9 @@ class Relationship(google.protobuf.message.Message):
     def __init__(self, *, parent: builtins.str | None=..., from_entity: builtins.str | None=..., to_entity: builtins.str | None=..., description: builtins.str | None=..., read_only: builtins.bool | None=..., properties: google.protobuf.struct_pb2.Struct | None=...) -> None:
         ...
 
-    def HasField(self, field_name: typing_extensions.Literal['properties', b'properties']) -> builtins.bool:
+    def HasField(self, field_name: typing.Literal['properties', b'properties']) -> builtins.bool:
         ...
 
-    def ClearField(self, field_name: typing_extensions.Literal['description', b'description', 'from_entity', b'from_entity', 'parent', b'parent', 'properties', b'properties', 'read_only', b'read_only', 'to_entity', b'to_entity']) -> None:
+    def ClearField(self, field_name: typing.Literal['description', b'description', 'from_entity', b'from_entity', 'parent', b'parent', 'properties', b'properties', 'read_only', b'read_only', 'to_entity', b'to_entity']) -> None:
         ...
 global___Relationship = Relationship
