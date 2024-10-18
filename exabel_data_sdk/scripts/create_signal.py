@@ -4,6 +4,7 @@ from typing import Sequence
 
 from exabel_data_sdk import ExabelClient
 from exabel_data_sdk.client.api.data_classes.signal import Signal
+from exabel_data_sdk.scripts import utils
 from exabel_data_sdk.scripts.base_script import BaseScript
 
 
@@ -17,7 +18,7 @@ class CreateSignal(BaseScript):
         self.parser.add_argument(
             "--name",
             required=True,
-            type=str,
+            type=utils.signal_resource_name,
             help="The resource name of the signal, for example 'signals/ns.signalIdentifier'",
         )
         self.parser.add_argument(

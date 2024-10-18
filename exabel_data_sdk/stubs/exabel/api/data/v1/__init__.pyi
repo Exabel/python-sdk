@@ -1,3 +1,4 @@
+from . import common_messages_pb2
 from . import data_set_messages_pb2
 from . import data_set_service_pb2
 from . import entity_messages_pb2

@@ -20,6 +20,9 @@ class SignalServiceStub(object):
         self.CreateSignal = channel.unary_unary('/exabel.api.data.v1.SignalService/CreateSignal', request_serializer=exabel_dot_api_dot_data_dot_v1_dot_signal__service__pb2.CreateSignalRequest.SerializeToString, response_deserializer=exabel_dot_api_dot_data_dot_v1_dot_signal__messages__pb2.Signal.FromString)
         self.UpdateSignal = channel.unary_unary('/exabel.api.data.v1.SignalService/UpdateSignal', request_serializer=exabel_dot_api_dot_data_dot_v1_dot_signal__service__pb2.UpdateSignalRequest.SerializeToString, response_deserializer=exabel_dot_api_dot_data_dot_v1_dot_signal__messages__pb2.Signal.FromString)
         self.DeleteSignal = channel.unary_unary('/exabel.api.data.v1.SignalService/DeleteSignal', request_serializer=exabel_dot_api_dot_data_dot_v1_dot_signal__service__pb2.DeleteSignalRequest.SerializeToString, response_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString)
+        self.ListDerivedSignals = channel.unary_unary('/exabel.api.data.v1.SignalService/ListDerivedSignals', request_serializer=exabel_dot_api_dot_data_dot_v1_dot_signal__service__pb2.ListDerivedSignalsRequest.SerializeToString, response_deserializer=exabel_dot_api_dot_data_dot_v1_dot_signal__service__pb2.ListDerivedSignalsResponse.FromString)
+        self.FilterDerivedSignals = channel.unary_unary('/exabel.api.data.v1.SignalService/FilterDerivedSignals', request_serializer=exabel_dot_api_dot_data_dot_v1_dot_signal__service__pb2.FilterDerivedSignalsRequest.SerializeToString, response_deserializer=exabel_dot_api_dot_data_dot_v1_dot_signal__service__pb2.FilterDerivedSignalsResponse.FromString)
+        self.GetDerivedSignal = channel.unary_unary('/exabel.api.data.v1.SignalService/GetDerivedSignal', request_serializer=exabel_dot_api_dot_data_dot_v1_dot_signal__service__pb2.GetDerivedSignalRequest.SerializeToString, response_deserializer=exabel_dot_api_dot_data_dot_v1_dot_signal__messages__pb2.DerivedSignal.FromString)
 
 class SignalServiceServicer(object):
     """Service for managing raw data signals. See the User Guide for more information about raw data
@@ -73,8 +76,36 @@ class SignalServiceServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def ListDerivedSignals(self, request, context):
+        """Lists all known derived signals.
+
+        Lists all derived data signals available to your customer, including those created by you, in the
+        global catalog, and from data sets you are subscribed to.
+        """
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def FilterDerivedSignals(self, request, context):
+        """Gets all derived signals that apply to at least one of several entities.
+
+        Selects from all derived data signals available to your customer (including those created by you, in the
+        global catalog, and from data sets you are subscribed to), those signals that apply to at least one of the
+        requested entities.
+        """
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def GetDerivedSignal(self, request, context):
+        """Gets one derived signal.
+        """
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 def add_SignalServiceServicer_to_server(servicer, server):
-    rpc_method_handlers = {'ListSignals': grpc.unary_unary_rpc_method_handler(servicer.ListSignals, request_deserializer=exabel_dot_api_dot_data_dot_v1_dot_signal__service__pb2.ListSignalsRequest.FromString, response_serializer=exabel_dot_api_dot_data_dot_v1_dot_signal__service__pb2.ListSignalsResponse.SerializeToString), 'GetSignal': grpc.unary_unary_rpc_method_handler(servicer.GetSignal, request_deserializer=exabel_dot_api_dot_data_dot_v1_dot_signal__service__pb2.GetSignalRequest.FromString, response_serializer=exabel_dot_api_dot_data_dot_v1_dot_signal__messages__pb2.Signal.SerializeToString), 'CreateSignal': grpc.unary_unary_rpc_method_handler(servicer.CreateSignal, request_deserializer=exabel_dot_api_dot_data_dot_v1_dot_signal__service__pb2.CreateSignalRequest.FromString, response_serializer=exabel_dot_api_dot_data_dot_v1_dot_signal__messages__pb2.Signal.SerializeToString), 'UpdateSignal': grpc.unary_unary_rpc_method_handler(servicer.UpdateSignal, request_deserializer=exabel_dot_api_dot_data_dot_v1_dot_signal__service__pb2.UpdateSignalRequest.FromString, response_serializer=exabel_dot_api_dot_data_dot_v1_dot_signal__messages__pb2.Signal.SerializeToString), 'DeleteSignal': grpc.unary_unary_rpc_method_handler(servicer.DeleteSignal, request_deserializer=exabel_dot_api_dot_data_dot_v1_dot_signal__service__pb2.DeleteSignalRequest.FromString, response_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString)}
+    rpc_method_handlers = {'ListSignals': grpc.unary_unary_rpc_method_handler(servicer.ListSignals, request_deserializer=exabel_dot_api_dot_data_dot_v1_dot_signal__service__pb2.ListSignalsRequest.FromString, response_serializer=exabel_dot_api_dot_data_dot_v1_dot_signal__service__pb2.ListSignalsResponse.SerializeToString), 'GetSignal': grpc.unary_unary_rpc_method_handler(servicer.GetSignal, request_deserializer=exabel_dot_api_dot_data_dot_v1_dot_signal__service__pb2.GetSignalRequest.FromString, response_serializer=exabel_dot_api_dot_data_dot_v1_dot_signal__messages__pb2.Signal.SerializeToString), 'CreateSignal': grpc.unary_unary_rpc_method_handler(servicer.CreateSignal, request_deserializer=exabel_dot_api_dot_data_dot_v1_dot_signal__service__pb2.CreateSignalRequest.FromString, response_serializer=exabel_dot_api_dot_data_dot_v1_dot_signal__messages__pb2.Signal.SerializeToString), 'UpdateSignal': grpc.unary_unary_rpc_method_handler(servicer.UpdateSignal, request_deserializer=exabel_dot_api_dot_data_dot_v1_dot_signal__service__pb2.UpdateSignalRequest.FromString, response_serializer=exabel_dot_api_dot_data_dot_v1_dot_signal__messages__pb2.Signal.SerializeToString), 'DeleteSignal': grpc.unary_unary_rpc_method_handler(servicer.DeleteSignal, request_deserializer=exabel_dot_api_dot_data_dot_v1_dot_signal__service__pb2.DeleteSignalRequest.FromString, response_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString), 'ListDerivedSignals': grpc.unary_unary_rpc_method_handler(servicer.ListDerivedSignals, request_deserializer=exabel_dot_api_dot_data_dot_v1_dot_signal__service__pb2.ListDerivedSignalsRequest.FromString, response_serializer=exabel_dot_api_dot_data_dot_v1_dot_signal__service__pb2.ListDerivedSignalsResponse.SerializeToString), 'FilterDerivedSignals': grpc.unary_unary_rpc_method_handler(servicer.FilterDerivedSignals, request_deserializer=exabel_dot_api_dot_data_dot_v1_dot_signal__service__pb2.FilterDerivedSignalsRequest.FromString, response_serializer=exabel_dot_api_dot_data_dot_v1_dot_signal__service__pb2.FilterDerivedSignalsResponse.SerializeToString), 'GetDerivedSignal': grpc.unary_unary_rpc_method_handler(servicer.GetDerivedSignal, request_deserializer=exabel_dot_api_dot_data_dot_v1_dot_signal__service__pb2.GetDerivedSignalRequest.FromString, response_serializer=exabel_dot_api_dot_data_dot_v1_dot_signal__messages__pb2.DerivedSignal.SerializeToString)}
     generic_handler = grpc.method_handlers_generic_handler('exabel.api.data.v1.SignalService', rpc_method_handlers)
     server.add_generic_rpc_handlers((generic_handler,))
 
@@ -102,3 +133,15 @@ class SignalService(object):
     @staticmethod
     def DeleteSignal(request, target, options=(), channel_credentials=None, call_credentials=None, insecure=False, compression=None, wait_for_ready=None, timeout=None, metadata=None):
         return grpc.experimental.unary_unary(request, target, '/exabel.api.data.v1.SignalService/DeleteSignal', exabel_dot_api_dot_data_dot_v1_dot_signal__service__pb2.DeleteSignalRequest.SerializeToString, google_dot_protobuf_dot_empty__pb2.Empty.FromString, options, channel_credentials, insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def ListDerivedSignals(request, target, options=(), channel_credentials=None, call_credentials=None, insecure=False, compression=None, wait_for_ready=None, timeout=None, metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/exabel.api.data.v1.SignalService/ListDerivedSignals', exabel_dot_api_dot_data_dot_v1_dot_signal__service__pb2.ListDerivedSignalsRequest.SerializeToString, exabel_dot_api_dot_data_dot_v1_dot_signal__service__pb2.ListDerivedSignalsResponse.FromString, options, channel_credentials, insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def FilterDerivedSignals(request, target, options=(), channel_credentials=None, call_credentials=None, insecure=False, compression=None, wait_for_ready=None, timeout=None, metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/exabel.api.data.v1.SignalService/FilterDerivedSignals', exabel_dot_api_dot_data_dot_v1_dot_signal__service__pb2.FilterDerivedSignalsRequest.SerializeToString, exabel_dot_api_dot_data_dot_v1_dot_signal__service__pb2.FilterDerivedSignalsResponse.FromString, options, channel_credentials, insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def GetDerivedSignal(request, target, options=(), channel_credentials=None, call_credentials=None, insecure=False, compression=None, wait_for_ready=None, timeout=None, metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/exabel.api.data.v1.SignalService/GetDerivedSignal', exabel_dot_api_dot_data_dot_v1_dot_signal__service__pb2.GetDerivedSignalRequest.SerializeToString, exabel_dot_api_dot_data_dot_v1_dot_signal__messages__pb2.DerivedSignal.FromString, options, channel_credentials, insecure, call_credentials, compression, wait_for_ready, timeout, metadata)

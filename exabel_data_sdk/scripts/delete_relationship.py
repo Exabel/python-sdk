@@ -3,6 +3,7 @@ import sys
 from typing import Sequence
 
 from exabel_data_sdk import ExabelClient
+from exabel_data_sdk.scripts import utils
 from exabel_data_sdk.scripts.base_script import BaseScript
 
 
@@ -16,20 +17,20 @@ class DeleteRelationship(BaseScript):
         self.parser.add_argument(
             "--relationship-type",
             required=True,
-            type=str,
+            type=utils.relationship_type_resource_name,
             help="The resource name of the relationship type, "
             "for example 'relationshipTypes/ns.relationshipTypeIdentifier'",
         )
         self.parser.add_argument(
             "--from-entity",
             required=True,
-            type=str,
+            type=utils.entity_resource_name,
             help="The resource name of the entity the relationship goes from",
         )
         self.parser.add_argument(
             "--to-entity",
             required=True,
-            type=str,
+            type=utils.entity_resource_name,
             help="The resource name of the entity the relationship goes to",
         )
 

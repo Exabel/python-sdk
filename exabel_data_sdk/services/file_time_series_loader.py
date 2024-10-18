@@ -231,7 +231,7 @@ class FileTimeSeriesLoader:
             )
         if replace_existing_time_series and replace_existing_data_points:
             raise FileLoadingException(
-                "Cannot specify both replace_existing_time_serier and replace_existing_data_points,"
+                "Cannot specify both replace_existing_time_series and replace_existing_data_points,"
                 " it is one or the other"
             )
         default_known_time = None
@@ -273,22 +273,21 @@ class FileTimeSeriesLoader:
             if pit_current_time:
                 raise FileLoadingException(
                     "Specified pit_current_time on the command line, but file contains known_time"
-                    " column.\nEither drop the pit_current_time command line argument, or"
-                    " remove the known_time column from the file."
+                    " column.\nEither drop the pit_current_time command line argument, or remove"
+                    " the known_time column from the file."
                 )
             if pit_offset is not None:
                 raise FileLoadingException(
-                    "Specified pit_offset on the command line, but file contains known_time"
-                    " column.\nEither drop the pit_offset command line argument, or"
-                    " remove the known_time column from the file."
+                    "Specified pit_offset on the command line, but file contains known_time column."
+                    "\nEither drop the pit_offset command line argument, or remove the known_time"
+                    " column from the file."
                 )
         else:
             if default_known_time is None:
                 raise FileLoadingException(
-                    "The Known-Time of the data must be specified.\n"
-                    "Please add a column called known_time in the input file, or specify a "
-                    "default policy with the pit_current_time or pit_offset command line "
-                    "arguments."
+                    "The Known-Time of the data must be specified.\nPlease add a column called"
+                    " known_time in the input file, or specify a default policy with the"
+                    " pit_current_time or pit_offset command line arguments."
                 )
 
         entity_names = parsed_file.get_entity_names()

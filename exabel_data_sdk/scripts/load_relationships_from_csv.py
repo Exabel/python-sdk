@@ -4,6 +4,7 @@ from typing import Sequence
 
 from exabel_data_sdk import ExabelClient
 from exabel_data_sdk.client.api.search_service import COMPANY_SEARCH_TERM_FIELDS
+from exabel_data_sdk.scripts import utils
 from exabel_data_sdk.scripts.actions import CaseInsensitiveArgumentAction, DeprecatedArgumentAction
 from exabel_data_sdk.scripts.csv_script_with_entity_mapping import CsvScriptWithEntityMapping
 from exabel_data_sdk.services.csv_relationship_loader import CsvRelationshipLoader
@@ -67,7 +68,7 @@ class LoadRelationshipsFromCsv(CsvScriptWithEntityMapping):
         self.parser.add_argument(
             "--relationship-type",
             required=True,
-            type=str,
+            type=utils.relationship_type_resource_name,
             help="The type of the relationships to be loaded.",
         )
         self.parser.add_argument(
@@ -211,6 +212,7 @@ class LoadRelationshipsFromCsv(CsvScriptWithEntityMapping):
                 abort_threshold=args.abort_threshold,
             )
         except FileLoadingException as e:
+            print("ERROR: Loading relationships failed.")
             print(e)
             sys.exit(1)
 

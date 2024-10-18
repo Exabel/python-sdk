@@ -3,6 +3,7 @@ import sys
 from typing import Sequence
 
 from exabel_data_sdk import ExabelClient
+from exabel_data_sdk.scripts import utils
 from exabel_data_sdk.scripts.base_script import BaseScript
 
 
@@ -16,7 +17,7 @@ class GetRelationshipType(BaseScript):
         self.parser.add_argument(
             "--name",
             required=True,
-            type=str,
+            type=utils.relationship_type_resource_name,
             help=(
                 "The resource name of the relationship type, "
                 "for example 'reltionshipTypes/ns.RELTYPE'"

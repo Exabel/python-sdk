@@ -140,3 +140,115 @@ class DeleteSignalRequest(google.protobuf.message.Message):
     def ClearField(self, field_name: typing.Literal['name', b'name']) -> None:
         ...
 global___DeleteSignalRequest = DeleteSignalRequest
+
+@typing.final
+class ListDerivedSignalsRequest(google.protobuf.message.Message):
+    """The request to list derived signals."""
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    PAGE_SIZE_FIELD_NUMBER: builtins.int
+    PAGE_TOKEN_FIELD_NUMBER: builtins.int
+    page_size: builtins.int
+    'Maximum number of results to return. Defaults to 1000, which is the maximum allowed value.'
+    page_token: builtins.str
+    'Token for a specific page of results, as returned from a previous list request with the same\n    query parameters.\n    '
+
+    def __init__(self, *, page_size: builtins.int | None=..., page_token: builtins.str | None=...) -> None:
+        ...
+
+    def ClearField(self, field_name: typing.Literal['page_size', b'page_size', 'page_token', b'page_token']) -> None:
+        ...
+global___ListDerivedSignalsRequest = ListDerivedSignalsRequest
+
+@typing.final
+class ListDerivedSignalsResponse(google.protobuf.message.Message):
+    """The response to list derived signals. Returns all known derived signals."""
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    DERIVED_SIGNALS_FIELD_NUMBER: builtins.int
+    NEXT_PAGE_TOKEN_FIELD_NUMBER: builtins.int
+    TOTAL_SIZE_FIELD_NUMBER: builtins.int
+    next_page_token: builtins.str
+    'Token for the next page of results, which can be sent to a subsequent query.\n    The end of the list is reached when the number of results is less than the page size\n    (NOT when the token is empty).\n    '
+    total_size: builtins.int
+    'Total number of results, irrespective of paging.'
+
+    @property
+    def derived_signals(self) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[exabel.api.data.v1.signal_messages_pb2.DerivedSignal]:
+        """List of derived signals."""
+
+    def __init__(self, *, derived_signals: collections.abc.Iterable[exabel.api.data.v1.signal_messages_pb2.DerivedSignal] | None=..., next_page_token: builtins.str | None=..., total_size: builtins.int | None=...) -> None:
+        ...
+
+    def ClearField(self, field_name: typing.Literal['derived_signals', b'derived_signals', 'next_page_token', b'next_page_token', 'total_size', b'total_size']) -> None:
+        ...
+global___ListDerivedSignalsResponse = ListDerivedSignalsResponse
+
+@typing.final
+class FilterDerivedSignalsRequest(google.protobuf.message.Message):
+    """The request to filter derived signals."""
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    ENTITY_NAMES_FIELD_NUMBER: builtins.int
+
+    @property
+    def entity_names(self) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[builtins.str]:
+        """The resource names of the entities to filter on. At least one entity must be specified.
+        A derived signal is returned only if at least one of the entities are included in the signal.
+        """
+
+    def __init__(self, *, entity_names: collections.abc.Iterable[builtins.str] | None=...) -> None:
+        ...
+
+    def ClearField(self, field_name: typing.Literal['entity_names', b'entity_names']) -> None:
+        ...
+global___FilterDerivedSignalsRequest = FilterDerivedSignalsRequest
+
+@typing.final
+class FilterDerivedSignalsResponse(google.protobuf.message.Message):
+    """The response to filter derived signals."""
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    @typing.final
+    class DerivedSignalsEntry(google.protobuf.message.Message):
+        DESCRIPTOR: google.protobuf.descriptor.Descriptor
+        KEY_FIELD_NUMBER: builtins.int
+        VALUE_FIELD_NUMBER: builtins.int
+        key: builtins.str
+
+        @property
+        def value(self) -> exabel.api.data.v1.signal_messages_pb2.DerivedSignals:
+            ...
+
+        def __init__(self, *, key: builtins.str | None=..., value: exabel.api.data.v1.signal_messages_pb2.DerivedSignals | None=...) -> None:
+            ...
+
+        def HasField(self, field_name: typing.Literal['value', b'value']) -> builtins.bool:
+            ...
+
+        def ClearField(self, field_name: typing.Literal['key', b'key', 'value', b'value']) -> None:
+            ...
+    DERIVED_SIGNALS_FIELD_NUMBER: builtins.int
+
+    @property
+    def derived_signals(self) -> google.protobuf.internal.containers.MessageMap[builtins.str, exabel.api.data.v1.signal_messages_pb2.DerivedSignals]:
+        """List of filtered derived signals, grouped by data set resource name."""
+
+    def __init__(self, *, derived_signals: collections.abc.Mapping[builtins.str, exabel.api.data.v1.signal_messages_pb2.DerivedSignals] | None=...) -> None:
+        ...
+
+    def ClearField(self, field_name: typing.Literal['derived_signals', b'derived_signals']) -> None:
+        ...
+global___FilterDerivedSignalsResponse = FilterDerivedSignalsResponse
+
+@typing.final
+class GetDerivedSignalRequest(google.protobuf.message.Message):
+    """The request to get one derived signal."""
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    NAME_FIELD_NUMBER: builtins.int
+    name: builtins.str
+    'The resource name of the requested signal, for example `derivedSignals/321`.'
+
+    def __init__(self, *, name: builtins.str | None=...) -> None:
+        ...
+
+    def ClearField(self, field_name: typing.Literal['name', b'name']) -> None:
+        ...
+global___GetDerivedSignalRequest = GetDerivedSignalRequest

@@ -33,12 +33,24 @@ class CheckCompanyIdentifiersInCsv(CsvScript):
             help="The type of the identifiers to look up. Defaults to the same as the column name.",
         )
         self.parser.add_argument(
+            "--entity-type",
+            type=str,
+            choices=["company", "security"],
+            default="company",
+            help="Specify the entity type, either 'company' or 'security' (defaults to 'company')",
+        )
+        self.parser.add_argument(
             "--print-all-identifiers",
             action="store_true",
             help=(
                 "Print all identifier mappings in the file, not just the ones that map to the same "
                 "company."
             ),
+        )
+        self.parser.add_argument(
+            "--output-file",
+            type=str,
+            help="The file to write the output to (defaults to stdout).",
         )
 
     def _get_identifier_type(
@@ -81,16 +93,20 @@ class CheckCompanyIdentifiersInCsv(CsvScript):
         return df
 
     def run_script(self, client: ExabelClient, args: argparse.Namespace) -> None:
-        data_frame = self.read_csv(args, string_columns=[args.identifier_column])
-        data_frame = data_frame[[args.identifier_column]]
-        identifiers = data_frame[args.identifier_column].drop_duplicates()
+        df = self.read_csv(args, string_columns=[args.identifier_column]).dropna(
+            subset=[args.identifier_column]
+        )
         identifier_type = self._get_identifier_type(args.identifier_column, args.identifier_type)
-        identifiers = identifiers.rename(identifier_type)
+        df.rename(columns={args.identifier_column: identifier_type}, inplace=True)
+        identifiers = df[identifier_type].drop_duplicates()
         entity_resource_names = to_entity_resource_names(
-            client.entity_api, identifiers=identifiers, check_entity_types=False
+            client.entity_api,
+            identifiers=identifiers,
+            check_entity_types=False,
+            entity_type=args.entity_type,
         )
         checked_data_frame = self._process_entity_resource_names(
-            entity_resource_names, identifier_type, args.print_all_identifiers
+            entity_resource_names, identifier_type, keep_all_identifiers=args.print_all_identifiers
         )
         with pd.option_context(
             "display.max_rows", None, "display.max_columns", None, "display.width", None
@@ -101,6 +117,11 @@ class CheckCompanyIdentifiersInCsv(CsvScript):
                 f"identifiers successfully mapped to companies out of {len(identifiers)} "
                 "identifiers in total"
             )
+        if args.output_file:
+            df.rename(columns={args.identifier_column: identifier_type}, inplace=True)
+            result_df = df.merge(checked_data_frame, how="left", on=identifier_type)
+            result_df.to_csv(args.output_file, index=False)
+            print(f"Identifier mappings written to {args.output_file}")
 
 
 if __name__ == "__main__":

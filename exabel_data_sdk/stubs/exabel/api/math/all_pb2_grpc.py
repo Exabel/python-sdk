@@ -2,3 +2,4 @@
 # Contains all messages in *_pb2_grpc.py in a single module.
 
 from .aggregation_pb2_grpc import *
+from .change_pb2_grpc import *

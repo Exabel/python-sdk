@@ -1,4 +1,5 @@
 import argparse
+import os
 import sys
 from typing import Optional, Sequence
 
@@ -73,6 +74,7 @@ class ExportData(CommandLineScript):
         retries: int = 0,
     ) -> ExportApi:
         """Get an `ExportApi` from an API key or user authentication."""
+        api_key = api_key or os.getenv("EXABEL_API_KEY")
         if api_key:
             return ExportApi.from_api_key(api_key, use_test_backend, retries=retries)
         login = UserLogin(reauthenticate, use_test_backend, user)

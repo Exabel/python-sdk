@@ -2,3 +2,4 @@
 # Contains all messages in *_pb2.py in a single module.
 
 from .aggregation_pb2 import *
+from .change_pb2 import *

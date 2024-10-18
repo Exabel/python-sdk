@@ -260,7 +260,7 @@ class ParsedTimeSeriesFile(abc.ABC):
     ) -> "ParsedTimeSeriesFile":
         """Read a file and construct a parsed file from the contents."""
         data = file_parser.parse_file(case_sensitive_signals=case_sensitive_signals)
-        logger.info("Data loaded successfully and contains %d rows", len(data))
+        logger.info("Data parsed successfully and contains %d rows", len(data))
         return cls.from_data_frame(
             data, entity_api, namespace, entity_mapping, entity_type, identifier_type
         )

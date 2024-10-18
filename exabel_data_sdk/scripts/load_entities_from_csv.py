@@ -3,6 +3,7 @@ import sys
 from typing import Sequence
 
 from exabel_data_sdk import ExabelClient
+from exabel_data_sdk.scripts import utils
 from exabel_data_sdk.scripts.actions import CaseInsensitiveArgumentAction, DeprecatedArgumentAction
 from exabel_data_sdk.scripts.csv_script import CsvScript
 from exabel_data_sdk.services.csv_entity_loader import CsvEntityLoader
@@ -45,7 +46,7 @@ class LoadEntitiesFromCsv(CsvScript):
         self.parser.add_argument(
             "--entity-type",
             required=False,
-            type=str,
+            type=utils.entity_type_resource_name,
             help=(
                 "The type of the entities to be loaded. Must already exist in the data model. "
                 "If not specified, defaults to the same value as the name_column argument."
@@ -139,6 +140,7 @@ class LoadEntitiesFromCsv(CsvScript):
                 abort_threshold=args.abort_threshold,
             )
         except (FileLoadingException, ParsePropertyColumnsError) as e:
+            print("ERROR: Loading entities failed.")
             print(e)
             sys.exit(1)
 

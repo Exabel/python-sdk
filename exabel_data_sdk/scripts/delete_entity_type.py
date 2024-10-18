@@ -3,6 +3,7 @@ import sys
 from typing import Sequence
 
 from exabel_data_sdk import ExabelClient
+from exabel_data_sdk.scripts import utils
 from exabel_data_sdk.scripts.base_script import BaseScript
 
 
@@ -16,13 +17,13 @@ class DeleteEntityType(BaseScript):
         self.parser.add_argument(
             "--name",
             required=True,
-            type=str,
+            type=utils.entity_type_resource_name,
             help="The resource name of the entity type, for example 'entityTypes/ns.brand'",
         )
 
     def run_script(self, client: ExabelClient, args: argparse.Namespace) -> None:
         client.entity_api.delete_entity_type(name=args.name)
-        print("Successfully deleted the entity type.")
+        print(f"Successfully deleted the entity type: {args.name}")
 
 
 if __name__ == "__main__":

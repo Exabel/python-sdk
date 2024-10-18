@@ -4,6 +4,7 @@ from typing import Sequence
 
 from exabel_data_sdk import ExabelClient
 from exabel_data_sdk.client.api.data_classes.entity_type import EntityType
+from exabel_data_sdk.scripts import utils
 from exabel_data_sdk.scripts.base_script import BaseScript
 
 
@@ -17,7 +18,7 @@ class CreateEntityType(BaseScript):
         self.parser.add_argument(
             "--name",
             required=True,
-            type=str,
+            type=utils.entity_type_resource_name,
             help="The resource name of the new entity type, for example 'entityTypes/ns.brand'",
         )
         self.parser.add_argument(
