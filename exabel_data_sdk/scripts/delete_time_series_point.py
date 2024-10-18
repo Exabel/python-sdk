@@ -5,6 +5,7 @@ from typing import Sequence
 import pandas as pd
 
 from exabel_data_sdk import ExabelClient
+from exabel_data_sdk.scripts import utils
 from exabel_data_sdk.scripts.base_script import BaseScript
 
 
@@ -18,7 +19,7 @@ class DeleteTimeSeriesPoint(BaseScript):
         self.parser.add_argument(
             "--name",
             required=True,
-            type=str,
+            type=utils.time_series_resource_name,
             help="The resource name for the time series, for example "
             "'entityTypes/ns.EntityType/entities/ns.EntityName/signals/ns.signalIdentifier'",
         )

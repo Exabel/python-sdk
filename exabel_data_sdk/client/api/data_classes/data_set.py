@@ -81,3 +81,13 @@ class DataSet:
         if not isinstance(other, DataSet):
             raise ValueError(f"Cannot compare DataSet to non-DataSet: {other}")
         return self.name < other.name
+
+
+def print_data_set(data_set: DataSet) -> None:
+    """Print a data set."""
+    print(f"Resource name:\t{data_set.name}")
+    print(f"Display name:\t{data_set.display_name}")
+    print(f"Description:\t{data_set.description}")
+    print("Signals:")
+    for signal in sorted(data_set.signals):
+        print(f"\t{signal}")

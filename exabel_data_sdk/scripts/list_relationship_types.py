@@ -5,6 +5,7 @@ from typing import List
 from exabel_data_sdk import ExabelClient
 from exabel_data_sdk.client.api.data_classes.relationship_type import RelationshipType
 from exabel_data_sdk.scripts.base_script import BaseScript
+from exabel_data_sdk.scripts.utils import PAGE_SIZE
 
 
 class ListRelationshipTypes(BaseScript):
@@ -17,11 +18,11 @@ class ListRelationshipTypes(BaseScript):
         all_relationship_types: List[RelationshipType] = []
         while True:
             result = client.relationship_api.list_relationship_types(
-                page_size=1000, page_token=page_token
+                page_size=PAGE_SIZE, page_token=page_token
             )
             all_relationship_types.extend(result.results)
             page_token = result.next_page_token
-            if len(all_relationship_types) == result.total_size:
+            if len(result.results) < PAGE_SIZE:
                 break
         if not all_relationship_types:
             print("No relationship types.")

@@ -4,6 +4,7 @@ from typing import Sequence
 
 from exabel_data_sdk import ExabelClient
 from exabel_data_sdk.client.api.data_classes.entity import Entity
+from exabel_data_sdk.scripts import utils
 from exabel_data_sdk.scripts.base_script import BaseScript
 
 
@@ -17,7 +18,7 @@ class CreateEntity(BaseScript):
         self.parser.add_argument(
             "--name",
             required=True,
-            type=str,
+            type=utils.entity_resource_name,
             help=(
                 "The resource name of the new entity, "
                 "for example 'entityTypes/brand/entities/brandIdentifier'"
@@ -39,8 +40,6 @@ class CreateEntity(BaseScript):
 
     def run_script(self, client: ExabelClient, args: argparse.Namespace) -> None:
         name_parts = args.name.split("/")
-        if len(name_parts) != 4:
-            raise ValueError(f"Invalid resource name: {args.name}")
         entity_type = f"{name_parts[0]}/{name_parts[1]}"
         entity = Entity(
             name=args.name,

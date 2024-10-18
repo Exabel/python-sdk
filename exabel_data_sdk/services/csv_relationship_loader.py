@@ -537,6 +537,8 @@ class CsvRelationshipLoader:
 
     def get_relationship_type_name(self, relationship_type: str, namespace: str) -> str:
         """Get the relationship type name."""
+        if relationship_type.startswith("relationshipTypes/"):
+            relationship_type = relationship_type.split("/")[1]
         if "." not in relationship_type:
             relationship_type_name = f"relationshipTypes/{namespace}.{relationship_type}"
         else:

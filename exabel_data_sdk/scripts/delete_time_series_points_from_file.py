@@ -3,6 +3,7 @@ import sys
 from typing import Sequence
 
 from exabel_data_sdk import ExabelClient
+from exabel_data_sdk.scripts import utils
 from exabel_data_sdk.scripts.actions import CaseInsensitiveArgumentAction
 from exabel_data_sdk.scripts.csv_script_with_entity_mapping import CsvScriptWithEntityMapping
 from exabel_data_sdk.services.csv_loading_constants import DEFAULT_NUMBER_OF_THREADS_FOR_IMPORT
@@ -41,7 +42,7 @@ class DeleteTimeSeriesPointsFromFile(CsvScriptWithEntityMapping):
         super().__init__(argv, description)
         self.parser.add_argument(
             "--entity-type",
-            type=str,
+            type=utils.entity_type_resource_name,
             help=(
                 "The entity type of the entities in the file. If not specified, the entity type "
                 "will be inferred from the column name."
@@ -98,6 +99,7 @@ class DeleteTimeSeriesPointsFromFile(CsvScriptWithEntityMapping):
                 abort_threshold=args.abort_threshold,
             )
         except FileLoadingException as e:
+            print("ERROR: Deleting time series data points failed.")
             print(e)
             sys.exit(1)
 

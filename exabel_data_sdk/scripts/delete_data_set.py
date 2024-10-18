@@ -7,9 +7,9 @@ from exabel_data_sdk.scripts import utils
 from exabel_data_sdk.scripts.base_script import BaseScript
 
 
-class DeleteRelationshipType(BaseScript):
+class DeleteDataSet(BaseScript):
     """
-    Deletes a relationship type.
+    Delete a data set.
     """
 
     def __init__(self, argv: Sequence[str], description: str):
@@ -17,15 +17,14 @@ class DeleteRelationshipType(BaseScript):
         self.parser.add_argument(
             "--name",
             required=True,
-            type=utils.relationship_type_resource_name,
-            help="The resource name of the relationship type, "
-            "for example 'relationshipTypes/ns.relationshipTypeIdentifier'",
+            type=utils.data_set_resource_name,
+            help="The resource name of the data set, for example 'dataSets/ns.transactions'",
         )
 
     def run_script(self, client: ExabelClient, args: argparse.Namespace) -> None:
-        client.relationship_api.delete_relationship_type(relationship_type=args.name)
-        print(f"Successfully deleted the relationship type: {args.name}")
+        client.data_set_api.delete_data_set(data_set=args.name)
+        print("Successfully deleted the data set.")
 
 
 if __name__ == "__main__":
-    DeleteRelationshipType(sys.argv, "Delete a relationship type.").run()
+    DeleteDataSet(sys.argv, "Delete a data set.").run()

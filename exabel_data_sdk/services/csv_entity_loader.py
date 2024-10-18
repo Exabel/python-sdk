@@ -192,7 +192,9 @@ class CsvEntityLoader:
             for et in reversed(list(self._client.entity_api.get_entity_type_iterator()))
         }
         entity_type = entity_type or name_col
-        entity_type_name = f"entityTypes/{entity_type}"
+        entity_type_name = (
+            entity_type if entity_type.startswith("entityTypes/") else f"entityTypes/{entity_type}"
+        )
         try:
             entity_type_name = entity_types[entity_type_name.lower()].name
         except KeyError as e:

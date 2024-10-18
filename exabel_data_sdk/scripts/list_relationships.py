@@ -4,6 +4,7 @@ from typing import Sequence
 
 from exabel_data_sdk import ExabelClient
 from exabel_data_sdk.client.api.data_classes.request_error import RequestError
+from exabel_data_sdk.scripts import utils
 from exabel_data_sdk.scripts.base_script import BaseScript
 
 
@@ -17,7 +18,7 @@ class ListRelationships(BaseScript):
         self.parser.add_argument(
             "--relationship-type",
             required=True,
-            type=str,
+            type=utils.relationship_type_resource_name,
             help=(
                 "The resource name of the relationship type, "
                 "for example 'relationshipTypes/ns.relationshipType'"
@@ -26,13 +27,13 @@ class ListRelationships(BaseScript):
         self.parser.add_argument(
             "--from-entity",
             required=False,
-            type=str,
+            type=utils.entity_resource_name,
             help="The resource name of the entity the relationships go from",
         )
         self.parser.add_argument(
             "--to-entity",
             required=False,
-            type=str,
+            type=utils.entity_resource_name,
             help="The resource name of the entity the relationships go to",
         )
         self.parser.add_argument(

@@ -161,6 +161,7 @@ class LoadTimeSeriesFromFile(CsvScriptWithEntityMapping):
                 replace_existing_data_points=args.replace_existing_data_points,
             )
         except FileLoadingException as e:
+            print("ERROR: Loading time series failed.")
             print(e)
             sys.exit(1)
 

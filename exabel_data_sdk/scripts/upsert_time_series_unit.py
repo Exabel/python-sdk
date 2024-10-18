@@ -8,6 +8,7 @@ from exabel_data_sdk import ExabelClient
 from exabel_data_sdk.client.api.data_classes.request_error import RequestError
 from exabel_data_sdk.client.api.data_classes.time_series import Dimension, TimeSeries, Unit, Units
 from exabel_data_sdk.client.api.resource_creation_result import ResourceCreationStatus
+from exabel_data_sdk.scripts import utils
 from exabel_data_sdk.scripts.base_script import BaseScript
 
 
@@ -22,7 +23,7 @@ class UpsertTimeSeriesUnit(BaseScript):
         self.parser.add_argument(
             "--name",
             required=True,
-            type=str,
+            type=utils.time_series_resource_name,
             help=(
                 "The resource name of a time series, for example "
                 "'entityTypes/brand/entities/brandIdentifier/signals/ns.signalIdentifier'"
