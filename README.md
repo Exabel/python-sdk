@@ -4,19 +4,19 @@ A Python SDK which provides easy access to Exabel APIs.
 
 ## Installation
 
-```
+```shell
 pip install exabel-data-sdk
 ```
 
 or download from [PyPI](https://pypi.org/project/exabel-data-sdk/).
 
-The SDK requires Python 3.8 or later.
+The SDK requires Python 3.9 or later.
 
 ### Installation with SQL data source support
 
 For installation with support for exporting data from a various SQL based data sources, add the data source as a pip extra in brackets after the package name:
 
-```sh
+```shell
 # Install the Exabel Python SDK with Snowflake support:
 pip install exabel-data-sdk[snowflake]
 
@@ -25,6 +25,7 @@ pip install exabel-data-sdk[snowflake,bigquery,athena]
 ```
 
 Supported data sources are:
+
 * Snowflake: `snowflake`
 * Google BigQuery: `bigquery`
 * AWS Athena: `athena`
@@ -44,21 +45,25 @@ until the token expires.
 ## Exabel API documentation
 
 ### Data API
+
 The Exabel Data API can be used to upload custom data to the Exabel platform. Custom data may include entities, relationships and time series.
 
 [Data API Developer guide](https://help.exabel.com/docs/data-api)
 
 ### Export API
+
 The Exabel Export API can be used to export dashboards and signals from the Exabel Platform.
 
 [Export API Developer guide](https://help.exabel.com/docs/exporting-via-exabel-sdk)
 
 ### Analytics API
+
 The Exabel Analytics API can be used to manage derived signals and prediction models on the Exabel Platform.
 
 [Analytics API Developer guide](https://help.exabel.com/docs/analytics-api)
 
 ### Management API
+
 The Exabel Management API can be used to manage the library on the Exabel Platform.
 
 [Management API Developer guide](https://help.exabel.com/docs/management-api)
