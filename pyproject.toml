@@ -39,6 +39,12 @@ disable = [
     "ungrouped-imports",
     "import-outside-toplevel",
 
+    # Mypy is better at checking this.
+    # Pylint has false positives for methods called with resource contexts.
+    "arguments-differ",
+    "arguments-renamed",
+    "too-many-function-args",
+
     # The checks with 'too-few' or 'too-many' are generally reasonable programming guidelines,
     # but when enforced they tend to have little effect beyond causing the code to be sprinkled
     # by ignore statements.
@@ -54,6 +60,7 @@ disable = [
     "too-many-public-methods",
     "too-many-return-statements",
     "too-many-statements",
+    "too-many-positional-arguments",
 ]
 enable="useless-suppression"
 
@@ -77,7 +84,7 @@ line_length = 100
 ensure_newline_before_comments = true
 
 [tool.mypy]
-python_version = "3.8"
+python_version = "3.9"
 # Searching for installed packages in mypy apparently does not play well with pipenv.
 ignore_missing_imports = true
 check_untyped_defs = true
