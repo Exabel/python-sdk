@@ -86,10 +86,7 @@ class DeleteTimeSeriesPoints(ListTimeSeries):
             else pd.Index([date], name="date")
         )
 
-        series = [
-            pd.Series([1], index=index, name=time_series)
-            for time_series in all_time_series
-        ]
+        series = [pd.Series([1], index=index, name=time_series) for time_series in all_time_series]
 
         print(f"Deleting time series data points with date {args.date}", end=" ")
         if known_time:
