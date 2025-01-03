@@ -12,6 +12,8 @@ from exabel_data_sdk.client.api.resource_creation_result import (
 )
 from exabel_data_sdk.services.csv_loading_constants import (
     DEFAULT_ABORT_THRESHOLD,
+    DEFAULT_MAX_BACKOFF_SECONDS,
+    DEFAULT_MIN_BACKOFF_SECONDS,
     DEFAULT_NUMBER_OF_RETRIES,
     DEFAULT_NUMBER_OF_THREADS,
 )
@@ -105,7 +107,11 @@ def _bulk_insert(
             raise BulkInsertFailedError()
 
 
-def _get_backoff(trial: int, min_sleep: float = 1.0, max_sleep: float = 60.0) -> float:
+def _get_backoff(
+    trial: int,
+    min_sleep: float = DEFAULT_MIN_BACKOFF_SECONDS,
+    max_sleep: float = DEFAULT_MAX_BACKOFF_SECONDS,
+) -> float:
     """Return the backoff in seconds for the given trial."""
     return min(min_sleep * 2**trial, max_sleep)
 

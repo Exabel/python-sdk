@@ -170,6 +170,7 @@ class TimeSeriesApi(PageableResourceMixin):
         series: Union[pd.Series, TimeSeries],
         create_tag: Optional[bool] = None,  # pylint: disable=unused-argument
         default_known_time: Optional[DefaultKnownTime] = None,
+        should_optimise: Optional[bool] = None,
     ) -> None:
         """
         Create a time series.
@@ -193,6 +194,9 @@ class TimeSeriesApi(PageableResourceMixin):
                         the Known Time for data points where a specific known time timestamp
                         has not been given. If not provided, the Exabel API defaults to the
                         current time (upload time) as the Known Time.
+            should_optimise:
+                        Whether time series storage optimisation should be enabled or not. If not
+                        set, optimisation is at the discretion of the server.
         """
         series = self._handle_time_series(name, series)
 
@@ -200,6 +204,7 @@ class TimeSeriesApi(PageableResourceMixin):
             CreateTimeSeriesRequest(
                 time_series=series.to_proto(),
                 default_known_time=default_known_time,
+                insert_options=InsertOptions(should_optimise=should_optimise),
             ),
         )
 
@@ -210,6 +215,7 @@ class TimeSeriesApi(PageableResourceMixin):
         series: pd.Series,
         create_tag: Optional[bool] = None,  # pylint: disable=unused-argument
         default_known_time: Optional[DefaultKnownTime] = None,
+        should_optimise: Optional[bool] = None,
     ) -> None:
         """
         Create or update a time series.
@@ -229,12 +235,16 @@ class TimeSeriesApi(PageableResourceMixin):
                         the Known Time for data points where a specific known time timestamp
                         has not been given. If not provided, the Exabel API defaults to the
                         current time (upload time) as the Known Time.
+            should_optimise:
+                        Whether time series storage optimisation should be enabled or not. If not
+                        set, optimisation is at the discretion of the server.
         """
         self.append_time_series_data(
             name,
             series,
             default_known_time,
             allow_missing=True,
+            should_optimise=should_optimise,
         )
 
     @deprecate_arguments(create_tag=None)
@@ -245,6 +255,7 @@ class TimeSeriesApi(PageableResourceMixin):
         default_known_time: Optional[DefaultKnownTime] = None,
         allow_missing: bool = False,
         create_tag: bool = False,  # pylint: disable=unused-argument
+        should_optimise: Optional[bool] = None,
     ) -> None:
         """
         Append data to the given time series.
@@ -263,6 +274,9 @@ class TimeSeriesApi(PageableResourceMixin):
             allow_missing:  If set to true, and the resource is not found, a new resource will be
                             created. In this situation, the "update_mask" is ignored.
             create_tag:     Deprecated.
+            should_optimise:
+                        Whether time series storage optimisation should be enabled or not. If not
+                        set, optimisation is at the discretion of the server.
         """
         series = self._handle_time_series(name, series)
 
@@ -271,6 +285,7 @@ class TimeSeriesApi(PageableResourceMixin):
                 time_series=series.to_proto(),
                 insert_options=InsertOptions(
                     default_known_time=default_known_time,
+                    should_optimise=should_optimise,
                 ),
                 update_options=UpdateOptions(
                     allow_missing=allow_missing,
@@ -289,6 +304,7 @@ class TimeSeriesApi(PageableResourceMixin):
         status_in_response: bool = False,
         replace_existing_time_series: bool = False,
         replace_existing_data_points: bool = False,
+        should_optimise: Optional[bool] = None,
     ) -> Optional[Sequence[ResourceCreationResult]]:
         """
         Import multiple time series.
@@ -325,6 +341,9 @@ class TimeSeriesApi(PageableResourceMixin):
                             inserted time series points. Data points at times not present in the
                             request will be left untouched. Only one of replace_existing_data_points
                             or replace_existing_time_series can be set to true.
+            should_optimise:
+                            Whether time series storage optimisation should be enabled or not. If
+                            not set, optimisation is at the discretion of the server.
         Returns:
             If status_in_response is set to true, a list of ResourceCreationResult will be returned.
             Otherwise, None is returned.
@@ -348,6 +367,7 @@ class TimeSeriesApi(PageableResourceMixin):
             status_in_response=status_in_response,
             insert_options=InsertOptions(
                 default_known_time=default_known_time,
+                should_optimise=should_optimise,
             ),
             update_options=update_options,
         )
@@ -367,6 +387,7 @@ class TimeSeriesApi(PageableResourceMixin):
         allow_missing: Optional[bool] = False,
         create_tag: Optional[bool] = None,  # pylint: disable=unused-argument
         include_metadata: Optional[bool] = False,
+        should_optimise: Optional[bool] = None,
     ) -> Union[pd.Series, TimeSeries]:
         """
         Append data to the given time series, and return the full series.
@@ -388,6 +409,9 @@ class TimeSeriesApi(PageableResourceMixin):
             include_metadata:
                             Whether to include the metadata of the time series in the response.
                             Returns a TimeSeries object if set to True, otherwise a pandas Series.
+            should_optimise:
+                        Whether time series storage optimisation should be enabled or not. If not
+                        set, optimisation is at the discretion of the server.
 
         Returns:
             A series with all data for the given time series.
@@ -401,6 +425,7 @@ class TimeSeriesApi(PageableResourceMixin):
                 view=TimeSeriesView(time_range=TimeRange()),
                 insert_options=InsertOptions(
                     default_known_time=default_known_time,
+                    should_optimise=should_optimise,
                 ),
                 update_options=UpdateOptions(
                     allow_missing=allow_missing,
@@ -441,6 +466,7 @@ class TimeSeriesApi(PageableResourceMixin):
         default_known_time: Optional[DefaultKnownTime] = None,
         replace_existing_time_series: bool = False,
         replace_existing_data_points: bool = False,
+        should_optimise: Optional[bool] = None,
         retries: int = DEFAULT_NUMBER_OF_RETRIES,
         abort_threshold: Optional[float] = DEFAULT_ABORT_THRESHOLD,
         # Deprecated arguments
@@ -477,6 +503,9 @@ class TimeSeriesApi(PageableResourceMixin):
                             inserted time series points. Data points at times not present in the
                             request will be left untouched. Only one of replace_existing_data_points
                             or replace_existing_time_series can be set to true.
+            should_optimise:
+                            Whether time series storage optimisation should be enabled or not. If
+                            not set, optimisation is at the discretion of the server.
             retries:        Maximum number of retries to make for each failed request.
             abort_threshold:
                             The threshold for the proportion of failed requests that will cause the
@@ -497,6 +526,7 @@ class TimeSeriesApi(PageableResourceMixin):
                 status_in_response=True,
                 replace_existing_time_series=replace_existing_time_series,
                 replace_existing_data_points=replace_existing_data_points,
+                should_optimise=should_optimise,
             )
             assert result is not None
             return result

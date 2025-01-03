@@ -78,6 +78,7 @@ class FileTimeSeriesLoader:
         case_sensitive_signals: bool = False,
         replace_existing_time_series: bool = False,
         replace_existing_data_points: bool = False,
+        should_optimise: Optional[bool] = None,
         return_results: bool = True,
         processed_rows: int = 0,
         total_rows: Optional[int] = None,
@@ -122,6 +123,8 @@ class FileTimeSeriesLoader:
             case_sensitive_signals: if True, signals are case sensitive
             replace_existing_time_series: if True, any existing time series are replaced
             replace_existing_data_points: if True, any existing time series data points are replaced
+            should_optimise: Whether time series storage optimisation should be enabled or not. If
+                not set, optimisation is at the discretion of the server.
             return_results: if True, returns a list of TimeSeriesFileLoadingResults
                 or otherwise an empty list.
             processed_rows: the number of rows already processed
@@ -169,6 +172,7 @@ class FileTimeSeriesLoader:
                 replace_existing_time_series=replace_existing_time_series,
                 replace_existing_data_points=replace_existing_data_points,
                 replaced_time_series=replaced_time_series,
+                should_optimise=should_optimise,
             )
             if result.processed_rows is not None and total_rows:
                 processed_rows = processed_rows + result.processed_rows
@@ -206,6 +210,7 @@ class FileTimeSeriesLoader:
         replace_existing_time_series: bool = False,
         replace_existing_data_points: bool = False,
         replaced_time_series: Optional[Sequence[str]] = None,
+        should_optimise: Optional[bool] = None,
     ) -> TimeSeriesFileLoadingResult:
         """
         Load time series from a parser.
@@ -371,6 +376,7 @@ class FileTimeSeriesLoader:
                         retries=retries,
                         abort_threshold=abort_threshold,
                         replace_existing_time_series=True,
+                        should_optimise=should_optimise,
                     )
                     if error_on_any_failure and (replace_result.has_failure() or invalid_series):
                         raise FileLoadingException(
@@ -387,6 +393,7 @@ class FileTimeSeriesLoader:
                     retries=retries,
                     abort_threshold=abort_threshold,
                     replace_existing_data_points=replace_existing_data_points,
+                    should_optimise=should_optimise,
                 )
                 if error_on_any_failure and (result.has_failure() or invalid_series):
                     raise FileLoadingException(
