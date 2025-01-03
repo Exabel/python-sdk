@@ -44,7 +44,12 @@ class TestBulkInsert(unittest.TestCase):
         self.assertEqual(8.0, _get_backoff(3))
         self.assertEqual(16.0, _get_backoff(4))
         self.assertEqual(32.0, _get_backoff(5))
-        self.assertEqual(60.0, _get_backoff(6))
+        self.assertEqual(64.0, _get_backoff(6))
+        self.assertEqual(128.0, _get_backoff(7))
+        self.assertEqual(256.0, _get_backoff(8))
+        self.assertEqual(512.0, _get_backoff(9))
+        self.assertEqual(600.0, _get_backoff(10))
+        self.assertEqual(600.0, _get_backoff(11))
 
     @staticmethod
     def _insert_func_side_effect(resource: pd.Series, *_, **__) -> ResourceCreationStatus:

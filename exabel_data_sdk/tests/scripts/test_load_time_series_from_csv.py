@@ -902,6 +902,50 @@ class TestUploadTimeSeries(unittest.TestCase):
             check_freq=False,
         )
 
+    def test_load_time_series_default_optimise(
+        self,
+    ):
+        args = common_args + [
+            "--filename",
+            "./exabel_data_sdk/tests/resources/data/timeseries_known_time.csv",
+        ]
+        script = LoadTimeSeriesFromFile(args)
+
+        script.run_script(self.client, script.parse_arguments())
+
+        call_args_list = self.client.time_series_api.bulk_upsert_time_series.call_args_list
+        self.assertIsNone(call_args_list[0][1]["should_optimise"])
+
+    def test_load_time_series_optimise(
+        self,
+    ):
+        args = common_args + [
+            "--filename",
+            "./exabel_data_sdk/tests/resources/data/timeseries_known_time.csv",
+            "--optimise",
+        ]
+        script = LoadTimeSeriesFromFile(args)
+
+        script.run_script(self.client, script.parse_arguments())
+
+        call_args_list = self.client.time_series_api.bulk_upsert_time_series.call_args_list
+        self.assertTrue(call_args_list[0][1]["should_optimise"])
+
+    def test_load_time_series_no_optimise(
+        self,
+    ):
+        args = common_args + [
+            "--filename",
+            "./exabel_data_sdk/tests/resources/data/timeseries_known_time.csv",
+            "--no-optimise",
+        ]
+        script = LoadTimeSeriesFromFile(args)
+
+        script.run_script(self.client, script.parse_arguments())
+
+        call_args_list = self.client.time_series_api.bulk_upsert_time_series.call_args_list
+        self.assertFalse(call_args_list[0][1]["should_optimise"])
+
     def _list_signal(self):
         return iter(
             [

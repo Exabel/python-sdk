@@ -1,8 +1,10 @@
 """Generated protocol buffer code."""
 from google.protobuf import descriptor as _descriptor
 from google.protobuf import descriptor_pool as _descriptor_pool
+from google.protobuf import runtime_version as _runtime_version
 from google.protobuf import symbol_database as _symbol_database
 from google.protobuf.internal import builder as _builder
+_runtime_version.ValidateProtobufRuntimeVersion(_runtime_version.Domain.PUBLIC, 5, 28, 1, '', 'exabel/api/analytics/v1/derived_signal_service.proto')
 _sym_db = _symbol_database.Default()
 from .....exabel.api.analytics.v1 import derived_signal_messages_pb2 as exabel_dot_api_dot_analytics_dot_v1_dot_derived__signal__messages__pb2
 from google.api import annotations_pb2 as google_dot_api_dot_annotations__pb2
@@ -14,24 +16,24 @@ DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n4exabel/api/analyt
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
 _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'exabel.api.analytics.v1.derived_signal_service_pb2', _globals)
-if _descriptor._USE_C_DESCRIPTORS == False:
-    _globals['DESCRIPTOR']._options = None
+if not _descriptor._USE_C_DESCRIPTORS:
+    _globals['DESCRIPTOR']._loaded_options = None
     _globals['DESCRIPTOR']._serialized_options = b'\n\x1bcom.exabel.api.analytics.v1B\x19DerivedSignalServiceProtoP\x01Z\x1bexabel.com/api/analytics/v1'
-    _globals['_GETDERIVEDSIGNALREQUEST'].fields_by_name['name']._options = None
+    _globals['_GETDERIVEDSIGNALREQUEST'].fields_by_name['name']._loaded_options = None
     _globals['_GETDERIVEDSIGNALREQUEST'].fields_by_name['name']._serialized_options = b'\x92A\x17\xca>\x14\xfa\x02\x11derivedSignalName\xe0A\x02'
-    _globals['_CREATEDERIVEDSIGNALREQUEST'].fields_by_name['signal']._options = None
+    _globals['_CREATEDERIVEDSIGNALREQUEST'].fields_by_name['signal']._loaded_options = None
     _globals['_CREATEDERIVEDSIGNALREQUEST'].fields_by_name['signal']._serialized_options = b'\xe0A\x02'
-    _globals['_UPDATEDERIVEDSIGNALREQUEST'].fields_by_name['signal']._options = None
+    _globals['_UPDATEDERIVEDSIGNALREQUEST'].fields_by_name['signal']._loaded_options = None
     _globals['_UPDATEDERIVEDSIGNALREQUEST'].fields_by_name['signal']._serialized_options = b'\xe0A\x02'
-    _globals['_DELETEDERIVEDSIGNALREQUEST'].fields_by_name['name']._options = None
+    _globals['_DELETEDERIVEDSIGNALREQUEST'].fields_by_name['name']._loaded_options = None
     _globals['_DELETEDERIVEDSIGNALREQUEST'].fields_by_name['name']._serialized_options = b'\x92A\x17\xca>\x14\xfa\x02\x11derivedSignalName\xe0A\x02'
-    _globals['_DERIVEDSIGNALSERVICE'].methods_by_name['GetDerivedSignal']._options = None
+    _globals['_DERIVEDSIGNALSERVICE'].methods_by_name['GetDerivedSignal']._loaded_options = None
     _globals['_DERIVEDSIGNALSERVICE'].methods_by_name['GetDerivedSignal']._serialized_options = b'\x92A\x14\x12\x12Get derived signal\x82\xd3\xe4\x93\x02\x1d\x12\x1b/v1/{name=derivedSignals/*}'
-    _globals['_DERIVEDSIGNALSERVICE'].methods_by_name['CreateDerivedSignal']._options = None
+    _globals['_DERIVEDSIGNALSERVICE'].methods_by_name['CreateDerivedSignal']._loaded_options = None
     _globals['_DERIVEDSIGNALSERVICE'].methods_by_name['CreateDerivedSignal']._serialized_options = b'\x92A\x17\x12\x15Create derived signal\x82\xd3\xe4\x93\x02\x1c"\x12/v1/derivedSignals:\x06signal'
-    _globals['_DERIVEDSIGNALSERVICE'].methods_by_name['UpdateDerivedSignal']._options = None
+    _globals['_DERIVEDSIGNALSERVICE'].methods_by_name['UpdateDerivedSignal']._loaded_options = None
     _globals['_DERIVEDSIGNALSERVICE'].methods_by_name['UpdateDerivedSignal']._serialized_options = b'\x92A\x17\x12\x15Update derived signal\x82\xd3\xe4\x93\x02,2"/v1/{signal.name=derivedSignals/*}:\x06signal'
-    _globals['_DERIVEDSIGNALSERVICE'].methods_by_name['DeleteDerivedSignal']._options = None
+    _globals['_DERIVEDSIGNALSERVICE'].methods_by_name['DeleteDerivedSignal']._loaded_options = None
     _globals['_DERIVEDSIGNALSERVICE'].methods_by_name['DeleteDerivedSignal']._serialized_options = b'\x92A\x17\x12\x15Delete derived signal\x82\xd3\xe4\x93\x02\x1d*\x1b/v1/{name=derivedSignals/*}'
     _globals['_GETDERIVEDSIGNALREQUEST']._serialized_start = 310
     _globals['_GETDERIVEDSIGNALREQUEST']._serialized_end = 380

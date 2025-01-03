@@ -1,8 +1,10 @@
 """Generated protocol buffer code."""
 from google.protobuf import descriptor as _descriptor
 from google.protobuf import descriptor_pool as _descriptor_pool
+from google.protobuf import runtime_version as _runtime_version
 from google.protobuf import symbol_database as _symbol_database
 from google.protobuf.internal import builder as _builder
+_runtime_version.ValidateProtobufRuntimeVersion(_runtime_version.Domain.PUBLIC, 5, 28, 1, '', 'exabel/api/data/v1/time_series_service.proto')
 _sym_db = _symbol_database.Default()
 from .....exabel.api.data.v1 import time_series_messages_pb2 as exabel_dot_api_dot_data_dot_v1_dot_time__series__messages__pb2
 from google.api import annotations_pb2 as google_dot_api_dot_annotations__pb2
@@ -14,70 +16,70 @@ DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n,exabel/api/data/v
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
 _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'exabel.api.data.v1.time_series_service_pb2', _globals)
-if _descriptor._USE_C_DESCRIPTORS == False:
-    _globals['DESCRIPTOR']._options = None
+if not _descriptor._USE_C_DESCRIPTORS:
+    _globals['DESCRIPTOR']._loaded_options = None
     _globals['DESCRIPTOR']._serialized_options = b'\n\x16com.exabel.api.data.v1B\x16TimeSeriesServiceProtoP\x01Z\x16exabel.com/api/data/v1'
-    _globals['_LISTTIMESERIESREQUEST'].fields_by_name['parent']._options = None
+    _globals['_LISTTIMESERIESREQUEST'].fields_by_name['parent']._loaded_options = None
     _globals['_LISTTIMESERIESREQUEST'].fields_by_name['parent']._serialized_options = b'\x92A\x16\xca>\x13\xfa\x02\x10timeSeriesParent\xe0A\x02'
-    _globals['_GETTIMESERIESREQUEST'].fields_by_name['name']._options = None
+    _globals['_GETTIMESERIESREQUEST'].fields_by_name['name']._loaded_options = None
     _globals['_GETTIMESERIESREQUEST'].fields_by_name['name']._serialized_options = b'\x92A\x14\xca>\x11\xfa\x02\x0etimeSeriesName\xe0A\x02'
-    _globals['_INSERTOPTIONS'].fields_by_name['create_tag']._options = None
+    _globals['_INSERTOPTIONS'].fields_by_name['create_tag']._loaded_options = None
     _globals['_INSERTOPTIONS'].fields_by_name['create_tag']._serialized_options = b'\x18\x01'
-    _globals['_CREATETIMESERIESREQUEST'].fields_by_name['time_series']._options = None
+    _globals['_CREATETIMESERIESREQUEST'].fields_by_name['time_series']._loaded_options = None
     _globals['_CREATETIMESERIESREQUEST'].fields_by_name['time_series']._serialized_options = b'\xe0A\x02'
-    _globals['_CREATETIMESERIESREQUEST'].fields_by_name['default_known_time']._options = None
+    _globals['_CREATETIMESERIESREQUEST'].fields_by_name['default_known_time']._loaded_options = None
     _globals['_CREATETIMESERIESREQUEST'].fields_by_name['default_known_time']._serialized_options = b'\x18\x01'
-    _globals['_CREATETIMESERIESREQUEST'].fields_by_name['create_tag']._options = None
+    _globals['_CREATETIMESERIESREQUEST'].fields_by_name['create_tag']._loaded_options = None
     _globals['_CREATETIMESERIESREQUEST'].fields_by_name['create_tag']._serialized_options = b'\x18\x01'
-    _globals['_CREATETIMESERIESREQUEST'].fields_by_name['should_optimise']._options = None
+    _globals['_CREATETIMESERIESREQUEST'].fields_by_name['should_optimise']._loaded_options = None
     _globals['_CREATETIMESERIESREQUEST'].fields_by_name['should_optimise']._serialized_options = b'\x18\x01'
-    _globals['_UPDATETIMESERIESREQUEST'].fields_by_name['time_series']._options = None
+    _globals['_UPDATETIMESERIESREQUEST'].fields_by_name['time_series']._loaded_options = None
     _globals['_UPDATETIMESERIESREQUEST'].fields_by_name['time_series']._serialized_options = b'\xe0A\x02'
-    _globals['_UPDATETIMESERIESREQUEST'].fields_by_name['default_known_time']._options = None
+    _globals['_UPDATETIMESERIESREQUEST'].fields_by_name['default_known_time']._loaded_options = None
     _globals['_UPDATETIMESERIESREQUEST'].fields_by_name['default_known_time']._serialized_options = b'\x18\x01'
-    _globals['_UPDATETIMESERIESREQUEST'].fields_by_name['allow_missing']._options = None
+    _globals['_UPDATETIMESERIESREQUEST'].fields_by_name['allow_missing']._loaded_options = None
     _globals['_UPDATETIMESERIESREQUEST'].fields_by_name['allow_missing']._serialized_options = b'\x18\x01'
-    _globals['_UPDATETIMESERIESREQUEST'].fields_by_name['create_tag']._options = None
+    _globals['_UPDATETIMESERIESREQUEST'].fields_by_name['create_tag']._loaded_options = None
     _globals['_UPDATETIMESERIESREQUEST'].fields_by_name['create_tag']._serialized_options = b'\x18\x01'
-    _globals['_UPDATETIMESERIESREQUEST'].fields_by_name['should_optimise']._options = None
+    _globals['_UPDATETIMESERIESREQUEST'].fields_by_name['should_optimise']._loaded_options = None
     _globals['_UPDATETIMESERIESREQUEST'].fields_by_name['should_optimise']._serialized_options = b'\x18\x01'
-    _globals['_UPDATETIMESERIESREQUEST'].fields_by_name['replace_known_time']._options = None
+    _globals['_UPDATETIMESERIESREQUEST'].fields_by_name['replace_known_time']._loaded_options = None
     _globals['_UPDATETIMESERIESREQUEST'].fields_by_name['replace_known_time']._serialized_options = b'\x18\x01'
-    _globals['_IMPORTTIMESERIESREQUEST'].fields_by_name['parent']._options = None
+    _globals['_IMPORTTIMESERIESREQUEST'].fields_by_name['parent']._loaded_options = None
     _globals['_IMPORTTIMESERIESREQUEST'].fields_by_name['parent']._serialized_options = b'\xe0A\x02'
-    _globals['_IMPORTTIMESERIESREQUEST'].fields_by_name['default_known_time']._options = None
+    _globals['_IMPORTTIMESERIESREQUEST'].fields_by_name['default_known_time']._loaded_options = None
     _globals['_IMPORTTIMESERIESREQUEST'].fields_by_name['default_known_time']._serialized_options = b'\x18\x01'
-    _globals['_IMPORTTIMESERIESREQUEST'].fields_by_name['allow_missing']._options = None
+    _globals['_IMPORTTIMESERIESREQUEST'].fields_by_name['allow_missing']._loaded_options = None
     _globals['_IMPORTTIMESERIESREQUEST'].fields_by_name['allow_missing']._serialized_options = b'\x18\x01'
-    _globals['_IMPORTTIMESERIESREQUEST'].fields_by_name['create_tag']._options = None
+    _globals['_IMPORTTIMESERIESREQUEST'].fields_by_name['create_tag']._loaded_options = None
     _globals['_IMPORTTIMESERIESREQUEST'].fields_by_name['create_tag']._serialized_options = b'\x18\x01'
-    _globals['_IMPORTTIMESERIESREQUEST'].fields_by_name['replace_existing_time_series']._options = None
+    _globals['_IMPORTTIMESERIESREQUEST'].fields_by_name['replace_existing_time_series']._loaded_options = None
     _globals['_IMPORTTIMESERIESREQUEST'].fields_by_name['replace_existing_time_series']._serialized_options = b'\x18\x01'
-    _globals['_IMPORTTIMESERIESREQUEST'].fields_by_name['should_optimise']._options = None
+    _globals['_IMPORTTIMESERIESREQUEST'].fields_by_name['should_optimise']._loaded_options = None
     _globals['_IMPORTTIMESERIESREQUEST'].fields_by_name['should_optimise']._serialized_options = b'\x18\x01'
-    _globals['_IMPORTTIMESERIESREQUEST'].fields_by_name['replace_known_time']._options = None
+    _globals['_IMPORTTIMESERIESREQUEST'].fields_by_name['replace_known_time']._loaded_options = None
     _globals['_IMPORTTIMESERIESREQUEST'].fields_by_name['replace_known_time']._serialized_options = b'\x18\x01'
-    _globals['_IMPORTTIMESERIESRESPONSE_SINGLETIMESERIESRESPONSE'].fields_by_name['time_series_name']._options = None
+    _globals['_IMPORTTIMESERIESRESPONSE_SINGLETIMESERIESRESPONSE'].fields_by_name['time_series_name']._loaded_options = None
     _globals['_IMPORTTIMESERIESRESPONSE_SINGLETIMESERIESRESPONSE'].fields_by_name['time_series_name']._serialized_options = b'\x92ANJL"entityTypes/store/entities/ns.apple_store_fifth_avenue/signals/ns.visitors"'
-    _globals['_DELETETIMESERIESREQUEST'].fields_by_name['name']._options = None
+    _globals['_DELETETIMESERIESREQUEST'].fields_by_name['name']._loaded_options = None
     _globals['_DELETETIMESERIESREQUEST'].fields_by_name['name']._serialized_options = b'\x92A\x14\xca>\x11\xfa\x02\x0etimeSeriesName\xe0A\x02'
-    _globals['_BATCHDELETETIMESERIESPOINTSREQUEST'].fields_by_name['parent']._options = None
+    _globals['_BATCHDELETETIMESERIESPOINTSREQUEST'].fields_by_name['parent']._loaded_options = None
     _globals['_BATCHDELETETIMESERIESPOINTSREQUEST'].fields_by_name['parent']._serialized_options = b'\xe0A\x02'
-    _globals['_BATCHDELETETIMESERIESPOINTSRESPONSE_BATCHDELETETIMESERIESRESPONSE'].fields_by_name['time_series_name']._options = None
+    _globals['_BATCHDELETETIMESERIESPOINTSRESPONSE_BATCHDELETETIMESERIESRESPONSE'].fields_by_name['time_series_name']._loaded_options = None
     _globals['_BATCHDELETETIMESERIESPOINTSRESPONSE_BATCHDELETETIMESERIESRESPONSE'].fields_by_name['time_series_name']._serialized_options = b'\x92ANJL"entityTypes/store/entities/ns.apple_store_fifth_avenue/signals/ns.visitors"'
-    _globals['_TIMESERIESSERVICE'].methods_by_name['ListTimeSeries']._options = None
+    _globals['_TIMESERIESSERVICE'].methods_by_name['ListTimeSeries']._loaded_options = None
     _globals['_TIMESERIESSERVICE'].methods_by_name['ListTimeSeries']._serialized_options = b'\x92A\x12\x12\x10List time series\x82\xd3\xe4\x93\x02W\x120/v1/{parent=entityTypes/*/entities/*}/timeSeriesZ#\x12!/v1/{parent=signals/*}/timeSeries'
-    _globals['_TIMESERIESSERVICE'].methods_by_name['GetTimeSeries']._options = None
+    _globals['_TIMESERIESSERVICE'].methods_by_name['GetTimeSeries']._loaded_options = None
     _globals['_TIMESERIESSERVICE'].methods_by_name['GetTimeSeries']._serialized_options = b'\x92A\x11\x12\x0fGet time series\x82\xd3\xe4\x93\x02`\x12-/v1/{name=entityTypes/*/entities/*/signals/*}Z/\x12-/v1/{name=signals/*/entityTypes/*/entities/*}'
-    _globals['_TIMESERIESSERVICE'].methods_by_name['CreateTimeSeries']._options = None
+    _globals['_TIMESERIESSERVICE'].methods_by_name['CreateTimeSeries']._loaded_options = None
     _globals['_TIMESERIESSERVICE'].methods_by_name['CreateTimeSeries']._serialized_options = b'\x92A\x14\x12\x12Create time series\x82\xd3\xe4\x93\x02\x92\x01"9/v1/{time_series.name=entityTypes/*/entities/*/signals/*}:\x0btime_seriesZH"9/v1/{time_series.name=signals/*/entityTypes/*/entities/*}:\x0btime_series'
-    _globals['_TIMESERIESSERVICE'].methods_by_name['UpdateTimeSeries']._options = None
+    _globals['_TIMESERIESSERVICE'].methods_by_name['UpdateTimeSeries']._loaded_options = None
     _globals['_TIMESERIESSERVICE'].methods_by_name['UpdateTimeSeries']._serialized_options = b'\x92A\x14\x12\x12Update time series\x82\xd3\xe4\x93\x02\x92\x0129/v1/{time_series.name=entityTypes/*/entities/*/signals/*}:\x0btime_seriesZH29/v1/{time_series.name=signals/*/entityTypes/*/entities/*}:\x0btime_series'
-    _globals['_TIMESERIESSERVICE'].methods_by_name['ImportTimeSeries']._options = None
+    _globals['_TIMESERIESSERVICE'].methods_by_name['ImportTimeSeries']._loaded_options = None
     _globals['_TIMESERIESSERVICE'].methods_by_name['ImportTimeSeries']._serialized_options = b'\x92A\x14\x12\x12Import time series\x82\xd3\xe4\x93\x02k"7/v1/{parent=entityTypes/*/entities/*}/timeSeries:import:\x01*Z-"(/v1/{parent=signals/*}/timeSeries:import:\x01*'
-    _globals['_TIMESERIESSERVICE'].methods_by_name['BatchDeleteTimeSeriesPoints']._options = None
+    _globals['_TIMESERIESSERVICE'].methods_by_name['BatchDeleteTimeSeriesPoints']._loaded_options = None
     _globals['_TIMESERIESSERVICE'].methods_by_name['BatchDeleteTimeSeriesPoints']._serialized_options = b'\x92A!\x12\x1fBatch delete time series points\x82\xd3\xe4\x93\x02\x83\x01"C/v1/{parent=entityTypes/*/entities/*}/timeSeries/points:batchDelete:\x01*Z9"4/v1/{parent=signals/*}/timeSeries/points:batchDelete:\x01*'
-    _globals['_TIMESERIESSERVICE'].methods_by_name['DeleteTimeSeries']._options = None
+    _globals['_TIMESERIESSERVICE'].methods_by_name['DeleteTimeSeries']._loaded_options = None
     _globals['_TIMESERIESSERVICE'].methods_by_name['DeleteTimeSeries']._serialized_options = b'\x92A\x14\x12\x12Delete time series\x82\xd3\xe4\x93\x02`*-/v1/{name=entityTypes/*/entities/*/signals/*}Z/*-/v1/{name=signals/*/entityTypes/*/entities/*}'
     _globals['_LISTTIMESERIESREQUEST']._serialized_start = 280
     _globals['_LISTTIMESERIESREQUEST']._serialized_end = 388

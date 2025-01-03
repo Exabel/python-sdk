@@ -137,6 +137,21 @@ class LoadTimeSeriesFromFile(CsvScriptWithEntityMapping):
             default=False,
             help="Replace any existing data points on the specified dates when importing",
         )
+        group = self.parser.add_mutually_exclusive_group()
+        group.add_argument(
+            "--optimise",
+            required=False,
+            action="store_true",
+            help="Enable time series storage optimisation. If neither this nor --no-optimise is "
+            "set, optimisation is at the discretion of the server.",
+        )
+        group.add_argument(
+            "--no-optimise",
+            required=False,
+            action="store_true",
+            help="Disable time series storage optimisation. If neither this nor -optimise is set, "
+            "optimisation is at the discretion of the server.",
+        )
 
     def run_script(self, client: ExabelClient, args: argparse.Namespace) -> None:
         try:
@@ -159,6 +174,9 @@ class LoadTimeSeriesFromFile(CsvScriptWithEntityMapping):
                 abort_threshold=args.abort_threshold,
                 replace_existing_time_series=args.replace_existing_time_series,
                 replace_existing_data_points=args.replace_existing_data_points,
+                should_optimise=(
+                    True if args.optimise is True else False if args.no_optimise is True else None
+                ),
             )
         except FileLoadingException as e:
             print("ERROR: Loading time series failed.")
