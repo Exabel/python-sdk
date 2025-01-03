@@ -1,8 +1,10 @@
 """Generated protocol buffer code."""
 from google.protobuf import descriptor as _descriptor
 from google.protobuf import descriptor_pool as _descriptor_pool
+from google.protobuf import runtime_version as _runtime_version
 from google.protobuf import symbol_database as _symbol_database
 from google.protobuf.internal import builder as _builder
+_runtime_version.ValidateProtobufRuntimeVersion(_runtime_version.Domain.PUBLIC, 5, 28, 1, '', 'exabel/api/data/v1/time_series_messages.proto')
 _sym_db = _symbol_database.Default()
 from .....exabel.api.time import time_range_pb2 as exabel_dot_api_dot_time_dot_time__range__pb2
 from google.api import field_behavior_pb2 as google_dot_api_dot_field__behavior__pb2
@@ -15,30 +17,30 @@ DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n-exabel/api/data/v
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
 _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'exabel.api.data.v1.time_series_messages_pb2', _globals)
-if _descriptor._USE_C_DESCRIPTORS == False:
-    _globals['DESCRIPTOR']._options = None
+if not _descriptor._USE_C_DESCRIPTORS:
+    _globals['DESCRIPTOR']._loaded_options = None
     _globals['DESCRIPTOR']._serialized_options = b'\n\x16com.exabel.api.data.v1B\x17TimeSeriesMessagesProtoP\x01Z\x16exabel.com/api/data/v1'
-    _globals['_TIMESERIES'].fields_by_name['name']._options = None
+    _globals['_TIMESERIES'].fields_by_name['name']._loaded_options = None
     _globals['_TIMESERIES'].fields_by_name['name']._serialized_options = b'\x92AbJL"entityTypes/store/entities/ns.apple_store_fifth_avenue/signals/ns.visitors"\xca>\x11\xfa\x02\x0etimeSeriesName\xe0A\x05\xe0A\x02'
-    _globals['_TIMESERIES'].fields_by_name['read_only']._options = None
+    _globals['_TIMESERIES'].fields_by_name['read_only']._loaded_options = None
     _globals['_TIMESERIES'].fields_by_name['read_only']._serialized_options = b'\xe0A\x03'
-    _globals['_TIMESERIES'].fields_by_name['units']._options = None
+    _globals['_TIMESERIES'].fields_by_name['units']._loaded_options = None
     _globals['_TIMESERIES'].fields_by_name['units']._serialized_options = b'\xe0A\x01'
-    _globals['_TIMESERIESPOINT'].fields_by_name['time']._options = None
+    _globals['_TIMESERIESPOINT'].fields_by_name['time']._loaded_options = None
     _globals['_TIMESERIESPOINT'].fields_by_name['time']._serialized_options = b'\xe0A\x02'
-    _globals['_TIMESERIESVIEW'].fields_by_name['known_time']._options = None
+    _globals['_TIMESERIESVIEW'].fields_by_name['known_time']._loaded_options = None
     _globals['_TIMESERIESVIEW'].fields_by_name['known_time']._serialized_options = b'\xe0A\x01'
-    _globals['_UNITS'].fields_by_name['units']._options = None
+    _globals['_UNITS'].fields_by_name['units']._loaded_options = None
     _globals['_UNITS'].fields_by_name['units']._serialized_options = b'\xe0A\x01\xe0A\x05'
-    _globals['_UNITS'].fields_by_name['multiplier']._options = None
+    _globals['_UNITS'].fields_by_name['multiplier']._loaded_options = None
     _globals['_UNITS'].fields_by_name['multiplier']._serialized_options = b'\xe0A\x01\xe0A\x05'
-    _globals['_UNITS'].fields_by_name['description']._options = None
+    _globals['_UNITS'].fields_by_name['description']._loaded_options = None
     _globals['_UNITS'].fields_by_name['description']._serialized_options = b'\xe0A\x01'
-    _globals['_UNIT'].fields_by_name['dimension']._options = None
+    _globals['_UNIT'].fields_by_name['dimension']._loaded_options = None
     _globals['_UNIT'].fields_by_name['dimension']._serialized_options = b'\xe0A\x01\xe0A\x05'
-    _globals['_UNIT'].fields_by_name['unit']._options = None
+    _globals['_UNIT'].fields_by_name['unit']._loaded_options = None
     _globals['_UNIT'].fields_by_name['unit']._serialized_options = b'\xe0A\x01\xe0A\x05'
-    _globals['_UNIT'].fields_by_name['exponent']._options = None
+    _globals['_UNIT'].fields_by_name['exponent']._loaded_options = None
     _globals['_UNIT'].fields_by_name['exponent']._serialized_options = b'\xe0A\x01\xe0A\x05'
     _globals['_TIMESERIES']._serialized_start = 309
     _globals['_TIMESERIES']._serialized_end = 568

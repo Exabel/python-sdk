@@ -60,6 +60,7 @@ class DerivedSignal(google.protobuf.message.Message):
     NAME_FIELD_NUMBER: builtins.int
     DATA_SETS_FIELD_NUMBER: builtins.int
     DISPLAY_NAME_FIELD_NUMBER: builtins.int
+    LABEL_FIELD_NUMBER: builtins.int
     DESCRIPTION_FIELD_NUMBER: builtins.int
     EXPRESSION_FIELD_NUMBER: builtins.int
     DOWNSAMPLING_METHOD_FIELD_NUMBER: builtins.int
@@ -69,7 +70,9 @@ class DerivedSignal(google.protobuf.message.Message):
     name: builtins.str
     "Unique resource name of the derived signal, e.g. `derivedSignals/signalIdentifier`. Derived\n    signals don't have namespaces in their resource names. The signal identifier must be numeric.\n    "
     display_name: builtins.str
-    'The display name/label of the signal.'
+    'The display name of the signal.'
+    label: builtins.str
+    'The label of the signal.'
     description: builtins.str
     'The description of the signal.'
     expression: builtins.str
@@ -89,13 +92,13 @@ class DerivedSignal(google.protobuf.message.Message):
     def entity_set(self) -> exabel.api.data.v1.common_messages_pb2.EntitySet:
         """The set of entities that this derived signal is valid for."""
 
-    def __init__(self, *, name: builtins.str | None=..., data_sets: collections.abc.Iterable[builtins.str] | None=..., display_name: builtins.str | None=..., description: builtins.str | None=..., expression: builtins.str | None=..., downsampling_method: exabel.api.math.aggregation_pb2.Aggregation.ValueType | None=..., change: exabel.api.math.change_pb2.Change.ValueType | None=..., entity_set: exabel.api.data.v1.common_messages_pb2.EntitySet | None=..., highlighted: builtins.bool | None=...) -> None:
+    def __init__(self, *, name: builtins.str | None=..., data_sets: collections.abc.Iterable[builtins.str] | None=..., display_name: builtins.str | None=..., label: builtins.str | None=..., description: builtins.str | None=..., expression: builtins.str | None=..., downsampling_method: exabel.api.math.aggregation_pb2.Aggregation.ValueType | None=..., change: exabel.api.math.change_pb2.Change.ValueType | None=..., entity_set: exabel.api.data.v1.common_messages_pb2.EntitySet | None=..., highlighted: builtins.bool | None=...) -> None:
         ...
 
     def HasField(self, field_name: typing.Literal['entity_set', b'entity_set']) -> builtins.bool:
         ...
 
-    def ClearField(self, field_name: typing.Literal['change', b'change', 'data_sets', b'data_sets', 'description', b'description', 'display_name', b'display_name', 'downsampling_method', b'downsampling_method', 'entity_set', b'entity_set', 'expression', b'expression', 'highlighted', b'highlighted', 'name', b'name']) -> None:
+    def ClearField(self, field_name: typing.Literal['change', b'change', 'data_sets', b'data_sets', 'description', b'description', 'display_name', b'display_name', 'downsampling_method', b'downsampling_method', 'entity_set', b'entity_set', 'expression', b'expression', 'highlighted', b'highlighted', 'label', b'label', 'name', b'name']) -> None:
         ...
 global___DerivedSignal = DerivedSignal
 

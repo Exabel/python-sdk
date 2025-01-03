@@ -1,8 +1,10 @@
 """Generated protocol buffer code."""
 from google.protobuf import descriptor as _descriptor
 from google.protobuf import descriptor_pool as _descriptor_pool
+from google.protobuf import runtime_version as _runtime_version
 from google.protobuf import symbol_database as _symbol_database
 from google.protobuf.internal import builder as _builder
+_runtime_version.ValidateProtobufRuntimeVersion(_runtime_version.Domain.PUBLIC, 5, 28, 1, '', 'exabel/api/data/v1/entity_service.proto')
 _sym_db = _symbol_database.Default()
 from .....exabel.api.data.v1 import entity_messages_pb2 as exabel_dot_api_dot_data_dot_v1_dot_entity__messages__pb2
 from .....exabel.api.data.v1 import search_messages_pb2 as exabel_dot_api_dot_data_dot_v1_dot_search__messages__pb2
@@ -15,58 +17,58 @@ DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\'exabel/api/data/
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
 _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'exabel.api.data.v1.entity_service_pb2', _globals)
-if _descriptor._USE_C_DESCRIPTORS == False:
-    _globals['DESCRIPTOR']._options = None
+if not _descriptor._USE_C_DESCRIPTORS:
+    _globals['DESCRIPTOR']._loaded_options = None
     _globals['DESCRIPTOR']._serialized_options = b'\n\x16com.exabel.api.data.v1B\x12EntityServiceProtoP\x01Z\x16exabel.com/api/data/v1'
-    _globals['_GETENTITYTYPEREQUEST'].fields_by_name['name']._options = None
+    _globals['_GETENTITYTYPEREQUEST'].fields_by_name['name']._loaded_options = None
     _globals['_GETENTITYTYPEREQUEST'].fields_by_name['name']._serialized_options = b'\x92A\x14\xca>\x11\xfa\x02\x0eentityTypeName\xe0A\x02'
-    _globals['_CREATEENTITYTYPEREQUEST'].fields_by_name['entity_type']._options = None
+    _globals['_CREATEENTITYTYPEREQUEST'].fields_by_name['entity_type']._loaded_options = None
     _globals['_CREATEENTITYTYPEREQUEST'].fields_by_name['entity_type']._serialized_options = b'\x92A\x14\xca>\x11\xfa\x02\x0eentityTypeName\xe0A\x02'
-    _globals['_UPDATEENTITYTYPEREQUEST'].fields_by_name['entity_type']._options = None
+    _globals['_UPDATEENTITYTYPEREQUEST'].fields_by_name['entity_type']._loaded_options = None
     _globals['_UPDATEENTITYTYPEREQUEST'].fields_by_name['entity_type']._serialized_options = b'\x92A\x14\xca>\x11\xfa\x02\x0eentityTypeName\xe0A\x02'
-    _globals['_DELETEENTITYTYPEREQUEST'].fields_by_name['name']._options = None
+    _globals['_DELETEENTITYTYPEREQUEST'].fields_by_name['name']._loaded_options = None
     _globals['_DELETEENTITYTYPEREQUEST'].fields_by_name['name']._serialized_options = b'\x92A\x14\xca>\x11\xfa\x02\x0eentityTypeName\xe0A\x02'
-    _globals['_LISTENTITIESREQUEST'].fields_by_name['parent']._options = None
+    _globals['_LISTENTITIESREQUEST'].fields_by_name['parent']._loaded_options = None
     _globals['_LISTENTITIESREQUEST'].fields_by_name['parent']._serialized_options = b'\x92A\x14\xca>\x11\xfa\x02\x0eentityTypeName\xe0A\x02'
-    _globals['_DELETEENTITIESREQUEST'].fields_by_name['parent']._options = None
+    _globals['_DELETEENTITIESREQUEST'].fields_by_name['parent']._loaded_options = None
     _globals['_DELETEENTITIESREQUEST'].fields_by_name['parent']._serialized_options = b'\x92A\x14\xca>\x11\xfa\x02\x0eentityTypeName\xe0A\x02'
-    _globals['_GETENTITYREQUEST'].fields_by_name['name']._options = None
+    _globals['_GETENTITYREQUEST'].fields_by_name['name']._loaded_options = None
     _globals['_GETENTITYREQUEST'].fields_by_name['name']._serialized_options = b'\x92A\x10\xca>\r\xfa\x02\nentityName\xe0A\x02'
-    _globals['_CREATEENTITYREQUEST'].fields_by_name['parent']._options = None
+    _globals['_CREATEENTITYREQUEST'].fields_by_name['parent']._loaded_options = None
     _globals['_CREATEENTITYREQUEST'].fields_by_name['parent']._serialized_options = b'\x92A\x14\xca>\x11\xfa\x02\x0eentityTypeName\xe0A\x02'
-    _globals['_CREATEENTITYREQUEST'].fields_by_name['entity']._options = None
+    _globals['_CREATEENTITYREQUEST'].fields_by_name['entity']._loaded_options = None
     _globals['_CREATEENTITYREQUEST'].fields_by_name['entity']._serialized_options = b'\xe0A\x02'
-    _globals['_UPDATEENTITYREQUEST'].fields_by_name['entity']._options = None
+    _globals['_UPDATEENTITYREQUEST'].fields_by_name['entity']._loaded_options = None
     _globals['_UPDATEENTITYREQUEST'].fields_by_name['entity']._serialized_options = b'\x92A\x10\xca>\r\xfa\x02\nentityName\xe0A\x02'
-    _globals['_DELETEENTITYREQUEST'].fields_by_name['name']._options = None
+    _globals['_DELETEENTITYREQUEST'].fields_by_name['name']._loaded_options = None
     _globals['_DELETEENTITYREQUEST'].fields_by_name['name']._serialized_options = b'\x92A\x10\xca>\r\xfa\x02\nentityName\xe0A\x02'
-    _globals['_SEARCHENTITIESREQUEST'].fields_by_name['parent']._options = None
+    _globals['_SEARCHENTITIESREQUEST'].fields_by_name['parent']._loaded_options = None
     _globals['_SEARCHENTITIESREQUEST'].fields_by_name['parent']._serialized_options = b'\x92A\x14\xca>\x11\xfa\x02\x0eentityTypeName\xe0A\x02'
-    _globals['_SEARCHENTITIESREQUEST'].fields_by_name['terms']._options = None
+    _globals['_SEARCHENTITIESREQUEST'].fields_by_name['terms']._loaded_options = None
     _globals['_SEARCHENTITIESREQUEST'].fields_by_name['terms']._serialized_options = b'\xe0A\x02'
-    _globals['_ENTITYSERVICE'].methods_by_name['ListEntityTypes']._options = None
+    _globals['_ENTITYSERVICE'].methods_by_name['ListEntityTypes']._loaded_options = None
     _globals['_ENTITYSERVICE'].methods_by_name['ListEntityTypes']._serialized_options = b'\x92A\x13\x12\x11List entity types\x82\xd3\xe4\x93\x02\x11\x12\x0f/v1/entityTypes'
-    _globals['_ENTITYSERVICE'].methods_by_name['GetEntityType']._options = None
+    _globals['_ENTITYSERVICE'].methods_by_name['GetEntityType']._loaded_options = None
     _globals['_ENTITYSERVICE'].methods_by_name['GetEntityType']._serialized_options = b'\x92A\x11\x12\x0fGet entity type\x82\xd3\xe4\x93\x02\x1a\x12\x18/v1/{name=entityTypes/*}'
-    _globals['_ENTITYSERVICE'].methods_by_name['CreateEntityType']._options = None
+    _globals['_ENTITYSERVICE'].methods_by_name['CreateEntityType']._loaded_options = None
     _globals['_ENTITYSERVICE'].methods_by_name['CreateEntityType']._serialized_options = b'\x92A\x14\x12\x12Create entity type\x82\xd3\xe4\x93\x02\x1e"\x0f/v1/entityTypes:\x0bentity_type'
-    _globals['_ENTITYSERVICE'].methods_by_name['UpdateEntityType']._options = None
+    _globals['_ENTITYSERVICE'].methods_by_name['UpdateEntityType']._loaded_options = None
     _globals['_ENTITYSERVICE'].methods_by_name['UpdateEntityType']._serialized_options = b'\x92A\x14\x12\x12Update entity type\x82\xd3\xe4\x93\x0232$/v1/{entity_type.name=entityTypes/*}:\x0bentity_type'
-    _globals['_ENTITYSERVICE'].methods_by_name['DeleteEntityType']._options = None
+    _globals['_ENTITYSERVICE'].methods_by_name['DeleteEntityType']._loaded_options = None
     _globals['_ENTITYSERVICE'].methods_by_name['DeleteEntityType']._serialized_options = b'\x92A\x14\x12\x12Delete entity type\x82\xd3\xe4\x93\x02\x1a*\x18/v1/{name=entityTypes/*}'
-    _globals['_ENTITYSERVICE'].methods_by_name['ListEntities']._options = None
+    _globals['_ENTITYSERVICE'].methods_by_name['ListEntities']._loaded_options = None
     _globals['_ENTITYSERVICE'].methods_by_name['ListEntities']._serialized_options = b'\x92A\x0f\x12\rList entities\x82\xd3\xe4\x93\x02%\x12#/v1/{parent=entityTypes/*}/entities'
-    _globals['_ENTITYSERVICE'].methods_by_name['DeleteEntities']._options = None
+    _globals['_ENTITYSERVICE'].methods_by_name['DeleteEntities']._loaded_options = None
     _globals['_ENTITYSERVICE'].methods_by_name['DeleteEntities']._serialized_options = b'\x92A\x18\x12\x16Delete entities (bulk)\x82\xd3\xe4\x93\x02%*#/v1/{parent=entityTypes/*}/entities'
-    _globals['_ENTITYSERVICE'].methods_by_name['GetEntity']._options = None
+    _globals['_ENTITYSERVICE'].methods_by_name['GetEntity']._loaded_options = None
     _globals['_ENTITYSERVICE'].methods_by_name['GetEntity']._serialized_options = b'\x92A\x0c\x12\nGet entity\x82\xd3\xe4\x93\x02%\x12#/v1/{name=entityTypes/*/entities/*}'
-    _globals['_ENTITYSERVICE'].methods_by_name['CreateEntity']._options = None
+    _globals['_ENTITYSERVICE'].methods_by_name['CreateEntity']._loaded_options = None
     _globals['_ENTITYSERVICE'].methods_by_name['CreateEntity']._serialized_options = b'\x92A\x0f\x12\rCreate entity\x82\xd3\xe4\x93\x02-"#/v1/{parent=entityTypes/*}/entities:\x06entity'
-    _globals['_ENTITYSERVICE'].methods_by_name['UpdateEntity']._options = None
+    _globals['_ENTITYSERVICE'].methods_by_name['UpdateEntity']._loaded_options = None
     _globals['_ENTITYSERVICE'].methods_by_name['UpdateEntity']._serialized_options = b'\x92A\x0f\x12\rUpdate entity\x82\xd3\xe4\x93\x0242*/v1/{entity.name=entityTypes/*/entities/*}:\x06entity'
-    _globals['_ENTITYSERVICE'].methods_by_name['DeleteEntity']._options = None
+    _globals['_ENTITYSERVICE'].methods_by_name['DeleteEntity']._loaded_options = None
     _globals['_ENTITYSERVICE'].methods_by_name['DeleteEntity']._serialized_options = b'\x92A\x0f\x12\rDelete entity\x82\xd3\xe4\x93\x02%*#/v1/{name=entityTypes/*/entities/*}'
-    _globals['_ENTITYSERVICE'].methods_by_name['SearchEntities']._options = None
+    _globals['_ENTITYSERVICE'].methods_by_name['SearchEntities']._loaded_options = None
     _globals['_ENTITYSERVICE'].methods_by_name['SearchEntities']._serialized_options = b'\x92A\x11\x12\x0fSearch entities\x82\xd3\xe4\x93\x02/"*/v1/{parent=entityTypes/*}/entities:search:\x01*'
     _globals['_LISTENTITYTYPESREQUEST']._serialized_start = 321
     _globals['_LISTENTITYTYPESREQUEST']._serialized_end = 384

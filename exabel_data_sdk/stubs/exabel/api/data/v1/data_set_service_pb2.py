@@ -1,8 +1,10 @@
 """Generated protocol buffer code."""
 from google.protobuf import descriptor as _descriptor
 from google.protobuf import descriptor_pool as _descriptor_pool
+from google.protobuf import runtime_version as _runtime_version
 from google.protobuf import symbol_database as _symbol_database
 from google.protobuf.internal import builder as _builder
+_runtime_version.ValidateProtobufRuntimeVersion(_runtime_version.Domain.PUBLIC, 5, 28, 1, '', 'exabel/api/data/v1/data_set_service.proto')
 _sym_db = _symbol_database.Default()
 from .....exabel.api.data.v1 import data_set_messages_pb2 as exabel_dot_api_dot_data_dot_v1_dot_data__set__messages__pb2
 from google.api import annotations_pb2 as google_dot_api_dot_annotations__pb2
@@ -14,26 +16,26 @@ DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n)exabel/api/data/v
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
 _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'exabel.api.data.v1.data_set_service_pb2', _globals)
-if _descriptor._USE_C_DESCRIPTORS == False:
-    _globals['DESCRIPTOR']._options = None
+if not _descriptor._USE_C_DESCRIPTORS:
+    _globals['DESCRIPTOR']._loaded_options = None
     _globals['DESCRIPTOR']._serialized_options = b'\n\x16com.exabel.api.data.v1B\x13DataSetServiceProtoP\x01Z\x16exabel.com/api/data/v1'
-    _globals['_GETDATASETREQUEST'].fields_by_name['name']._options = None
+    _globals['_GETDATASETREQUEST'].fields_by_name['name']._loaded_options = None
     _globals['_GETDATASETREQUEST'].fields_by_name['name']._serialized_options = b'\x92A\x11\xca>\x0e\xfa\x02\x0bdataSetName\xe0A\x02'
-    _globals['_CREATEDATASETREQUEST'].fields_by_name['data_set']._options = None
+    _globals['_CREATEDATASETREQUEST'].fields_by_name['data_set']._loaded_options = None
     _globals['_CREATEDATASETREQUEST'].fields_by_name['data_set']._serialized_options = b'\xe0A\x02'
-    _globals['_UPDATEDATASETREQUEST'].fields_by_name['data_set']._options = None
+    _globals['_UPDATEDATASETREQUEST'].fields_by_name['data_set']._loaded_options = None
     _globals['_UPDATEDATASETREQUEST'].fields_by_name['data_set']._serialized_options = b'\xe0A\x02'
-    _globals['_DELETEDATASETREQUEST'].fields_by_name['name']._options = None
+    _globals['_DELETEDATASETREQUEST'].fields_by_name['name']._loaded_options = None
     _globals['_DELETEDATASETREQUEST'].fields_by_name['name']._serialized_options = b'\x92A\x11\xca>\x0e\xfa\x02\x0bdataSetName\xe0A\x02'
-    _globals['_DATASETSERVICE'].methods_by_name['ListDataSets']._options = None
+    _globals['_DATASETSERVICE'].methods_by_name['ListDataSets']._loaded_options = None
     _globals['_DATASETSERVICE'].methods_by_name['ListDataSets']._serialized_options = b'\x92A\x10\x12\x0eList data sets\x82\xd3\xe4\x93\x02\x0e\x12\x0c/v1/dataSets'
-    _globals['_DATASETSERVICE'].methods_by_name['GetDataSet']._options = None
+    _globals['_DATASETSERVICE'].methods_by_name['GetDataSet']._loaded_options = None
     _globals['_DATASETSERVICE'].methods_by_name['GetDataSet']._serialized_options = b'\x92A\x0e\x12\x0cGet data set\x82\xd3\xe4\x93\x02\x17\x12\x15/v1/{name=dataSets/*}'
-    _globals['_DATASETSERVICE'].methods_by_name['CreateDataSet']._options = None
+    _globals['_DATASETSERVICE'].methods_by_name['CreateDataSet']._loaded_options = None
     _globals['_DATASETSERVICE'].methods_by_name['CreateDataSet']._serialized_options = b'\x92A\x11\x12\x0fCreate data set\x82\xd3\xe4\x93\x02\x18"\x0c/v1/dataSets:\x08data_set'
-    _globals['_DATASETSERVICE'].methods_by_name['UpdateDataSet']._options = None
+    _globals['_DATASETSERVICE'].methods_by_name['UpdateDataSet']._loaded_options = None
     _globals['_DATASETSERVICE'].methods_by_name['UpdateDataSet']._serialized_options = b'\x92A\x11\x12\x0fUpdate data set\x82\xd3\xe4\x93\x02*2\x1e/v1/{data_set.name=dataSets/*}:\x08data_set'
-    _globals['_DATASETSERVICE'].methods_by_name['DeleteDataSet']._options = None
+    _globals['_DATASETSERVICE'].methods_by_name['DeleteDataSet']._loaded_options = None
     _globals['_DATASETSERVICE'].methods_by_name['DeleteDataSet']._serialized_options = b'\x92A\x11\x12\x0fDelete data set\x82\xd3\xe4\x93\x02\x17*\x15/v1/{name=dataSets/*}'
     _globals['_LISTDATASETSREQUEST']._serialized_start = 283
     _globals['_LISTDATASETSREQUEST']._serialized_end = 304
