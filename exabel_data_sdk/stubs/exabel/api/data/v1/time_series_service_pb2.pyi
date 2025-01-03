@@ -130,7 +130,7 @@ class UpdateOptions(google.protobuf.message.Message):
     replace_known_time: builtins.bool
     'Specifies that the known times of _all_ inserted points are a fixed timestamp specified in\n    `insert_options.default_known_time`, and additionally that all existing values of the\n    time series should be unset at this timestamp. If this is set, either\n    `insert_options.default_known_time.current_time` or\n    `insert_options.default_known_time.known_time` must be set, and it is an error to specify the\n    known time of any inserted points.\n    Use with care! For instance: If this flag is set, and an import job splits one time series\n    over multiple calls, only the data in the last call will be kept.\n    '
     replace_existing_data_points: builtins.bool
-    'Whether to remove existing data points for other known times of the the inserted time series\n    points. Data points for times not present in the request will be left untouched.\n    '
+    'Whether to remove existing data points for other known times of the inserted time series\n    points. Data points for times not present in the request will be left untouched.\n    '
 
     def __init__(self, *, allow_missing: builtins.bool | None=..., replace_existing_time_series: builtins.bool | None=..., replace_known_time: builtins.bool | None=..., replace_existing_data_points: builtins.bool | None=...) -> None:
         ...

@@ -1,8 +1,10 @@
 """Generated protocol buffer code."""
 from google.protobuf import descriptor as _descriptor
 from google.protobuf import descriptor_pool as _descriptor_pool
+from google.protobuf import runtime_version as _runtime_version
 from google.protobuf import symbol_database as _symbol_database
 from google.protobuf.internal import builder as _builder
+_runtime_version.ValidateProtobufRuntimeVersion(_runtime_version.Domain.PUBLIC, 5, 28, 1, '', 'exabel/api/data/v1/signal_service.proto')
 _sym_db = _symbol_database.Default()
 from .....exabel.api.data.v1 import signal_messages_pb2 as exabel_dot_api_dot_data_dot_v1_dot_signal__messages__pb2
 from google.api import annotations_pb2 as google_dot_api_dot_annotations__pb2
@@ -14,36 +16,36 @@ DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\'exabel/api/data/
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
 _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'exabel.api.data.v1.signal_service_pb2', _globals)
-if _descriptor._USE_C_DESCRIPTORS == False:
-    _globals['DESCRIPTOR']._options = None
+if not _descriptor._USE_C_DESCRIPTORS:
+    _globals['DESCRIPTOR']._loaded_options = None
     _globals['DESCRIPTOR']._serialized_options = b'\n\x16com.exabel.api.data.v1B\x12SignalServiceProtoP\x01Z\x16exabel.com/api/data/v1'
-    _globals['_GETSIGNALREQUEST'].fields_by_name['name']._options = None
+    _globals['_GETSIGNALREQUEST'].fields_by_name['name']._loaded_options = None
     _globals['_GETSIGNALREQUEST'].fields_by_name['name']._serialized_options = b'\x92A\x10\xca>\r\xfa\x02\nsignalName\xe0A\x02'
-    _globals['_CREATESIGNALREQUEST'].fields_by_name['signal']._options = None
+    _globals['_CREATESIGNALREQUEST'].fields_by_name['signal']._loaded_options = None
     _globals['_CREATESIGNALREQUEST'].fields_by_name['signal']._serialized_options = b'\xe0A\x02'
-    _globals['_UPDATESIGNALREQUEST'].fields_by_name['signal']._options = None
+    _globals['_UPDATESIGNALREQUEST'].fields_by_name['signal']._loaded_options = None
     _globals['_UPDATESIGNALREQUEST'].fields_by_name['signal']._serialized_options = b'\xe0A\x02'
-    _globals['_DELETESIGNALREQUEST'].fields_by_name['name']._options = None
+    _globals['_DELETESIGNALREQUEST'].fields_by_name['name']._loaded_options = None
     _globals['_DELETESIGNALREQUEST'].fields_by_name['name']._serialized_options = b'\x92A\x10\xca>\r\xfa\x02\nsignalName\xe0A\x02'
-    _globals['_FILTERDERIVEDSIGNALSRESPONSE_DERIVEDSIGNALSENTRY']._options = None
+    _globals['_FILTERDERIVEDSIGNALSRESPONSE_DERIVEDSIGNALSENTRY']._loaded_options = None
     _globals['_FILTERDERIVEDSIGNALSRESPONSE_DERIVEDSIGNALSENTRY']._serialized_options = b'8\x01'
-    _globals['_GETDERIVEDSIGNALREQUEST'].fields_by_name['name']._options = None
+    _globals['_GETDERIVEDSIGNALREQUEST'].fields_by_name['name']._loaded_options = None
     _globals['_GETDERIVEDSIGNALREQUEST'].fields_by_name['name']._serialized_options = b'\x92A\x17\xca>\x14\xfa\x02\x11derivedSignalName\xe0A\x02'
-    _globals['_SIGNALSERVICE'].methods_by_name['ListSignals']._options = None
+    _globals['_SIGNALSERVICE'].methods_by_name['ListSignals']._loaded_options = None
     _globals['_SIGNALSERVICE'].methods_by_name['ListSignals']._serialized_options = b'\x92A\x0e\x12\x0cList signals\x82\xd3\xe4\x93\x02\r\x12\x0b/v1/signals'
-    _globals['_SIGNALSERVICE'].methods_by_name['GetSignal']._options = None
+    _globals['_SIGNALSERVICE'].methods_by_name['GetSignal']._loaded_options = None
     _globals['_SIGNALSERVICE'].methods_by_name['GetSignal']._serialized_options = b'\x92A\x0c\x12\nGet signal\x82\xd3\xe4\x93\x02\x16\x12\x14/v1/{name=signals/*}'
-    _globals['_SIGNALSERVICE'].methods_by_name['CreateSignal']._options = None
+    _globals['_SIGNALSERVICE'].methods_by_name['CreateSignal']._loaded_options = None
     _globals['_SIGNALSERVICE'].methods_by_name['CreateSignal']._serialized_options = b'\x92A\x0f\x12\rCreate signal\x82\xd3\xe4\x93\x02\x15"\x0b/v1/signals:\x06signal'
-    _globals['_SIGNALSERVICE'].methods_by_name['UpdateSignal']._options = None
+    _globals['_SIGNALSERVICE'].methods_by_name['UpdateSignal']._loaded_options = None
     _globals['_SIGNALSERVICE'].methods_by_name['UpdateSignal']._serialized_options = b'\x92A\x0f\x12\rUpdate signal\x82\xd3\xe4\x93\x02%2\x1b/v1/{signal.name=signals/*}:\x06signal'
-    _globals['_SIGNALSERVICE'].methods_by_name['DeleteSignal']._options = None
+    _globals['_SIGNALSERVICE'].methods_by_name['DeleteSignal']._loaded_options = None
     _globals['_SIGNALSERVICE'].methods_by_name['DeleteSignal']._serialized_options = b'\x92A\x0f\x12\rDelete signal\x82\xd3\xe4\x93\x02\x16*\x14/v1/{name=signals/*}'
-    _globals['_SIGNALSERVICE'].methods_by_name['ListDerivedSignals']._options = None
+    _globals['_SIGNALSERVICE'].methods_by_name['ListDerivedSignals']._loaded_options = None
     _globals['_SIGNALSERVICE'].methods_by_name['ListDerivedSignals']._serialized_options = b'\x92A\x16\x12\x14List derived signals\x82\xd3\xe4\x93\x02\x14\x12\x12/v1/derivedSignals'
-    _globals['_SIGNALSERVICE'].methods_by_name['FilterDerivedSignals']._options = None
+    _globals['_SIGNALSERVICE'].methods_by_name['FilterDerivedSignals']._loaded_options = None
     _globals['_SIGNALSERVICE'].methods_by_name['FilterDerivedSignals']._serialized_options = b'\x92A\x18\x12\x16Filter derived signals\x82\xd3\xe4\x93\x02\x1b\x12\x19/v1/derivedSignals:filter'
-    _globals['_SIGNALSERVICE'].methods_by_name['GetDerivedSignal']._options = None
+    _globals['_SIGNALSERVICE'].methods_by_name['GetDerivedSignal']._loaded_options = None
     _globals['_SIGNALSERVICE'].methods_by_name['GetDerivedSignal']._serialized_options = b'\x92A\x14\x12\x12Get derived signal\x82\xd3\xe4\x93\x02\x1d\x12\x1b/v1/{name=derivedSignals/*}'
     _globals['_LISTSIGNALSREQUEST']._serialized_start = 279
     _globals['_LISTSIGNALSREQUEST']._serialized_end = 338
