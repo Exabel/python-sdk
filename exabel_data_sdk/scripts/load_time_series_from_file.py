@@ -81,8 +81,8 @@ class LoadTimeSeriesFromFile(CsvScriptWithEntityMapping):
             "--pit-offset",
             required=False,
             type=int,
-            choices=range(31),
-            metavar="[0-30]",
+            choices=range(101),
+            metavar="[0-100]",
             help=(
                 "Set the Known-Time of the uploaded data to be the timestamp of each data point, "
                 "plus the specified number of days as an offset. For instance, if the data is "

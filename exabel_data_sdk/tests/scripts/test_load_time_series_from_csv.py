@@ -466,9 +466,11 @@ class TestUploadTimeSeries(unittest.TestCase):
             "contains_!llegal_chars": "Signal name must start with a letter, "
             'contain only letters, numbers, and underscores, but got "contains_!llegal_chars"',
             "": "Signal name cannot be empty",
-            "signal_with_sixty_five_characters_in_length_which_more_than_max__": "Signal name "
-            "cannot be longer than 64 characters, but got "
-            '"signal_with_sixty_five_characters_in_length_which_more_than_max__"',
+            "signal_with_length_of_one_hundred_and_twenty_nine_characters_in_identifier_part_of_"
+            "resource_name_which_is_more_than_maximum_129__": "Signal name "
+            "cannot be longer than 128 characters, but got "
+            '"signal_with_length_of_one_hundred_and_twenty_nine_characters_in_identifier_part_of_'
+            'resource_name_which_is_more_than_maximum_129__"',
         }
 
         for signal, error in signals_errors.items():
@@ -482,7 +484,8 @@ class TestUploadTimeSeries(unittest.TestCase):
             "SIGNAL",
             "signal_with_underscores",
             "signal_1_with_underscores_and_numbers",
-            "signal_with_sixty_four_characters_in_length_which_is_the_maximum",
+            "signal_with_length_of_one_hundred_and_twenty_eight_characters_in_identifier_part_of_"
+            "resource_name_which_is_the_maximum_128_chars",
         ]
 
         for signal in valid_signals:

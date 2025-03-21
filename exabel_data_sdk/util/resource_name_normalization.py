@@ -411,9 +411,9 @@ def validate_signal_name(name: str) -> None:
     """
     if not name:
         raise ValueError("Signal name cannot be empty")
-    if len(name) > 64:
-        raise ValueError(f'Signal name cannot be longer than 64 characters, but got "{name}"')
-    if not re.match(r"^[a-zA-Z]\w{0,63}$", name):
+    if len(name) > 128:
+        raise ValueError(f'Signal name cannot be longer than 128 characters, but got "{name}"')
+    if not re.match(r"^[a-zA-Z]\w{0,127}$", name):
         raise ValueError(
             f"Signal name must start with a letter, contain only letters, "
             f'numbers, and underscores, but got "{name}"'
