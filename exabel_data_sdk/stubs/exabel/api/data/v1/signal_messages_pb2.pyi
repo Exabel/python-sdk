@@ -25,7 +25,7 @@ class Signal(google.protobuf.message.Message):
     READ_ONLY_FIELD_NUMBER: builtins.int
     ENTITY_TYPES_FIELD_NUMBER: builtins.int
     name: builtins.str
-    'Unique resource name of the raw data signal, e.g. `signals/signalIdentifier` or\n    `signals/namespace.signalIdentifier`. The namespace must be empty (being global) or a\n    namespace accessible to the customer.\n    The signal identifier must match the regex `[a-zA-Z]\\w{0,63}`.\n    '
+    'Unique resource name of the raw data signal, e.g. `signals/signalIdentifier` or\n    `signals/namespace.signalIdentifier`. The namespace must be empty (being global) or a\n    namespace accessible to the customer.\n    The signal identifier must match the regex `[a-zA-Z]\\w{0,127}`.\n    '
     entity_type: builtins.str
     'No longer in use.'
     display_name: builtins.str
