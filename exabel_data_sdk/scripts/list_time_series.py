@@ -1,5 +1,6 @@
 import argparse
 import sys
+from concurrent.futures import ThreadPoolExecutor
 from math import ceil
 from typing import List, Optional, Sequence
 
@@ -8,7 +9,7 @@ from exabel_data_sdk.client.api.data_classes.entity import Entity
 from exabel_data_sdk.client.api.data_classes.paging_result import PagingResult
 from exabel_data_sdk.scripts import utils
 from exabel_data_sdk.scripts.base_script import BaseScript
-from exabel_data_sdk.scripts.utils import PAGE_SIZE, conditional_progress_bar
+from exabel_data_sdk.scripts.utils import MAX_WORKERS, PAGE_SIZE, conditional_progress_bar
 
 
 class ListTimeSeries(BaseScript):
@@ -91,7 +92,7 @@ class ListTimeSeries(BaseScript):
             print(f"Fetching time series in pages of size {PAGE_SIZE}...")
             for _ in conditional_progress_bar(
                 range(1, ceil(num_time_series / PAGE_SIZE) + 1),
-                desc="Fetching time series: ",
+                desc="Fetching time series names: ",
                 show_progress=show_progress,
                 initial=1,
             ):
@@ -129,18 +130,36 @@ class ListTimeSeries(BaseScript):
                 )
 
         if all_entities and not all_time_series:
-            for item in conditional_progress_bar(
-                all_entities, desc="Fetching time series: ", show_progress=show_progress
-            ):
+            num_entities = len(all_entities)
+
+            def _get_entity_time_series(entity: Entity) -> Sequence[str]:
                 page_token = None
+                ts_list: List[str] = []
                 while True:
                     result = client.time_series_api.get_entity_time_series(
-                        item.name, page_size=PAGE_SIZE, page_token=page_token
+                        entity.name, page_size=PAGE_SIZE, page_token=page_token
                     )
-                    all_time_series.extend(self._filter_ts_list(result.results, signal))
+                    ts_list.extend(self._filter_ts_list(result.results, signal))
                     page_token = result.next_page_token
                     if len(result.results) < PAGE_SIZE:
                         break
+
+                return ts_list
+
+            with ThreadPoolExecutor(max_workers=MAX_WORKERS) as executor:
+                for i in conditional_progress_bar(
+                    range(0, num_entities, PAGE_SIZE),
+                    desc="Fetching time series names: ",
+                    show_progress=show_progress,
+                ):
+                    batch = (
+                        all_entities[i : i + PAGE_SIZE]
+                        if i + PAGE_SIZE < num_entities
+                        else all_entities[i:]
+                    )
+
+                    for ts_sequence in executor.map(_get_entity_time_series, batch):
+                        all_time_series.extend(ts_sequence)
 
         return all_time_series
 
@@ -160,4 +179,4 @@ class ListTimeSeries(BaseScript):
 
 
 if __name__ == "__main__":
-    ListTimeSeries(sys.argv, "Lists time series.").run()
+    ListTimeSeries(sys.argv, "List time series names.").run()

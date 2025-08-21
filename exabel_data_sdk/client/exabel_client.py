@@ -3,6 +3,7 @@ from typing import Optional, Sequence, Tuple
 from exabel_data_sdk.client.api.data_set_api import DataSetApi
 from exabel_data_sdk.client.api.derived_signal_api import DerivedSignalApi
 from exabel_data_sdk.client.api.entity_api import EntityApi
+from exabel_data_sdk.client.api.kpi_api import KpiApi
 from exabel_data_sdk.client.api.library_api import LibraryApi
 from exabel_data_sdk.client.api.namespace_api import NamespaceApi
 from exabel_data_sdk.client.api.prediction_model_api import PredictionModelApi
@@ -75,6 +76,7 @@ class ExabelClient:
         self.tag_api = TagApi(config)
         self.user_api = UserApi(config)
         self.library_api = LibraryApi(config)
+        self.kpi_api = KpiApi(config)
         self.namespace_api = NamespaceApi(config)
         self._namespace: Optional[str] = None
 

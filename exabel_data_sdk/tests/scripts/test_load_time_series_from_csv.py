@@ -1,3 +1,4 @@
+import io
 import unittest
 from functools import partial
 from typing import Callable
@@ -500,6 +501,38 @@ class TestUploadTimeSeries(unittest.TestCase):
         script = LoadTimeSeriesFromFile(args)
         with self.assertRaises(SystemExit):
             script.run_script(self.client, script.parse_arguments())
+
+    def test_should_fail_with_missing_date(self):
+        args = common_args + [
+            "--filename",
+            "./exabel_data_sdk/tests/resources/data/timeseries_with_missing_date.csv",
+            "--pit-offset",
+            "1",
+        ]
+
+        script = LoadTimeSeriesFromFile(args)
+        with self.assertRaises(SystemExit):
+            with mock.patch("sys.stdout", new_callable=io.StringIO) as fake_stdout:
+                script.run_script(self.client, script.parse_arguments())
+            self.assertIn(
+                "The 'date' column has missing values, which is not permitted.",
+                fake_stdout.getvalue(),
+            )
+
+    def test_should_fail_with_missing_known_time(self):
+        args = common_args + [
+            "--filename",
+            "./exabel_data_sdk/tests/resources/data/timeseries_with_missing_known_time.csv",
+        ]
+
+        script = LoadTimeSeriesFromFile(args)
+        with self.assertRaises(SystemExit):
+            with mock.patch("sys.stdout", new_callable=io.StringIO) as fake_stdout:
+                script.run_script(self.client, script.parse_arguments())
+            self.assertIn(
+                "The 'known_time' column has missing values, which is not permitted.",
+                fake_stdout.getvalue(),
+            )
 
     def test_valid_no_create_library_signal(self):
         args = common_args + [

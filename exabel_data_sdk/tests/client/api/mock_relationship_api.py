@@ -57,7 +57,12 @@ class MockRelationshipApi(RelationshipApi):
         page_size: int = 1000,
         page_token: Optional[str] = None,
     ) -> PagingResult[Relationship]:
-        raise NotImplementedError()
+        # Note: This implementation ignores page_size and page_token
+        return self.relationships.list(
+            predicate=lambda r: (
+                r.from_entity == from_entity and r.relationship_type == relationship_type
+            )
+        )
 
     def get_relationships_to_entity(
         self,
@@ -66,7 +71,12 @@ class MockRelationshipApi(RelationshipApi):
         page_size: int = 1000,
         page_token: Optional[str] = None,
     ) -> PagingResult[Relationship]:
-        raise NotImplementedError()
+        # Note: This implementation ignores page_size and page_token
+        return self.relationships.list(
+            predicate=lambda r: (
+                r.to_entity == to_entity and r.relationship_type == relationship_type
+            )
+        )
 
     def get_relationship(
         self, relationship_type: str, from_entity: str, to_entity: str
@@ -94,4 +104,5 @@ class MockRelationshipApi(RelationshipApi):
         page_size: int = 1000,
         page_token: Optional[str] = None,
     ) -> PagingResult[Relationship]:
+        # Note: This implementation ignores page_size and page_token
         return self.relationships.list(predicate=lambda r: r.relationship_type == relationship_type)

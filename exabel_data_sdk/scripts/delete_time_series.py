@@ -33,15 +33,13 @@ class DeleteTimeSeries(ListTimeSeries):
             help="Only print to console instead of deleting",
         )
 
-    def run_script(self, client: ExabelClient, args: argparse.Namespace) -> None:
-        all_time_series = self._list_time_series(
-            client,
-            entity=args.entity,
-            signal=args.signal,
-            entity_type=args.entity_type,
-            show_progress=args.show_progress,
-        )
-
+    def _delete_time_series(
+        self,
+        client: ExabelClient,
+        all_time_series: Sequence[str],
+        show_progress: bool = False,
+        dry_run: bool = False,
+    ) -> None:
         if not all_time_series:
             print("No time series to delete.")
             return
@@ -62,7 +60,7 @@ class DeleteTimeSeries(ListTimeSeries):
             for i in conditional_progress_bar(
                 range(0, num_time_series, PAGE_SIZE),
                 desc="Deleting time series: ",
-                show_progress=args.show_progress,
+                show_progress=show_progress,
             ):
                 batch = (
                     all_time_series[i : i + PAGE_SIZE]
@@ -70,9 +68,9 @@ class DeleteTimeSeries(ListTimeSeries):
                     else all_time_series[i:]
                 )
 
-                if args.dry_run:
-                    for time_series in batch:
-                        tqdm.write(f"Delete: {time_series}")
+                if dry_run:
+                    for ts in batch:
+                        tqdm.write(f"Delete: {ts}")
                     num_deleted += len(batch)
                     continue
 
@@ -81,12 +79,28 @@ class DeleteTimeSeries(ListTimeSeries):
                 num_deleted += api_results_counter[SUCCESS]
                 num_failed += api_results_counter[ERROR]
 
-        if args.dry_run:
+        if dry_run:
             print(f"Would have deleted {num_deleted} time series.")
             return
         print(f"Successfully deleted {num_deleted} time series.")
         if num_failed > 0:
             print(f"Failed to delete {num_failed} time series.")
+
+    def run_script(self, client: ExabelClient, args: argparse.Namespace) -> None:
+        all_time_series = self._list_time_series(
+            client,
+            entity=args.entity,
+            signal=args.signal,
+            entity_type=args.entity_type,
+            show_progress=args.show_progress,
+        )
+
+        self._delete_time_series(
+            client,
+            all_time_series,
+            show_progress=args.show_progress,
+            dry_run=args.dry_run,
+        )
 
 
 if __name__ == "__main__":
