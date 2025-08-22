@@ -346,7 +346,9 @@ class TestFileTimeSeriesLoaderExcelFiles(unittest.TestCase):
             FileTimeSeriesLoader(client).load_time_series(
                 filename="./exabel_data_sdk/tests/resources/data/with_empty_rows_1.xlsx",
             )
-        self.assertIn("A cell in the entity column was empty.", str(context.exception))
+        self.assertIn(
+            "The 'date' column has missing values, which is not permitted.", str(context.exception)
+        )
 
     def test_read_excel__duplicate_columns(self):
         client: ExabelClient = ExabelMockClient()

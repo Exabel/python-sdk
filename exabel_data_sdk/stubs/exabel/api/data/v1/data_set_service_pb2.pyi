@@ -108,7 +108,9 @@ global___UpdateDataSetRequest = UpdateDataSetRequest
 
 @typing.final
 class DeleteDataSetRequest(google.protobuf.message.Message):
-    """The request to delete one data set."""
+    """The request to delete one data set.
+    A data set cannot be deleted if it is enabled for subscriptions.
+    """
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
     NAME_FIELD_NUMBER: builtins.int
     name: builtins.str

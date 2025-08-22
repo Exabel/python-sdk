@@ -4,7 +4,7 @@ import warnings
 from .....exabel.api.data.v1 import entity_messages_pb2 as exabel_dot_api_dot_data_dot_v1_dot_entity__messages__pb2
 from .....exabel.api.data.v1 import entity_service_pb2 as exabel_dot_api_dot_data_dot_v1_dot_entity__service__pb2
 from google.protobuf import empty_pb2 as google_dot_protobuf_dot_empty__pb2
-GRPC_GENERATED_VERSION = '1.68.1'
+GRPC_GENERATED_VERSION = '1.71.0'
 GRPC_VERSION = grpc.__version__
 _version_not_supported = False
 try:
@@ -167,7 +167,7 @@ class EntityServiceServicer(object):
         * `bloomberg_symbol` (eg `AAPL US Equity`)
         * `cusip` (Committee on Uniform Securities Identification Procedures)
         * `figi` (Financial Instruments Global Identifier)
-        * `factset_identifier`: either FactSet entity identifier or FactSet permanent identifier ("FSYM_ID")
+        * `factset_identifier`: either FactSet entity identifier (eg `000C7F-E`) or FactSet permanent identifier (FSYM_ID, eg `R85KLC-S`)
         * `text`
 
         `mic` and `ticker` must come in pairs, with `mic` immediately before `ticker`. Each pair is

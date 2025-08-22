@@ -27,12 +27,16 @@ class TestDataSet(unittest.TestCase):
             display_name="Revenue per store.",
             description="description",
             signals=["signals/ns.sig1", "signals/ns.sig2"],
+            derived_signals=["derivedSignals/123", "derivedSignals/321"],
+            highlighted_signals=["derivedSignals/123", "derivedSignals/321"],
         )
         data_set_2 = DataSet(
             name="dataSet/customerA.MyData",
             display_name="Revenue per store.",
             description="description",
             signals=["signals/ns.sig2", "signals/ns.sig1"],
+            derived_signals=["derivedSignals/123", "derivedSignals/321"],
+            highlighted_signals=["derivedSignals/321", "derivedSignals/123"],
         )
         data_set_3 = DataSet(
             name="dataSet/customerA.MyData",
@@ -40,5 +44,14 @@ class TestDataSet(unittest.TestCase):
             description="description",
             signals=["signals/ns.sig2"],
         )
+        data_set_4 = DataSet(
+            name="dataSet/customerA.MyData",
+            display_name="Revenue per store.",
+            description="description",
+            signals=["signals/ns.sig2", "signals/ns.sig1"],
+            derived_signals=["derivedSignals/321", "derivedSignals/123"],
+            highlighted_signals=["derivedSignals/123", "derivedSignals/321"],
+        )
         self.assertEqual(data_set_1, data_set_2)
         self.assertNotEqual(data_set_1, data_set_3)
+        self.assertNotEqual(data_set_1, data_set_4)

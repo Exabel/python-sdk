@@ -478,6 +478,10 @@ class DateParsingMixin:
 
     @classmethod
     def _try_parsing_date_column(cls, data: pd.DataFrame, column: str) -> pd.DatetimeIndex:
+        if bool(data[column].isna().any()):
+            raise FileLoadingException(
+                f"The '{column}' column has missing values, which is not permitted."
+            )
         try:
             return pd.DatetimeIndex(data[column], tz=tz.tzutc())
         except Exception as e:
@@ -853,10 +857,14 @@ class EntitiesInColumns(ParsedTimeSeriesFile):
 
     @classmethod
     def _set_index(cls, data: pd.DataFrame) -> pd.DataFrame:
+        if bool(data.iloc[:, 0].isna().any()):
+            raise FileLoadingException(
+                "The first column has missing values, which is not permitted."
+            )
         date_index = pd.DatetimeIndex(data.iloc[:, 0], tz=tz.tzutc())
         date_index.name = None
-        data.set_index(date_index, inplace=True)
-        data.drop(columns=data.columns[0], inplace=True)
+        data = data.set_index(date_index)
+        data = data.drop(columns=data.columns[0])
         return data
 
     @classmethod

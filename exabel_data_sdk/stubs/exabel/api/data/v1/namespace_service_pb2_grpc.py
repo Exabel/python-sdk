@@ -2,7 +2,7 @@
 import grpc
 import warnings
 from .....exabel.api.data.v1 import namespace_service_pb2 as exabel_dot_api_dot_data_dot_v1_dot_namespace__service__pb2
-GRPC_GENERATED_VERSION = '1.68.1'
+GRPC_GENERATED_VERSION = '1.71.0'
 GRPC_VERSION = grpc.__version__
 _version_not_supported = False
 try:

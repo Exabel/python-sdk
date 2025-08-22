@@ -91,8 +91,8 @@ class MockResourceStore(Generic[ResourceT]):
         self.resources[key] = resource
         return resource
 
-    def delete(self, key: object):
+    def delete(self, key: object) -> None:
         """Delete the resource with the given key."""
-        if key in self.resources:
-            del self.resources[key]
-        raise ValueError(f"Trying to delete non-existent resource: {key}")
+        if key not in self.resources:
+            raise ValueError(f"Trying to delete non-existent resource: {key}")
+        del self.resources[key]

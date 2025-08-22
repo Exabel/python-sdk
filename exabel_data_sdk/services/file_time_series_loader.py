@@ -894,7 +894,7 @@ def check_signal_name_errors(signals: Sequence[str]) -> None:
         error_message = (
             "Encountered invalid signal names. Signal names must start with a letter, "
             "and can only consist of letters, numbers, and underscore (_), and be "
-            "at most 64 characters. "
+            "at most 128 characters. "
         )
         if invalid_signals:
             error_message += f"Invalid signal names: {', '.join(invalid_signals)}. "
