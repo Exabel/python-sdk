@@ -3,9 +3,15 @@ from typing import Optional
 
 import pandas as pd
 
-from exabel_data_sdk.client.api.data_classes.kpi_mapping_group import KpiMappingGroup
+from exabel_data_sdk.client.api.data_classes.kpi_mapping_group_reference import (
+    KpiMappingGroupReference,
+)
+from exabel_data_sdk.client.api.data_classes.model_quality import ModelQuality
 from exabel_data_sdk.stubs.exabel.api.analytics.v1.kpi_messages_pb2 import (
     KpiMappingResultData as ProtoKpiMappingResultData,
+)
+from exabel_data_sdk.stubs.exabel.api.analytics.v1.kpi_messages_pb2 import (
+    ModelQuality as ProtoModelQuality,
 )
 
 
@@ -19,6 +25,7 @@ class KpiMappingResultData:
         model_mae:              The model MAE (mean absolute error) for a model built using only
                                 this KPI mapping.
         model_hit_rate:         The hit rate for a model built using only this KPI mapping.
+        model_quality:          The quality of the model built using only this KPI mapping.
         number_of_data_points:  The number of data points.
         mae_pop:                The period-over-period MAE (mean absolute error).
         mae_yoy:                The year-over-year MAE (mean absolute error).
@@ -31,10 +38,11 @@ class KpiMappingResultData:
         last_value_date:        The last date with a value for the KPI mapping proxy signal.
     """
 
-    source: KpiMappingGroup
+    source: KpiMappingGroupReference
     model_mape: Optional[float]
     model_mae: Optional[float]
     model_hit_rate: Optional[float]
+    model_quality: Optional[ModelQuality]
     number_of_data_points: Optional[int]
     mae_pop: Optional[float]
     mae_yoy: Optional[float]
@@ -50,10 +58,15 @@ class KpiMappingResultData:
     def from_proto(proto: ProtoKpiMappingResultData) -> "KpiMappingResultData":
         """Create a KpiMappingResultData from the given protobuf KpiMappingResultData."""
         return KpiMappingResultData(
-            source=KpiMappingGroup.from_proto(proto.source),
+            source=KpiMappingGroupReference.from_proto(proto.source),
             model_mape=proto.model_mape if proto.HasField("model_mape") else None,
             model_mae=proto.model_mae if proto.HasField("model_mae") else None,
             model_hit_rate=proto.model_hit_rate if proto.HasField("model_hit_rate") else None,
+            model_quality=(
+                ModelQuality.from_proto(proto.model_quality)
+                if proto.model_quality != ProtoModelQuality.MODEL_QUALITY_UNSPECIFIED
+                else None
+            ),
             number_of_data_points=(
                 proto.number_of_data_points if proto.HasField("number_of_data_points") else None
             ),

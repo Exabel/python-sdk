@@ -101,7 +101,7 @@ class ListTagsRequest(google.protobuf.message.Message):
     PAGE_SIZE_FIELD_NUMBER: builtins.int
     PAGE_TOKEN_FIELD_NUMBER: builtins.int
     page_size: builtins.int
-    'Maximum number of results to return. Default is 20 and max is 1000.'
+    'Maximum number of tags to return. Default is 20 and max is 1000.'
     page_token: builtins.str
     'Token for a specific page of results, as returned from a previous list request with the same\n    query parameters.\n    '
 
@@ -205,7 +205,7 @@ class ListTagEntitiesRequest(google.protobuf.message.Message):
     parent: builtins.str
     'The parent tag to list entities for\n    Example: `tags/user:abc123`.\n    '
     page_size: builtins.int
-    'Maximum number of results to return. Default is 20 and max is 1000.'
+    'Maximum number of entities to return. Default is 20 and max is 1000.'
     page_token: builtins.str
     'Token for a specific page of results, as returned from a previous list request with the same\n    query parameters.\n    '
 

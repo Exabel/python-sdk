@@ -35,8 +35,11 @@ class BaseGrpcClient:
             # Use an insecure channel. This can be used for local testing.
             self.channel = grpc.insecure_channel(**common_kwargs)
         else:
-            assert config.api_key is not None
-            self.metadata.append(("x-api-key", config.api_key))
+            if config.access_token is not None:
+                self.metadata.append(("authorization", "Bearer " + config.access_token))
+            else:
+                assert config.api_key is not None
+                self.metadata.append(("x-api-key", config.api_key))
             self.channel = grpc.secure_channel(
                 credentials=grpc.ssl_channel_credentials(
                     root_certificates=config.root_certificates

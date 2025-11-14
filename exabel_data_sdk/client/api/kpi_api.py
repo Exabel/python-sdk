@@ -6,11 +6,14 @@ from exabel_data_sdk.client.api.api_client.grpc.kpi_grpc_client import KpiGrpcCl
 from exabel_data_sdk.client.api.data_classes.company_kpi_mapping_results import (
     CompanyKpiMappingResults,
 )
-from exabel_data_sdk.client.api.data_classes.company_kpi_model_result import CompanyKpiModelResult
 from exabel_data_sdk.client.api.data_classes.company_kpi_models import CompanyKpiModels
 from exabel_data_sdk.client.api.data_classes.kpi import Kpi, KpiType
 from exabel_data_sdk.client.api.data_classes.kpi_mapping_result_data import KpiMappingResultData
 from exabel_data_sdk.client.api.data_classes.kpi_source import KpiSource
+from exabel_data_sdk.client.api.data_classes.model_results import (
+    BaseModelResults,
+    HierarchicalModelResults,
+)
 from exabel_data_sdk.client.api.data_classes.paging_result import PagingResult
 from exabel_data_sdk.client.client_config import ClientConfig
 from exabel_data_sdk.stubs.exabel.api.analytics.v1.all_pb2 import (
@@ -62,7 +65,7 @@ class KpiApi:
         source_filter: Optional[KpiSource] = None,
         fiscal_period: Union[Literal["previous", "current", "next"], pd.Timestamp] = "current",
         freq: Optional[Literal["FQ", "FS", "FY"]] = None,
-    ) -> Sequence[CompanyKpiModelResult]:
+    ) -> BaseModelResults:
         """
         List base model results for a company.
 
@@ -79,7 +82,7 @@ class KpiApi:
             period=self._get_fiscal_period_selector(fiscal_period, freq),
         )
         response = self.client.list_company_base_model_results(request)
-        return [CompanyKpiModelResult.from_proto(result) for result in response.results]
+        return BaseModelResults.from_proto(response)
 
     def list_company_hierarchical_model_results(
         self,
@@ -87,7 +90,7 @@ class KpiApi:
         source_filter: Optional[KpiSource] = None,
         fiscal_period: Union[Literal["previous", "current", "next"], pd.Timestamp] = "current",
         freq: Optional[Literal["FQ", "FS", "FY"]] = None,
-    ) -> Sequence[CompanyKpiModelResult]:
+    ) -> HierarchicalModelResults:
         """
         List hierarchical model results for a company.
 
@@ -104,7 +107,7 @@ class KpiApi:
             period=self._get_fiscal_period_selector(fiscal_period, freq),
         )
         response = self.client.list_company_hierarchical_model_results(request)
-        return [CompanyKpiModelResult.from_proto(result) for result in response.results]
+        return HierarchicalModelResults.from_proto(response)
 
     def list_company_kpi_mapping_results(
         self,

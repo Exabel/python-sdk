@@ -6,6 +6,8 @@ from exabel_data_sdk.client.client_config import ClientConfig
 from exabel_data_sdk.stubs.exabel.api.data.v1.all_pb2 import (
     CreateSignalRequest,
     DeleteSignalRequest,
+    FilterDerivedSignalsRequest,
+    FilterDerivedSignalsResponse,
     GetSignalRequest,
     ListSignalsRequest,
     ListSignalsResponse,
@@ -59,6 +61,17 @@ class SignalGrpcClient(SignalApiClient, BaseGrpcClient):
     @handle_grpc_error
     def delete_signal(self, request: DeleteSignalRequest) -> None:
         self.stub.DeleteSignal(
+            request,
+            metadata=self.metadata,
+            timeout=self.config.timeout,
+        )
+
+    @handle_grpc_error
+    def filter_derived_signals(
+        self, request: FilterDerivedSignalsRequest
+    ) -> FilterDerivedSignalsResponse:
+        """Filter derived signals by entity names."""
+        return self.stub.FilterDerivedSignals(
             request,
             metadata=self.metadata,
             timeout=self.config.timeout,

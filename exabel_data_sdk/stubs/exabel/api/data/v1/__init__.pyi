@@ -1,3 +1,5 @@
+from . import calendar_messages_pb2
+from . import calendar_service_pb2
 from . import common_messages_pb2
 from . import data_set_messages_pb2
 from . import data_set_service_pb2

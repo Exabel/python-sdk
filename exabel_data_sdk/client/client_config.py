@@ -11,6 +11,7 @@ class DefaultConfig:
 
     def __init__(self) -> None:
         self.api_key = os.getenv("EXABEL_API_KEY")
+        self.access_token = os.getenv("EXABEL_ACCESS_TOKEN")
         self.client_name = os.getenv("EXABEL_CLIENT_NAME", "Exabel Python SDK")
         self.data_api_host = os.getenv("EXABEL_DATA_API_HOST", "data.api.exabel.com")
         self.analytics_api_host = os.getenv("EXABEL_ANALYTICS_API_HOST", "analytics.api.exabel.com")
@@ -33,6 +34,7 @@ class ClientConfig(DefaultConfig):
     def __init__(
         self,
         api_key: Optional[str] = None,
+        access_token: Optional[str] = None,
         client_name: Optional[str] = None,
         data_api_host: Optional[str] = None,
         analytics_api_host: Optional[str] = None,
@@ -49,6 +51,7 @@ class ClientConfig(DefaultConfig):
 
         Args:
             api_key:             API key to use.
+            access_token:        Access token to use.
             client_name:         Name of this client.
             data_api_host:       Exabel Data API host.
             analytics_api_host:  Exabel Analytics API host.
@@ -62,7 +65,10 @@ class ClientConfig(DefaultConfig):
         """
         super().__init__()
 
-        self.api_key = api_key or self.api_key
+        # Arguments take presedence over environment variables
+        if api_key or access_token:
+            self.api_key = api_key
+            self.access_token = access_token
         self.client_name = client_name or self.client_name
         self.data_api_host = data_api_host or self.data_api_host
         self.analytics_api_host = analytics_api_host or self.analytics_api_host
@@ -74,5 +80,13 @@ class ClientConfig(DefaultConfig):
         self.root_certificates = root_certificates or self.root_certificates
         self.extra_headers = extra_headers or self.extra_headers
 
-        if not self.api_key:
-            raise ValueError("No API key given. Use of the Exabel SDK requires an API key.")
+        if self.api_key and self.access_token:
+            raise ValueError(
+                "Both API key and access token given. Only one of these should be set."
+            )
+
+        if not self.api_key and not self.access_token:
+            raise ValueError(
+                "No API key or access token given. Use of the Exabel SDK requires either an "
+                "API key or access token."
+            )

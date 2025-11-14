@@ -21,7 +21,7 @@ class ListKpiMappingResultsRequest(google.protobuf.message.Message):
     parent: builtins.str
     'Resource name of the KPI mapping to list results of.\n    Example: `kpiMappings/123`.\n    '
     page_size: builtins.int
-    'Maximum number of entities to return. Defaults to 20, and the maximum allowed value is 100.'
+    'Maximum number of companies to return. Defaults to 20, and the maximum allowed value is 100.'
     page_token: builtins.str
     'Token for a specific page of results, as returned from a previous list request with the same\n    query parameters.\n    '
 
@@ -90,15 +90,23 @@ class ListCompanyBaseModelResultsResponse(google.protobuf.message.Message):
     """Response from ListCompanyBaseModelResults."""
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
     RESULTS_FIELD_NUMBER: builtins.int
+    PERIOD_FIELD_NUMBER: builtins.int
 
     @property
     def results(self) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[exabel.api.analytics.v1.kpi_messages_pb2.CompanyKpiModelResult]:
         """List of results."""
 
-    def __init__(self, *, results: collections.abc.Iterable[exabel.api.analytics.v1.kpi_messages_pb2.CompanyKpiModelResult] | None=...) -> None:
+    @property
+    def period(self) -> exabel.api.analytics.v1.kpi_messages_pb2.FiscalPeriod:
+        """Fiscal period representing the period the results are for."""
+
+    def __init__(self, *, results: collections.abc.Iterable[exabel.api.analytics.v1.kpi_messages_pb2.CompanyKpiModelResult] | None=..., period: exabel.api.analytics.v1.kpi_messages_pb2.FiscalPeriod | None=...) -> None:
         ...
 
-    def ClearField(self, field_name: typing.Literal['results', b'results']) -> None:
+    def HasField(self, field_name: typing.Literal['period', b'period']) -> builtins.bool:
+        ...
+
+    def ClearField(self, field_name: typing.Literal['period', b'period', 'results', b'results']) -> None:
         ...
 global___ListCompanyBaseModelResultsResponse = ListCompanyBaseModelResultsResponse
 
@@ -138,6 +146,7 @@ class ListCompanyHierarchicalModelResultsResponse(google.protobuf.message.Messag
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
     RESULTS_FIELD_NUMBER: builtins.int
     KPI_HIERARCHY_FIELD_NUMBER: builtins.int
+    PERIOD_FIELD_NUMBER: builtins.int
 
     @property
     def results(self) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[exabel.api.analytics.v1.kpi_messages_pb2.CompanyKpiModelResult]:
@@ -147,13 +156,17 @@ class ListCompanyHierarchicalModelResultsResponse(google.protobuf.message.Messag
     def kpi_hierarchy(self) -> exabel.api.analytics.v1.kpi_messages_pb2.KpiHierarchy:
         """The KPI hierarchy for the company."""
 
-    def __init__(self, *, results: collections.abc.Iterable[exabel.api.analytics.v1.kpi_messages_pb2.CompanyKpiModelResult] | None=..., kpi_hierarchy: exabel.api.analytics.v1.kpi_messages_pb2.KpiHierarchy | None=...) -> None:
+    @property
+    def period(self) -> exabel.api.analytics.v1.kpi_messages_pb2.FiscalPeriod:
+        """Fiscal period representing the period the results are for."""
+
+    def __init__(self, *, results: collections.abc.Iterable[exabel.api.analytics.v1.kpi_messages_pb2.CompanyKpiModelResult] | None=..., kpi_hierarchy: exabel.api.analytics.v1.kpi_messages_pb2.KpiHierarchy | None=..., period: exabel.api.analytics.v1.kpi_messages_pb2.FiscalPeriod | None=...) -> None:
         ...
 
-    def HasField(self, field_name: typing.Literal['kpi_hierarchy', b'kpi_hierarchy']) -> builtins.bool:
+    def HasField(self, field_name: typing.Literal['kpi_hierarchy', b'kpi_hierarchy', 'period', b'period']) -> builtins.bool:
         ...
 
-    def ClearField(self, field_name: typing.Literal['kpi_hierarchy', b'kpi_hierarchy', 'results', b'results']) -> None:
+    def ClearField(self, field_name: typing.Literal['kpi_hierarchy', b'kpi_hierarchy', 'period', b'period', 'results', b'results']) -> None:
         ...
 global___ListCompanyHierarchicalModelResultsResponse = ListCompanyHierarchicalModelResultsResponse
 
