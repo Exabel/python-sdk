@@ -10,7 +10,7 @@ pip install exabel-data-sdk
 
 or download from [PyPI](https://pypi.org/project/exabel-data-sdk/).
 
-The SDK requires Python 3.9 or later.
+The SDK requires Python 3.10 or later.
 
 ### Installation with SQL data source support
 

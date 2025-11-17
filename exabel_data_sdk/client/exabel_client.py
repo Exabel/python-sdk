@@ -1,5 +1,6 @@
 from typing import Optional, Sequence, Tuple
 
+from exabel_data_sdk.client.api.calendar_api import CalendarApi
 from exabel_data_sdk.client.api.data_set_api import DataSetApi
 from exabel_data_sdk.client.api.derived_signal_api import DerivedSignalApi
 from exabel_data_sdk.client.api.entity_api import EntityApi
@@ -23,6 +24,7 @@ class ExabelClient:
     def __init__(
         self,
         api_key: Optional[str] = None,
+        access_token: Optional[str] = None,
         client_name: Optional[str] = None,
         data_api_host: Optional[str] = None,
         analytics_api_host: Optional[str] = None,
@@ -38,10 +40,11 @@ class ExabelClient:
         Initialize a new client.
 
         Args:
-            api_key:             API key to use. If not set, the API key must be set using the
-                                 environment variable EXABEL_API_KEY. If set to the value 'NO_KEY',
-                                 the client will use an insecure channel, typically used for local
-                                 testing.
+            api_key:             API key to use. Only one of api_key and access_token must be
+                                 given. If set to the value 'NO_KEY', the client will use an
+                                 insecure channel, typically used for local testing.
+            access_token:        Access token to use. Only one of api_key and access_token must be
+                                 given.
             client_name:         Override name of this client. Default name is "Exabel Python SDK".
             data_api_host:       Override default Exabel Data API host.
             analytics_api_host:  Override default Exabel Analytics API host.
@@ -54,6 +57,7 @@ class ExabelClient:
         """
         config = ClientConfig(
             api_key=api_key,
+            access_token=access_token,
             client_name=client_name,
             data_api_host=data_api_host,
             analytics_api_host=analytics_api_host,
@@ -77,6 +81,7 @@ class ExabelClient:
         self.user_api = UserApi(config)
         self.library_api = LibraryApi(config)
         self.kpi_api = KpiApi(config)
+        self.calendar_api = CalendarApi(config)
         self.namespace_api = NamespaceApi(config)
         self._namespace: Optional[str] = None
 

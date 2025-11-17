@@ -98,10 +98,7 @@ def _bulk_insert(
                         results,
                         resource,
                         insert_func,
-                        # Python 3.9 added support for the shutdown argument 'cancel_futures'.
-                        # We should set this argument to True once we have moved to this python
-                        # version.
-                        lambda: executor.shutdown(wait=False),
+                        lambda: executor.shutdown(wait=False, cancel_futures=True),
                     )
         if results.abort:
             raise BulkInsertFailedError()

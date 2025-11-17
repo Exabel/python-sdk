@@ -84,7 +84,7 @@ line_length = 100
 ensure_newline_before_comments = true
 
 [tool.mypy]
-python_version = "3.9"
+python_version = "3.10"
 # Searching for installed packages in mypy apparently does not play well with pipenv.
 ignore_missing_imports = true
 check_untyped_defs = true

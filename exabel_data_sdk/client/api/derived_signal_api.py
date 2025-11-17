@@ -34,9 +34,9 @@ class DerivedSignalApi:
                     If not provided, the signal will be put in the default analytics API folder.
         """
         response = self.client.create_derived_signal(
-            CreateDerivedSignalRequest(signal=signal.to_proto(), folder=folder)
+            CreateDerivedSignalRequest(signal=signal.to_analytics_api_proto(), folder=folder)
         )
-        return DerivedSignal.from_proto(response)
+        return DerivedSignal.from_analytics_api_proto(response)
 
     def get_derived_signal(self, name: str) -> Optional[DerivedSignal]:
         """
@@ -53,7 +53,7 @@ class DerivedSignalApi:
             if error.error_type == ErrorType.NOT_FOUND:
                 return None
             raise
-        return DerivedSignal.from_proto(response)
+        return DerivedSignal.from_analytics_api_proto(response)
 
     def update_derived_signal(self, signal: DerivedSignal) -> DerivedSignal:
         """
@@ -63,9 +63,9 @@ class DerivedSignalApi:
             signal: The derived signal to update.
         """
         response = self.client.update_derived_signal(
-            UpdateDerivedSignalRequest(signal=signal.to_proto())
+            UpdateDerivedSignalRequest(signal=signal.to_analytics_api_proto())
         )
-        return DerivedSignal.from_proto(response)
+        return DerivedSignal.from_analytics_api_proto(response)
 
     def delete_derived_signal(self, name: str) -> None:
         """

@@ -1,8 +1,9 @@
-from typing import Iterator, Optional
+from typing import Dict, Iterator, List, Optional
 
 from google.protobuf.field_mask_pb2 import FieldMask
 
 from exabel_data_sdk.client.api.api_client.grpc.signal_grpc_client import SignalGrpcClient
+from exabel_data_sdk.client.api.data_classes.derived_signal import DerivedSignal
 from exabel_data_sdk.client.api.data_classes.paging_result import PagingResult
 from exabel_data_sdk.client.api.data_classes.request_error import ErrorType, RequestError
 from exabel_data_sdk.client.api.data_classes.signal import Signal
@@ -11,6 +12,7 @@ from exabel_data_sdk.client.client_config import ClientConfig
 from exabel_data_sdk.stubs.exabel.api.data.v1.all_pb2 import (
     CreateSignalRequest,
     DeleteSignalRequest,
+    FilterDerivedSignalsRequest,
     GetSignalRequest,
     ListSignalsRequest,
     UpdateSignalRequest,
@@ -125,3 +127,29 @@ class SignalApi(PageableResourceMixin):
         self.client.delete_signal(
             DeleteSignalRequest(name=name),
         )
+
+    def filter_derived_signals(self, entity_names: List[str]) -> Dict[str, List[DerivedSignal]]:
+        """
+        Filter derived signals by entity names.
+
+        Gets all derived signals that apply to at least one of several entities.
+
+        Selects from all derived data signals available to your customer (including those
+        created by you, in the global catalog, and from data sets you are subscribed to),
+        those signals that apply to at least one of the requested entities.
+
+        Args:
+            entity_names:   The resource names of the entities to filter on. At least one
+                            entity must be specified. A derived signal is returned only if
+                            at least one of the entities are included in the signal.
+
+        Returns:
+            Dictionary mapping data set resource names to DerivedSignals collections.
+        """
+        response = self.client.filter_derived_signals(
+            FilterDerivedSignalsRequest(entity_names=entity_names)
+        )
+        return {
+            dataset_name: [DerivedSignal.from_data_api_proto(d) for d in signals.derived_signals]
+            for dataset_name, signals in response.derived_signals.items()
+        }

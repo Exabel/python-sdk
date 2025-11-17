@@ -46,17 +46,24 @@ class ExportData(CommandLineScript):
         auth_group.add_argument(
             "--reauthenticate",
             action="store_true",
-            help="Reauthenticate the default user, for example to login to a different tenant",
+            help="Reauthenticate the default user, for example to login to a different tenant "
+            "[deprecated - use --access-token]",
         )
         auth_group.add_argument(
             "--api-key",
             type=str,
-            help="Authenticate with an API key instead of an Exabel user account",
+            help="Authenticate using an API key",
+        )
+        auth_group.add_argument(
+            "--access-token",
+            type=str,
+            help="Authenticate using an access token",
         )
         auth_group.add_argument(
             "--user",
             type=str,
-            help="The Exabel user to log in as, e.g. `my_user@enterprise.com`",
+            help="The Exabel user to log in as, e.g. `my_user@enterprise.com` [deprecated - use "
+            "--access-token]",
         )
         parser.add_argument(
             "--use-test-backend",
@@ -72,11 +79,24 @@ class ExportData(CommandLineScript):
         use_test_backend: bool = False,
         user: Optional[str] = None,
         retries: int = 0,
+        access_token: Optional[str] = None,
     ) -> ExportApi:
-        """Get an `ExportApi` from an API key or user authentication."""
-        api_key = api_key or os.getenv("EXABEL_API_KEY")
+        """Get an `ExportApi` from an API key, access token, or user authentication."""
+        # Command line argument takes precedence over environment variables.
+        if not api_key and not access_token and not user:
+            api_key = os.getenv("EXABEL_API_KEY")
+            access_token = os.getenv("EXABEL_ACCESS_TOKEN")
+            if api_key and access_token:
+                raise ValueError("Only one of EXABEL_API_KEY and EXABEL_ACCESS_TOKEN can be set.")
         if api_key:
             return ExportApi.from_api_key(api_key, use_test_backend, retries=retries)
+        if access_token:
+            return ExportApi.from_access_token(access_token, use_test_backend, retries=retries)
+
+        sys.stderr.write(
+            "Username/password authentication is deprecated. Change to --access-token.\n"
+        )
+
         login = UserLogin(reauthenticate, use_test_backend, user)
         headers = login.get_auth_headers()
         return ExportApi(auth_headers=headers, backend=login.backend, retries=retries)
@@ -86,7 +106,12 @@ class ExportData(CommandLineScript):
         args = self.parse_arguments()
         self.setup_logging()
         export_api = ExportData.get_export_api(
-            args.api_key, args.reauthenticate, args.use_test_backend, args.user, args.retries
+            args.api_key,
+            args.reauthenticate,
+            args.use_test_backend,
+            args.user,
+            args.retries,
+            args.access_token,
         )
         content = export_api.run_query_bytes(query=args.query, file_format=args.format)
         with open(args.filename, "wb") as file:

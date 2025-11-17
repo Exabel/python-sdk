@@ -1,7 +1,9 @@
 from dataclasses import dataclass
 from typing import Optional, Sequence
 
-from exabel_data_sdk.client.api.data_classes.kpi_mapping_group import KpiMappingGroup
+from exabel_data_sdk.client.api.data_classes.kpi_mapping_group_reference import (
+    KpiMappingGroupReference,
+)
 from exabel_data_sdk.stubs.exabel.api.analytics.v1.kpi_messages_pb2 import (
     KpiModelFeatureWeight as ProtoKpiModelFeatureWeight,
 )
@@ -49,7 +51,7 @@ class KpiModelWeightGroup:
     """
 
     display_name: str
-    group: Optional[KpiMappingGroup]
+    group: Optional[KpiMappingGroupReference]
     weights: Sequence[KpiModelFeatureWeight]
 
     @staticmethod
@@ -57,7 +59,11 @@ class KpiModelWeightGroup:
         """Create a KpiModelWeightGroup from the given protobuf KpiModelWeightGroup."""
         return KpiModelWeightGroup(
             display_name=proto.display_name,
-            group=KpiMappingGroup.from_proto(proto.group) if proto.HasField("group") else None,
+            group=(
+                KpiMappingGroupReference.from_proto(proto.group)
+                if proto.HasField("group")
+                else None
+            ),
             weights=[KpiModelFeatureWeight.from_proto(w) for w in proto.feature_weights],
         )
 

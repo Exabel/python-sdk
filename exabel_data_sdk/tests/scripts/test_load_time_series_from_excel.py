@@ -26,7 +26,7 @@ class TestUploadTimeSeries(unittest.TestCase):
         *expected_calls,
         pit_from_file: bool = False,
         entity_type: Optional[str] = None,
-        identifier_type: Optional[str] = None
+        identifier_type: Optional[str] = None,
     ):
         """Check that the file can be imported and that it produces the given time series."""
         args = common_args + [

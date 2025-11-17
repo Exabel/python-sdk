@@ -11,7 +11,7 @@ class FileLoadingException(Generic[ResourceT], Exception):
         self,
         message: str,
         *,
-        failures: Optional[Sequence[ResourceCreationResult[ResourceT]]] = None
+        failures: Optional[Sequence[ResourceCreationResult[ResourceT]]] = None,
     ):
         super().__init__(message)
         self.message = message

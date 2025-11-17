@@ -2,7 +2,7 @@ import abc
 import argparse
 import os
 import urllib.parse
-from typing import Callable, Optional, Sequence, Tuple
+from typing import Optional, Sequence, Tuple
 
 from exabel_data_sdk import ExabelClient
 from exabel_data_sdk.scripts.command_line_script import CommandLineScript
@@ -15,20 +15,24 @@ class BaseScript(CommandLineScript, abc.ABC):
         self,
         argv: Sequence[str],
         description: str,
-        api_key_retriever: Optional[Callable[[argparse.Namespace], str]] = None,
     ):
         super().__init__(argv, description)
-        self.api_key_retriever = api_key_retriever
-        if api_key_retriever is None:
-            api_key = os.getenv("EXABEL_API_KEY")
-            help_text = "The API key to use"
-            if api_key:
-                help_text += " (found in EXABEL_API_KEY environment variable)"
-            else:
-                help_text += ". Can also be specified in the EXABEL_API_KEY environment variable."
-            group = self.parser.add_mutually_exclusive_group(required=not api_key)
-            group.add_argument("--api-key", type=str, help=help_text)
-            group.add_argument("--gcp-project-number", type=str, help=argparse.SUPPRESS)
+        api_key = os.getenv("EXABEL_API_KEY")
+        access_token = os.getenv("EXABEL_ACCESS_TOKEN")
+        group = self.parser.add_mutually_exclusive_group(required=not api_key and not access_token)
+        group.add_argument(
+            "--api-key",
+            type=str,
+            help="The API key to use. Can also be specified in the EXABEL_API_KEY environment "
+            "variable.",
+        )
+        group.add_argument(
+            "--access-token",
+            type=str,
+            help="The access token to use. Can also be specified in the EXABEL_ACCESS_TOKEN "
+            "environment variable.",
+        )
+        group.add_argument("--gcp-project-number", type=str, help=argparse.SUPPRESS)
         self.parser.add_argument(
             "--exabel-data-api-host",
             required=False,
@@ -51,11 +55,21 @@ class BaseScript(CommandLineScript, abc.ABC):
     def run(self) -> None:
         args = self.parse_arguments()
         self.setup_logging()
-        api_key = (
-            self.api_key_retriever(args) if self.api_key_retriever is not None else args.api_key
-        )
+        api_key = args.api_key
+        access_token = args.access_token
+        # Command line argument takes precedence over environment variables.
+        if not api_key and not access_token and not args.gcp_project_number:
+            api_key = os.getenv("EXABEL_API_KEY")
+            access_token = os.getenv("EXABEL_ACCESS_TOKEN")
+            if api_key and access_token:
+                raise ValueError("Only one of EXABEL_API_KEY and EXABEL_ACCESS_TOKEN can be set.")
+            if not api_key and not access_token:
+                raise ValueError(
+                    "No authentication information. Provide an API key or access token."
+                )
+
         extra_headers = []
-        if self.api_key_retriever is None and args.gcp_project_number:
+        if args.gcp_project_number:
             api_key = "NO_KEY"
             extra_headers = [
                 ("x-endpoint-api-consumer-type", "PROJECT"),
@@ -76,6 +90,7 @@ class BaseScript(CommandLineScript, abc.ABC):
             management_api_host=management_api_host,
             management_api_port=management_api_port,
             api_key=api_key,
+            access_token=access_token,
             extra_headers=extra_headers,
         )
         self.run_script(client, args)

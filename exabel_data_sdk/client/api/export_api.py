@@ -66,6 +66,18 @@ class ExportApi:
         backend = "export.api-test.exabel.com" if use_test_backend else "export.api.exabel.com"
         return ExportApi(auth_headers={"x-api-key": api_key}, backend=backend, retries=retries)
 
+    @staticmethod
+    def from_access_token(
+        access_token: str, use_test_backend: bool = False, retries: int = 0
+    ) -> "ExportApi":
+        """Create an `ExportApi` from an access token."""
+        backend = "export.api-test.exabel.com" if use_test_backend else "export.api.exabel.com"
+        return ExportApi(
+            auth_headers={"authorization": f"Bearer {access_token}"},
+            backend=backend,
+            retries=retries,
+        )
+
     def run_query_bytes(self, query: Union[str, Query], file_format: str) -> bytes:
         """
         Run an export data query, and returns a byte string with the file in the requested format.

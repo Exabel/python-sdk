@@ -1,41 +1,15 @@
 from dataclasses import dataclass
-from enum import Enum
 from typing import Optional
 
 import pandas as pd
 
+from exabel_data_sdk.client.api.data_classes.model_quality import ModelQuality
 from exabel_data_sdk.stubs.exabel.api.analytics.v1.kpi_messages_pb2 import (
     KpiModelData as ProtoKpiModelData,
 )
 from exabel_data_sdk.stubs.exabel.api.analytics.v1.kpi_messages_pb2 import (
     ModelQuality as ProtoModelQuality,
 )
-
-
-class ModelQuality(Enum):
-    """Enum representing the model quality."""
-
-    # Low model quality.
-    LOW = 1
-    # Medium model quality.
-    MEDIUM = 2
-    # High model quality.
-    HIGH = 3
-    # Very high model quality.
-    VERY_HIGH = 4
-
-    @staticmethod
-    def from_proto(proto: ProtoModelQuality.ValueType) -> "ModelQuality":
-        """Create a ModelQuality from the given protobuf ModelQuality."""
-        if proto == ProtoModelQuality.MODEL_QUALITY_LOW:
-            return ModelQuality.LOW
-        if proto == ProtoModelQuality.MODEL_QUALITY_MEDIUM:
-            return ModelQuality.MEDIUM
-        if proto == ProtoModelQuality.MODEL_QUALITY_HIGH:
-            return ModelQuality.HIGH
-        if proto == ProtoModelQuality.MODEL_QUALITY_VERY_HIGH:
-            return ModelQuality.VERY_HIGH
-        raise AssertionError("Unknown model quality")
 
 
 @dataclass
@@ -58,7 +32,9 @@ class KpiModelData:
         mape_pit:           The point-in-time MAPE (mean absolute percentage error).
         mae:                The MAE (mean absolute error).
         mae_pit:            The point-in-time MAE (mean absolute error).
+        error_count:        Number of data points used to calcuate the MAE and MAPE.
         hit_rate:           The hit rate.
+        hit_rate_count:     Number of data points used to calculate the hit rate.
         revision_1_week:    The 1 week revision.
         revision_1_month:   The 1 month revision.
         error:              Optional error, if the model estimation failed.
@@ -78,7 +54,9 @@ class KpiModelData:
     mape_pit: Optional[float]
     mae: Optional[float]
     mae_pit: Optional[float]
+    error_count: Optional[int]
     hit_rate: Optional[float]
+    hit_rate_count: Optional[int]
     revision_1_week: Optional[float]
     revision_1_month: Optional[float]
     date: Optional[pd.Timestamp]
@@ -114,7 +92,9 @@ class KpiModelData:
             mape_pit=proto.mape_pit if proto.HasField("mape_pit") else None,
             mae=proto.mae if proto.HasField("mae") else None,
             mae_pit=proto.mae_pit if proto.HasField("mae_pit") else None,
+            error_count=proto.error_count if proto.HasField("error_count") else None,
             hit_rate=proto.hit_rate if proto.HasField("hit_rate") else None,
+            hit_rate_count=proto.hit_rate_count if proto.HasField("hit_rate_count") else None,
             revision_1_week=proto.revision_1_week if proto.HasField("revision_1_week") else None,
             revision_1_month=proto.revision_1_month if proto.HasField("revision_1_month") else None,
             date=(
