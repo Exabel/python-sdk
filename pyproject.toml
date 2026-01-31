@@ -36,7 +36,6 @@ dev = [
     "ruff",
     "mypy",
     "pytest",
-    "pytest-asyncio",
     "types-protobuf",
     "types-python-dateutil",
     "types-requests",
