@@ -3,6 +3,13 @@ name: Builds and tests the Python Package on pull requests
 on:
   pull_request:
   workflow_dispatch:
+  workflow_call:
+    inputs:
+      cache-key:
+        description: 'Cache key for the build artifacts'
+        required: false
+        type: string
+        default: ''
 
 jobs:
   build-package:
@@ -28,7 +35,7 @@ jobs:
       uses: actions/cache@v5
       with:
         path: ./dist
-        key: build-cache-${{ github.sha }}
+        key: ${{ inputs.cache-key || format('build-cache-{0}', github.sha) }}
 
   test-package:
     needs: build-package
@@ -40,21 +47,31 @@ jobs:
 
     steps:
     - uses: actions/checkout@v6
-    - uses: actions/setup-python@v6
+
+    - name: "Set up Python"
+      uses: actions/setup-python@v6
       with:
+        python-version: ${{ matrix.python-version }}
+
+    - name: Install uv
+      uses: astral-sh/setup-uv@v7
+      with:
+        enable-cache: true
         python-version: ${{ matrix.python-version }}
 
     - name: Recover cache
       uses: actions/cache@v5
       with:
         path: ./dist
-        key: build-cache-${{ github.sha }}
+        key: ${{ inputs.cache-key || format('build-cache-{0}', github.sha) }}
 
     - name: Install SDK from cache
+      env:
+        UV_SYSTEM_PYTHON: 1
       run: |
         PACKAGE=$(ls ./dist/ | grep -P .+\.whl$)
-        pip install ./dist/$PACKAGE --no-cache-dir
-        pip install pytest
+        uv pip install "./dist/$PACKAGE[snowflake,bigquery,athena]"
+        uv pip install pytest
 
     - name: Run unit tests
       run: ./test_installed.sh

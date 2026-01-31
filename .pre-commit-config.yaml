@@ -25,6 +25,7 @@ repos:
       - id: trailing-whitespace
         exclude: \.md$
       - id: end-of-file-fixer
+      - id: check-yaml
       - id: check-toml
       - id: debug-statements  # no lines with breakpoints()
       - id: check-merge-conflict
