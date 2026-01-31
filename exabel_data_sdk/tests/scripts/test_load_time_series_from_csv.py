@@ -29,9 +29,6 @@ from exabel_data_sdk.util.resource_name_normalization import validate_signal_nam
 common_args = ["script-name", "--sep", ";", "--api-key", "123"]
 
 
-# pylint: disable=protected-access
-
-
 class TestUploadTimeSeries(unittest.TestCase):
     def setUp(self) -> None:
         self.client = mock.create_autospec(ExabelClient)

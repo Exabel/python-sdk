@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import Optional, Sequence
+from typing import Sequence
 
 from exabel_data_sdk.client.api.data_classes.kpi_mapping_model import KpiMappingModel
 from exabel_data_sdk.client.api.data_classes.kpi_model import KpiModel
@@ -20,8 +20,8 @@ class CompanyKpiModels:
         kpi_mapping_models: The KPI mapping models.
     """
 
-    exabel_model: Optional[KpiModel]
-    hierarchical_model: Optional[KpiModel]
+    exabel_model: KpiModel | None
+    hierarchical_model: KpiModel | None
     custom_models: Sequence[KpiModel]
     kpi_mapping_models: Sequence[KpiMappingModel]
 

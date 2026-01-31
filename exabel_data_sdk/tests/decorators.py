@@ -1,18 +1,18 @@
 import importlib.util
 import unittest
-from typing import Callable, Type, TypeVar
+from typing import Callable, TypeVar
 
 T = TypeVar("T")
 
 
-def requires_modules(*modules: str) -> Callable[..., Type[T]]:
+def requires_modules(*modules: str) -> Callable[..., type[T]]:
     """
     Decorator for a class containing tests that require optional dependencies.
 
     If the modules are not importable, the tests are skipped.
     """
 
-    def wrapper(original_class: Type[T]) -> Type[T]:
+    def wrapper(original_class: type[T]) -> type[T]:
         not_importable = []
         for module in modules:
             if not _is_importable(module):

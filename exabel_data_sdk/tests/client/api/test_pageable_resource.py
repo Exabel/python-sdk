@@ -1,12 +1,12 @@
 import unittest
-from typing import Iterator, Optional, Sequence
+from typing import Iterator, Sequence
 
 from exabel_data_sdk.client.api.data_classes.paging_result import PagingResult
 from exabel_data_sdk.client.api.pageable_resource import PageableResourceMixin
 
 
 class _PageableApiMock(PageableResourceMixin):
-    def __init__(self, resources: Sequence[str], total_sizes: Optional[Sequence[int]] = None):
+    def __init__(self, resources: Sequence[str], total_sizes: Sequence[int] | None = None):
         self.resources = resources
         if total_sizes is not None:
             self.total_sizes = total_sizes
@@ -14,7 +14,7 @@ class _PageableApiMock(PageableResourceMixin):
             self.total_sizes = [len(resources)] * len(resources)
 
     def get_resource_page(
-        self, page_size: Optional[int] = None, page_token: Optional[str] = None
+        self, page_size: int | None = None, page_token: str | None = None
     ) -> PagingResult[str]:
         """Return a page of resources."""
         assert page_size == 1

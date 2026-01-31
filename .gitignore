@@ -1,7 +1,19 @@
-build
+# Distribution
 dist
 *.egg-info
 *.pyc
 __pycache__
-/.idea/
 .DS_Store
+
+# Virtual environment
+.venv
+
+# Linters
+.mypy_cache
+.pytest_cache
+.ruff_cache
+
+# IDE
+/.idea/
+.claude/
+.vscode/

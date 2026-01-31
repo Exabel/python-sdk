@@ -1,5 +1,4 @@
 from enum import Enum
-from typing import Optional
 
 from google.protobuf.wrappers_pb2 import Int32Value
 
@@ -68,10 +67,10 @@ class DerivedSignalMetaData:
     def __init__(
         self,
         unit: DerivedSignalUnit = DerivedSignalUnit.NUMBER,
-        decimals: Optional[int] = None,
+        decimals: int | None = None,
         signal_type: DerivedSignalType = DerivedSignalType.DERIVED_SIGNAL,
-        downsampling_method: Optional[Aggregation.ValueType] = None,
-        change: Optional[Change.ValueType] = None,
+        downsampling_method: Aggregation.ValueType | None = None,
+        change: Change.ValueType | None = None,
     ):
         """
         Create metadata for a derived signal.
@@ -111,11 +110,9 @@ class DerivedSignalMetaData:
             decimals=Int32Value(value=self.decimals) if self.decimals is not None else None,
             type=self.signal_type.value,
             downsampling_method=(
-                int(self.downsampling_method)
-                if self.downsampling_method
-                else 0  # type: ignore[arg-type]
+                self.downsampling_method if self.downsampling_method else Aggregation.ValueType(0)
             ),
-            change=int(self.change) if self.change else 0,  # type: ignore[arg-type]
+            change=self.change if self.change else Change.ValueType(0),
         )
 
     def __eq__(self, other: object) -> bool:
@@ -154,11 +151,11 @@ class DerivedSignal:
 
     def __init__(
         self,
-        name: Optional[str],
+        name: str | None,
         label: str,
         expression: str,
-        description: Optional[str] = None,
-        display_name: Optional[str] = None,
+        description: str | None = None,
+        display_name: str | None = None,
         metadata: DerivedSignalMetaData = DerivedSignalMetaData(),
     ):
         """

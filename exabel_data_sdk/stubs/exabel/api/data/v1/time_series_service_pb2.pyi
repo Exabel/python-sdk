@@ -230,7 +230,7 @@ class UpdateTimeSeriesRequest(google.protobuf.message.Message):
 
     @property
     def update_options(self) -> global___UpdateOptions:
-        """Update uptions for this request."""
+        """Update options for this request."""
 
     @property
     def default_known_time(self) -> exabel.api.data.v1.time_series_messages_pb2.DefaultKnownTime:
@@ -291,7 +291,7 @@ class ImportTimeSeriesRequest(google.protobuf.message.Message):
 
     @property
     def update_options(self) -> global___UpdateOptions:
-        """Update uptions for this request."""
+        """Update options for this request."""
 
     @property
     def default_known_time(self) -> exabel.api.data.v1.time_series_messages_pb2.DefaultKnownTime:

@@ -1,6 +1,6 @@
 import functools
 import warnings
-from typing import Any, Callable, Optional, TypeVar, overload
+from typing import Any, Callable, TypeVar, overload
 
 from exabel_data_sdk.util.warnings import ExabelDeprecationWarning
 
@@ -9,29 +9,29 @@ FunctionT = TypeVar("FunctionT", bound=Callable[..., Any])
 
 @overload
 def deprecate_arguments(
-    **deprecation_replacements: Optional[str],
+    **deprecation_replacements: str | None,
 ) -> Callable[[FunctionT], FunctionT]: ...
 
 
 @overload
 def deprecate_arguments(
-    __func: None,  # pylint: disable=invalid-name
-    **deprecation_replacements: Optional[str],
+    __func: None,
+    **deprecation_replacements: str | None,
 ) -> Callable[[FunctionT], FunctionT]: ...
 
 
 @overload
 def deprecate_arguments(
-    __func: FunctionT,  # pylint: disable=invalid-name
-    **deprecation_replacements: Optional[str],
+    __func: FunctionT,
+    **deprecation_replacements: str | None,
 ) -> FunctionT: ...
 
 
 # Pylint flags '__func' as an invalid argument name, but we want the '__' prefix to make Mypy
 # interpret it as a positional-only argument. Therefore, we disable the check for this argument.
 def deprecate_arguments(
-    __func: Optional[FunctionT] = None,  # pylint: disable=invalid-name
-    **deprecation_replacements: Optional[str],
+    __func: FunctionT | None = None,
+    **deprecation_replacements: str | None,
 ) -> FunctionT:
     """
     Decorator for warning about and replacing deprecated arguments in a function that will be
@@ -95,20 +95,20 @@ def deprecate_argument_value(
 
 @overload
 def deprecate_argument_value(
-    __func: None,  # pylint: disable=invalid-name
+    __func: None,
     **deprecated_values: object,
 ) -> Callable[[FunctionT], FunctionT]: ...
 
 
 @overload
 def deprecate_argument_value(
-    __func: FunctionT,  # pylint: disable=invalid-name
+    __func: FunctionT,
     **deprecated_values: object,
 ) -> FunctionT: ...
 
 
 def deprecate_argument_value(
-    __func: Optional[FunctionT] = None,  # pylint: disable=invalid-name
+    __func: FunctionT | None = None,
     **deprecated_values: object,
 ) -> FunctionT:
     """

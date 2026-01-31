@@ -20,7 +20,7 @@ class TestLoggingThreadPoolExecutor(unittest.TestCase):
         futures = [executor.submit(task) for _ in range(2)]
 
         for _ in range(2):
-            start_semaphore.acquire()  # pylint: disable=consider-using-with
+            start_semaphore.acquire()
         self.assertEqual(executor.running_threads, 2)
 
         start_barrier.wait()

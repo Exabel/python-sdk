@@ -1,6 +1,6 @@
 import abc
 import logging
-from typing import Iterable, Iterator, NewType, Optional, Union
+from typing import Iterable, Iterator, NewType
 
 import pandas as pd
 
@@ -22,7 +22,7 @@ class SqlReader(abc.ABC):
     """
 
     @staticmethod
-    def get_data_frame(df: Union[pd.DataFrame, Iterable[pd.DataFrame]]) -> pd.DataFrame:
+    def get_data_frame(df: pd.DataFrame | Iterable[pd.DataFrame]) -> pd.DataFrame:
         """Return the first `DataFrame` if given an iterable, or the given `DataFrame`."""
         if isinstance(df, pd.DataFrame):
             return df
@@ -46,10 +46,10 @@ class SqlReader(abc.ABC):
     def read_sql_query_and_write_result(
         self,
         query: Query,
-        output_file: Optional[OutputFile] = None,
+        output_file: OutputFile | None = None,
         *,
-        batch_size: Optional[BatchSize] = None,
-    ) -> Optional[FileWritingResult]:
+        batch_size: BatchSize | None = None,
+    ) -> FileWritingResult | None:
         """
         Execute the given query and write the result to the given output file. If no output file is
         given, print a sample instead.

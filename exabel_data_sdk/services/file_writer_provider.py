@@ -1,5 +1,4 @@
 from pathlib import Path
-from typing import Type
 
 from exabel_data_sdk.services.csv_writer import CsvWriter
 from exabel_data_sdk.services.excel_writer import ExcelWriter
@@ -22,7 +21,7 @@ class FileWriterProvider:
         return "".join(suffixes)
 
     @classmethod
-    def get_file_writer(cls, filepath: str) -> Type[FileWriter]:
+    def get_file_writer(cls, filepath: str) -> type[FileWriter]:
         """Return the file writer for the given filepath."""
         extension = cls.get_file_extension(filepath)
         if extension in FULL_CSV_EXTENSIONS:

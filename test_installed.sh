@@ -9,4 +9,4 @@ echo "__path__ = __import__('pkgutil').extend_path(__path__, __name__)" >> ${PYT
 echo "__path__ = __import__('pkgutil').extend_path(__path__, __name__)" > tests/__init__.py
 
 cd ./tests/
-python -m unittest discover -s ./exabel_data_sdk/tests
+pytest ./exabel_data_sdk/tests

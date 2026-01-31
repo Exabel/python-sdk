@@ -3,7 +3,7 @@ from __future__ import annotations
 import logging
 from collections import Counter
 from enum import Enum
-from typing import Generic, MutableSequence, Optional, Sequence, Set, TypeVar
+from typing import Generic, MutableSequence, Sequence, TypeVar
 
 import numpy as np
 import pandas as pd
@@ -62,11 +62,11 @@ class ResourceCreationResult(Generic[ResourceT]):
     def __init__(
         self,
         status: ResourceCreationStatus,
-        resource: Optional[ResourceT] = None,
-        error: Optional[RequestError] = None,
+        resource: ResourceT | None = None,
+        error: RequestError | None = None,
     ):
         self.status = status
-        self.resource: Optional[ResourceT] = (
+        self.resource: ResourceT | None = (
             None if status != ResourceCreationStatus.FAILED else resource
         )
         self.resource_name = get_resource_name(resource)
@@ -107,7 +107,7 @@ class ResourceCreationResults(Generic[ResourceT]):
         self,
         total_count: int,
         print_status: bool = True,
-        abort_threshold: Optional[float] = DEFAULT_ABORT_THRESHOLD,
+        abort_threshold: float | None = DEFAULT_ABORT_THRESHOLD,
     ) -> None:
         """
         Args:
@@ -128,7 +128,7 @@ class ResourceCreationResults(Generic[ResourceT]):
         )
 
     @staticmethod
-    def _get_progress_checkpoints(total: int, checkpoints: int) -> Set[int]:
+    def _get_progress_checkpoints(total: int, checkpoints: int) -> set[int]:
         """
         Return a list of progress checkpoints.
         """
@@ -155,7 +155,7 @@ class ResourceCreationResults(Generic[ResourceT]):
             if count > 20 and count != self.total_count:
                 self.check_failures()
 
-    def count(self, status: Optional[ResourceCreationStatus] = None) -> int:
+    def count(self, status: ResourceCreationStatus | None = None) -> int:
         """
         Number of results with the given status,
         or total number of results if no status is specified.
@@ -213,7 +213,7 @@ class ResourceCreationResults(Generic[ResourceT]):
                     self.abort_threshold * 100,
                 )
 
-    def print_summary(self, failure_log_limit: Optional[int] = FAILURE_LOG_LIMIT) -> None:
+    def print_summary(self, failure_log_limit: int | None = FAILURE_LOG_LIMIT) -> None:
         """Prints a human legible summary of the resource creation results to screen."""
         if self.counter[ResourceCreationStatus.CREATED]:
             logger.info("%s new resources created", self.counter[ResourceCreationStatus.CREATED])

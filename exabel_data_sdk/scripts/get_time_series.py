@@ -72,9 +72,7 @@ class GetTimeSeries(BaseScript):
             )
 
         pd.set_option("display.max_rows", None)
-        pd.set_option(
-            "display.float_format", "{:}".format  # pylint: disable=consider-using-f-string
-        )
+        pd.set_option("display.float_format", "{:}".format)
         print(result)
 
 

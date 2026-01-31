@@ -1,5 +1,3 @@
-from typing import Optional
-
 from google.protobuf.field_mask_pb2 import FieldMask
 
 from exabel_data_sdk.client.api.data_classes.paging_result import PagingResult
@@ -9,7 +7,6 @@ from exabel_data_sdk.client.api.relationship_api import RelationshipApi
 from exabel_data_sdk.tests.client.api.mock_resource_store import MockResourceStore
 
 
-# pylint: disable=super-init-not-called
 class MockRelationshipApi(RelationshipApi):
     """
     Mock of the RelationshipApi class for CRUD operations on relationships and relationship types.
@@ -29,11 +26,11 @@ class MockRelationshipApi(RelationshipApi):
         return (relationship.relationship_type, relationship.from_entity, relationship.to_entity)
 
     def list_relationship_types(
-        self, page_size: int = 1000, page_token: Optional[str] = None
+        self, page_size: int = 1000, page_token: str | None = None
     ) -> PagingResult[RelationshipType]:
         return self.types.list()
 
-    def get_relationship_type(self, name: str) -> Optional[RelationshipType]:
+    def get_relationship_type(self, name: str) -> RelationshipType | None:
         return self.types.get(name)
 
     def create_relationship_type(self, relationship_type: RelationshipType) -> RelationshipType:
@@ -42,8 +39,8 @@ class MockRelationshipApi(RelationshipApi):
     def update_relationship_type(
         self,
         relationship_type: RelationshipType,
-        update_mask: Optional[FieldMask] = None,
-        allow_missing: Optional[bool] = None,
+        update_mask: FieldMask | None = None,
+        allow_missing: bool | None = None,
     ) -> RelationshipType:
         raise NotImplementedError()
 
@@ -55,7 +52,7 @@ class MockRelationshipApi(RelationshipApi):
         relationship_type: str,
         from_entity: str,
         page_size: int = 1000,
-        page_token: Optional[str] = None,
+        page_token: str | None = None,
     ) -> PagingResult[Relationship]:
         # Note: This implementation ignores page_size and page_token
         return self.relationships.list(
@@ -69,7 +66,7 @@ class MockRelationshipApi(RelationshipApi):
         relationship_type: str,
         to_entity: str,
         page_size: int = 1000,
-        page_token: Optional[str] = None,
+        page_token: str | None = None,
     ) -> PagingResult[Relationship]:
         # Note: This implementation ignores page_size and page_token
         return self.relationships.list(
@@ -80,7 +77,7 @@ class MockRelationshipApi(RelationshipApi):
 
     def get_relationship(
         self, relationship_type: str, from_entity: str, to_entity: str
-    ) -> Optional[Relationship]:
+    ) -> Relationship | None:
         return self.relationships.get((relationship_type, from_entity, to_entity))
 
     def create_relationship(self, relationship: Relationship) -> Relationship:
@@ -89,8 +86,8 @@ class MockRelationshipApi(RelationshipApi):
     def update_relationship(
         self,
         relationship: Relationship,
-        update_mask: Optional[FieldMask] = None,
-        allow_missing: Optional[bool] = None,
+        update_mask: FieldMask | None = None,
+        allow_missing: bool | None = None,
     ) -> Relationship:
         # Note: The mock implementation ignores update_mask
         return self.relationships.update(relationship, self._key(relationship), allow_missing)
@@ -102,7 +99,7 @@ class MockRelationshipApi(RelationshipApi):
         self,
         relationship_type: str,
         page_size: int = 1000,
-        page_token: Optional[str] = None,
+        page_token: str | None = None,
     ) -> PagingResult[Relationship]:
         # Note: This implementation ignores page_size and page_token
         return self.relationships.list(predicate=lambda r: r.relationship_type == relationship_type)

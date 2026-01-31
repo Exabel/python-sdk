@@ -1,0 +1,52 @@
+"""Generated protocol buffer code."""
+from google.protobuf import descriptor as _descriptor
+from google.protobuf import descriptor_pool as _descriptor_pool
+from google.protobuf import runtime_version as _runtime_version
+from google.protobuf import symbol_database as _symbol_database
+from google.protobuf.internal import builder as _builder
+_runtime_version.ValidateProtobufRuntimeVersion(_runtime_version.Domain.PUBLIC, 5, 29, 0, '', 'exabel/api/data/v1/holiday_service.proto')
+_sym_db = _symbol_database.Default()
+from .....exabel.api.data.v1 import holiday_messages_pb2 as exabel_dot_api_dot_data_dot_v1_dot_holiday__messages__pb2
+from google.api import annotations_pb2 as google_dot_api_dot_annotations__pb2
+from google.api import field_behavior_pb2 as google_dot_api_dot_field__behavior__pb2
+from google.protobuf import empty_pb2 as google_dot_protobuf_dot_empty__pb2
+from .....protoc_gen_openapiv2.options import annotations_pb2 as protoc__gen__openapiv2_dot_options_dot_annotations__pb2
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n(exabel/api/data/v1/holiday_service.proto\x12\x12exabel.api.data.v1\x1a)exabel/api/data/v1/holiday_messages.proto\x1a\x1cgoogle/api/annotations.proto\x1a\x1fgoogle/api/field_behavior.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a.protoc_gen_openapiv2/options/annotations.proto"I\n ListHolidaySpecificationsRequest\x12\x11\n\tpage_size\x18\x01 \x01(\x05\x12\x12\n\npage_token\x18\x02 \x01(\t"\x86\x01\n!ListHolidaySpecificationsResponse\x12H\n\x16holiday_specifications\x18\x01 \x03(\x0b2(.exabel.api.data.v1.HolidaySpecification\x12\x17\n\x0fnext_page_token\x18\x02 \x01(\t"q\n\x1eGetHolidaySpecificationRequest\x12O\n\x04name\x18\x01 \x01(\tBA\x92A;J\x1b"holidaySpecifications/123"\xca>\x1b\xfa\x02\x18holidaySpecificationName\xe0A\x02"q\n!CreateHolidaySpecificationRequest\x12L\n\x15holiday_specification\x18\x01 \x01(\x0b2(.exabel.api.data.v1.HolidaySpecificationB\x03\xe0A\x02"q\n!UpdateHolidaySpecificationRequest\x12L\n\x15holiday_specification\x18\x01 \x01(\x0b2(.exabel.api.data.v1.HolidaySpecificationB\x03\xe0A\x02"t\n!DeleteHolidaySpecificationRequest\x12O\n\x04name\x18\x01 \x01(\tBA\x92A;J\x1b"holidaySpecifications/123"\xca>\x1b\xfa\x02\x18holidaySpecificationName\xe0A\x022\xb2\x08\n\x0eHolidayService\x12\xcb\x01\n\x19ListHolidaySpecifications\x124.exabel.api.data.v1.ListHolidaySpecificationsRequest\x1a5.exabel.api.data.v1.ListHolidaySpecificationsResponse"A\x92A\x1d\x12\x1bList holiday specifications\x82\xd3\xe4\x93\x02\x1b\x12\x19/v1/holidaySpecifications\x12\xc1\x01\n\x17GetHolidaySpecification\x122.exabel.api.data.v1.GetHolidaySpecificationRequest\x1a(.exabel.api.data.v1.HolidaySpecification"H\x92A\x1b\x12\x19Get holiday specification\x82\xd3\xe4\x93\x02$\x12"/v1/{name=holidaySpecifications/*}\x12\xd8\x01\n\x1aCreateHolidaySpecification\x125.exabel.api.data.v1.CreateHolidaySpecificationRequest\x1a(.exabel.api.data.v1.HolidaySpecification"Y\x92A\x1e\x12\x1cCreate holiday specification\x82\xd3\xe4\x93\x022"\x19/v1/holidaySpecifications:\x15holiday_specification\x12\xf7\x01\n\x1aUpdateHolidaySpecification\x125.exabel.api.data.v1.UpdateHolidaySpecificationRequest\x1a(.exabel.api.data.v1.HolidaySpecification"x\x92A\x1e\x12\x1cUpdate holiday specification\x82\xd3\xe4\x93\x02Q28/v1/{holiday_specification.name=holidaySpecifications/*}:\x15holiday_specification\x12\xb8\x01\n\x1aDeleteHolidaySpecification\x125.exabel.api.data.v1.DeleteHolidaySpecificationRequest\x1a\x16.google.protobuf.Empty"K\x92A\x1e\x12\x1cDelete holiday specification\x82\xd3\xe4\x93\x02$*"/v1/{name=holidaySpecifications/*}BG\n\x16com.exabel.api.data.v1B\x13HolidayServiceProtoP\x01Z\x16exabel.com/api/data/v1b\x06proto3')
+_globals = globals()
+_builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
+_builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'exabel.api.data.v1.holiday_service_pb2', _globals)
+if not _descriptor._USE_C_DESCRIPTORS:
+    _globals['DESCRIPTOR']._loaded_options = None
+    _globals['DESCRIPTOR']._serialized_options = b'\n\x16com.exabel.api.data.v1B\x13HolidayServiceProtoP\x01Z\x16exabel.com/api/data/v1'
+    _globals['_GETHOLIDAYSPECIFICATIONREQUEST'].fields_by_name['name']._loaded_options = None
+    _globals['_GETHOLIDAYSPECIFICATIONREQUEST'].fields_by_name['name']._serialized_options = b'\x92A;J\x1b"holidaySpecifications/123"\xca>\x1b\xfa\x02\x18holidaySpecificationName\xe0A\x02'
+    _globals['_CREATEHOLIDAYSPECIFICATIONREQUEST'].fields_by_name['holiday_specification']._loaded_options = None
+    _globals['_CREATEHOLIDAYSPECIFICATIONREQUEST'].fields_by_name['holiday_specification']._serialized_options = b'\xe0A\x02'
+    _globals['_UPDATEHOLIDAYSPECIFICATIONREQUEST'].fields_by_name['holiday_specification']._loaded_options = None
+    _globals['_UPDATEHOLIDAYSPECIFICATIONREQUEST'].fields_by_name['holiday_specification']._serialized_options = b'\xe0A\x02'
+    _globals['_DELETEHOLIDAYSPECIFICATIONREQUEST'].fields_by_name['name']._loaded_options = None
+    _globals['_DELETEHOLIDAYSPECIFICATIONREQUEST'].fields_by_name['name']._serialized_options = b'\x92A;J\x1b"holidaySpecifications/123"\xca>\x1b\xfa\x02\x18holidaySpecificationName\xe0A\x02'
+    _globals['_HOLIDAYSERVICE'].methods_by_name['ListHolidaySpecifications']._loaded_options = None
+    _globals['_HOLIDAYSERVICE'].methods_by_name['ListHolidaySpecifications']._serialized_options = b'\x92A\x1d\x12\x1bList holiday specifications\x82\xd3\xe4\x93\x02\x1b\x12\x19/v1/holidaySpecifications'
+    _globals['_HOLIDAYSERVICE'].methods_by_name['GetHolidaySpecification']._loaded_options = None
+    _globals['_HOLIDAYSERVICE'].methods_by_name['GetHolidaySpecification']._serialized_options = b'\x92A\x1b\x12\x19Get holiday specification\x82\xd3\xe4\x93\x02$\x12"/v1/{name=holidaySpecifications/*}'
+    _globals['_HOLIDAYSERVICE'].methods_by_name['CreateHolidaySpecification']._loaded_options = None
+    _globals['_HOLIDAYSERVICE'].methods_by_name['CreateHolidaySpecification']._serialized_options = b'\x92A\x1e\x12\x1cCreate holiday specification\x82\xd3\xe4\x93\x022"\x19/v1/holidaySpecifications:\x15holiday_specification'
+    _globals['_HOLIDAYSERVICE'].methods_by_name['UpdateHolidaySpecification']._loaded_options = None
+    _globals['_HOLIDAYSERVICE'].methods_by_name['UpdateHolidaySpecification']._serialized_options = b'\x92A\x1e\x12\x1cUpdate holiday specification\x82\xd3\xe4\x93\x02Q28/v1/{holiday_specification.name=holidaySpecifications/*}:\x15holiday_specification'
+    _globals['_HOLIDAYSERVICE'].methods_by_name['DeleteHolidaySpecification']._loaded_options = None
+    _globals['_HOLIDAYSERVICE'].methods_by_name['DeleteHolidaySpecification']._serialized_options = b'\x92A\x1e\x12\x1cDelete holiday specification\x82\xd3\xe4\x93\x02$*"/v1/{name=holidaySpecifications/*}'
+    _globals['_LISTHOLIDAYSPECIFICATIONSREQUEST']._serialized_start = 247
+    _globals['_LISTHOLIDAYSPECIFICATIONSREQUEST']._serialized_end = 320
+    _globals['_LISTHOLIDAYSPECIFICATIONSRESPONSE']._serialized_start = 323
+    _globals['_LISTHOLIDAYSPECIFICATIONSRESPONSE']._serialized_end = 457
+    _globals['_GETHOLIDAYSPECIFICATIONREQUEST']._serialized_start = 459
+    _globals['_GETHOLIDAYSPECIFICATIONREQUEST']._serialized_end = 572
+    _globals['_CREATEHOLIDAYSPECIFICATIONREQUEST']._serialized_start = 574
+    _globals['_CREATEHOLIDAYSPECIFICATIONREQUEST']._serialized_end = 687
+    _globals['_UPDATEHOLIDAYSPECIFICATIONREQUEST']._serialized_start = 689
+    _globals['_UPDATEHOLIDAYSPECIFICATIONREQUEST']._serialized_end = 802
+    _globals['_DELETEHOLIDAYSPECIFICATIONREQUEST']._serialized_start = 804
+    _globals['_DELETEHOLIDAYSPECIFICATIONREQUEST']._serialized_end = 920
+    _globals['_HOLIDAYSERVICE']._serialized_start = 923
+    _globals['_HOLIDAYSERVICE']._serialized_end = 1997

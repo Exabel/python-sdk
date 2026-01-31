@@ -1,6 +1,5 @@
 from dataclasses import dataclass
 from datetime import datetime
-from typing import Optional
 
 from dateutil import tz
 from google.protobuf.timestamp_pb2 import Timestamp as ProtoTimestamp
@@ -22,11 +21,11 @@ class TagMetaData:
         write_access:  Whether the current user has write access to the tag.
     """
 
-    create_time: Optional[datetime]
-    update_time: Optional[datetime]
-    created_by: Optional[str]
-    updated_by: Optional[str]
-    write_access: Optional[bool]
+    create_time: datetime | None
+    update_time: datetime | None
+    created_by: str | None
+    updated_by: str | None
+    write_access: bool | None
 
     @classmethod
     def from_proto(cls, metadata: ProtoTagMetadata) -> "TagMetaData":
@@ -50,11 +49,11 @@ class TagMetaData:
         )
 
     @staticmethod
-    def _proto_timestamp_to_datetime(timestamp: ProtoTimestamp) -> Optional[datetime]:
+    def _proto_timestamp_to_datetime(timestamp: ProtoTimestamp) -> datetime | None:
         return datetime.fromtimestamp(timestamp.seconds, tz=tz.tzutc())
 
     @staticmethod
-    def _datetime_to_proto_timestamp(date: Optional[datetime]) -> Optional[ProtoTimestamp]:
+    def _datetime_to_proto_timestamp(date: datetime | None) -> ProtoTimestamp | None:
         if date is None:
             return date
         timestamp = ProtoTimestamp()
@@ -78,11 +77,11 @@ class Tag:
         metadata:       Metadata of the tag.
     """
 
-    name: Optional[str]
+    name: str | None
     display_name: str
-    description: Optional[str]
-    entity_type: Optional[str] = None
-    metadata: Optional[TagMetaData] = None
+    description: str | None
+    entity_type: str | None = None
+    metadata: TagMetaData | None = None
 
     @staticmethod
     def from_proto(tag: ProtoTag) -> "Tag":

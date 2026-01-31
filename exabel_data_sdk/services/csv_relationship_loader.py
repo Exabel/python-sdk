@@ -1,7 +1,7 @@
 import logging
 from dataclasses import dataclass
 from itertools import chain
-from typing import Mapping, Optional, Sequence, Set, Tuple, Union
+from typing import Mapping, Sequence
 
 from pandas import DataFrame
 
@@ -44,13 +44,13 @@ class EntityColumnConfiguration:
         index:          The index of the column.
     """
 
-    entity_type: Optional[str] = None
-    identifier_type: Optional[str] = None
-    name: Optional[str] = None
-    index: Optional[int] = None
+    entity_type: str | None = None
+    identifier_type: str | None = None
+    name: str | None = None
+    index: int | None = None
 
     @property
-    def reference(self) -> Union[str, int]:
+    def reference(self) -> str | int:
         """
         The column reference, either the column name or the column index.
         """
@@ -85,12 +85,12 @@ class RelationshipLoaderColumnConfiguration:
 
     @staticmethod
     def _validate_argument_combination(
-        from_entity_type: Optional[str] = None,
-        from_identifier_type: Optional[str] = None,
-        from_entity_column: Optional[str] = None,
-        to_entity_type: Optional[str] = None,
-        to_identifier_type: Optional[str] = None,
-        to_entity_column: Optional[str] = None,
+        from_entity_type: str | None = None,
+        from_identifier_type: str | None = None,
+        from_entity_column: str | None = None,
+        to_entity_type: str | None = None,
+        to_identifier_type: str | None = None,
+        to_entity_column: str | None = None,
     ) -> None:
         """
         Validate that the argument combination is valid.
@@ -135,8 +135,7 @@ class RelationshipLoaderColumnConfiguration:
         if to_identifier_type:
             if to_entity_type is None:
                 raise ValueError(
-                    "to_identifier_type can only be specified in combination with "
-                    "to_entity_type."
+                    "to_identifier_type can only be specified in combination with to_entity_type."
                 )
             if to_entity_type == "company":
                 if to_identifier_type not in COMPANY_SEARCH_TERM_FIELDS:
@@ -163,11 +162,11 @@ class RelationshipLoaderColumnConfiguration:
         cls,
         *,
         from_entity_type: str,
-        from_identifier_type: Optional[str] = None,
-        from_entity_column: Optional[str] = None,
+        from_identifier_type: str | None = None,
+        from_entity_column: str | None = None,
         to_entity_type: str,
-        to_identifier_type: Optional[str] = None,
-        to_entity_column: Optional[str] = None,
+        to_identifier_type: str | None = None,
+        to_entity_column: str | None = None,
     ) -> "RelationshipLoaderColumnConfiguration":
         """Create configuration from specified entity types."""
         logger.debug("Creating column configuration from entity types.")
@@ -210,12 +209,12 @@ class RelationshipLoaderColumnConfiguration:
     @classmethod
     def from_arguments(
         cls,
-        from_entity_type: Optional[str] = None,
-        from_identifier_type: Optional[str] = None,
-        from_entity_column: Optional[str] = None,
-        to_entity_type: Optional[str] = None,
-        to_identifier_type: Optional[str] = None,
-        to_entity_column: Optional[str] = None,
+        from_entity_type: str | None = None,
+        from_identifier_type: str | None = None,
+        from_entity_column: str | None = None,
+        to_entity_type: str | None = None,
+        to_identifier_type: str | None = None,
+        to_entity_column: str | None = None,
     ) -> "RelationshipLoaderColumnConfiguration":
         """
         Create a RelationshipLoaderConfiguration from the given arguments.
@@ -254,7 +253,7 @@ class RelationshipLoaderColumnConfiguration:
             return cls._from_default_values()
         raise ValueError("Cannot determine entity types and columns from provided arguments.")
 
-    def get_from_and_to_column_names(self, columns: Sequence[str]) -> Tuple[str, str]:
+    def get_from_and_to_column_names(self, columns: Sequence[str]) -> tuple[str, str]:
         """
         Get the from and to column names from the given columns.
         """
@@ -286,30 +285,30 @@ class CsvRelationshipLoader:
         self,
         *,
         filename: str,
-        entity_mapping_filename: Optional[str] = None,
+        entity_mapping_filename: str | None = None,
         separator: str = ",",
         relationship_type: str,
-        from_entity_type: Optional[str] = None,
-        from_identifier_type: Optional[str] = None,
-        from_entity_column: Optional[str] = None,
-        to_entity_type: Optional[str] = None,
-        to_identifier_type: Optional[str] = None,
-        to_entity_column: Optional[str] = None,
-        description_column: Optional[str] = None,
-        property_columns: Optional[Mapping[str, type]] = None,
+        from_entity_type: str | None = None,
+        from_identifier_type: str | None = None,
+        from_entity_column: str | None = None,
+        to_entity_type: str | None = None,
+        to_identifier_type: str | None = None,
+        to_entity_column: str | None = None,
+        description_column: str | None = None,
+        property_columns: Mapping[str, type] | None = None,
         threads: int = DEFAULT_NUMBER_OF_THREADS,
         upsert: bool = False,
         dry_run: bool = False,
         error_on_any_failure: bool = False,
         retries: int = DEFAULT_NUMBER_OF_RETRIES,
-        abort_threshold: Optional[float] = DEFAULT_ABORT_THRESHOLD,
-        batch_size: Optional[int] = None,
+        abort_threshold: float | None = DEFAULT_ABORT_THRESHOLD,
+        batch_size: int | None = None,
         return_results: bool = True,
-        total_rows: Optional[int] = None,
+        total_rows: int | None = None,
         # Deprecated arguments:
-        entity_from_column: Optional[str] = None,  # pylint: disable=unused-argument
-        entity_to_column: Optional[str] = None,  # pylint: disable=unused-argument
-        namespace: Optional[str] = None,  # pylint: disable=unused-argument
+        entity_from_column: str | None = None,
+        entity_to_column: str | None = None,
+        namespace: str | None = None,
     ) -> FileLoadingResult:
         """
         Load a CSV file and upload the relationships specified therein to the Exabel Data API.
@@ -368,7 +367,7 @@ class CsvRelationshipLoader:
         preview_df = CsvReader.read_file(
             filename, separator, string_columns=[], keep_default_na=False, nrows=0
         )
-        string_columns: Set[Union[str, int]] = set()
+        string_columns: set[str | int] = set()
         string_columns.update(
             (
                 get_case_insensitive_column(config.from_column.reference, preview_df.columns),
@@ -430,17 +429,17 @@ class CsvRelationshipLoader:
     def _load_relationships(
         self,
         data_frame: DataFrame,
-        entity_mapping: Optional[Mapping[str, Mapping[str, str]]],
+        entity_mapping: Mapping[str, Mapping[str, str]] | None,
         relationship_type_name: str,
         config: RelationshipLoaderColumnConfiguration,
-        description_column: Optional[str],
+        description_column: str | None,
         property_columns: Mapping[str, type],
         threads: int = DEFAULT_NUMBER_OF_THREADS,
         upsert: bool = False,
         dry_run: bool = False,
         error_on_any_failure: bool = False,
         retries: int = DEFAULT_NUMBER_OF_RETRIES,
-        abort_threshold: Optional[float] = DEFAULT_ABORT_THRESHOLD,
+        abort_threshold: float | None = DEFAULT_ABORT_THRESHOLD,
     ) -> FileLoadingResult:
         from_entity_column_name, to_entity_column_name = config.get_from_and_to_column_names(
             data_frame.columns

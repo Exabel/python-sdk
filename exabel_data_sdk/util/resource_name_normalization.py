@@ -3,7 +3,7 @@ import re
 import warnings
 from collections import defaultdict, deque
 from dataclasses import dataclass
-from typing import Iterator, Mapping, MutableMapping, MutableSequence, Optional, Sequence, Tuple
+from typing import Iterator, Mapping, MutableMapping, MutableSequence, Sequence
 
 import pandas as pd
 
@@ -133,7 +133,7 @@ class EntityResourceNames:
         return {key: values for key, values in result.items() if len(values) > 1}
 
 
-def get_namespace_from_resource_identifier(resource_identifier: str) -> Optional[str]:
+def get_namespace_from_resource_identifier(resource_identifier: str) -> str | None:
     """Get the namespace from a resource identifier."""
     resource_identifier_parts = resource_identifier.split(".")
     if len(resource_identifier_parts) == 1:
@@ -166,7 +166,7 @@ def _search_entities(
     identifier_type: str,
     identifiers: Sequence[str],
     entity_type: str,
-) -> Tuple[Mapping[str, str], Sequence[EntitySearchResultWarning]]:
+) -> tuple[Mapping[str, str], Sequence[EntitySearchResultWarning]]:
     logger.info("Looking up %d %ss...", len(identifiers), identifier_type)
     # Skip empty identifiers
     non_empty_identifiers: Iterator[str] = (
@@ -217,7 +217,7 @@ def _get_resource_names(
     entity_api: EntityApi,
     identifiers: Sequence[str],
     entity_type: str,
-    namespace: Optional[str] = None,
+    namespace: str | None = None,
     check_entity_types: bool = True,
     preserve_namespace: bool = False,
 ) -> Mapping[str, str]:
@@ -271,11 +271,11 @@ def _get_resource_names(
 def to_entity_resource_names(
     entity_api: EntityApi,
     identifiers: pd.Series,
-    namespace: Optional[str] = None,
-    entity_mapping: Optional[Mapping[str, Mapping[str, str]]] = None,
+    namespace: str | None = None,
+    entity_mapping: Mapping[str, Mapping[str, str]] | None = None,
     check_entity_types: bool = True,
     preserve_namespace: bool = False,
-    entity_type: Optional[str] = None,
+    entity_type: str | None = None,
 ) -> EntityResourceNames:
     """
     Turns the given identifiers into entity resource names.

@@ -1,6 +1,7 @@
 from exabel_data_sdk.client.api.api_client.calendar_api_client import CalendarApiClient
 from exabel_data_sdk.client.api.api_client.exabel_api_group import ExabelApiGroup
 from exabel_data_sdk.client.api.api_client.grpc.base_grpc_client import BaseGrpcClient
+from exabel_data_sdk.client.api.error_handler import handle_grpc_error
 from exabel_data_sdk.client.client_config import ClientConfig
 from exabel_data_sdk.stubs.exabel.api.data.v1.calendar_service_pb2 import (
     BatchCreateFiscalPeriodsRequest,
@@ -23,6 +24,7 @@ class CalendarGrpcClient(CalendarApiClient, BaseGrpcClient):
         super().__init__(config, ExabelApiGroup.DATA_API)
         self.stub = CalendarServiceStub(self.channel)
 
+    @handle_grpc_error
     def batch_create_fiscal_periods(
         self, request: BatchCreateFiscalPeriodsRequest
     ) -> BatchCreateFiscalPeriodsResponse:
@@ -30,6 +32,7 @@ class CalendarGrpcClient(CalendarApiClient, BaseGrpcClient):
             request, metadata=self.metadata, timeout=self.config.timeout
         )
 
+    @handle_grpc_error
     def list_company_fiscal_periods(
         self, request: ListFiscalPeriodsRequest
     ) -> ListFiscalPeriodsResponse:
@@ -37,9 +40,11 @@ class CalendarGrpcClient(CalendarApiClient, BaseGrpcClient):
             request, metadata=self.metadata, timeout=self.config.timeout
         )
 
+    @handle_grpc_error
     def delete_fiscal_periods(self, request: DeleteFiscalPeriodRequest) -> None:
         self.stub.DeleteFiscalPeriod(request, metadata=self.metadata, timeout=self.config.timeout)
 
+    @handle_grpc_error
     def list_companies_with_fiscal_periods(
         self, request: ListCompaniesWithFiscalPeriodsRequest
     ) -> ListCompaniesWithFiscalPeriodsResponse:

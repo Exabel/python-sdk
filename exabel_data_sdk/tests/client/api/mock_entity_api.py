@@ -1,4 +1,4 @@
-from typing import Optional, Sequence
+from typing import Sequence
 from unittest import mock
 
 from google.protobuf.field_mask_pb2 import FieldMask
@@ -11,7 +11,6 @@ from exabel_data_sdk.client.api.search_service import SearchService
 from exabel_data_sdk.tests.client.api.mock_resource_store import MockResourceStore
 
 
-# pylint: disable=super-init-not-called
 class MockEntityApi(EntityApi):
     """
     Mock of the EntityApi class for CRUD operations on entities and entity types.
@@ -28,29 +27,29 @@ class MockEntityApi(EntityApi):
             self.types.create(EntityType("entityTypes/" + entity_type, entity_type, ""))
 
     def list_entity_types(
-        self, page_size: int = 1000, page_token: Optional[str] = None
+        self, page_size: int = 1000, page_token: str | None = None
     ) -> PagingResult[EntityType]:
         return self.types.list()
 
-    def get_entity_type(self, name: str) -> Optional[EntityType]:
+    def get_entity_type(self, name: str) -> EntityType | None:
         return self.types.get(name)
 
     def create_entity_type(self, entity_type: EntityType) -> EntityType:
         return self.types.create(entity_type)
 
     def list_entities(
-        self, entity_type: str, page_size: int = 1000, page_token: Optional[str] = None
+        self, entity_type: str, page_size: int = 1000, page_token: str | None = None
     ) -> PagingResult[Entity]:
         return self.entities.list(lambda x: x.get_entity_type() == entity_type)
 
-    def get_entity(self, name: str) -> Optional[Entity]:
+    def get_entity(self, name: str) -> Entity | None:
         return self.entities.get(name)
 
     def create_entity(self, entity: Entity, entity_type: str) -> Entity:
         return self.entities.create(entity)
 
     def update_entity(
-        self, entity: Entity, update_mask: Optional[FieldMask] = None, allow_missing: bool = False
+        self, entity: Entity, update_mask: FieldMask | None = None, allow_missing: bool = False
     ) -> Entity:
         # Note: The mock implementation ignores update_mask
         return self.entities.update(entity, allow_missing=allow_missing)

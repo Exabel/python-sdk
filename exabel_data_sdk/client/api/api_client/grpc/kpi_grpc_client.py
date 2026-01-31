@@ -13,6 +13,8 @@ from exabel_data_sdk.stubs.exabel.api.analytics.v1.kpi_service_pb2 import (
     ListCompanyKpiModelResultsResponse,
     ListKpiMappingResultsRequest,
     ListKpiMappingResultsResponse,
+    ListKpiScreenResultsRequest,
+    ListKpiScreenResultsResponse,
 )
 from exabel_data_sdk.stubs.exabel.api.analytics.v1.kpi_service_pb2_grpc import KpiServiceStub
 
@@ -58,5 +60,12 @@ class KpiGrpcClient(KpiApiClient, BaseGrpcClient):
         self, request: ListCompanyKpiModelResultsRequest
     ) -> ListCompanyKpiModelResultsResponse:
         return self.stub.ListCompanyKpiModelResults(
+            request, metadata=self.metadata, timeout=self.config.timeout
+        )
+
+    def list_kpi_screen_results(
+        self, request: ListKpiScreenResultsRequest
+    ) -> ListKpiScreenResultsResponse:
+        return self.stub.ListKpiScreenResults(
             request, metadata=self.metadata, timeout=self.config.timeout
         )

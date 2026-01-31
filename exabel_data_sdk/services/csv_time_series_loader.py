@@ -1,5 +1,3 @@
-from typing import Optional
-
 from exabel_data_sdk import ExabelClient
 from exabel_data_sdk.services.csv_loading_constants import (
     DEFAULT_ABORT_THRESHOLD,
@@ -24,23 +22,23 @@ class CsvTimeSeriesLoader:
         self,
         *,
         filename: str,
-        entity_mapping_filename: Optional[str] = None,
+        entity_mapping_filename: str | None = None,
         separator: str = ",",
         pit_current_time: bool = False,
-        pit_offset: Optional[int] = None,
+        pit_offset: int | None = None,
         create_missing_signals: bool = False,
         create_library_signal: bool = True,
-        global_time_series: Optional[bool] = None,
+        global_time_series: bool | None = None,
         threads: int = DEFAULT_NUMBER_OF_THREADS_FOR_IMPORT,
         dry_run: bool = False,
         error_on_any_failure: bool = False,
         retries: int = DEFAULT_NUMBER_OF_RETRIES,
-        abort_threshold: Optional[float] = DEFAULT_ABORT_THRESHOLD,
+        abort_threshold: float | None = DEFAULT_ABORT_THRESHOLD,
         skip_validation: bool = False,
         case_sensitive_signals: bool = False,
         # Deprecated arguments
-        create_tag: Optional[bool] = None,  # pylint: disable=unused-argument
-        namespace: Optional[str] = None,  # pylint: disable=unused-argument
+        create_tag: bool | None = None,
+        namespace: str | None = None,
     ) -> FileLoadingResult:
         """
         Load a CSV file and upload the time series to the Exabel Data API

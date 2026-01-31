@@ -1,7 +1,7 @@
 import argparse
 import logging
 import os
-from typing import Collection, Mapping, Optional, Sequence, Union
+from typing import Collection, Mapping, Sequence
 
 import pandas as pd
 
@@ -88,10 +88,10 @@ class CsvScript(BaseScript):
         )
 
     def read_csv(
-        self, args: argparse.Namespace, string_columns: Optional[Collection[Union[str, int]]] = None
+        self, args: argparse.Namespace, string_columns: Collection[str | int] | None = None
     ) -> pd.DataFrame:
         """Read the CSV file from disk with the filename specified by command line argument."""
-        dtype: Optional[Mapping[Union[str, int], type]] = None
+        dtype: Mapping[str | int, type] | None = None
         if string_columns:
             dtype = {column: str for column in string_columns}
         return pd.read_csv(args.filename, header=0, sep=args.sep, dtype=dtype)

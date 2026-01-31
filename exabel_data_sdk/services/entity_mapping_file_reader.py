@@ -1,5 +1,5 @@
 import json
-from typing import Mapping, Optional
+from typing import Mapping
 
 import pandas as pd
 
@@ -11,8 +11,8 @@ class EntityMappingFileReader:
 
     @staticmethod
     def read_entity_mapping_file(
-        filename: Optional[str], *, separator: str = ","
-    ) -> Optional[Mapping[str, Mapping[str, str]]]:
+        filename: str | None, *, separator: str = ","
+    ) -> Mapping[str, Mapping[str, str]] | None:
         """
         Read the entity mapping file from disk with the filename specified by command line
         argument. Only supports *.json and *.csv file extensions.
@@ -24,19 +24,17 @@ class EntityMappingFileReader:
         if filename.endswith(".csv"):
             return EntityMappingFileReader._read_csv(filename, separator=separator)
         raise FileLoadingException(
-            "Expected the entity mapping file to be a *.json or *.csv file, "
-            f"but got: '{filename}'."
+            f"Expected the entity mapping file to be a *.json or *.csv file, but got: '{filename}'."
         )
 
     @staticmethod
-    def _read_json(filename: str) -> Optional[Mapping[str, Mapping[str, str]]]:
+    def _read_json(filename: str) -> Mapping[str, Mapping[str, str]] | None:
         with open(filename, "r", encoding="utf-8") as f:
             mappings = json.load(f)
         # validate the mapping is a dictionary (and not a list)
         if not isinstance(mappings, dict):
             raise FileLoadingException(
-                "Expected entity mapping file to be a JSON key-value object, "
-                f"but got: {mappings}"
+                f"Expected entity mapping file to be a JSON key-value object, but got: {mappings}"
             )
         for value in mappings.values():
             if not isinstance(value, dict):
@@ -57,7 +55,7 @@ class EntityMappingFileReader:
         return mappings
 
     @staticmethod
-    def _read_csv(filename: str, separator: str) -> Optional[Mapping[str, Mapping[str, str]]]:
+    def _read_csv(filename: str, separator: str) -> Mapping[str, Mapping[str, str]] | None:
         csv_data_frame = pd.read_csv(filename, header=0, sep=separator, dtype="str")
         identifier_columns = [col for col in csv_data_frame.columns if not col.endswith("_entity")]
         entity_columns = [col for col in csv_data_frame.columns if col.endswith("_entity")]
@@ -79,7 +77,7 @@ class EntityMappingFileReader:
         if invalid_entities:
             raise FileLoadingException(
                 "The entity mapping CSV file is missing one or more identifier columns: "
-                f"{[entity[:-len('_entity')] for entity in invalid_entities]}"
+                f"{[entity[: -len('_entity')] for entity in invalid_entities]}"
             )
 
         mappings = {}

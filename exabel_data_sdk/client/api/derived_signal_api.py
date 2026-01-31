@@ -1,5 +1,3 @@
-from typing import Optional
-
 from exabel_data_sdk.client.api.api_client.grpc.derived_signal_grpc_client import (
     DerivedSignalGrpcClient,
 )
@@ -23,7 +21,7 @@ class DerivedSignalApi:
         self.client = DerivedSignalGrpcClient(config)
 
     def create_derived_signal(
-        self, signal: DerivedSignal, folder: Optional[str] = None
+        self, signal: DerivedSignal, folder: str | None = None
     ) -> DerivedSignal:
         """
         Create a derived signal.
@@ -38,7 +36,7 @@ class DerivedSignalApi:
         )
         return DerivedSignal.from_analytics_api_proto(response)
 
-    def get_derived_signal(self, name: str) -> Optional[DerivedSignal]:
+    def get_derived_signal(self, name: str) -> DerivedSignal | None:
         """
         Get a derived signal.
 

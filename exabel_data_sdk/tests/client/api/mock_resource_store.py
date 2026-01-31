@@ -1,5 +1,5 @@
 from random import random
-from typing import Callable, Dict, Generic, Optional, TypeVar
+from typing import Callable, Generic, TypeVar
 
 from exabel_data_sdk.client.api.data_classes.paging_result import PagingResult
 from exabel_data_sdk.client.api.data_classes.request_error import ErrorType, RequestError
@@ -25,17 +25,15 @@ class MockResourceStore(Generic[ResourceT]):
     """In-memory resource store. Only intended for tests."""
 
     def __init__(self):
-        self.resources: Dict[object, ResourceT] = {}
+        self.resources: dict[object, ResourceT] = {}
         # The failure rate, as a fraction (0.0-1.0) of calls that should fail
         self.failure_rate = 0.0
 
-    def get(self, key: object) -> Optional[ResourceT]:
+    def get(self, key: object) -> ResourceT | None:
         """Get the resource with the given key if present, otherwise returns None."""
         return self.resources.get(key, None)
 
-    def list(
-        self, predicate: Optional[Callable[[ResourceT], bool]] = None
-    ) -> PagingResult[ResourceT]:
+    def list(self, predicate: Callable[[ResourceT], bool] | None = None) -> PagingResult[ResourceT]:
         """List all resources in the store."""
         resources = list(self.resources.values())
         if predicate:
@@ -47,7 +45,7 @@ class MockResourceStore(Generic[ResourceT]):
         )
 
     @failure_prone
-    def create(self, resource: ResourceT, key: Optional[object] = None) -> ResourceT:
+    def create(self, resource: ResourceT, key: object | None = None) -> ResourceT:
         """
         Create the given resource in the store.
 
@@ -70,8 +68,8 @@ class MockResourceStore(Generic[ResourceT]):
     def update(
         self,
         resource: ResourceT,
-        key: Optional[object] = None,
-        allow_missing: Optional[bool] = None,
+        key: object | None = None,
+        allow_missing: bool | None = None,
     ) -> ResourceT:
         """
         Update the given resource in the store.

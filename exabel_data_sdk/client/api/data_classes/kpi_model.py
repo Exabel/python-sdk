@@ -1,5 +1,4 @@
 from dataclasses import dataclass
-from typing import Optional
 
 from exabel_data_sdk.client.api.data_classes.kpi_model_data import KpiModelData
 from exabel_data_sdk.client.api.data_classes.kpi_model_runs import KpiModelRuns
@@ -26,7 +25,7 @@ class KpiModel:
     display_name: str
     data: KpiModelData
     weights: KpiModelWeightGroups
-    model_runs: Optional[KpiModelRuns]
+    model_runs: KpiModelRuns | None
 
     @staticmethod
     def from_proto(proto: ProtoKpiModel) -> "KpiModel":

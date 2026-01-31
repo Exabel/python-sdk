@@ -1,4 +1,4 @@
-from typing import Iterable, Union
+from typing import Iterable
 
 import pandas as pd
 
@@ -9,9 +9,7 @@ class ExcelWriter(FileWriter):
     """Stores a DataFrame in an Excel file."""
 
     @staticmethod
-    def write_file(
-        df: Union[pd.DataFrame, Iterable[pd.DataFrame]], filepath: str
-    ) -> FileWritingResult:
+    def write_file(df: pd.DataFrame | Iterable[pd.DataFrame], filepath: str) -> FileWritingResult:
         if isinstance(df, pd.DataFrame):
             df.to_excel(filepath, index=False)
             return FileWritingResult(len(df))

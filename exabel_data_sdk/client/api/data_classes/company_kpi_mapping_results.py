@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import List, Sequence
+from typing import Sequence
 
 from exabel_data_sdk.client.api.data_classes.company import Company
 from exabel_data_sdk.client.api.data_classes.kpi import Kpi
@@ -23,7 +23,7 @@ class SingleCompanyKpiMappingResults:
     """
 
     kpi: Kpi
-    data: List[KpiMappingResultData]
+    data: list[KpiMappingResultData]
 
     @staticmethod
     def from_proto(proto: ProtoSingleCompanyKpiMappingResults) -> "SingleCompanyKpiMappingResults":

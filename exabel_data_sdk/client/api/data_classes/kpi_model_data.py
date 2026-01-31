@@ -1,5 +1,4 @@
 from dataclasses import dataclass
-from typing import Optional
 
 import pandas as pd
 
@@ -40,26 +39,26 @@ class KpiModelData:
         error:              Optional error, if the model estimation failed.
     """
 
-    prediction: Optional[float]
-    prediction_yoy_rel: Optional[float]
-    prediction_yoy_abs: Optional[float]
-    consensus: Optional[float]
-    consensus_yoy_rel: Optional[float]
-    consensus_yoy_abs: Optional[float]
-    delta_abs: Optional[float]
-    delta_rel: Optional[float]
-    delta_by_error: Optional[float]
-    model_quality: Optional[ModelQuality]
-    mape: Optional[float]
-    mape_pit: Optional[float]
-    mae: Optional[float]
-    mae_pit: Optional[float]
-    error_count: Optional[int]
-    hit_rate: Optional[float]
-    hit_rate_count: Optional[int]
-    revision_1_week: Optional[float]
-    revision_1_month: Optional[float]
-    date: Optional[pd.Timestamp]
+    prediction: float | None
+    prediction_yoy_rel: float | None
+    prediction_yoy_abs: float | None
+    consensus: float | None
+    consensus_yoy_rel: float | None
+    consensus_yoy_abs: float | None
+    delta_abs: float | None
+    delta_rel: float | None
+    delta_by_error: float | None
+    model_quality: ModelQuality | None
+    mape: float | None
+    mape_pit: float | None
+    mae: float | None
+    mae_pit: float | None
+    error_count: int | None
+    hit_rate: float | None
+    hit_rate_count: int | None
+    revision_1_week: float | None
+    revision_1_month: float | None
+    date: pd.Timestamp | None
     error: str
 
     @staticmethod

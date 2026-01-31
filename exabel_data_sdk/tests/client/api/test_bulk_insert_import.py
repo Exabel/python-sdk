@@ -20,8 +20,6 @@ from exabel_data_sdk.client.api.resource_creation_result import ResourceCreation
 
 logger = logging.getLogger(__name__)
 
-# pylint: disable=protected-access
-
 
 def _get_ts_resources_map() -> Mapping[str, pd.Series]:
     resource_map = {

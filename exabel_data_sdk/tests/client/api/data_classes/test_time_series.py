@@ -115,7 +115,7 @@ class TestTimeSeries(unittest.TestCase):
 
     def test_time_series_name(self):
         time_series = TimeSeries(
-            series=pd.Series([]),
+            series=pd.Series([], dtype=float),
         )
         time_series.name = "entityTypes/country/entities/no/signals/customerA.revenue"
         self.assertEqual(

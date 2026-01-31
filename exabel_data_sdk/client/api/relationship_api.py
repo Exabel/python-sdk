@@ -1,5 +1,5 @@
 from functools import partial
-from typing import Iterator, Optional, Sequence
+from typing import Iterator, Sequence
 
 from google.protobuf.field_mask_pb2 import FieldMask
 
@@ -45,7 +45,7 @@ class RelationshipApi(PageableResourceMixin):
         self.client = RelationshipGrpcClient(config)
 
     def list_relationship_types(
-        self, page_size: int = 1000, page_token: Optional[str] = None
+        self, page_size: int = 1000, page_token: str | None = None
     ) -> PagingResult[RelationshipType]:
         """
         List all relationship types.
@@ -68,7 +68,7 @@ class RelationshipApi(PageableResourceMixin):
         """Return an iterator with all known relationship types."""
         return self._get_resource_iterator(self.list_relationship_types)
 
-    def get_relationship_type(self, name: str) -> Optional[RelationshipType]:
+    def get_relationship_type(self, name: str) -> RelationshipType | None:
         """
         Get one relationship type.
 
@@ -101,7 +101,7 @@ class RelationshipApi(PageableResourceMixin):
     def update_relationship_type(
         self,
         relationship_type: RelationshipType,
-        update_mask: Optional[FieldMask] = None,
+        update_mask: FieldMask | None = None,
         allow_missing: bool = False,
     ) -> RelationshipType:
         """
@@ -139,7 +139,7 @@ class RelationshipApi(PageableResourceMixin):
         relationship_type: str,
         from_entity: str,
         page_size: int = 1000,
-        page_token: Optional[str] = None,
+        page_token: str | None = None,
     ) -> PagingResult[Relationship]:
         """
         Get relationships from the given entity.
@@ -186,7 +186,7 @@ class RelationshipApi(PageableResourceMixin):
         relationship_type: str,
         to_entity: str,
         page_size: int = 1000,
-        page_token: Optional[str] = None,
+        page_token: str | None = None,
     ) -> PagingResult[Relationship]:
         """
         Get relationships to the given entity.
@@ -232,7 +232,7 @@ class RelationshipApi(PageableResourceMixin):
         self,
         relationship_type: str,
         page_size: int = 1000,
-        page_token: Optional[str] = None,
+        page_token: str | None = None,
     ) -> PagingResult[Relationship]:
         """
         List all relationships of the given relationship type.
@@ -269,7 +269,7 @@ class RelationshipApi(PageableResourceMixin):
 
     def get_relationship(
         self, relationship_type: str, from_entity: str, to_entity: str
-    ) -> Optional[Relationship]:
+    ) -> Relationship | None:
         """
         Get one relationship.
 
@@ -310,7 +310,7 @@ class RelationshipApi(PageableResourceMixin):
     def update_relationship(
         self,
         relationship: Relationship,
-        update_mask: Optional[FieldMask] = None,
+        update_mask: FieldMask | None = None,
         allow_missing: bool = False,
     ) -> Relationship:
         """
@@ -379,7 +379,7 @@ class RelationshipApi(PageableResourceMixin):
         threads: int = DEFAULT_NUMBER_OF_THREADS,
         upsert: bool = False,
         retries: int = DEFAULT_NUMBER_OF_RETRIES,
-        abort_threshold: Optional[float] = DEFAULT_ABORT_THRESHOLD,
+        abort_threshold: float | None = DEFAULT_ABORT_THRESHOLD,
     ) -> ResourceCreationResults[Relationship]:
         """
         Check if the provided relationships exist, and create them if they don't.

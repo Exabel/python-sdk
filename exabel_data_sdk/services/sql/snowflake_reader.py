@@ -1,5 +1,5 @@
 import logging
-from typing import Any, Iterator, Mapping, Optional
+from typing import Any, Iterator, Mapping
 
 import pandas as pd
 
@@ -18,7 +18,7 @@ class SnowflakeReader(SqlReader):
     """Reader of SQL queries from Snowflake."""
 
     def __init__(
-        self, connection_args: Mapping[str, Any], *, kwargs: Optional[Mapping[str, Any]] = None
+        self, connection_args: Mapping[str, Any], *, kwargs: Mapping[str, Any] | None = None
     ) -> None:
         self.kwargs = kwargs or {}
         self.connection_args = connection_args

@@ -1,6 +1,6 @@
 import argparse
 import sys
-from typing import Optional, Sequence
+from typing import Sequence
 
 import pandas as pd
 
@@ -54,7 +54,7 @@ class CheckCompanyIdentifiersInCsv(CsvScript):
         )
 
     def _get_identifier_type(
-        self, identifier_column: str, identifier_type: Optional[str] = None
+        self, identifier_column: str, identifier_type: str | None = None
     ) -> str:
         _identifier_type = identifier_type or identifier_column
         given_explicit_identifier_type = identifier_type is not None
@@ -113,7 +113,7 @@ class CheckCompanyIdentifiersInCsv(CsvScript):
         ):
             print(checked_data_frame.to_string(index=False))
             print(
-                f"{len(identifiers) - len(checked_data_frame[checked_data_frame['warning']!=''])} "
+                f"{len(identifiers) - len(checked_data_frame[checked_data_frame['warning'] != ''])} "
                 f"identifiers successfully mapped to companies out of {len(identifiers)} "
                 "identifiers in total"
             )

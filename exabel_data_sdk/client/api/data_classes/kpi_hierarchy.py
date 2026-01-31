@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import Optional, Sequence
+from typing import Sequence
 
 from exabel_data_sdk.client.api.data_classes.kpi import Kpi
 from exabel_data_sdk.stubs.exabel.api.analytics.v1.kpi_messages_pb2 import (
@@ -25,8 +25,8 @@ class KpiBreakdownNode:
         children:   The children of this node.
     """
 
-    kpi: Optional[Kpi]
-    header: Optional[str]
+    kpi: Kpi | None
+    header: str | None
     children: Sequence["KpiBreakdownNode"]
 
     @staticmethod

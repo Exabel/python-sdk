@@ -2,7 +2,7 @@ import argparse
 import sys
 from concurrent.futures import ThreadPoolExecutor
 from math import ceil
-from typing import List, Optional, Sequence
+from typing import Sequence
 
 from exabel_data_sdk import ExabelClient
 from exabel_data_sdk.client.api.data_classes.entity import Entity
@@ -49,7 +49,7 @@ class ListTimeSeries(BaseScript):
         )
 
     def _filter_ts_list(
-        self, ts_list: Sequence[str], ts_filter: Optional[str] = None
+        self, ts_list: Sequence[str], ts_filter: str | None = None
     ) -> Sequence[str]:
         if ts_filter:
             return [ts for ts in ts_list if ts_filter in ts]
@@ -58,9 +58,9 @@ class ListTimeSeries(BaseScript):
     def _list_time_series(
         self,
         client: ExabelClient,
-        entity: Optional[str] = None,
-        signal: Optional[str] = None,
-        entity_type: Optional[str] = None,
+        entity: str | None = None,
+        signal: str | None = None,
+        entity_type: str | None = None,
         show_progress: bool = False,
     ) -> Sequence[str]:
         if (signal is None) == (entity is None) == (entity_type is None):
@@ -69,8 +69,8 @@ class ListTimeSeries(BaseScript):
                 "only signal, entity-type or entity, but not all three."
             )
 
-        all_time_series: List[str] = []
-        all_entities: List[Entity] = []
+        all_time_series: list[str] = []
+        all_entities: list[Entity] = []
 
         if entity:
             if signal:
@@ -134,7 +134,7 @@ class ListTimeSeries(BaseScript):
 
             def _get_entity_time_series(entity: Entity) -> Sequence[str]:
                 page_token = None
-                ts_list: List[str] = []
+                ts_list: list[str] = []
                 while True:
                     result = client.time_series_api.get_entity_time_series(
                         entity.name, page_size=PAGE_SIZE, page_token=page_token

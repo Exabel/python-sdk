@@ -1,4 +1,4 @@
-from typing import Iterator, Optional, Sequence
+from typing import Iterator, Sequence
 
 from google.protobuf.field_mask_pb2 import FieldMask
 
@@ -50,7 +50,7 @@ class EntityApi(PageableResourceMixin):
         self.search = SearchService(self.client)
 
     def list_entity_types(
-        self, page_size: int = 1000, page_token: Optional[str] = None
+        self, page_size: int = 1000, page_token: str | None = None
     ) -> PagingResult[EntityType]:
         """
         List all known entity types.
@@ -74,7 +74,7 @@ class EntityApi(PageableResourceMixin):
         """Return an iterator with all known entity types."""
         return self._get_resource_iterator(self.list_entity_types)
 
-    def get_entity_type(self, name: str) -> Optional[EntityType]:
+    def get_entity_type(self, name: str) -> EntityType | None:
         """
         Get one entity type.
 
@@ -107,7 +107,7 @@ class EntityApi(PageableResourceMixin):
     def update_entity_type(
         self,
         entity_type: EntityType,
-        update_mask: Optional[FieldMask] = None,
+        update_mask: FieldMask | None = None,
         allow_missing: bool = False,
     ) -> EntityType:
         """
@@ -136,7 +136,7 @@ class EntityApi(PageableResourceMixin):
         self.client.delete_entity_type(DeleteEntityTypeRequest(name=name))
 
     def list_entities(
-        self, entity_type: str, page_size: int = 1000, page_token: Optional[str] = None
+        self, entity_type: str, page_size: int = 1000, page_token: str | None = None
     ) -> PagingResult[Entity]:
         """
         List all entities of a given entity type.
@@ -161,7 +161,7 @@ class EntityApi(PageableResourceMixin):
         """Return an iterator with all entities of a given entity type."""
         return self._get_resource_iterator(self.list_entities, entity_type=entity_type)
 
-    def get_entity(self, name: str) -> Optional[Entity]:
+    def get_entity(self, name: str) -> Entity | None:
         """
         Get one entity.
 
@@ -193,7 +193,7 @@ class EntityApi(PageableResourceMixin):
         return Entity.from_proto(response)
 
     def update_entity(
-        self, entity: Entity, update_mask: Optional[FieldMask] = None, allow_missing: bool = False
+        self, entity: Entity, update_mask: FieldMask | None = None, allow_missing: bool = False
     ) -> Entity:
         """
         Update an entity.
@@ -285,7 +285,7 @@ class EntityApi(PageableResourceMixin):
         threads: int = DEFAULT_NUMBER_OF_THREADS,
         upsert: bool = False,
         retries: int = DEFAULT_NUMBER_OF_RETRIES,
-        abort_threshold: Optional[float] = DEFAULT_ABORT_THRESHOLD,
+        abort_threshold: float | None = DEFAULT_ABORT_THRESHOLD,
     ) -> ResourceCreationResults[Entity]:
         """
         Check if the provided entities exist, and create them if they don't.

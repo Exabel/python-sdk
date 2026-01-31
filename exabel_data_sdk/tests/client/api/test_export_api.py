@@ -1,17 +1,18 @@
 import re
 import unittest
-from unittest.mock import MagicMock, patch
+from unittest.mock import MagicMock
 
 import pandas as pd
 
 from exabel_data_sdk.client.api.export_api import ExportApi
+from exabel_data_sdk.client.client_config import ClientConfig
 from exabel_data_sdk.query.column import Column
 from exabel_data_sdk.query.signals import Signals
 
 
 class TestExportApi(unittest.TestCase):
     def test_signal_query(self):
-        export_api = ExportApi(auth_headers={})
+        export_api = ExportApi(ClientConfig(api_key="api-key"))
         mock = MagicMock(name="run_query")
         export_api.run_query = mock
 
@@ -104,7 +105,7 @@ class TestExportApi(unittest.TestCase):
             self.assertLessEqual(length, batch_size)
             return data.query(f"name in {names}")
 
-        export_api = ExportApi(auth_headers={})
+        export_api = ExportApi(ClientConfig(api_key="api-key"))
         export_api.run_query = MagicMock(name="run_query", side_effect=side_effect)
         for batch_size in range(1, 12):
             result = export_api.batched_signal_query(
@@ -113,7 +114,7 @@ class TestExportApi(unittest.TestCase):
             pd.testing.assert_series_equal(series, result)
 
     def test_batched_signal_query_error(self):
-        export_api = ExportApi(auth_headers={})
+        export_api = ExportApi(ClientConfig(api_key="api-key"))
         self.assertRaisesRegex(
             ValueError,
             "Need to specify an identification method",
@@ -130,25 +131,3 @@ class TestExportApi(unittest.TestCase):
             bloomberg_ticker=["A", "B"],
             factset_id=["C", "D"],
         )
-
-    @patch("exabel_data_sdk.client.api.export_api.ExportApi")
-    def test_from_api_key(self, mock_api):
-        mock_api.return_value = None
-        api_key = "api-key"
-        ExportApi.from_api_key(api_key=api_key)
-        mock_api.assert_called_with(
-            auth_headers={"x-api-key": api_key}, backend="export.api.exabel.com", retries=0
-        )
-        ExportApi.from_api_key(api_key=api_key, use_test_backend=True, retries=3)
-        mock_api.assert_called_with(
-            auth_headers={"x-api-key": api_key}, backend="export.api-test.exabel.com", retries=3
-        )
-
-    def test_retries(self):
-        # pylint: disable=protected-access
-        export_api = ExportApi(auth_headers={})
-        adapter = export_api._session.get_adapter("https://export.api.exabel.com")
-        self.assertEqual(0, adapter.max_retries.total)
-        export_api = ExportApi(auth_headers={}, retries=3)
-        adapter = export_api._session.get_adapter("https://export.api.exabel.com")
-        self.assertEqual(3, adapter.max_retries.total)

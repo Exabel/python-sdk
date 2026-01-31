@@ -37,7 +37,6 @@ class TestExportSignals(unittest.TestCase):
         self._assert_common_args(args)
         self.assertEqual(args.filename, "foo.csv")
         self.assertEqual(args.api_key, "api-key")
-        self.assertEqual(script.get_api_key(args), "api-key")
 
     def test_args_env_variable(self):
         os.environ["EXABEL_API_KEY"] = "env_key"
@@ -48,7 +47,6 @@ class TestExportSignals(unittest.TestCase):
             self._assert_common_args(args)
             self.assertIsNone(args.api_key)
             self.assertEqual(args.filename, "foo.csv")
-            self.assertEqual(script.get_api_key(args), "env_key")
         finally:
             del os.environ["EXABEL_API_KEY"]
 

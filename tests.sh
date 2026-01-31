@@ -2,4 +2,4 @@
 
 # Runs all the tests.
 
-python -m unittest -v
+python -m pytest -v

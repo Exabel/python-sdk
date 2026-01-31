@@ -1,8 +1,8 @@
-from typing import Union
+from typing import TypeAlias
 
 import pandas as pd
 
-Literal = Union[str, int, float, pd.Timestamp]
+Literal: TypeAlias = str | int | float | pd.Timestamp
 
 
 def to_sql(literal: Literal) -> str:

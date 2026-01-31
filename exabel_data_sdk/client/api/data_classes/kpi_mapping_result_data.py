@@ -1,5 +1,4 @@
 from dataclasses import dataclass
-from typing import Optional
 
 import pandas as pd
 
@@ -39,20 +38,20 @@ class KpiMappingResultData:
     """
 
     source: KpiMappingGroupReference
-    model_mape: Optional[float]
-    model_mae: Optional[float]
-    model_hit_rate: Optional[float]
-    model_quality: Optional[ModelQuality]
-    number_of_data_points: Optional[int]
-    mae_pop: Optional[float]
-    mae_yoy: Optional[float]
-    correlation_abs: Optional[float]
-    correlation_pop: Optional[float]
-    correlation_yoy: Optional[float]
-    p_value_abs: Optional[float]
-    p_value_pop: Optional[float]
-    p_value_yoy: Optional[float]
-    last_value_date: Optional[pd.Timestamp]
+    model_mape: float | None
+    model_mae: float | None
+    model_hit_rate: float | None
+    model_quality: ModelQuality | None
+    number_of_data_points: int | None
+    mae_pop: float | None
+    mae_yoy: float | None
+    correlation_abs: float | None
+    correlation_pop: float | None
+    correlation_yoy: float | None
+    p_value_abs: float | None
+    p_value_pop: float | None
+    p_value_yoy: float | None
+    last_value_date: pd.Timestamp | None
 
     @staticmethod
     def from_proto(proto: ProtoKpiMappingResultData) -> "KpiMappingResultData":

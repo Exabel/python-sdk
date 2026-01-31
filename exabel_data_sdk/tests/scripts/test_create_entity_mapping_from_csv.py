@@ -11,7 +11,7 @@ class TestCreateEntityMappingFromCsv(unittest.TestCase):
     def setUp(self):
         self.client = mock.create_autospec(ExabelClient)
         self.client.entity_api = mock.create_autospec(EntityApi)
-        self.temp_file = tempfile.NamedTemporaryFile()  # pylint: disable=consider-using-with
+        self.temp_file = tempfile.NamedTemporaryFile()
 
     def tearDown(self):
         self.temp_file.close()

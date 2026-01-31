@@ -9,18 +9,23 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
-    - uses: actions/setup-python@v5
+    - uses: actions/checkout@v6
+
+    - name: "Set up Python"
+      uses: actions/setup-python@v6
       with:
-        python-version-file: '.python-version'
+        python-version-file: ".python-version"
+
+    - name: Install uv
+      uses: astral-sh/setup-uv@v7
+
     - name: Install dependencies and build package
       run: |
-        pip install pipenv wheel
-        pipenv sync --system
+        uv sync
         ./build.sh
 
     - name: Cache build
-      uses: actions/cache@v4
+      uses: actions/cache@v5
       with:
         path: ./dist
         key: build-cache-${{ github.sha }}
@@ -34,13 +39,13 @@ jobs:
       fail-fast: true
 
     steps:
-    - uses: actions/checkout@v4
-    - uses: actions/setup-python@v5
+    - uses: actions/checkout@v6
+    - uses: actions/setup-python@v6
       with:
         python-version: ${{ matrix.python-version }}
 
     - name: Recover cache
-      uses: actions/cache@v4
+      uses: actions/cache@v5
       with:
         path: ./dist
         key: build-cache-${{ github.sha }}

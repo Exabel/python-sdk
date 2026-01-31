@@ -47,8 +47,8 @@ class EntityServiceServicer(object):
     def ListEntityTypes(self, request, context):
         """Lists all known entity types.
 
-        Lists all entity types available to your customer, including those created by you, in the
-        global catalog, and from data sets you are subscribed to.
+        Lists all entity types available to your customer, including those created by you, and in the
+        global catalog.
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')

@@ -11,6 +11,8 @@ from exabel_data_sdk.stubs.exabel.api.analytics.v1.kpi_service_pb2 import (
     ListCompanyKpiModelResultsResponse,
     ListKpiMappingResultsRequest,
     ListKpiMappingResultsResponse,
+    ListKpiScreenResultsRequest,
+    ListKpiScreenResultsResponse,
 )
 
 
@@ -48,3 +50,9 @@ class KpiApiClient(ABC):
         self, request: ListCompanyKpiModelResultsRequest
     ) -> ListCompanyKpiModelResultsResponse:
         """List model results for a single company KPI."""
+
+    @abstractmethod
+    def list_kpi_screen_results(
+        self, request: ListKpiScreenResultsRequest
+    ) -> ListKpiScreenResultsResponse:
+        """List KPI screen results."""

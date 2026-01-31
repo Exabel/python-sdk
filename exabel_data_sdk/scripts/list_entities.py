@@ -1,7 +1,7 @@
 import argparse
 import sys
 from math import ceil
-from typing import List, Optional, Sequence
+from typing import Sequence
 
 from exabel_data_sdk import ExabelClient
 from exabel_data_sdk.client.api.data_classes.entity import Entity
@@ -49,7 +49,7 @@ class ListEntities(BaseScript):
         self,
         client: ExabelClient,
         entity_type: str,
-        limit: Optional[int] = None,
+        limit: int | None = None,
         show_progress: bool = False,
         exclude_read_only: bool = False,
     ) -> Sequence[Entity]:
@@ -64,7 +64,7 @@ class ListEntities(BaseScript):
             print(f"Limiting to {limit} entities")
             num_entities = min(num_entities, limit)
 
-        all_entities: List[Entity] = []
+        all_entities: list[Entity] = []
         for _ in conditional_progress_bar(
             range(1, ceil(num_entities / PAGE_SIZE) + 1),
             show_progress=show_progress,

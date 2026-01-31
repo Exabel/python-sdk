@@ -34,7 +34,7 @@ class LoggingThreadPoolExecutor(ThreadPoolExecutor):
 
         return wrapped
 
-    def submit(  # type: ignore[override]  # pylint: disable=arguments-differ
+    def submit(  # type: ignore[override]
         self, function: Callable[..., Any], *args: Any, **kwargs: Any
     ) -> Future:
         return super().submit(self.active_threads_counter(function), *args, **kwargs)

@@ -13,7 +13,7 @@ class ExabelMockClient(ExabelClient):
     which only store objects in memory.
     """
 
-    def __init__(self, namespace: str = "test"):  # pylint: disable=super-init-not-called
+    def __init__(self, namespace: str = "test"):
         self.entity_api = MockEntityApi()
         self.relationship_api = MockRelationshipApi()
         self.signal_api = MockSignalApi()

@@ -8,6 +8,8 @@ from .data_set_messages_pb2_grpc import *
 from .data_set_service_pb2_grpc import *
 from .entity_messages_pb2_grpc import *
 from .entity_service_pb2_grpc import *
+from .holiday_messages_pb2_grpc import *
+from .holiday_service_pb2_grpc import *
 from .import_job_service_pb2_grpc import *
 from .namespace_service_pb2_grpc import *
 from .namespaces_messages_pb2_grpc import *

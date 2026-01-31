@@ -1,4 +1,4 @@
-from typing import Optional, Sequence
+from typing import Sequence
 
 from exabel_data_sdk.client.api.data_classes.folder_item import FolderItem
 from exabel_data_sdk.stubs.exabel.api.management.v1.all_pb2 import Folder as ProtoFolder
@@ -22,7 +22,7 @@ class Folder:
         display_name: str,
         write: bool,
         items: Sequence[FolderItem],
-        description: Optional[str] = None,
+        description: str | None = None,
     ):
         """
         Create a Folder.

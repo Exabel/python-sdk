@@ -1,15 +1,13 @@
 import argparse
 import logging
-import os
 import sys
 from datetime import timedelta
 from time import time
-from typing import List, Sequence, Set
+from typing import Sequence
 
 import pandas as pd
 
 from exabel_data_sdk import ExabelClient
-from exabel_data_sdk.client.api.export_api import ExportApi
 from exabel_data_sdk.scripts.base_script import BaseScript
 from exabel_data_sdk.scripts.file_utils import (
     supported_formats_message,
@@ -71,37 +69,24 @@ class ExportSignals(BaseScript):
             default=100,
         )
         self.parser.add_argument(
-            "--retries",
-            type=int,
-            help="The number of times to retry each request.",
-            default=3,
-        )
-        self.parser.add_argument(
             "--show-progress",
             required=False,
             action="store_true",
             default=False,
             help="Show progress bar",
         )
-
-    @staticmethod
-    def get_api_key(args: argparse.Namespace) -> str:
-        """
-        Get the API key to use, either from the command line arguments or the environment.
-        Raises SystemExit if there is no API key provided.
-        """
-        api_key = args.api_key or os.getenv("EXABEL_API_KEY")
-        if not api_key:
-            print("No API key specified.")
-            print("Use the --api-key command line argument or EXABEL_API_KEY environment variable.")
-            sys.exit(1)
-        return api_key
+        self.parser.add_argument(
+            "--retries",
+            required=False,
+            type=int,
+            default=0,
+            help="The maximum number of retries to make for each failed request. Defaults to 0.",
+        )
 
     def run_script(self, client: ExabelClient, args: argparse.Namespace) -> None:
         """Download data from the Exabel API and store it to file."""
-        api_key = self.get_api_key(args)
         start_time = time()
-        tag_results: List[Set[str]] = []
+        tag_results: list[set[str]] = []
         for tag in args.tag:
             if not tag.startswith("tags/"):
                 tag = f"tags/{tag}"
@@ -112,11 +97,10 @@ class ExportSignals(BaseScript):
         if len(tag_results) > 1:
             entities = entities.union(*tag_results[1:])
             print("In total", len(entities), "entities")
-        export_api = ExportApi.from_api_key(api_key, retries=args.retries)
         signals = args.signal
         print("Downloading signal(s):", ", ".join(signals))
         logging.getLogger("exabel_data_sdk.client.api.export_api").setLevel(logging.WARNING)
-        data = export_api.batched_signal_query(
+        data = client.export_api.batched_signal_query(
             batch_size=args.batch_size,
             signal=signals,
             resource_name=list(entities),

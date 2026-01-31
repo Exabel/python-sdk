@@ -3,7 +3,7 @@ from __future__ import annotations
 import logging
 from dataclasses import dataclass
 from enum import Enum, unique
-from typing import Optional, Sequence
+from typing import Sequence
 
 logger = logging.getLogger(__name__)
 
@@ -87,5 +87,5 @@ class RequestError(Exception):
     """
 
     error_type: ErrorType
-    message: Optional[str] = None
-    precondition_failure: Optional[PreconditionFailure] = None
+    message: str | None = None
+    precondition_failure: PreconditionFailure | None = None

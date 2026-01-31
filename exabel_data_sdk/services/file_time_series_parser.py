@@ -11,11 +11,7 @@ from typing import (
     Iterator,
     Mapping,
     NamedTuple,
-    Optional,
     Sequence,
-    Set,
-    Tuple,
-    Union,
 )
 
 import numpy as np
@@ -66,16 +62,16 @@ class TimeSeriesFileParser:
     """
 
     filename: str
-    separator: Optional[str]
-    worksheet: Optional[str]
-    data_frame: Optional[pd.DataFrame]
+    separator: str | None
+    worksheet: str | None
+    data_frame: pd.DataFrame | None
 
     def __post_init__(self) -> None:
-        self._preview: Optional[pd.DataFrame] = None
+        self._preview: pd.DataFrame | None = None
 
     @classmethod
     def from_file(
-        cls, filename: str, separator: Optional[str] = None, batch_size: Optional[int] = None
+        cls, filename: str, separator: str | None = None, batch_size: int | None = None
     ) -> Iterator["TimeSeriesFileParser"]:
         """
         Construct an iterator of parsers from a file.
@@ -112,7 +108,7 @@ class TimeSeriesFileParser:
             logger.info("Reading input data in batches of %d rows. ", batch_size)
             return (
                 TimeSeriesFileParser(filename, separator, None, df)
-                for df in CsvReader.read_file(  # pylint: disable=all
+                for df in CsvReader.read_file(
                     filename,
                     separator,
                     (0,),
@@ -129,14 +125,14 @@ class TimeSeriesFileParser:
             self._preview = self.parse_file(nrows=10)
         return self._preview
 
-    def sheet_name(self) -> Optional[str]:
+    def sheet_name(self) -> str | None:
         """Return the name of the worksheet, when applicable."""
         return str(self.worksheet) if self.worksheet is not None else None
 
     def parse_file(
         self,
-        nrows: Optional[int] = None,
-        header: Optional[Sequence[int]] = None,
+        nrows: int | None = None,
+        header: Sequence[int] | None = None,
         case_sensitive_signals: bool = False,
     ) -> pd.DataFrame:
         """Parse the file as a Pandas data frame."""
@@ -207,7 +203,7 @@ class TimeSeriesFileParser:
             invalid.append(column)
         if invalid:
             raise FileLoadingException(
-                f"Parsing failed, invalid column(s) found: " f"{', '.join(invalid)}."
+                f"Parsing failed, invalid column(s) found: {', '.join(invalid)}."
             )
         if "date" in self.preview.columns and _has_duplicate_columns(self.preview.columns):
             raise FileLoadingException(
@@ -228,10 +224,8 @@ class ParsedTimeSeriesFile(abc.ABC):
     class ValidatedTimeSeries(NamedTuple):
         """A tuple of valid time series and failures that did not pass validation."""
 
-        valid_series: Sequence[Union[pd.Series, TimeSeries]]
-        failures: Sequence[
-            Union[ResourceCreationResult[pd.Series], ResourceCreationResult[TimeSeries]]
-        ]
+        valid_series: Sequence[pd.Series | TimeSeries]
+        failures: Sequence[ResourceCreationResult[pd.Series] | ResourceCreationResult[TimeSeries]]
 
     def __init__(self, data: pd.DataFrame, entity_lookup_result: EntityResourceNames):
         self._data = data
@@ -253,10 +247,10 @@ class ParsedTimeSeriesFile(abc.ABC):
         file_parser: TimeSeriesFileParser,
         entity_api: EntityApi,
         namespace: str,
-        entity_mapping: Optional[Mapping[str, Mapping[str, str]]] = None,
-        entity_type: Optional[str] = None,
+        entity_mapping: Mapping[str, Mapping[str, str]] | None = None,
+        entity_type: str | None = None,
         case_sensitive_signals: bool = False,
-        identifier_type: Optional[str] = None,
+        identifier_type: str | None = None,
     ) -> "ParsedTimeSeriesFile":
         """Read a file and construct a parsed file from the contents."""
         data = file_parser.parse_file(case_sensitive_signals=case_sensitive_signals)
@@ -271,9 +265,9 @@ class ParsedTimeSeriesFile(abc.ABC):
         data: pd.DataFrame,
         entity_api: EntityApi,
         namespace: str,
-        entity_mapping: Optional[Mapping[str, Mapping[str, str]]] = None,
-        entity_type: Optional[str] = None,
-        identifier_type: Optional[str] = None,
+        entity_mapping: Mapping[str, Mapping[str, str]] | None = None,
+        entity_type: str | None = None,
+        identifier_type: str | None = None,
     ) -> "ParsedTimeSeriesFile":
         """Construct a new parsed file from a data frame."""
         data = cls._set_index(data)
@@ -385,10 +379,10 @@ class ParsedTimeSeriesFile(abc.ABC):
         data: pd.DataFrame,
         entity_api: EntityApi,
         namespace: str,
-        entity_mapping: Optional[Mapping[str, Mapping[str, str]]] = None,
-        entity_type: Optional[str] = None,
-        identifier_type: Optional[str] = None,
-    ) -> Tuple[pd.DataFrame, EntityResourceNames]:
+        entity_mapping: Mapping[str, Mapping[str, str]] | None = None,
+        entity_type: str | None = None,
+        identifier_type: str | None = None,
+    ) -> tuple[pd.DataFrame, EntityResourceNames]:
         """Map the entities of the data, and return any warnings."""
 
     @staticmethod
@@ -428,14 +422,14 @@ class ParsedTimeSeriesFile(abc.ABC):
         identifiers: pd.Series,
         entity_api: EntityApi,
         namespace: str,
-        entity_mapping: Optional[Mapping[str, Mapping[str, str]]] = None,
+        entity_mapping: Mapping[str, Mapping[str, str]] | None = None,
         preserve_namespace: bool = False,
-        entity_type: Optional[str] = None,
+        entity_type: str | None = None,
     ) -> EntityResourceNames:
         """Look up the entity identifier, and throw an exception if no entities are found."""
         if not all(isinstance(i, str) for i in identifiers):
             example = next(i for i in identifiers if not isinstance(i, str))
-            if example is np.nan:
+            if np.isnan(example):
                 raise FileLoadingException("A cell in the entity column was empty.")
             raise FileLoadingException(
                 "Entity identifiers were not strings. If there are entity identifiers which are "
@@ -568,10 +562,10 @@ class SignalNamesInRows(DateParsingMixin, ParsedTimeSeriesFile):
         data: pd.DataFrame,
         entity_api: EntityApi,
         namespace: str,
-        entity_mapping: Optional[Mapping[str, Mapping[str, str]]] = None,
-        entity_type: Optional[str] = None,
-        identifier_type: Optional[str] = None,
-    ) -> Tuple[pd.DataFrame, EntityResourceNames]:
+        entity_mapping: Mapping[str, Mapping[str, str]] | None = None,
+        entity_type: str | None = None,
+        identifier_type: str | None = None,
+    ) -> tuple[pd.DataFrame, EntityResourceNames]:
         if not any(
             _is_valid_entity_column(column, cls.RESERVED_COLUMNS) for column in data.columns
         ):
@@ -673,10 +667,10 @@ class SignalNamesInColumns(DateParsingMixin, ParsedTimeSeriesFile):
         data: pd.DataFrame,
         entity_api: EntityApi,
         namespace: str,
-        entity_mapping: Optional[Mapping[str, Mapping[str, str]]] = None,
-        entity_type: Optional[str] = None,
-        identifier_type: Optional[str] = None,
-    ) -> Tuple[pd.DataFrame, EntityResourceNames]:
+        entity_mapping: Mapping[str, Mapping[str, str]] | None = None,
+        entity_type: str | None = None,
+        identifier_type: str | None = None,
+    ) -> tuple[pd.DataFrame, EntityResourceNames]:
         entity_column = data.columns[0]
         identifiers = data[entity_column]
         identifiers.name = identifier_type or entity_column
@@ -738,10 +732,10 @@ class SignalNamesInColumnsGlobalEntity(SignalNamesInColumns):
         data: pd.DataFrame,
         entity_api: EntityApi,
         namespace: str,
-        entity_mapping: Optional[Mapping[str, Mapping[str, str]]] = None,
-        entity_type: Optional[str] = None,
-        identifier_type: Optional[str] = None,
-    ) -> Tuple[pd.DataFrame, EntityResourceNames]:
+        entity_mapping: Mapping[str, Mapping[str, str]] | None = None,
+        entity_type: str | None = None,
+        identifier_type: str | None = None,
+    ) -> tuple[pd.DataFrame, EntityResourceNames]:
         if entity_type is not None and entity_type != file_constants.GLOBAL_ENTITY_TYPE:
             raise FileLoadingException(
                 "Entity type must be set to 'global' when loading time series to the global entity."
@@ -787,10 +781,10 @@ class EntitiesInColumns(ParsedTimeSeriesFile):
         file_parser: TimeSeriesFileParser,
         entity_api: EntityApi,
         namespace: str,
-        entity_mapping: Optional[Mapping[str, Mapping[str, str]]] = None,
-        entity_type: Optional[str] = None,
+        entity_mapping: Mapping[str, Mapping[str, str]] | None = None,
+        entity_type: str | None = None,
         case_sensitive_signals: bool = False,
-        identifier_type: Optional[str] = None,
+        identifier_type: str | None = None,
     ) -> "ParsedTimeSeriesFile":
         """Read a file and construct a new parser from the contents of that file."""
         if entity_type is not None:
@@ -873,10 +867,10 @@ class EntitiesInColumns(ParsedTimeSeriesFile):
         data: pd.DataFrame,
         entity_api: EntityApi,
         namespace: str,
-        entity_mapping: Optional[Mapping[str, Mapping[str, str]]] = None,
-        entity_type: Optional[str] = None,
-        identifier_type: Optional[str] = None,
-    ) -> Tuple[pd.DataFrame, EntityResourceNames]:
+        entity_mapping: Mapping[str, Mapping[str, str]] | None = None,
+        entity_type: str | None = None,
+        identifier_type: str | None = None,
+    ) -> tuple[pd.DataFrame, EntityResourceNames]:
         identifiers = pd.Series(data.columns.get_level_values(1))
         identifiers.name = identifier_type or entity_type
         lookup_result = cls._lookup_entities(
@@ -1040,7 +1034,7 @@ class MetaDataSignalNamesInRows(SignalNamesInRows):
     @staticmethod
     def _get_deduplicated_series(
         series: Sequence[TimeSeries],
-    ) -> Tuple[Sequence[TimeSeries], Sequence[TimeSeries]]:
+    ) -> tuple[Sequence[TimeSeries], Sequence[TimeSeries]]:
         """Get the deduplicated series and series with duplicate names"""
         series_dict = defaultdict(list)
         for ts in series:
@@ -1115,7 +1109,7 @@ def _is_int(element: Any) -> bool:
         return False
 
 
-def _is_valid_entity_column(column: str, invalid: Set[str]) -> bool:
+def _is_valid_entity_column(column: str, invalid: set[str]) -> bool:
     if column in invalid:
         return False
     if len(column) == 0:
@@ -1127,7 +1121,7 @@ def _is_valid_entity_column(column: str, invalid: Set[str]) -> bool:
     return True
 
 
-def _is_valid_signal_name(column: str, invalid: Set[str], allow_duplicates: bool = False) -> bool:
+def _is_valid_signal_name(column: str, invalid: set[str], allow_duplicates: bool = False) -> bool:
     # Pandas adds a `.x` to duplicate columns, for example `col`, `col.1`, `col.2`.
     if allow_duplicates:
         column = _remove_dot_int(column)

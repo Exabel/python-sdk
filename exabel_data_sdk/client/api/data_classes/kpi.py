@@ -1,6 +1,5 @@
 from dataclasses import dataclass
 from enum import Enum
-from typing import Optional
 
 from exabel_data_sdk.stubs.exabel.api.analytics.v1.kpi_messages_pb2 import Kpi as ProtoKpi
 
@@ -34,8 +33,8 @@ class Kpi:
     type: KpiType
     value: str
     freq: str
-    display_name: Optional[str] = None
-    is_ratio: Optional[bool] = None
+    display_name: str | None = None
+    is_ratio: bool | None = None
 
     @staticmethod
     def from_proto(proto: ProtoKpi) -> "Kpi":

@@ -1,7 +1,7 @@
 import sys
 import warnings
 from contextlib import contextmanager
-from typing import Iterator, Mapping, Optional
+from typing import Iterator, Mapping
 
 _OPTIONAL_DEPENDENCIES = {
     "snowflake": "snowflake-connector-python",
@@ -16,8 +16,8 @@ _OPTIONAL_DEPENDENCIES = {
 
 @contextmanager
 def handle_missing_imports(
-    module_library_map: Optional[Mapping[str, str]] = None,
-    warning: Optional[str] = None,
+    module_library_map: Mapping[str, str] | None = None,
+    warning: str | None = None,
     reraise: bool = False,
 ) -> Iterator:
     """
@@ -32,7 +32,7 @@ def handle_missing_imports(
             # Get the caller's module name. Second frame is `contextlib` because of the decorator.
             # Third frame is the caller of this function.
             if not warning:
-                caller_name = sys._getframe(2).f_locals.get(  # pylint: disable=protected-access
+                caller_name = sys._getframe(2).f_locals.get(  # noqa: SLF001
                     "__name__"
                 )
                 warning = (

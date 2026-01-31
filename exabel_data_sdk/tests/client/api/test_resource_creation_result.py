@@ -12,8 +12,6 @@ from exabel_data_sdk.client.api.resource_creation_result import (
     get_resource_name,
 )
 
-# pylint: disable=protected-access
-
 
 class TestResourceCreationResult(unittest.TestCase):
     def test_get_resource_name(self):

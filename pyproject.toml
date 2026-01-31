@@ -1,87 +1,73 @@
-[tool.black]
-line-length = 100
-
-[tool.pylint.MASTER]
-ignore = "stubs"
-# pylint on mac is reporting c-extension-no-member errors without this.
-extension-pkg-allow-list = ["math", "resource"]
-jobs = 2
-
-[tool.pylint."MESSAGES CONTROL"]
-disable = [
-    # fails on any TODO
-    "fixme",
-
-    # many dubious positives, such as similar __init__ methods and tests
-    "duplicate-code",
-
-    # when this is run on Jenkins, the dependencies are not available
-    "import-error",
-
-    # Checks fail on protobufs.
-    "no-member",
-    "no-name-in-module",
-
-    # Does not support typing correctly.
-    "isinstance-second-argument-not-valid-type",
-
-    # When an import is placed inside a function, it is generally as a work-around due to cyclic
-    # imports; emitting a warning which has to be ignored, does not seem helpful.
-    "cyclic-import",
-
-    # Since we usually follow the pattern of one class per module, the module docstring is
-    # superfluous.
-    "missing-module-docstring",
-
-    # Imports are handled by 'isort'.
-    "wrong-import-order",
-    "wrong-import-position",
-    "ungrouped-imports",
-    "import-outside-toplevel",
-
-    # Mypy is better at checking this.
-    # Pylint has false positives for methods called with resource contexts.
-    "arguments-differ",
-    "arguments-renamed",
-    "too-many-function-args",
-
-    # The checks with 'too-few' or 'too-many' are generally reasonable programming guidelines,
-    # but when enforced they tend to have little effect beyond causing the code to be sprinkled
-    # by ignore statements.
-    "too-few-public-methods",
-    "too-many-ancestors",
-    "too-many-arguments",
-    "too-many-boolean-expressions",
-    "too-many-branches",
-    "too-many-instance-attributes",
-    "too-many-lines",
-    "too-many-locals",
-    "too-many-nested-blocks",
-    "too-many-public-methods",
-    "too-many-return-statements",
-    "too-many-statements",
-    "too-many-positional-arguments",
+[project]
+name = "exabel-data-sdk"
+description = "Python SDK for the Exabel Data API"
+version = "7.0.0"
+license = "MIT"
+license-files = ["LICENSE"]
+readme = "README.md"
+authors = [
+    { name = "Exabel", email = "support@exabel.com" }
 ]
-enable="useless-suppression"
+requires-python = ">=3.10"
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Financial and Insurance Industry",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+dependencies = [
+    "google-api-core>1.31.3",
+    "googleapis-common-protos>=1.56.0",
+    "grpcio",
+    "openpyxl",
+    "pandas",
+    "protobuf>=4",
+    "requests",
+    "tqdm",
+]
 
-[tool.pylint.BASIC]
-no-docstring-rgx = "^_|^test_|.*Test$|^Test"
+[dependency-groups]
+dev = [
+    "ruff",
+    "mypy",
+    "pytest",
+    "pytest-asyncio",
+    "types-protobuf",
+    "types-python-dateutil",
+    "types-requests",
+]
 
-[tool.pylint.FORMAT]
-# By default, pylint enforces an argument naming convention which is different from PEP8 (stricter),
-# but we have decided on PEP8 and no need to deviate from that.
-argument-rgx = "[a-z][a-z0-9_]*$"
-attr-rgx = "_{0,2}[A-Za-z_][A-Za-z0-9_]*$"
-variable-rgx = "[a-z_][a-z0-9_]*$"
-good-names=["_", "of"]
+[project.optional-dependencies]
+snowflake = ["snowflake-connector-python[pandas]", "snowflake-sqlalchemy"]
+bigquery = ["google-cloud-bigquery", "sqlalchemy-bigquery"]
+athena = ["pyathena", "pyarrow", "sqlalchemy"]
 
-[tool.isort]
-multi_line_output = 3
-include_trailing_comma = true
-force_grid_wrap = 0
-use_parentheses = true
-line_length = 100
-ensure_newline_before_comments = true
+[project.urls]
+Homepage = "https://github.com/Exabel/python-sdk"
+Source = "https://github.com/Exabel/python-sdk"
+Changelog = "https://github.com/Exabel/python-sdk/releases"
+
+[build-system]
+requires = ["uv_build>=0.9.28,<0.10.0"]
+build-backend = "uv_build"
+
+[tool.uv]
+package = true
+
+[tool.uv.build-backend]
+module-name = "exabel_data_sdk"
+module-root = ""
+source-exclude = [
+    "exabel_data_sdk/tests/**",
+]
+wheel-exclude = [
+    "exabel_data_sdk/tests/**",
+]
 
 [tool.mypy]
 python_version = "3.10"
@@ -104,6 +90,126 @@ check_untyped_defs = false
 disable_error_code = ["annotation-unchecked"]
 
 [[tool.mypy.overrides]]
+module = [
+    "google.*",
+    "google.api_core.*",
+    "google.cloud.*",
+]
+ignore_errors = true
+follow_imports = "skip"
+
+[[tool.mypy.overrides]]
 module = "exabel_data_sdk.stubs.*"
 disallow_untyped_defs = false
 disable_error_code = ["name-defined"]
+
+[tool.ruff]
+src = ["exabel_data_sdk"]
+force-exclude = true
+extend-exclude = ["stubs"]
+line-length = 100
+indent-width = 4
+target-version = "py310"
+
+[tool.ruff.lint]
+select = [
+    "I",       # isort
+    "E",       # pycodestyle errors
+    "W",       # pycodestyle warnings
+    "F",       # pyflakes
+    "N",       # pep8-naming
+    "G",       # flake8-logging-format
+    "PL",      # Pylint (PLC, PLE, PLR, PLW)
+    "SLF001",  # private-member-access
+    "BLE001",  # blind-except
+    "B006",    # mutable-argument-default
+    "B018",    # useless-expression
+    "B023",    # function-uses-loop-variable
+    "S307",    # suspicious-eval-usage
+
+    # pydocstyle
+    "D101",    # undocumented-public-class
+    # "D102",  # undocumented-public-method
+    "D103",    # undocumented-public-function
+    "D419",    # empty-docstring
+
+    # pyupgrade
+    "UP006",    # use dict/list instead of typing.Dict/List
+    "UP007",    # use X | Y for unions
+    "UP032",    # f-string
+    "UP037",    # do not need quotes for type annotations
+    "UP045",    # use X | None instead of Optional[X]
+]
+
+ignore = [
+    "E402",  # module-import-not-at-top-of-file
+    "E501",  # line-too-long - handled by formatter
+    "E721",  # type-comparison
+    "E741",  # ambiguous-variable-name
+
+    # Matches pylint disabled rules in [tool.pylint.messages_control]
+    "PLC0415",  # import-outside-toplevel
+    "PLR0904",  # too-many-public-methods
+    "PLR0911",  # too-many-return-statements
+    "PLR0912",  # too-many-branches
+    "PLR0913",  # too-many-arguments
+    "PLR0914",  # too-many-locals
+    "PLR0915",  # too-many-statements
+    "PLR0916",  # too-many-boolean-expressions
+    "PLR0917",  # too-many-positional-arguments
+    "PLR1702",  # too-many-nested-blocks
+
+    "PLR6201",  # using set literal for testing membership
+    "PLC2801",  # unnecessary-dunder-call
+    "PLR5501",  # collapsible-else-if
+    "PLC2401",  # non-ascii-name
+
+    # Pylint optional checkers (not enabled by default in pylint)
+    "PLC2701",  # import-private-name
+    "PLR2004",  # magic-value-comparison
+    "PLR2044",  # empty-comment
+    "PLR6301",  # no-self-use
+    "PLW1641",  # eq-without-hash
+    "PLW2901",  # redefined-loop-name
+
+    "B019",  # using lru_cache on methods can lead to memory leaks
+
+    "N802",  # invalid-function-name
+    "N803",  # invalid-argument-name
+    "N806",  # non-lowercase-variable-in-function
+    "N813",  # camelcase-imported-as-lowercase
+    "N815",  # mixed-case-variable-in-class-scope
+    "N818",  # error-suffix-on-exception-name
+
+    "F821",  # undefined name
+    "F601",  # multi-value-repeated-key-literal
+
+    "G010",  # logging-warn
+    "G201",  # logging-exc-info - use .exception() instead of .error() with exc_info=true
+]
+
+[tool.ruff.lint.per-file-ignores]
+"{**/test_*.py,**/*_test.py,**/tests/**/*.py,**/test/**/*.py}" = [
+    "F841",  # unused-variable
+    "F811",  # redefined-while-unused
+    "ARG001",  # unused-function-argument
+    "ARG002",  # unused-method-argument
+    "D",  # pydocstyle
+    "SLF001"  # private-member-access
+]
+"**/__init__.py" = ["F401"] # unused-import
+
+[tool.ruff.lint.isort]
+known-first-party = ["exabel_data_sdk"]
+detect-same-package = false
+
+[tool.ruff.lint.pep8-naming]
+extend-ignore-names = ["_*", "of*", "__*", "X*"]
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
+ignore-decorators = ["typing.overload"]
+ignore-var-parameters = true
+
+[tool.ruff.lint.flake8-unused-arguments]
+ignore-variadic-names = true

@@ -2,7 +2,7 @@ import abc
 import argparse
 import os
 import urllib.parse
-from typing import Optional, Sequence, Tuple
+from typing import Sequence
 
 from exabel_data_sdk import ExabelClient
 from exabel_data_sdk.scripts.command_line_script import CommandLineScript
@@ -51,6 +51,12 @@ class BaseScript(CommandLineScript, abc.ABC):
             default="management.api.exabel.com",
             help="Management API host on format 'hostname[:port]'",
         )
+        self.parser.add_argument(
+            "--exabel-export-api-host",
+            required=False,
+            default="export.api.exabel.com",
+            help="Export API host on format 'hostname[:port]'",
+        )
 
     def run(self) -> None:
         args = self.parse_arguments()
@@ -82,6 +88,7 @@ class BaseScript(CommandLineScript, abc.ABC):
         management_api_host, management_api_port = self.parse_host_and_port(
             args.exabel_management_api_host
         )
+        export_api_host, export_api_port = self.parse_host_and_port(args.exabel_export_api_host)
         client = ExabelClient(
             data_api_host=data_api_host,
             data_api_port=data_api_port,
@@ -89,9 +96,12 @@ class BaseScript(CommandLineScript, abc.ABC):
             analytics_api_port=analytics_api_port,
             management_api_host=management_api_host,
             management_api_port=management_api_port,
+            export_api_host=export_api_host,
+            export_api_port=export_api_port,
             api_key=api_key,
             access_token=access_token,
             extra_headers=extra_headers,
+            retries=getattr(args, "retries", None),
         )
         self.run_script(client, args)
 
@@ -106,7 +116,7 @@ class BaseScript(CommandLineScript, abc.ABC):
         """
 
     @staticmethod
-    def parse_host_and_port(host_and_port: str) -> Tuple[str, Optional[int]]:
+    def parse_host_and_port(host_and_port: str) -> tuple[str, int | None]:
         """
         Parses a string on format 'hostname[:port]'.
         """

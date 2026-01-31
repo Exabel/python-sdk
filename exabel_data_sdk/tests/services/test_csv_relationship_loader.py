@@ -26,8 +26,6 @@ from exabel_data_sdk.stubs.exabel.api.data.v1.all_pb2 import SearchEntitiesRespo
 from exabel_data_sdk.stubs.exabel.api.data.v1.entity_messages_pb2 import Entity
 from exabel_data_sdk.tests.client.exabel_mock_client import ExabelMockClient
 
-# pylint: disable=protected-access
-
 
 class TestRelationshipLoaderColumnConfiguration(unittest.TestCase):
     def test_validate_argument_combination(self):
@@ -522,9 +520,7 @@ class TestCsvRelationshipLoader(unittest.TestCase):
         expected_relationships = [
             Relationship(
                 relationship_type="relationshipTypes/ns.HAS_BRAND",
-                from_entity=(
-                    "entityTypes/otherns.accessible_entity_type/" "entities/otherns.entity"
-                ),
+                from_entity=("entityTypes/otherns.accessible_entity_type/entities/otherns.entity"),
                 to_entity="entityTypes/ns.brand/entities/ns.brand",
             )
         ]
