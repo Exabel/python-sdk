@@ -1,4 +1,5 @@
-from typing import Literal, Optional, Sequence, Union
+import logging
+from typing import Literal, Sequence
 
 import pandas as pd
 
@@ -9,6 +10,7 @@ from exabel_data_sdk.client.api.data_classes.company_kpi_mapping_results import 
 from exabel_data_sdk.client.api.data_classes.company_kpi_models import CompanyKpiModels
 from exabel_data_sdk.client.api.data_classes.kpi import Kpi, KpiType
 from exabel_data_sdk.client.api.data_classes.kpi_mapping_result_data import KpiMappingResultData
+from exabel_data_sdk.client.api.data_classes.kpi_screen_results import KpiScreenCompanyResult
 from exabel_data_sdk.client.api.data_classes.kpi_source import KpiSource
 from exabel_data_sdk.client.api.data_classes.model_results import (
     BaseModelResults,
@@ -26,8 +28,11 @@ from exabel_data_sdk.stubs.exabel.api.analytics.v1.kpi_service_pb2 import (
     ListCompanyKpiMappingResultsRequest,
     ListCompanyKpiModelResultsRequest,
     ListKpiMappingResultsRequest,
+    ListKpiScreenResultsRequest,
 )
 from exabel_data_sdk.stubs.exabel.api.time.date_pb2 import Date
+
+logger = logging.getLogger(__name__)
 
 
 class KpiApi:
@@ -62,23 +67,28 @@ class KpiApi:
     def list_company_base_model_results(
         self,
         company: str,
-        source_filter: Optional[KpiSource] = None,
-        fiscal_period: Union[Literal["previous", "current", "next"], pd.Timestamp] = "current",
-        freq: Optional[Literal["FQ", "FS", "FY"]] = None,
+        source_filter: KpiSource | None = None,
+        fiscal_period: Literal["previous", "current", "next"] | pd.Timestamp = "current",
+        freq: Literal["FQ", "FS", "FY"] | None = None,
     ) -> BaseModelResults:
         """
         List base model results for a company.
 
         Args:
             company:        Company resource name.
-            source_filter:  Optional KPI source filter.
+            source_filter:  DEPRECATED. KPI source filtering is now determined by user settings.
+                            This parameter is ignored. Set user preferences via UserApi instead.
             fiscal_period:  Fiscal period to retrieve data for.
             freq:           Frequency to retrieve data for. If not provided, frequency is
                             determined based on KPI counts.
         """
+        if source_filter is not None:
+            logger.warning(
+                "source_filter parameter is deprecated and ignored. "
+                "KPI source filtering is now determined by user settings. ",
+            )
         request = ListCompanyBaseModelResultsRequest(
             parent=company,
-            kpi_source=source_filter.to_proto() if source_filter else None,
             period=self._get_fiscal_period_selector(fiscal_period, freq),
         )
         response = self.client.list_company_base_model_results(request)
@@ -87,23 +97,28 @@ class KpiApi:
     def list_company_hierarchical_model_results(
         self,
         company: str,
-        source_filter: Optional[KpiSource] = None,
-        fiscal_period: Union[Literal["previous", "current", "next"], pd.Timestamp] = "current",
-        freq: Optional[Literal["FQ", "FS", "FY"]] = None,
+        source_filter: KpiSource | None = None,
+        fiscal_period: Literal["previous", "current", "next"] | pd.Timestamp = "current",
+        freq: Literal["FQ", "FS", "FY"] | None = None,
     ) -> HierarchicalModelResults:
         """
         List hierarchical model results for a company.
 
         Args:
             company:        Company resource name.
-            source_filter:  Optional KPI source filter.
+            source_filter:  DEPRECATED. KPI source filtering is now determined by user settings.
+                            This parameter is ignored. Set user preferences via UserApi instead.
             fiscal_period:  Fiscal period to retrieve data for.
             freq:           Frequency to retrieve data for. If not provided, frequency is
                             determined based on KPI counts.
         """
+        if source_filter is not None:
+            logger.warning(
+                "source_filter parameter is deprecated and ignored. "
+                "KPI source filtering is now determined by user settings. ",
+            )
         request = ListCompanyHierarchicalModelResultsRequest(
             parent=company,
-            kpi_source=source_filter.to_proto() if source_filter else None,
             period=self._get_fiscal_period_selector(fiscal_period, freq),
         )
         response = self.client.list_company_hierarchical_model_results(request)
@@ -149,10 +164,31 @@ class KpiApi:
         response = self.client.list_company_kpi_model_results(request)
         return CompanyKpiModels.from_proto(response)
 
+    def list_kpi_screen_results(
+        self, kpi_screen: str, page_size: int = 20, page_token: str = ""
+    ) -> PagingResult[KpiScreenCompanyResult]:
+        """
+        List KPI screen results.
+
+        Args:
+            kpi_screen:    KPI screen resource name.
+            page_size:     The maximum number of results to return.
+            page_token:    The page token to resume the results from.
+        """
+        request = ListKpiScreenResultsRequest(
+            name=kpi_screen, page_size=page_size, page_token=page_token
+        )
+        response = self.client.list_kpi_screen_results(request)
+        return PagingResult(
+            [KpiScreenCompanyResult.from_proto(result) for result in response.results],
+            next_page_token=response.next_page_token,
+            total_size=response.total_size,
+        )
+
     @staticmethod
     def _get_fiscal_period_selector(
-        fiscal_period: Union[Literal["previous", "current", "next"], pd.Timestamp],
-        freq: Optional[Literal["FQ", "FS", "FY"]],
+        fiscal_period: Literal["previous", "current", "next"] | pd.Timestamp,
+        freq: Literal["FQ", "FS", "FY"] | None,
     ) -> FiscalPeriodSelector:
         if freq not in ["FQ", "FS", "FY", None]:
             raise ValueError("Frequency must be one of FQ, FS and FY.")

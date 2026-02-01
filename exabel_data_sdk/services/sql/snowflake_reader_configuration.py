@@ -1,6 +1,6 @@
 import argparse
 from dataclasses import asdict, dataclass
-from typing import NewType, Optional
+from typing import NewType
 
 from exabel_data_sdk.services.sql.sql_reader_configuration import (
     ConnectionString,
@@ -30,12 +30,12 @@ class SnowflakeReaderConfiguration(SqlReaderConfiguration):
 
     account: Account
     user: Username
-    password: Optional[Password] = None
-    private_key: Optional[PrivateKey] = None
-    warehouse: Optional[Warehouse] = None
-    database: Optional[Database] = None
-    schema: Optional[Schema] = None
-    role: Optional[Role] = None
+    password: Password | None = None
+    private_key: PrivateKey | None = None
+    warehouse: Warehouse | None = None
+    database: Database | None = None
+    schema: Schema | None = None
+    role: Role | None = None
     login_timeout: LoginTimeout = LoginTimeout(15)
 
     def __post_init__(self) -> None:

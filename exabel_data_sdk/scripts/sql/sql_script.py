@@ -1,5 +1,5 @@
 import abc
-from typing import Sequence, Type
+from typing import Sequence
 
 from exabel_data_sdk.scripts.command_line_script import CommandLineScript
 from exabel_data_sdk.services.sql.sql_reader_configuration import SqlReaderConfiguration
@@ -16,7 +16,7 @@ class SqlScript(CommandLineScript, abc.ABC):
         self,
         argv: Sequence[str],
         description: str,
-        reader_configuration_class: Type[SqlReaderConfiguration],
+        reader_configuration_class: type[SqlReaderConfiguration],
     ):
         super().__init__(argv, description)
         self.reader_configuration_class = reader_configuration_class

@@ -47,8 +47,8 @@ class RelationshipServiceServicer(object):
     def ListRelationshipTypes(self, request, context):
         """List all relationship types from a common catalog.
 
-        Lists all relationship types available to your customer, including those created by you, in
-        the global catalog, and from data sets you are subscribed to.
+        Lists all relationship types available to your customer, including those created by you, and in
+        the global catalog.
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')

@@ -1,5 +1,4 @@
 from dataclasses import dataclass
-from typing import Optional
 
 import pandas as pd
 
@@ -14,12 +13,14 @@ class FiscalPeriod:
     Represents a fiscal period.
 
     Attributes:
-        period_end: The end date of the fiscal period.
-        label: The label of the fiscal period.
+        period_end:  The end date of the fiscal period.
+        label:       The label of the fiscal period.
+        report_date: The report date of the fiscal period.
     """
 
-    period_end: Optional[pd.Timestamp]
-    label: Optional[str]
+    period_end: pd.Timestamp | None
+    label: str | None
+    report_date: pd.Timestamp | None
 
     @staticmethod
     def from_proto(proto: ProtoFiscalPeriod) -> "FiscalPeriod":
@@ -35,4 +36,13 @@ class FiscalPeriod:
                 else None
             ),
             label=proto.label if proto.label else None,
+            report_date=(
+                pd.Timestamp(
+                    year=proto.report_date.year,
+                    month=proto.report_date.month,
+                    day=proto.report_date.day,
+                )
+                if proto.HasField("report_date")
+                else None
+            ),
         )

@@ -2,7 +2,7 @@ import argparse
 import json
 import urllib.parse
 from dataclasses import dataclass
-from typing import MutableMapping, NewType, Optional
+from typing import MutableMapping, NewType
 
 from exabel_data_sdk.services.sql.exceptions import InvalidServiceAccountCredentialsError
 from exabel_data_sdk.services.sql.sql_reader_configuration import (
@@ -27,10 +27,10 @@ Credentials = NewType("Credentials", str)
 class BigQueryReaderConfiguration(SqlReaderConfiguration):
     """SQL configuration for BigQuery."""
 
-    project: Optional[Project] = None
-    credentials_path: Optional[CredentialsPath] = None
-    dataset: Optional[Dataset] = None
-    credentials: Optional[Credentials] = None
+    project: Project | None = None
+    credentials_path: CredentialsPath | None = None
+    dataset: Dataset | None = None
+    credentials: Credentials | None = None
 
     def __post_init__(self) -> None:
         if self.credentials_path and self.credentials:

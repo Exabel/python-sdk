@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Generic, Mapping, Optional, Sequence, TypeVar
+from typing import Generic, Mapping, Sequence, TypeVar
 
 import pandas as pd
 
@@ -43,13 +43,13 @@ class FileLoadingResult(Generic[ResourceT]):
 
     def __init__(
         self,
-        results: Optional[ResourceCreationResults[ResourceT]] = None,
+        results: ResourceCreationResults[ResourceT] | None = None,
         *,
-        warnings: Optional[Sequence[str]] = None,
+        warnings: Sequence[str] | None = None,
         aborted: bool = False,
-        processed_rows: Optional[int] = None,
+        processed_rows: int | None = None,
     ):
-        self.results: Optional[ResourceCreationResults[ResourceT]] = results
+        self.results: ResourceCreationResults[ResourceT] | None = results
         self.warnings = warnings or []
         self.aborted = aborted
         self.processed_rows = processed_rows
@@ -90,17 +90,17 @@ class TimeSeriesFileLoadingResult(FileLoadingResult[pd.Series]):
 
     def __init__(
         self,
-        results: Optional[ResourceCreationResults[pd.Series]] = None,
+        results: ResourceCreationResults[pd.Series] | None = None,
         *,
-        warnings: Optional[Sequence[str]] = None,
+        warnings: Sequence[str] | None = None,
         aborted: bool = False,
-        processed_rows: Optional[int] = None,
-        entity_mapping_result: Optional[EntityMappingResult] = None,
-        created_data_signals: Optional[Sequence[str]] = None,
-        dry_run_results: Optional[Sequence[str]] = None,
-        sheet_name: Optional[str] = None,
+        processed_rows: int | None = None,
+        entity_mapping_result: EntityMappingResult | None = None,
+        created_data_signals: Sequence[str] | None = None,
+        dry_run_results: Sequence[str] | None = None,
+        sheet_name: str | None = None,
         has_known_time: bool = False,
-        replaced: Optional[Sequence[str]] = None,
+        replaced: Sequence[str] | None = None,
     ):
         super().__init__(results, warnings=warnings, aborted=aborted, processed_rows=processed_rows)
         if entity_mapping_result is None:

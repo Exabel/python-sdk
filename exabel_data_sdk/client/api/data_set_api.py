@@ -1,4 +1,4 @@
-from typing import Optional, Sequence
+from typing import Sequence
 
 from google.protobuf.field_mask_pb2 import FieldMask
 
@@ -30,7 +30,7 @@ class DataSetApi:
         response = self.client.list_data_sets(ListDataSetsRequest())
         return [DataSet.from_proto(d) for d in response.data_sets]
 
-    def get_data_set(self, name: str) -> Optional[DataSet]:
+    def get_data_set(self, name: str) -> DataSet | None:
         """
         Get one data set.
 
@@ -61,7 +61,7 @@ class DataSetApi:
     def update_data_set(
         self,
         data_set: DataSet,
-        update_mask: Optional[FieldMask] = None,
+        update_mask: FieldMask | None = None,
         allow_missing: bool = False,
     ) -> DataSet:
         """

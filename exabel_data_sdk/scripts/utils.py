@@ -1,5 +1,5 @@
 import argparse
-from typing import Iterable, Sequence, Union
+from typing import Iterable, Sequence
 
 from tqdm import tqdm
 
@@ -21,7 +21,7 @@ ID_EXAMPLE_MAP = {
 
 
 def conditional_progress_bar(
-    iterable: Iterable, show_progress: bool = False, **kwargs: Union[str, int]
+    iterable: Iterable, show_progress: bool = False, **kwargs: str | int
 ) -> Iterable:
     """
     Returns a tqdm progress bar if show_progress is True, otherwise returns the iterable unchanged.

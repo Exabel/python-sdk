@@ -2,5 +2,5 @@
 
 # Autoformats all Python files with isort and black.
 
-isort -s exabel_data_sdk/stubs exabel_data_sdk setup.py
-black --exclude exabel_data_sdk/stubs exabel_data_sdk setup.py
+ruff check --fix exabel_data_sdk
+ruff format exabel_data_sdk

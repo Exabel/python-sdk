@@ -1,5 +1,5 @@
 import itertools
-from typing import Mapping, Sequence, Tuple, TypeVar, Union
+from typing import Mapping, Sequence, TypeVar
 
 from exabel_data_sdk.client.api.api_client.entity_api_client import EntityApiClient
 from exabel_data_sdk.client.api.data_classes.entity import Entity
@@ -109,8 +109,8 @@ class SearchService:
         return self._companies_by_field("text", *texts)
 
     def company_by_mic_and_ticker(
-        self, *mic_and_ticker: Tuple[str, str]
-    ) -> Mapping[Tuple[str, str], Entity]:
+        self, *mic_and_ticker: tuple[str, str]
+    ) -> Mapping[tuple[str, str], Entity]:
         """
         Look up companies by MIC (Market Identifier Code) and ticker.
 
@@ -120,8 +120,8 @@ class SearchService:
         return self._by_mic_and_ticker(_COMPANY_ENTITY_TYPE, *mic_and_ticker)
 
     def security_by_mic_and_ticker(
-        self, *mic_and_ticker: Tuple[str, str]
-    ) -> Mapping[Tuple[str, str], Entity]:
+        self, *mic_and_ticker: tuple[str, str]
+    ) -> Mapping[tuple[str, str], Entity]:
         """
         Look up securities by MIC (Market Identifier Code) and ticker.
 
@@ -131,8 +131,8 @@ class SearchService:
         return self._by_mic_and_ticker(_SECURITY_ENTITY_TYPE, *mic_and_ticker)
 
     def listing_by_mic_and_ticker(
-        self, *mic_and_ticker: Tuple[str, str]
-    ) -> Mapping[Tuple[str, str], Entity]:
+        self, *mic_and_ticker: tuple[str, str]
+    ) -> Mapping[tuple[str, str], Entity]:
         """
         Look up listings by MIC (Market Identifier Code) and ticker.
 
@@ -160,7 +160,7 @@ class SearchService:
         return self._security_by_field("cusip", *cusips)
 
     def entities_by_terms(
-        self, entity_type: str, terms: Sequence[Union[SearchTerm, Tuple[str, str]]]
+        self, entity_type: str, terms: Sequence[SearchTerm | tuple[str, str]]
     ) -> Sequence[SearchEntitiesResponse.SearchResult]:
         """
         Look up entities of a given type based on a series of search terms.
@@ -192,8 +192,8 @@ class SearchService:
         return self._single_result(self._by_field(_SECURITY_ENTITY_TYPE, field, *values))
 
     def _by_mic_and_ticker(
-        self, entity_type: str, *mic_and_ticker: Tuple[str, str]
-    ) -> Mapping[Tuple[str, str], Entity]:
+        self, entity_type: str, *mic_and_ticker: tuple[str, str]
+    ) -> Mapping[tuple[str, str], Entity]:
         results = self._by_fields(entity_type, ("mic", "ticker"), *itertools.chain(*mic_and_ticker))
         return self._single_result(results)  # type: ignore[arg-type]
 
@@ -207,14 +207,14 @@ class SearchService:
     def _by_field(
         self, entity_type: str, field: str, *values: str
     ) -> Mapping[str, Sequence[Entity]]:
-        result: Mapping[Tuple[str, ...], Sequence[Entity]] = self._by_fields(
+        result: Mapping[tuple[str, ...], Sequence[Entity]] = self._by_fields(
             entity_type, [field], *values
         )
         return {query[0]: entities for query, entities in result.items()}
 
     def _by_fields(
         self, entity_type: str, fields: Sequence[str], *values: str
-    ) -> Mapping[Tuple[str, ...], Sequence[Entity]]:
+    ) -> Mapping[tuple[str, ...], Sequence[Entity]]:
         if not values:
             raise ValueError("No search terms provided.")
         tuples = []
@@ -224,9 +224,9 @@ class SearchService:
         to_return = {}
         for result in results:
             assert len(result.terms) == len(fields)
-            assert list(fields) == [
-                term.field for term in result.terms
-            ], f"{fields} != {[term.field for term in result.terms]}"
+            assert list(fields) == [term.field for term in result.terms], (
+                f"{fields} != {[term.field for term in result.terms]}"
+            )
             if result.entities:
                 to_return[tuple(term.query for term in result.terms)] = [
                     Entity.from_proto(e) for e in result.entities

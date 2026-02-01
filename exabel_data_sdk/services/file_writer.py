@@ -1,6 +1,6 @@
 import abc
 from dataclasses import dataclass
-from typing import Iterable, Optional, Union
+from typing import Iterable
 
 import pandas as pd
 
@@ -14,7 +14,7 @@ class FileWritingResult:
         rows: Number of rows written to a file or a set of files.
     """
 
-    rows: Optional[int] = None
+    rows: int | None = None
 
 
 class FileWriter(abc.ABC):
@@ -22,7 +22,5 @@ class FileWriter(abc.ABC):
 
     @staticmethod
     @abc.abstractmethod
-    def write_file(
-        df: Union[pd.DataFrame, Iterable[pd.DataFrame]], filepath: str
-    ) -> FileWritingResult:
+    def write_file(df: pd.DataFrame | Iterable[pd.DataFrame], filepath: str) -> FileWritingResult:
         """Write the DataFrame or iterable of DataFrames to a file."""

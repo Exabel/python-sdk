@@ -1,6 +1,6 @@
 import logging
 import time
-from typing import Any, Iterator, Mapping, Optional
+from typing import Any, Iterator, Mapping
 
 import pandas as pd
 
@@ -18,7 +18,7 @@ class SQLAlchemyReader(SqlReader):
     """Reader of SQL queries using SQLAlchemy."""
 
     def __init__(
-        self, connection_string: ConnectionString, *, kwargs: Optional[Mapping[str, Any]] = None
+        self, connection_string: ConnectionString, *, kwargs: Mapping[str, Any] | None = None
     ) -> None:
         kwargs = kwargs or {}
         self.engine = create_engine(connection_string, **kwargs)

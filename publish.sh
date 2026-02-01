@@ -38,8 +38,8 @@ bash build.sh
 if [ "${UPLOAD_TO_REAL_PYPI}" == true ]; then
   echo ""
   echo "=== Publishing package to the real PyPI ==="
-  python3 -m twine upload dist/*
+  uv publish
 else
   echo "Publishing to test"
-  python3 -m twine upload --repository testpypi dist/*
+  uv publish --publish-url https://test.pypi.org/legacy/
 fi

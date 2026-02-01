@@ -1,6 +1,6 @@
 import tempfile
 import unittest
-from typing import Iterable, Optional, Union
+from typing import Iterable
 
 import pandas as pd
 
@@ -11,8 +11,8 @@ class TestCsvReader(unittest.TestCase):
     def _read_csv(
         self,
         content: str,
-        string_columns: Iterable[Union[str, int]],
-        chunksize: Optional[int] = None,
+        string_columns: Iterable[str | int],
+        chunksize: int | None = None,
     ):
         with tempfile.TemporaryDirectory() as tmp:
             file = f"{tmp}/file.csv"

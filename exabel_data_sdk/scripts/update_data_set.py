@@ -1,6 +1,6 @@
 import argparse
 import sys
-from typing import List, Sequence
+from typing import Sequence
 
 from google.protobuf.field_mask_pb2 import FieldMask
 
@@ -64,8 +64,7 @@ class UpdateDataSet(BaseScript):
             required=False,
             action="store_true",
             help=(
-                "Whether signals should be removed or replace the existing signals of the data "
-                "set."
+                "Whether signals should be removed or replace the existing signals of the data set."
             ),
         )
 
@@ -82,7 +81,7 @@ class UpdateDataSet(BaseScript):
         if args.add_signals and not args.signals and not args.signals_file:
             raise ValueError("Signals must be given when --add-signals is set.")
 
-        signals: List[str] = []
+        signals: list[str] = []
         if args.signals:
             signals = args.signals
         elif args.signals_file:

@@ -1,6 +1,6 @@
 import logging
 from pathlib import Path
-from typing import Iterable, Union
+from typing import Iterable
 
 import pandas as pd
 
@@ -13,9 +13,7 @@ class FeatherWriter(FileWriter):
     """Stores a DataFrame in a Feather file."""
 
     @staticmethod
-    def write_file(
-        df: Union[pd.DataFrame, Iterable[pd.DataFrame]], filepath: str
-    ) -> FileWritingResult:
+    def write_file(df: pd.DataFrame | Iterable[pd.DataFrame], filepath: str) -> FileWritingResult:
         rows = 0
         if isinstance(df, pd.DataFrame):
             df.to_feather(filepath)

@@ -7,6 +7,7 @@ from ..... import exabel
 import google.protobuf.descriptor
 import google.protobuf.internal.enum_type_wrapper
 import google.protobuf.message
+import google.protobuf.struct_pb2
 import sys
 import typing
 if sys.version_info >= (3, 10):
@@ -88,6 +89,8 @@ class KpiMappingGroup(google.protobuf.message.Message):
     TYPE_FIELD_NUMBER: builtins.int
     ENTITY_SET_FIELD_NUMBER: builtins.int
     PROXY_RESAMPLE_METHOD_FIELD_NUMBER: builtins.int
+    FORECASTING_OPTIONS_FIELD_NUMBER: builtins.int
+    MODEL_OPTIONS_FIELD_NUMBER: builtins.int
     name: builtins.str
     'Resource name. E.g "kpiMappings/123/groups/4".'
     display_name: builtins.str
@@ -111,12 +114,75 @@ class KpiMappingGroup(google.protobuf.message.Message):
         All the entities must be companies.
         """
 
-    def __init__(self, *, name: builtins.str | None=..., display_name: builtins.str | None=..., kpi: exabel.api.analytics.v1.kpi_messages_pb2.Kpi | None=..., proxy_signal: exabel.api.analytics.v1.derived_signal_messages_pb2.DerivedSignal | None=..., type: global___KpiMappingGroupType.ValueType | None=..., entity_set: exabel.api.analytics.v1.common_messages_pb2.EntitySet | None=..., proxy_resample_method: global___ResampleMethod.ValueType | None=...) -> None:
+    @property
+    def forecasting_options(self) -> global___ForecastingOptions:
+        """Specifies how proxy signal forecasting should be performed."""
+
+    @property
+    def model_options(self) -> global___ModelOptions:
+        """Configuration for the single-predictor models that are built for this group."""
+
+    def __init__(self, *, name: builtins.str | None=..., display_name: builtins.str | None=..., kpi: exabel.api.analytics.v1.kpi_messages_pb2.Kpi | None=..., proxy_signal: exabel.api.analytics.v1.derived_signal_messages_pb2.DerivedSignal | None=..., type: global___KpiMappingGroupType.ValueType | None=..., entity_set: exabel.api.analytics.v1.common_messages_pb2.EntitySet | None=..., proxy_resample_method: global___ResampleMethod.ValueType | None=..., forecasting_options: global___ForecastingOptions | None=..., model_options: global___ModelOptions | None=...) -> None:
         ...
 
-    def HasField(self, field_name: typing.Literal['entity_set', b'entity_set', 'kpi', b'kpi', 'proxy_signal', b'proxy_signal']) -> builtins.bool:
+    def HasField(self, field_name: typing.Literal['entity_set', b'entity_set', 'forecasting_options', b'forecasting_options', 'kpi', b'kpi', 'model_options', b'model_options', 'proxy_signal', b'proxy_signal']) -> builtins.bool:
         ...
 
-    def ClearField(self, field_name: typing.Literal['display_name', b'display_name', 'entity_set', b'entity_set', 'kpi', b'kpi', 'name', b'name', 'proxy_resample_method', b'proxy_resample_method', 'proxy_signal', b'proxy_signal', 'type', b'type']) -> None:
+    def ClearField(self, field_name: typing.Literal['display_name', b'display_name', 'entity_set', b'entity_set', 'forecasting_options', b'forecasting_options', 'kpi', b'kpi', 'model_options', b'model_options', 'name', b'name', 'proxy_resample_method', b'proxy_resample_method', 'proxy_signal', b'proxy_signal', 'type', b'type']) -> None:
         ...
 global___KpiMappingGroup = KpiMappingGroup
+
+@typing.final
+class ForecastingOptions(google.protobuf.message.Message):
+    """Forecasting options for Prophet and other forecasting models."""
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    MODEL_TYPE_FIELD_NUMBER: builtins.int
+    PARAMETERS_FIELD_NUMBER: builtins.int
+    COUNTRY_HOLIDAYS_FIELD_NUMBER: builtins.int
+    HOLIDAYS_FIELD_NUMBER: builtins.int
+    model_type: builtins.str
+    'Forecasting model type.\n\n    Supported values: `auto`, `prophet`, `sarima`, `theta`, `unobserved`, `holt_winters`.\n\n    Default: `auto`.\n\n    For information about forecasting, see https://doc.exabel.com/dsl/modelling/forecasting.html\n    '
+    country_holidays: builtins.str
+    "Country code for standard country holidays (e.g., 'US', 'UK').\n    Only used when model_type='prophet'.\n    "
+    holidays: builtins.str
+    'Resource name of the holiday specification to use for Prophet forecasting.\n    Only used when model_type=\'prophet\'.\n    Example: "holidaySpecifications/123"\n    '
+
+    @property
+    def parameters(self) -> google.protobuf.struct_pb2.Struct:
+        """Model-specific parameters passed to the forecasting function."""
+
+    def __init__(self, *, model_type: builtins.str | None=..., parameters: google.protobuf.struct_pb2.Struct | None=..., country_holidays: builtins.str | None=..., holidays: builtins.str | None=...) -> None:
+        ...
+
+    def HasField(self, field_name: typing.Literal['parameters', b'parameters']) -> builtins.bool:
+        ...
+
+    def ClearField(self, field_name: typing.Literal['country_holidays', b'country_holidays', 'holidays', b'holidays', 'model_type', b'model_type', 'parameters', b'parameters']) -> None:
+        ...
+global___ForecastingOptions = ForecastingOptions
+
+@typing.final
+class ModelOptions(google.protobuf.message.Message):
+    """Options for the KPI prediction models."""
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    MODEL_TYPE_FIELD_NUMBER: builtins.int
+    PARAMETERS_FIELD_NUMBER: builtins.int
+    YEAR_OVER_YEAR_FIELD_NUMBER: builtins.int
+    model_type: builtins.str
+    'The type of the model.\n\n    Supported values: `ard_regression`, `elastic_net`, `elastic_net_cv`, `huber_regression`,\n    `linear_regression`, `ratio_prediction`, `ratio_prediction_ml`, `sarimax`, `spread_model`,\n    and `unobserved_components`.\n\n    Default: `sarimax` is used for ratio KPIs and `ratio_prediction` for other KPIs.\n\n    For information about model types, see https://doc.exabel.com/dsl/modelling/models.html\n    '
+    year_over_year: builtins.bool
+    'Whether to apply year-over-year transformation.\n    When enabled, both predictors and targets are transformed to year-over-year changes during training,\n    and predictions are transformed back to absolute values during inference.\n    '
+
+    @property
+    def parameters(self) -> google.protobuf.struct_pb2.Struct:
+        """Model-specific parameters. Only takes effect if `model_type` is set."""
+
+    def __init__(self, *, model_type: builtins.str | None=..., parameters: google.protobuf.struct_pb2.Struct | None=..., year_over_year: builtins.bool | None=...) -> None:
+        ...
+
+    def HasField(self, field_name: typing.Literal['parameters', b'parameters']) -> builtins.bool:
+        ...
+
+    def ClearField(self, field_name: typing.Literal['model_type', b'model_type', 'parameters', b'parameters', 'year_over_year', b'year_over_year']) -> None:
+        ...
+global___ModelOptions = ModelOptions

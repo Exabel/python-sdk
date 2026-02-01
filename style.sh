@@ -4,13 +4,10 @@
 
 set -euf
 echo "Running mypy."
-mypy exabel_data_sdk setup.py
+mypy exabel_data_sdk
 
-echo "Check imports"
-isort --check-only -s exabel_data_sdk/stubs exabel_data_sdk setup.py
+echo "Check style with ruff linter."
+ruff check exabel_data_sdk
 
-echo "Check formatting"
-black --check --exclude exabel_data_sdk/stubs exabel_data_sdk setup.py
-
-echo "Running pylint."
-pylint exabel_data_sdk setup.py
+echo "Check formatting with ruff formatter."
+ruff format --check exabel_data_sdk

@@ -1,5 +1,4 @@
 from dataclasses import dataclass
-from typing import Optional
 
 from exabel_data_sdk.query.literal import Literal, escape
 from exabel_data_sdk.query.predicate import Comparison, InPredicate
@@ -17,7 +16,7 @@ class Column:
     """
 
     name: str
-    expression: Optional[str] = None
+    expression: str | None = None
 
     def sql(self) -> str:
         """Returns the SQL representation of this column as used in the SELECT part."""

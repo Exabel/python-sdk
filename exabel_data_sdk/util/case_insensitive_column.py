@@ -1,7 +1,7 @@
-from typing import Sequence, Union
+from typing import Sequence
 
 
-def get_case_insensitive_column(column: Union[str, int], columns: Sequence[str]) -> Union[str, int]:
+def get_case_insensitive_column(column: str | int, columns: Sequence[str]) -> str | int:
     """
     Search for a column name in a sequence of column names and if found, return the
     lexicographically first case-insensitive match among the column names. If no match is found

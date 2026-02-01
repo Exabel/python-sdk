@@ -5,6 +5,8 @@ from . import data_set_messages_pb2
 from . import data_set_service_pb2
 from . import entity_messages_pb2
 from . import entity_service_pb2
+from . import holiday_messages_pb2
+from . import holiday_service_pb2
 from . import import_job_service_pb2
 from . import namespace_service_pb2
 from . import namespaces_messages_pb2

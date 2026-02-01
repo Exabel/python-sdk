@@ -1,6 +1,5 @@
 from dataclasses import dataclass
 from datetime import datetime
-from typing import Optional
 
 from dateutil import tz
 from google.protobuf.timestamp_pb2 import Timestamp as ProtoTimestamp
@@ -22,10 +21,10 @@ class KpiModelRun:
         error:       An optional error message if the run failed.
     """
 
-    created_at: Optional[datetime]
-    started_at: Optional[datetime]
-    finished_at: Optional[datetime]
-    error: Optional[str]
+    created_at: datetime | None
+    started_at: datetime | None
+    finished_at: datetime | None
+    error: str | None
 
     @staticmethod
     def from_proto(proto: ProtoKpiModelRun) -> "KpiModelRun":
@@ -50,6 +49,6 @@ class KpiModelRun:
         )
 
     @staticmethod
-    def _proto_timestamp_to_datetime(timestamp: ProtoTimestamp) -> Optional[datetime]:
+    def _proto_timestamp_to_datetime(timestamp: ProtoTimestamp) -> datetime | None:
         """Convert a protobuf Timestamp to a datetime object."""
         return datetime.fromtimestamp(timestamp.seconds, tz=tz.tzutc())

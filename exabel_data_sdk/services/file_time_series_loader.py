@@ -1,5 +1,5 @@
 import logging
-from typing import List, Mapping, MutableSequence, Optional, Sequence, Tuple, Type
+from typing import Mapping, MutableSequence, Sequence
 
 from google.protobuf.duration_pb2 import Duration
 from google.protobuf.field_mask_pb2 import FieldMask
@@ -52,39 +52,39 @@ class FileTimeSeriesLoader:
 
     def __init__(self, client: ExabelClient):
         self._client = client
-        self._time_series_parser: Optional[Type[ParsedTimeSeriesFile]] = None
+        self._time_series_parser: type[ParsedTimeSeriesFile] | None = None
 
     @deprecate_arguments(namespace=None, create_tag=None)
     def load_time_series(
         self,
         *,
         filename: str,
-        entity_mapping_filename: Optional[str] = None,
+        entity_mapping_filename: str | None = None,
         separator: str = ",",
-        entity_type: Optional[str] = None,
-        identifier_type: Optional[str] = None,
-        pit_current_time: Optional[bool] = False,
-        pit_offset: Optional[int] = None,
+        entity_type: str | None = None,
+        identifier_type: str | None = None,
+        pit_current_time: bool | None = False,
+        pit_offset: int | None = None,
         create_missing_signals: bool = False,
         create_library_signal: bool = True,
-        global_time_series: Optional[bool] = None,
+        global_time_series: bool | None = None,
         threads: int = DEFAULT_NUMBER_OF_THREADS_FOR_IMPORT,
         dry_run: bool = False,
         error_on_any_failure: bool = False,
         retries: int = DEFAULT_NUMBER_OF_RETRIES,
-        abort_threshold: Optional[float] = DEFAULT_ABORT_THRESHOLD,
-        batch_size: Optional[int] = None,
+        abort_threshold: float | None = DEFAULT_ABORT_THRESHOLD,
+        batch_size: int | None = None,
         skip_validation: bool = False,
         case_sensitive_signals: bool = False,
         replace_existing_time_series: bool = False,
         replace_existing_data_points: bool = False,
-        should_optimise: Optional[bool] = None,
+        should_optimise: bool | None = None,
         return_results: bool = True,
         processed_rows: int = 0,
-        total_rows: Optional[int] = None,
+        total_rows: int | None = None,
         # Deprecated arguments
-        create_tag: Optional[bool] = None,  # pylint: disable=unused-argument
-        namespace: Optional[str] = None,  # pylint: disable=unused-argument
+        create_tag: bool | None = None,
+        namespace: str | None = None,
     ) -> Sequence[TimeSeriesFileLoadingResult]:
         """
         Load a file and upload the time series to the Exabel Data API
@@ -144,7 +144,7 @@ class FileTimeSeriesLoader:
             entity_mapping_filename, separator=separator
         )
         results = []
-        replaced_time_series: List[str] = []
+        replaced_time_series: list[str] = []
         for batch_no, parser in enumerate(
             TimeSeriesFileParser.from_file(filename, separator, batch_size), 1
         ):
@@ -192,25 +192,25 @@ class FileTimeSeriesLoader:
         self,
         *,
         parser: TimeSeriesFileParser,
-        entity_mapping: Optional[Mapping[str, Mapping[str, str]]] = None,
-        entity_type: Optional[str] = None,
-        identifier_type: Optional[str] = None,
-        pit_current_time: Optional[bool] = False,
-        pit_offset: Optional[int] = None,
+        entity_mapping: Mapping[str, Mapping[str, str]] | None = None,
+        entity_type: str | None = None,
+        identifier_type: str | None = None,
+        pit_current_time: bool | None = False,
+        pit_offset: int | None = None,
         create_missing_signals: bool = False,
         create_library_signal: bool = True,
-        global_time_series: Optional[bool] = None,
+        global_time_series: bool | None = None,
         threads: int = DEFAULT_NUMBER_OF_THREADS,
         dry_run: bool = False,
         error_on_any_failure: bool = False,
         retries: int = DEFAULT_NUMBER_OF_RETRIES,
-        abort_threshold: Optional[float] = DEFAULT_ABORT_THRESHOLD,
+        abort_threshold: float | None = DEFAULT_ABORT_THRESHOLD,
         skip_validation: bool = False,
         case_sensitive_signals: bool = False,
         replace_existing_time_series: bool = False,
         replace_existing_data_points: bool = False,
-        replaced_time_series: Optional[Sequence[str]] = None,
-        should_optimise: Optional[bool] = None,
+        replaced_time_series: Sequence[str] | None = None,
+        should_optimise: bool | None = None,
     ) -> TimeSeriesFileLoadingResult:
         """
         Load time series from a parser.
@@ -248,7 +248,7 @@ class FileTimeSeriesLoader:
         elif pit_current_time is None and pit_offset is None:
             default_known_time = DefaultKnownTime(current_time=True)
 
-        candidate_parsers: MutableSequence[Type[ParsedTimeSeriesFile]] = []
+        candidate_parsers: MutableSequence[type[ParsedTimeSeriesFile]] = []
         if parser.data_frame is None:
             candidate_parsers.append(EntitiesInColumns)
         candidate_parsers += [
@@ -427,21 +427,21 @@ class FileTimeSeriesLoader:
         self,
         *,
         filename: str,
-        entity_mapping_filename: Optional[str] = None,
+        entity_mapping_filename: str | None = None,
         separator: str = ",",
-        entity_type: Optional[str] = None,
-        identifier_type: Optional[str] = None,
-        global_time_series: Optional[bool] = None,
+        entity_type: str | None = None,
+        identifier_type: str | None = None,
+        global_time_series: bool | None = None,
         threads: int = DEFAULT_NUMBER_OF_THREADS_FOR_IMPORT,
         dry_run: bool = False,
         retries: int = DEFAULT_NUMBER_OF_RETRIES,
-        abort_threshold: Optional[float] = DEFAULT_ABORT_THRESHOLD,
-        batch_size: Optional[int] = None,
+        abort_threshold: float | None = DEFAULT_ABORT_THRESHOLD,
+        batch_size: int | None = None,
         skip_validation: bool = False,
         case_sensitive_signals: bool = False,
         return_results: bool = True,
         processed_rows: int = 0,
-        total_rows: Optional[int] = None,
+        total_rows: int | None = None,
     ) -> Sequence[FileLoadingResult]:
         """
         Load a CSV file to delete the time series data points represented in it.
@@ -475,14 +475,14 @@ class FileTimeSeriesLoader:
         entity_mapping = EntityMappingFileReader.read_entity_mapping_file(
             entity_mapping_filename, separator=separator
         )
-        results: List[FileLoadingResult] = []
+        results: list[FileLoadingResult] = []
         for batch_no, parser in enumerate(
             TimeSeriesFileParser.from_file(filename, separator, batch_size), 1
         ):
             if batch_size is not None:
                 logger.info("Processing batch no: %d", batch_no)
 
-            candidate_parsers: MutableSequence[Type[ParsedTimeSeriesFile]] = []
+            candidate_parsers: MutableSequence[type[ParsedTimeSeriesFile]] = []
             if parser.data_frame is None:
                 candidate_parsers.append(EntitiesInColumns)
             candidate_parsers += [
@@ -575,24 +575,24 @@ class FileTimeSeriesLoader:
         self,
         *,
         filename: str,
-        entity_mapping_filename: Optional[str] = None,
+        entity_mapping_filename: str | None = None,
         separator: str = ",",
-        entity_type: Optional[str] = None,
-        identifier_type: Optional[str] = None,
+        entity_type: str | None = None,
+        identifier_type: str | None = None,
         create_missing_signals: bool = False,
         create_library_signal: bool = True,
-        global_time_series: Optional[bool] = None,
+        global_time_series: bool | None = None,
         threads: int = DEFAULT_NUMBER_OF_THREADS,
         dry_run: bool = False,
         error_on_any_failure: bool = False,
         retries: int = DEFAULT_NUMBER_OF_RETRIES,
-        abort_threshold: Optional[float] = DEFAULT_ABORT_THRESHOLD,
-        batch_size: Optional[int] = None,
+        abort_threshold: float | None = DEFAULT_ABORT_THRESHOLD,
+        batch_size: int | None = None,
         skip_validation: bool = False,
         case_sensitive_signals: bool = False,
         return_results: bool = True,
         processed_rows: int = 0,
-        total_rows: Optional[int] = None,
+        total_rows: int | None = None,
     ) -> Sequence[TimeSeriesFileLoadingResult]:
         """
         Load a file and upload the time series metadata to the Exabel Data API
@@ -768,7 +768,7 @@ class FileTimeSeriesLoader:
 
     def _check_signals_to_rename(
         self, signals: Sequence[str], case_sensitive_signals: bool, signals_in_rows: bool
-    ) -> Tuple[Sequence[str], dict]:
+    ) -> tuple[Sequence[str], dict]:
         """
         Check which signals are missing and which signals can be renamed according to case
         sensitivity rules.
@@ -805,7 +805,7 @@ class FileTimeSeriesLoader:
         dry_run: bool,
         case_sensitive_signals: bool,
         parsed_file: ParsedTimeSeriesFile,
-    ) -> Tuple[ParsedTimeSeriesFile, Sequence[str]]:
+    ) -> tuple[ParsedTimeSeriesFile, Sequence[str]]:
         """
         Handle signals in a time series file by:
             1. Checking for missing signals
@@ -846,9 +846,7 @@ class FileTimeSeriesLoader:
         return (parsed_file, missing_signals)
 
 
-def check_global_time_series(
-    entity_names: Sequence[str], global_time_series: Optional[bool]
-) -> None:
+def check_global_time_series(entity_names: Sequence[str], global_time_series: bool | None) -> None:
     """
     Perform checks related to global entities and time series.
     """
@@ -875,8 +873,8 @@ def check_signal_name_errors(signals: Sequence[str]) -> None:
     """
     Perform checks on signals in a time series file.
     """
-    missing_headers: List[str] = []
-    invalid_signals: List[str] = []
+    missing_headers: list[str] = []
+    invalid_signals: list[str] = []
     for signal in signals:
         try:
             validate_signal_name(signal)

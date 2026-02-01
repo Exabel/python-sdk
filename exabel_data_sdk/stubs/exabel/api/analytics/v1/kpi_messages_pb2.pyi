@@ -806,6 +806,7 @@ class FiscalPeriod(google.protobuf.message.Message):
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
     END_DATE_FIELD_NUMBER: builtins.int
     LABEL_FIELD_NUMBER: builtins.int
+    REPORT_DATE_FIELD_NUMBER: builtins.int
     label: builtins.str
     'The fiscal period label. Examples: 1Q-2003, 2H-1997, FY-2029.'
 
@@ -813,13 +814,17 @@ class FiscalPeriod(google.protobuf.message.Message):
     def end_date(self) -> exabel.api.time.date_pb2.Date:
         """The last date of the fiscal period."""
 
-    def __init__(self, *, end_date: exabel.api.time.date_pb2.Date | None=..., label: builtins.str | None=...) -> None:
+    @property
+    def report_date(self) -> exabel.api.time.date_pb2.Date:
+        """The report date of the fiscal period."""
+
+    def __init__(self, *, end_date: exabel.api.time.date_pb2.Date | None=..., label: builtins.str | None=..., report_date: exabel.api.time.date_pb2.Date | None=...) -> None:
         ...
 
-    def HasField(self, field_name: typing.Literal['_label', b'_label', 'end_date', b'end_date', 'label', b'label']) -> builtins.bool:
+    def HasField(self, field_name: typing.Literal['_label', b'_label', 'end_date', b'end_date', 'label', b'label', 'report_date', b'report_date']) -> builtins.bool:
         ...
 
-    def ClearField(self, field_name: typing.Literal['_label', b'_label', 'end_date', b'end_date', 'label', b'label']) -> None:
+    def ClearField(self, field_name: typing.Literal['_label', b'_label', 'end_date', b'end_date', 'label', b'label', 'report_date', b'report_date']) -> None:
         ...
 
     def WhichOneof(self, oneof_group: typing.Literal['_label', b'_label']) -> typing.Literal['label'] | None:
@@ -927,3 +932,33 @@ class KpiBreakdownNode(google.protobuf.message.Message):
     def WhichOneof(self, oneof_group: typing.Literal['content', b'content']) -> typing.Literal['kpi', 'header'] | None:
         ...
 global___KpiBreakdownNode = KpiBreakdownNode
+
+@typing.final
+class KpiScreenCompanyResult(google.protobuf.message.Message):
+    """KPI screen results for a single company."""
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    COMPANY_FIELD_NUMBER: builtins.int
+    FISCAL_PERIOD_FIELD_NUMBER: builtins.int
+    RESULTS_FIELD_NUMBER: builtins.int
+
+    @property
+    def company(self) -> global___Company:
+        """The company."""
+
+    @property
+    def fiscal_period(self) -> global___FiscalPeriod:
+        """The fiscal period for this result."""
+
+    @property
+    def results(self) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[global___CompanyKpiModelResult]:
+        """KPI model results for this company."""
+
+    def __init__(self, *, company: global___Company | None=..., fiscal_period: global___FiscalPeriod | None=..., results: collections.abc.Iterable[global___CompanyKpiModelResult] | None=...) -> None:
+        ...
+
+    def HasField(self, field_name: typing.Literal['company', b'company', 'fiscal_period', b'fiscal_period']) -> builtins.bool:
+        ...
+
+    def ClearField(self, field_name: typing.Literal['company', b'company', 'fiscal_period', b'fiscal_period', 'results', b'results']) -> None:
+        ...
+global___KpiScreenCompanyResult = KpiScreenCompanyResult

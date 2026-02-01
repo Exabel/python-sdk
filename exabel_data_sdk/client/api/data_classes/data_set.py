@@ -1,4 +1,4 @@
-from typing import Optional, Sequence
+from typing import Sequence
 
 from exabel_data_sdk.stubs.exabel.api.data.v1.all_pb2 import DataSet as ProtoDataSet
 
@@ -23,10 +23,10 @@ class DataSet:
         name: str,
         display_name: str,
         description: str = "",
-        signals: Optional[Sequence[str]] = None,
+        signals: Sequence[str] | None = None,
         read_only: bool = False,
-        derived_signals: Optional[Sequence[str]] = None,
-        highlighted_signals: Optional[Sequence[str]] = None,
+        derived_signals: Sequence[str] | None = None,
+        highlighted_signals: Sequence[str] | None = None,
     ):
         """
         Create a data set resource in the Data API.

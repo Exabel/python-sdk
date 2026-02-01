@@ -1,7 +1,7 @@
 import argparse
 import urllib.parse
 from dataclasses import dataclass
-from typing import MutableMapping, NewType, Optional
+from typing import MutableMapping, NewType
 
 from exabel_data_sdk.services.sql.sql_reader_configuration import (
     ConnectionString,
@@ -44,12 +44,12 @@ class AthenaReaderConfiguration(SqlReaderConfiguration):
 
     region: Region
     s3_staging_dir: S3StagingDir
-    workgroup: Optional[Workgroup] = None
-    catalog: Optional[Catalog] = None
-    schema: Optional[Schema] = None
-    aws_access_key_id: Optional[AwsAccessKeyId] = None
-    aws_secret_access_key: Optional[AwsSecretAccessKey] = None
-    profile: Optional[Profile] = None
+    workgroup: Workgroup | None = None
+    catalog: Catalog | None = None
+    schema: Schema | None = None
+    aws_access_key_id: AwsAccessKeyId | None = None
+    aws_secret_access_key: AwsSecretAccessKey | None = None
+    profile: Profile | None = None
 
     def __post_init__(self) -> None:
         if self.profile is not None and (

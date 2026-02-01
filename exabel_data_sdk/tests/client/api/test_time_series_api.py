@@ -10,12 +10,12 @@ from exabel_data_sdk.client.api.data_classes.paging_result import PagingResult
 from exabel_data_sdk.client.api.data_classes.time_series import TimeSeries
 from exabel_data_sdk.client.api.time_series_api import TimeSeriesApi
 from exabel_data_sdk.client.client_config import ClientConfig
-from exabel_data_sdk.stubs.exabel.api.data.v1.all_pb2 import ImportTimeSeriesRequest
+from exabel_data_sdk.stubs.exabel.api.data.v1.all_pb2 import (
+    ImportTimeSeriesRequest,
+    TimeSeriesPoint,
+)
 from exabel_data_sdk.stubs.exabel.api.data.v1.all_pb2 import TimeSeries as ProtoTimeSeries
-from exabel_data_sdk.stubs.exabel.api.data.v1.all_pb2 import TimeSeriesPoint
 from exabel_data_sdk.util.import_ import estimate_size, get_batches_for_import
-
-# pylint: disable=protected-access
 
 
 class TestTimeSeriesApi(unittest.TestCase):

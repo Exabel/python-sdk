@@ -1,4 +1,4 @@
-from typing import Dict, Iterator, List, Optional
+from typing import Iterator
 
 from google.protobuf.field_mask_pb2 import FieldMask
 
@@ -28,7 +28,7 @@ class SignalApi(PageableResourceMixin):
         self.client = SignalGrpcClient(config)
 
     def list_signals(
-        self, page_size: int = 1000, page_token: Optional[str] = None
+        self, page_size: int = 1000, page_token: str | None = None
     ) -> PagingResult[Signal]:
         """
         List all signals.
@@ -51,7 +51,7 @@ class SignalApi(PageableResourceMixin):
         """Return an iterator with all signals."""
         return self._get_resource_iterator(self.list_signals)
 
-    def get_signal(self, name: str) -> Optional[Signal]:
+    def get_signal(self, name: str) -> Signal | None:
         """
         Get one signal.
 
@@ -88,7 +88,7 @@ class SignalApi(PageableResourceMixin):
     def update_signal(
         self,
         signal: Signal,
-        update_mask: Optional[FieldMask] = None,
+        update_mask: FieldMask | None = None,
         allow_missing: bool = False,
         create_library_signal: bool = False,
     ) -> Signal:
@@ -128,7 +128,7 @@ class SignalApi(PageableResourceMixin):
             DeleteSignalRequest(name=name),
         )
 
-    def filter_derived_signals(self, entity_names: List[str]) -> Dict[str, List[DerivedSignal]]:
+    def filter_derived_signals(self, entity_names: list[str]) -> dict[str, list[DerivedSignal]]:
         """
         Filter derived signals by entity names.
 

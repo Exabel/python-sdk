@@ -1,4 +1,4 @@
-from typing import Iterator, Optional, Sequence, Union
+from typing import Iterator, Sequence
 
 import numpy as np
 import pandas as pd
@@ -52,7 +52,7 @@ class TimeSeriesApi(PageableResourceMixin):
         self.client = TimeSeriesGrpcClient(config)
 
     def get_signal_time_series(
-        self, signal: str, page_size: int = 1000, page_token: Optional[str] = None
+        self, signal: str, page_size: int = 1000, page_token: str | None = None
     ) -> PagingResult[str]:
         """
         Get the resource names of all time series for one signal.
@@ -79,7 +79,7 @@ class TimeSeriesApi(PageableResourceMixin):
         return self._get_resource_iterator(self.get_signal_time_series, signal=signal)
 
     def get_entity_time_series(
-        self, entity: str, page_size: int = 1000, page_token: Optional[str] = None
+        self, entity: str, page_size: int = 1000, page_token: str | None = None
     ) -> PagingResult[str]:
         """
         Get the resource names of all time series for one entity.
@@ -109,11 +109,11 @@ class TimeSeriesApi(PageableResourceMixin):
     def get_time_series(
         self,
         name: str,
-        start: Optional[pd.Timestamp] = None,
-        end: Optional[pd.Timestamp] = None,
-        known_time: Optional[pd.Timestamp] = None,
+        start: pd.Timestamp | None = None,
+        end: pd.Timestamp | None = None,
+        known_time: pd.Timestamp | None = None,
         include_metadata: bool = False,
-    ) -> Optional[Union[pd.Series, TimeSeries]]:
+    ) -> pd.Series | TimeSeries | None:
         """
         Get one time series.
 
@@ -167,10 +167,10 @@ class TimeSeriesApi(PageableResourceMixin):
     def create_time_series(
         self,
         name: str,
-        series: Union[pd.Series, TimeSeries],
-        create_tag: Optional[bool] = None,  # pylint: disable=unused-argument
-        default_known_time: Optional[DefaultKnownTime] = None,
-        should_optimise: Optional[bool] = None,
+        series: pd.Series | TimeSeries,
+        create_tag: bool | None = None,
+        default_known_time: DefaultKnownTime | None = None,
+        should_optimise: bool | None = None,
     ) -> None:
         """
         Create a time series.
@@ -213,9 +213,9 @@ class TimeSeriesApi(PageableResourceMixin):
         self,
         name: str,
         series: pd.Series,
-        create_tag: Optional[bool] = None,  # pylint: disable=unused-argument
-        default_known_time: Optional[DefaultKnownTime] = None,
-        should_optimise: Optional[bool] = None,
+        create_tag: bool | None = None,
+        default_known_time: DefaultKnownTime | None = None,
+        should_optimise: bool | None = None,
     ) -> None:
         """
         Create or update a time series.
@@ -251,11 +251,11 @@ class TimeSeriesApi(PageableResourceMixin):
     def append_time_series_data(
         self,
         name: str,
-        series: Union[pd.Series, TimeSeries],
-        default_known_time: Optional[DefaultKnownTime] = None,
+        series: pd.Series | TimeSeries,
+        default_known_time: DefaultKnownTime | None = None,
         allow_missing: bool = False,
-        create_tag: bool = False,  # pylint: disable=unused-argument
-        should_optimise: Optional[bool] = None,
+        create_tag: bool = False,
+        should_optimise: bool | None = None,
     ) -> None:
         """
         Append data to the given time series.
@@ -297,15 +297,15 @@ class TimeSeriesApi(PageableResourceMixin):
     def import_time_series(
         self,
         parent: str,
-        series: Sequence[Union[pd.Series, TimeSeries]],
-        default_known_time: Optional[DefaultKnownTime] = None,
+        series: Sequence[pd.Series | TimeSeries],
+        default_known_time: DefaultKnownTime | None = None,
         allow_missing: bool = False,
-        create_tag: Optional[bool] = None,  # pylint: disable=unused-argument
+        create_tag: bool | None = None,
         status_in_response: bool = False,
         replace_existing_time_series: bool = False,
         replace_existing_data_points: bool = False,
-        should_optimise: Optional[bool] = None,
-    ) -> Optional[Sequence[ResourceCreationResult]]:
+        should_optimise: bool | None = None,
+    ) -> Sequence[ResourceCreationResult] | None:
         """
         Import multiple time series.
 
@@ -382,13 +382,13 @@ class TimeSeriesApi(PageableResourceMixin):
     def append_time_series_data_and_return(
         self,
         name: str,
-        series: Union[pd.Series, TimeSeries],
-        default_known_time: Optional[DefaultKnownTime] = None,
-        allow_missing: Optional[bool] = False,
-        create_tag: Optional[bool] = None,  # pylint: disable=unused-argument
-        include_metadata: Optional[bool] = False,
-        should_optimise: Optional[bool] = None,
-    ) -> Union[pd.Series, TimeSeries]:
+        series: pd.Series | TimeSeries,
+        default_known_time: DefaultKnownTime | None = None,
+        allow_missing: bool | None = False,
+        create_tag: bool | None = None,
+        include_metadata: bool | None = False,
+        should_optimise: bool | None = None,
+    ) -> pd.Series | TimeSeries:
         """
         Append data to the given time series, and return the full series.
 
@@ -460,17 +460,17 @@ class TimeSeriesApi(PageableResourceMixin):
     @deprecate_arguments(threads_for_import=None, create_tag=None)
     def bulk_upsert_time_series(
         self,
-        series: Sequence[Union[pd.Series, TimeSeries]],
-        create_tag: Optional[bool] = None,  # pylint: disable=unused-argument
+        series: Sequence[pd.Series | TimeSeries],
+        create_tag: bool | None = None,
         threads: int = DEFAULT_NUMBER_OF_THREADS_FOR_IMPORT,
-        default_known_time: Optional[DefaultKnownTime] = None,
+        default_known_time: DefaultKnownTime | None = None,
         replace_existing_time_series: bool = False,
         replace_existing_data_points: bool = False,
-        should_optimise: Optional[bool] = None,
+        should_optimise: bool | None = None,
         retries: int = DEFAULT_NUMBER_OF_RETRIES,
-        abort_threshold: Optional[float] = DEFAULT_ABORT_THRESHOLD,
+        abort_threshold: float | None = DEFAULT_ABORT_THRESHOLD,
         # Deprecated arguments
-        threads_for_import: int = 4,  # pylint: disable=unused-argument
+        threads_for_import: int = 4,
     ) -> ResourceCreationResults[pd.Series]:
         """Import the provided time series in batches.
 
@@ -516,7 +516,7 @@ class TimeSeriesApi(PageableResourceMixin):
         """
 
         def import_func(
-            ts_sequence: Sequence[Union[pd.Series, TimeSeries]],
+            ts_sequence: Sequence[pd.Series | TimeSeries],
         ) -> Sequence[ResourceCreationResult]:
             result = self.import_time_series(
                 parent="signals/-",
@@ -542,7 +542,7 @@ class TimeSeriesApi(PageableResourceMixin):
     def delete_time_series_points(
         self,
         series: Sequence[pd.Series],
-    ) -> Optional[Sequence[ResourceCreationResult]]:
+    ) -> Sequence[ResourceCreationResult] | None:
         """
         Delete data points from time series. A data point that is deleted will be removed from the
         time series at the given date and known_time if it exists with a value or NaN.
@@ -566,7 +566,7 @@ class TimeSeriesApi(PageableResourceMixin):
         series: Sequence[pd.Series],
         threads: int = DEFAULT_NUMBER_OF_THREADS_FOR_IMPORT,
         retries: int = DEFAULT_NUMBER_OF_RETRIES,
-        abort_threshold: Optional[float] = DEFAULT_ABORT_THRESHOLD,
+        abort_threshold: float | None = DEFAULT_ABORT_THRESHOLD,
     ) -> ResourceCreationResults[pd.Series]:
         """Delete the provided time series data points in batches.
 
@@ -610,8 +610,8 @@ class TimeSeriesApi(PageableResourceMixin):
 
     @staticmethod
     def _get_time_range(
-        start: Optional[pd.Timestamp],
-        end: Optional[pd.Timestamp],
+        start: pd.Timestamp | None,
+        end: pd.Timestamp | None,
         include_start: bool = True,
         include_end: bool = True,
     ) -> TimeRange:
@@ -638,8 +638,8 @@ class TimeSeriesApi(PageableResourceMixin):
 
     @staticmethod
     def _pandas_timestamp_to_proto(
-        timestamp: Optional[pd.Timestamp],
-    ) -> Optional[timestamp_pb2.Timestamp]:
+        timestamp: pd.Timestamp | None,
+    ) -> timestamp_pb2.Timestamp | None:
         """
         Convert a pandas Timestamp to a protobuf Timestamp.
         Note that second time resolution is used, and any fraction of a second is discarded.
@@ -674,7 +674,7 @@ class TimeSeriesApi(PageableResourceMixin):
         return time_series_results
 
     @staticmethod
-    def _handle_time_series(name: str, series: Union[pd.Series, TimeSeries]) -> TimeSeries:
+    def _handle_time_series(name: str, series: pd.Series | TimeSeries) -> TimeSeries:
         """
         Helper function to convert to TimeSeries if necessary,
         and set the name equal to the given name.

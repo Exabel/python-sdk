@@ -1,4 +1,4 @@
-from typing import Generic, Optional, Sequence
+from typing import Generic, Sequence
 
 from exabel_data_sdk.client.api.resource_creation_result import ResourceCreationResult
 from exabel_data_sdk.services.file_loading_result import ResourceT
@@ -11,8 +11,8 @@ class FileLoadingException(Generic[ResourceT], Exception):
         self,
         message: str,
         *,
-        failures: Optional[Sequence[ResourceCreationResult[ResourceT]]] = None,
+        failures: Sequence[ResourceCreationResult[ResourceT]] | None = None,
     ):
         super().__init__(message)
         self.message = message
-        self.failures: Optional[Sequence[ResourceCreationResult[ResourceT]]] = failures
+        self.failures: Sequence[ResourceCreationResult[ResourceT]] | None = failures

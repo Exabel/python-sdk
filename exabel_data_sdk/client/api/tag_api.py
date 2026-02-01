@@ -1,4 +1,4 @@
-from typing import Iterator, List, Optional
+from typing import Iterator
 
 from exabel_data_sdk.client.api.api_client.grpc.tag_grpc_client import TagGrpcClient
 from exabel_data_sdk.client.api.data_classes.paging_result import PagingResult
@@ -26,7 +26,7 @@ class TagApi(PageableResourceMixin):
     def __init__(self, config: ClientConfig):
         self.client = TagGrpcClient(config)
 
-    def create_tag(self, tag: Tag, folder: Optional[str] = None) -> Tag:
+    def create_tag(self, tag: Tag, folder: str | None = None) -> Tag:
         """
         Create a tag.
 
@@ -38,7 +38,7 @@ class TagApi(PageableResourceMixin):
         response = self.client.create_tag(CreateTagRequest(tag=tag.to_proto(), folder=folder))
         return Tag.from_proto(response)
 
-    def get_tag(self, name: str) -> Optional[Tag]:
+    def get_tag(self, name: str) -> Tag | None:
         """
         Get a tag.
 
@@ -74,9 +74,7 @@ class TagApi(PageableResourceMixin):
         """
         self.client.delete_tag(DeleteTagRequest(name=name))
 
-    def list_tags(
-        self, page_size: int = 1000, page_token: Optional[str] = None
-    ) -> PagingResult[Tag]:
+    def list_tags(self, page_size: int = 1000, page_token: str | None = None) -> PagingResult[Tag]:
         """
         List tags accesible to the user.
 
@@ -100,7 +98,7 @@ class TagApi(PageableResourceMixin):
         """Return an iterator with all tags."""
         return self._get_resource_iterator(self.list_tags)
 
-    def add_entities(self, name: str, entity_names: List[str]) -> None:
+    def add_entities(self, name: str, entity_names: list[str]) -> None:
         """
         Add entities to a tag.
 
@@ -110,7 +108,7 @@ class TagApi(PageableResourceMixin):
         """
         self.client.add_entities(AddEntitiesRequest(name=name, entity_names=entity_names))
 
-    def remove_entities(self, name: str, entity_names: List[str]) -> None:
+    def remove_entities(self, name: str, entity_names: list[str]) -> None:
         """
         Remove entities from a tag.
 
@@ -121,7 +119,7 @@ class TagApi(PageableResourceMixin):
         self.client.remove_entities(RemoveEntitiesRequest(name=name, entity_names=entity_names))
 
     def list_entities(
-        self, parent: str, page_size: int = 1000, page_token: Optional[str] = None
+        self, parent: str, page_size: int = 1000, page_token: str | None = None
     ) -> PagingResult[str]:
         """
         List resource names of the entities in the parent tag.

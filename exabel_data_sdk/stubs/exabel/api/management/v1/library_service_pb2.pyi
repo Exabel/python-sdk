@@ -44,6 +44,7 @@ global___ListFoldersResponse = ListFoldersResponse
 
 @typing.final
 class GetFolderRequest(google.protobuf.message.Message):
+    """Request to GetFolder."""
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
     NAME_FIELD_NUMBER: builtins.int
     name: builtins.str
@@ -58,6 +59,7 @@ global___GetFolderRequest = GetFolderRequest
 
 @typing.final
 class CreateFolderRequest(google.protobuf.message.Message):
+    """Request to CreateFolder."""
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
     FOLDER_FIELD_NUMBER: builtins.int
 
@@ -77,6 +79,7 @@ global___CreateFolderRequest = CreateFolderRequest
 
 @typing.final
 class UpdateFolderRequest(google.protobuf.message.Message):
+    """Request to UpdateFolder."""
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
     FOLDER_FIELD_NUMBER: builtins.int
     UPDATE_MASK_FIELD_NUMBER: builtins.int
@@ -111,6 +114,7 @@ global___UpdateFolderRequest = UpdateFolderRequest
 
 @typing.final
 class DeleteFolderRequest(google.protobuf.message.Message):
+    """Request to DeleteFolder."""
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
     NAME_FIELD_NUMBER: builtins.int
     name: builtins.str
@@ -125,6 +129,7 @@ global___DeleteFolderRequest = DeleteFolderRequest
 
 @typing.final
 class ListItemsRequest(google.protobuf.message.Message):
+    """Request to ListItems."""
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
     PARENT_FIELD_NUMBER: builtins.int
     ITEM_TYPE_FIELD_NUMBER: builtins.int
@@ -142,6 +147,7 @@ global___ListItemsRequest = ListItemsRequest
 
 @typing.final
 class ListItemsResponse(google.protobuf.message.Message):
+    """Response from ListItems."""
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
     ITEMS_FIELD_NUMBER: builtins.int
 
@@ -158,6 +164,7 @@ global___ListItemsResponse = ListItemsResponse
 
 @typing.final
 class MoveItemsRequest(google.protobuf.message.Message):
+    """Request to MoveItems."""
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
     ITEMS_FIELD_NUMBER: builtins.int
     TARGET_FOLDER_FIELD_NUMBER: builtins.int
@@ -177,6 +184,7 @@ global___MoveItemsRequest = MoveItemsRequest
 
 @typing.final
 class MoveItemsResponse(google.protobuf.message.Message):
+    """Response from MoveItems."""
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
 
     def __init__(self) -> None:
@@ -185,6 +193,7 @@ global___MoveItemsResponse = MoveItemsResponse
 
 @typing.final
 class ListFolderAccessorsRequest(google.protobuf.message.Message):
+    """Request to ListFolderAccessors."""
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
     NAME_FIELD_NUMBER: builtins.int
     name: builtins.str
@@ -199,6 +208,7 @@ global___ListFolderAccessorsRequest = ListFolderAccessorsRequest
 
 @typing.final
 class ListFolderAccessorsResponse(google.protobuf.message.Message):
+    """Response from ListFolderAccessors."""
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
     FOLDER_ACCESSORS_FIELD_NUMBER: builtins.int
 
@@ -217,6 +227,7 @@ global___ListFolderAccessorsResponse = ListFolderAccessorsResponse
 
 @typing.final
 class ShareFolderRequest(google.protobuf.message.Message):
+    """Request to ShareFolder."""
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
     FOLDER_FIELD_NUMBER: builtins.int
     GROUP_FIELD_NUMBER: builtins.int
@@ -237,6 +248,7 @@ global___ShareFolderRequest = ShareFolderRequest
 
 @typing.final
 class UnshareFolderRequest(google.protobuf.message.Message):
+    """Request to UnshareFolder."""
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
     FOLDER_FIELD_NUMBER: builtins.int
     GROUP_FIELD_NUMBER: builtins.int
@@ -254,6 +266,7 @@ global___UnshareFolderRequest = UnshareFolderRequest
 
 @typing.final
 class SearchItemsRequest(google.protobuf.message.Message):
+    """Request to SearchItems."""
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
     FOLDER_FIELD_NUMBER: builtins.int
     QUERY_FIELD_NUMBER: builtins.int
@@ -280,6 +293,7 @@ global___SearchItemsRequest = SearchItemsRequest
 
 @typing.final
 class SearchItemsResponse(google.protobuf.message.Message):
+    """Response from SearchItems."""
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
     RESULTS_FIELD_NUMBER: builtins.int
     NEXT_PAGE_TOKEN_FIELD_NUMBER: builtins.int

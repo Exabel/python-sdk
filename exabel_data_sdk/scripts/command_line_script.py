@@ -18,7 +18,7 @@ class CommandLineScript(abc.ABC):
 
     def setup_logging(
         self,
-        format: str = "%(message)s",  # pylint: disable=redefined-builtin
+        format: str = "%(message)s",
         level: int = logging.INFO,
         stream: TextIO = sys.stdout,
     ) -> None:

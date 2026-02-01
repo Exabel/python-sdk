@@ -1,0 +1,60 @@
+# See https://pre-commit.com for more information
+# pre-commit can be installed using uv or pipx:
+# - uv tool install pre-commit
+# - pipx install pre-commit
+#
+# The hooks needs to be installed in the git repository by using:
+#
+#     pre-commit install
+#
+# Then pre-commit runs the hooks on each commit.
+# To run the pre-commit hooks manually on all staged files use:
+#
+#     pre-commit run
+#
+
+default_language_version:
+  python: python3.10
+
+exclude: (^|/)stubs/
+fail_fast: true
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v6.0.0
+    hooks:
+      - id: trailing-whitespace
+        exclude: \.md$
+      - id: end-of-file-fixer
+      - id: check-yaml
+      - id: check-toml
+      - id: debug-statements  # no lines with breakpoints()
+      - id: check-merge-conflict
+      - id: no-commit-to-branch
+        args: [--branch, main]
+
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.14.13
+    hooks:
+      - id: ruff-check
+        types_or: [ python ]
+        args: [ --fix, --show-fixes, --config=pyproject.toml ]
+      - id: ruff-format
+        types_or: [ python ]
+        args: [ --config=pyproject.toml ]
+
+  - repo: https://github.com/pre-commit/mirrors-mypy
+    rev: v1.19.1
+    hooks:
+      - id: mypy
+        types: [python]
+        args:
+          [
+            "--config-file=pyproject.toml",
+            # https://mypy.readthedocs.io/en/stable/running_mypy.html#following-imports
+            "--follow-imports=silent",
+            "--disable-error-code=unused-ignore",
+          ]
+        additional_dependencies:
+          - types-protobuf
+          - types-python-dateutil
+          - types-requests

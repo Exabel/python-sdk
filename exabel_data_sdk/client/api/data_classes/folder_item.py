@@ -1,6 +1,5 @@
 from datetime import datetime
 from enum import Enum
-from typing import Optional
 
 from dateutil import tz
 from google.protobuf.timestamp_pb2 import Timestamp as ProtoTimestamp
@@ -61,8 +60,8 @@ class FolderItem:
         description: str,
         create_time: datetime,
         update_time: datetime,
-        created_by: Optional[str],
-        updated_by: Optional[str],
+        created_by: str | None,
+        updated_by: str | None,
     ):
         """
         Create a FolderItem.

@@ -30,8 +30,6 @@ from exabel_data_sdk.util.resource_name_normalization import (
     EntitySearchResultWarning,
 )
 
-# pylint: disable=protected-access
-
 BLOOMBERG_TICKER_MAPPING = {"AAPL US": "F_000C7F-E", "MSFT US": "F_000Q07-E"}
 
 

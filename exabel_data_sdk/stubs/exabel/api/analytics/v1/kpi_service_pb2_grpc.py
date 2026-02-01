@@ -28,6 +28,7 @@ class KpiServiceStub(object):
         self.ListCompanyHierarchicalModelResults = channel.unary_unary('/exabel.api.analytics.v1.KpiService/ListCompanyHierarchicalModelResults', request_serializer=exabel_dot_api_dot_analytics_dot_v1_dot_kpi__service__pb2.ListCompanyHierarchicalModelResultsRequest.SerializeToString, response_deserializer=exabel_dot_api_dot_analytics_dot_v1_dot_kpi__service__pb2.ListCompanyHierarchicalModelResultsResponse.FromString, _registered_method=True)
         self.ListCompanyKpiMappingResults = channel.unary_unary('/exabel.api.analytics.v1.KpiService/ListCompanyKpiMappingResults', request_serializer=exabel_dot_api_dot_analytics_dot_v1_dot_kpi__service__pb2.ListCompanyKpiMappingResultsRequest.SerializeToString, response_deserializer=exabel_dot_api_dot_analytics_dot_v1_dot_kpi__service__pb2.ListCompanyKpiMappingResultsResponse.FromString, _registered_method=True)
         self.ListCompanyKpiModelResults = channel.unary_unary('/exabel.api.analytics.v1.KpiService/ListCompanyKpiModelResults', request_serializer=exabel_dot_api_dot_analytics_dot_v1_dot_kpi__service__pb2.ListCompanyKpiModelResultsRequest.SerializeToString, response_deserializer=exabel_dot_api_dot_analytics_dot_v1_dot_kpi__service__pb2.ListCompanyKpiModelResultsResponse.FromString, _registered_method=True)
+        self.ListKpiScreenResults = channel.unary_unary('/exabel.api.analytics.v1.KpiService/ListKpiScreenResults', request_serializer=exabel_dot_api_dot_analytics_dot_v1_dot_kpi__service__pb2.ListKpiScreenResultsRequest.SerializeToString, response_deserializer=exabel_dot_api_dot_analytics_dot_v1_dot_kpi__service__pb2.ListKpiScreenResultsResponse.FromString, _registered_method=True)
 
 class KpiServiceServicer(object):
     """Service to retrieve KPI results.
@@ -42,6 +43,15 @@ class KpiServiceServicer(object):
 
     def ListCompanyBaseModelResults(self, request, context):
         """List base model results for a company.
+
+        Returns results for all modeled KPIs for the given company. This is provided as a list of KPIs,
+        with the latest model predictions and metadata for each KPI.
+
+        Base models work by modeling each KPI independently, using the vendor alternative data
+        available to your customer/user, and combining the best signals for that KPI.
+
+        The default "Exabel Model" that you see for all KPIs is a base model. If you have trained a
+        custom model and set that as your primary model for the KPI, you may see that returned instead.
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -49,6 +59,16 @@ class KpiServiceServicer(object):
 
     def ListCompanyHierarchicalModelResults(self, request, context):
         """List hierarchical model results for a company.
+
+        Returns results for all modeled KPIs for the given company. This is provided as a list of KPIs,
+        with the latest model predictions and metadata for each KPI.
+
+        Hierarchical models build on top of the base models by harmonizing their predictions with
+        knowledge of each company's financial model, e.g. Total revenue = Segment A + Segment B + ...
+        This produces more accurate predictions that are coherent across all segments. Note that
+        consensus may be used for KPIs for which you have no alternative data; this is denoted in the
+        metadata. Hierarchical models are only available for some companies - contact
+        support@exabel.com with requests.
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -56,6 +76,10 @@ class KpiServiceServicer(object):
 
     def ListCompanyKpiMappingResults(self, request, context):
         """List KPI mapping results for a single company KPI.
+
+        Returns the statistical test results of all KPI mappings for a given company KPI. This is
+        provided as a list of KPI mappings, each with the model backtest MAPE/MAE, correlation scores,
+        MAEs, and p-values.
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -63,13 +87,32 @@ class KpiServiceServicer(object):
 
     def ListCompanyKpiModelResults(self, request, context):
         """List model results for a single company KPI.
+
+        Returns all models for a given company KPI. This includes: all single-predictor models derived
+        from each individual KPI mapping; the Exabel model that is an automatic ensemble of the best
+        single-predictor models; any custom models you train; and the hierarchical model (if available)
+        that harmonizes model predictions across a company's KPIs as the final modeling layer.
+        """
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def ListKpiScreenResults(self, request, context):
+        """List KPI screen results.
+
+        Returns results from a saved KPI screen. This is provided as a list of companies and their KPIs
+        that meet the screen criteria, with the latest model predictions and metadata for each KPI.
+
+        As KPI screens are private to each user, you should authenticate with a user-level access
+        token, rather than the customer-level API key (which will not have access to individual users'
+        KPI screens).
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
 def add_KpiServiceServicer_to_server(servicer, server):
-    rpc_method_handlers = {'ListKpiMappingResults': grpc.unary_unary_rpc_method_handler(servicer.ListKpiMappingResults, request_deserializer=exabel_dot_api_dot_analytics_dot_v1_dot_kpi__service__pb2.ListKpiMappingResultsRequest.FromString, response_serializer=exabel_dot_api_dot_analytics_dot_v1_dot_kpi__service__pb2.ListKpiMappingResultsResponse.SerializeToString), 'ListCompanyBaseModelResults': grpc.unary_unary_rpc_method_handler(servicer.ListCompanyBaseModelResults, request_deserializer=exabel_dot_api_dot_analytics_dot_v1_dot_kpi__service__pb2.ListCompanyBaseModelResultsRequest.FromString, response_serializer=exabel_dot_api_dot_analytics_dot_v1_dot_kpi__service__pb2.ListCompanyBaseModelResultsResponse.SerializeToString), 'ListCompanyHierarchicalModelResults': grpc.unary_unary_rpc_method_handler(servicer.ListCompanyHierarchicalModelResults, request_deserializer=exabel_dot_api_dot_analytics_dot_v1_dot_kpi__service__pb2.ListCompanyHierarchicalModelResultsRequest.FromString, response_serializer=exabel_dot_api_dot_analytics_dot_v1_dot_kpi__service__pb2.ListCompanyHierarchicalModelResultsResponse.SerializeToString), 'ListCompanyKpiMappingResults': grpc.unary_unary_rpc_method_handler(servicer.ListCompanyKpiMappingResults, request_deserializer=exabel_dot_api_dot_analytics_dot_v1_dot_kpi__service__pb2.ListCompanyKpiMappingResultsRequest.FromString, response_serializer=exabel_dot_api_dot_analytics_dot_v1_dot_kpi__service__pb2.ListCompanyKpiMappingResultsResponse.SerializeToString), 'ListCompanyKpiModelResults': grpc.unary_unary_rpc_method_handler(servicer.ListCompanyKpiModelResults, request_deserializer=exabel_dot_api_dot_analytics_dot_v1_dot_kpi__service__pb2.ListCompanyKpiModelResultsRequest.FromString, response_serializer=exabel_dot_api_dot_analytics_dot_v1_dot_kpi__service__pb2.ListCompanyKpiModelResultsResponse.SerializeToString)}
+    rpc_method_handlers = {'ListKpiMappingResults': grpc.unary_unary_rpc_method_handler(servicer.ListKpiMappingResults, request_deserializer=exabel_dot_api_dot_analytics_dot_v1_dot_kpi__service__pb2.ListKpiMappingResultsRequest.FromString, response_serializer=exabel_dot_api_dot_analytics_dot_v1_dot_kpi__service__pb2.ListKpiMappingResultsResponse.SerializeToString), 'ListCompanyBaseModelResults': grpc.unary_unary_rpc_method_handler(servicer.ListCompanyBaseModelResults, request_deserializer=exabel_dot_api_dot_analytics_dot_v1_dot_kpi__service__pb2.ListCompanyBaseModelResultsRequest.FromString, response_serializer=exabel_dot_api_dot_analytics_dot_v1_dot_kpi__service__pb2.ListCompanyBaseModelResultsResponse.SerializeToString), 'ListCompanyHierarchicalModelResults': grpc.unary_unary_rpc_method_handler(servicer.ListCompanyHierarchicalModelResults, request_deserializer=exabel_dot_api_dot_analytics_dot_v1_dot_kpi__service__pb2.ListCompanyHierarchicalModelResultsRequest.FromString, response_serializer=exabel_dot_api_dot_analytics_dot_v1_dot_kpi__service__pb2.ListCompanyHierarchicalModelResultsResponse.SerializeToString), 'ListCompanyKpiMappingResults': grpc.unary_unary_rpc_method_handler(servicer.ListCompanyKpiMappingResults, request_deserializer=exabel_dot_api_dot_analytics_dot_v1_dot_kpi__service__pb2.ListCompanyKpiMappingResultsRequest.FromString, response_serializer=exabel_dot_api_dot_analytics_dot_v1_dot_kpi__service__pb2.ListCompanyKpiMappingResultsResponse.SerializeToString), 'ListCompanyKpiModelResults': grpc.unary_unary_rpc_method_handler(servicer.ListCompanyKpiModelResults, request_deserializer=exabel_dot_api_dot_analytics_dot_v1_dot_kpi__service__pb2.ListCompanyKpiModelResultsRequest.FromString, response_serializer=exabel_dot_api_dot_analytics_dot_v1_dot_kpi__service__pb2.ListCompanyKpiModelResultsResponse.SerializeToString), 'ListKpiScreenResults': grpc.unary_unary_rpc_method_handler(servicer.ListKpiScreenResults, request_deserializer=exabel_dot_api_dot_analytics_dot_v1_dot_kpi__service__pb2.ListKpiScreenResultsRequest.FromString, response_serializer=exabel_dot_api_dot_analytics_dot_v1_dot_kpi__service__pb2.ListKpiScreenResultsResponse.SerializeToString)}
     generic_handler = grpc.method_handlers_generic_handler('exabel.api.analytics.v1.KpiService', rpc_method_handlers)
     server.add_generic_rpc_handlers((generic_handler,))
     server.add_registered_method_handlers('exabel.api.analytics.v1.KpiService', rpc_method_handlers)
@@ -97,3 +140,7 @@ class KpiService(object):
     @staticmethod
     def ListCompanyKpiModelResults(request, target, options=(), channel_credentials=None, call_credentials=None, insecure=False, compression=None, wait_for_ready=None, timeout=None, metadata=None):
         return grpc.experimental.unary_unary(request, target, '/exabel.api.analytics.v1.KpiService/ListCompanyKpiModelResults', exabel_dot_api_dot_analytics_dot_v1_dot_kpi__service__pb2.ListCompanyKpiModelResultsRequest.SerializeToString, exabel_dot_api_dot_analytics_dot_v1_dot_kpi__service__pb2.ListCompanyKpiModelResultsResponse.FromString, options, channel_credentials, insecure, call_credentials, compression, wait_for_ready, timeout, metadata, _registered_method=True)
+
+    @staticmethod
+    def ListKpiScreenResults(request, target, options=(), channel_credentials=None, call_credentials=None, insecure=False, compression=None, wait_for_ready=None, timeout=None, metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/exabel.api.analytics.v1.KpiService/ListKpiScreenResults', exabel_dot_api_dot_analytics_dot_v1_dot_kpi__service__pb2.ListKpiScreenResultsRequest.SerializeToString, exabel_dot_api_dot_analytics_dot_v1_dot_kpi__service__pb2.ListKpiScreenResultsResponse.FromString, options, channel_credentials, insecure, call_credentials, compression, wait_for_ready, timeout, metadata, _registered_method=True)

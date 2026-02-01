@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import Optional, Sequence
+from typing import Sequence
 
 import numpy as np
 import pandas as pd
@@ -113,7 +113,7 @@ class TimeSeries:
     """
 
     series: pd.Series
-    units: Optional[Units] = None
+    units: Units | None = None
 
     @property
     def name(self) -> str:
@@ -143,7 +143,7 @@ class TimeSeries:
 
     @staticmethod
     def _time_series_points_to_series(
-        points: Sequence[TimeSeriesPoint], name: Optional[str] = None
+        points: Sequence[TimeSeriesPoint], name: str | None = None
     ) -> pd.Series:
         """Convert a sequence of TimeSeriesPoint to a pandas Series."""
         known_time = False
@@ -219,7 +219,7 @@ class Units:
     """
 
     units: Sequence[Unit] = field(default_factory=list)
-    description: Optional[str] = None
+    description: str | None = None
 
     @staticmethod
     def from_proto(proto_units: ProtoUnits) -> Units:
@@ -250,8 +250,8 @@ class Unit:
     """
 
     dimension: Dimension
-    unit: Optional[str] = None
-    exponent: Optional[int] = None
+    unit: str | None = None
+    exponent: int | None = None
 
     @staticmethod
     def from_proto(proto_unit: ProtoUnit) -> Unit:

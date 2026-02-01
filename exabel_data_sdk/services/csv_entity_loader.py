@@ -1,5 +1,5 @@
 import logging
-from typing import Mapping, Optional, Set, Union
+from typing import Mapping
 
 from pandas import DataFrame, Index
 from pandas.core.arrays import ExtensionArray
@@ -38,23 +38,23 @@ class CsvEntityLoader:
         *,
         filename: str,
         separator: str = ",",
-        entity_type: Optional[str] = None,
-        entity_column: Optional[str] = None,
-        display_name_column: Optional[str] = None,
-        description_column: Optional[str] = None,
-        property_columns: Optional[Mapping[str, type]] = None,
+        entity_type: str | None = None,
+        entity_column: str | None = None,
+        display_name_column: str | None = None,
+        description_column: str | None = None,
+        property_columns: Mapping[str, type] | None = None,
         threads: int = DEFAULT_NUMBER_OF_THREADS,
         upsert: bool = False,
         dry_run: bool = False,
         error_on_any_failure: bool = False,
         retries: int = DEFAULT_NUMBER_OF_RETRIES,
-        abort_threshold: Optional[float] = DEFAULT_ABORT_THRESHOLD,
-        batch_size: Optional[int] = None,
+        abort_threshold: float | None = DEFAULT_ABORT_THRESHOLD,
+        batch_size: int | None = None,
         return_results: bool = True,
-        total_rows: Optional[int] = None,
+        total_rows: int | None = None,
         # Deprecated arguments
-        name_column: Optional[str] = None,  # pylint: disable=unused-argument
-        namespace: Optional[str] = None,  # pylint: disable=unused-argument
+        name_column: str | None = None,
+        namespace: str | None = None,
     ) -> FileLoadingResult:
         """
         Load a CSV file and upload the entities specified therein to the Exabel Data API.
@@ -95,7 +95,7 @@ class CsvEntityLoader:
             filename, separator, string_columns=[], keep_default_na=False, nrows=0
         )
 
-        string_columns: Set[Union[str, int]] = set()
+        string_columns: set[str | int] = set()
         name_col_ref = entity_column or 0
         display_name_col_ref = (
             display_name_column or preview_df.columns[1]
@@ -173,17 +173,17 @@ class CsvEntityLoader:
         self,
         *,
         data_frame: DataFrame,
-        entity_type: Optional[str],
+        entity_type: str | None,
         name_col: str,
         display_name_col: str,
-        description_col: Optional[str],
+        description_col: str | None,
         property_columns: Mapping[str, type],
         threads: int = DEFAULT_NUMBER_OF_THREADS,
         upsert: bool = False,
         dry_run: bool = False,
         error_on_any_failure: bool = False,
         retries: int = DEFAULT_NUMBER_OF_RETRIES,
-        abort_threshold: Optional[float] = DEFAULT_ABORT_THRESHOLD,
+        abort_threshold: float | None = DEFAULT_ABORT_THRESHOLD,
     ) -> FileLoadingResult:
         # Entity types are reversed because we want to match the first entity type returned by the
         # API lexicographically.
@@ -252,7 +252,7 @@ class CsvEntityLoader:
     @staticmethod
     def detect_duplicate_entities(
         entities_dataframe: DataFrame,
-        name_col: Union[str, None, ExtensionArray, Index],
+        name_col: str | None | ExtensionArray | Index,
     ) -> None:
         """Detects duplicate entities"""
         duplicated_original_names = entities_dataframe[name_col][
@@ -266,8 +266,8 @@ class CsvEntityLoader:
             raise ValueError("Duplicate entities detected")
 
     def _get_description_column(
-        self, columns: Index, property_columns: Optional[Mapping[str, type]]
-    ) -> Optional[str]:
+        self, columns: Index, property_columns: Mapping[str, type] | None
+    ) -> str | None:
         """Get the third column if it exists and it is not a property column"""
         if len(columns) > 2 and (property_columns is None or columns[2] not in property_columns):
             return columns[2]

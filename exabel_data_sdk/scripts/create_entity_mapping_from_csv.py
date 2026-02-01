@@ -1,6 +1,6 @@
 import argparse
 import sys
-from typing import List, Sequence
+from typing import Sequence
 
 import pandas as pd
 
@@ -208,7 +208,7 @@ class CreateEntityMappingFromCsv(BaseScript):
 
         return mapping_output
 
-    def get_markets(self, market: str) -> List[str]:
+    def get_markets(self, market: str) -> list[str]:
         """
         Find the list of MICs we will use in entity search for a given market.
 

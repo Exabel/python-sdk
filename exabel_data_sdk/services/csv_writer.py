@@ -1,6 +1,6 @@
 import logging
 import os
-from typing import Iterable, Union
+from typing import Iterable
 
 import pandas as pd
 
@@ -13,9 +13,7 @@ class CsvWriter(FileWriter):
     """Stores a DataFrame in a CSV file."""
 
     @staticmethod
-    def write_file(
-        df: Union[pd.DataFrame, Iterable[pd.DataFrame]], filepath: str
-    ) -> FileWritingResult:
+    def write_file(df: pd.DataFrame | Iterable[pd.DataFrame], filepath: str) -> FileWritingResult:
         rows = 0
         if isinstance(df, pd.DataFrame):
             df.to_csv(filepath, index=False)

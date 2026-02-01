@@ -1,5 +1,4 @@
 from collections.abc import Sequence
-from typing import Optional
 
 from exabel_data_sdk.client.api.api_client.grpc.calendar_grpc_client import CalendarGrpcClient
 from exabel_data_sdk.client.client_config import ClientConfig
@@ -43,7 +42,7 @@ class CalendarApi:
         self.client.batch_create_fiscal_periods(request)
 
     def list_fiscal_periods(
-        self, company: str, frequency: Optional[Frequency.ValueType] = None
+        self, company: str, frequency: Frequency.ValueType | None = None
     ) -> Sequence[FiscalPeriod]:
         """
         List the fiscal periods for a company.

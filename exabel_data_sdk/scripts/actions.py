@@ -1,6 +1,6 @@
 import argparse
 import warnings
-from typing import Sequence, Union
+from typing import Sequence
 
 from exabel_data_sdk.util.warnings import ExabelDeprecationWarning
 
@@ -44,7 +44,7 @@ class CaseInsensitiveArgumentAction(argparse.Action):
         setattr(namespace, self.dest, values)
 
 
-def case_insensitive_argument(values: Union[str, Sequence, None]) -> Union[str, Sequence, None]:
+def case_insensitive_argument(values: str | Sequence | None) -> str | Sequence | None:
     """
     Lowercase all argument values that are type `str`.
     """

@@ -4,7 +4,7 @@ from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass
 from itertools import chain
 from time import sleep, time
-from typing import Callable, Generic, Mapping, Optional, Sequence, Union, overload
+from typing import Callable, Generic, Mapping, Sequence, overload
 
 import pandas as pd
 
@@ -58,8 +58,8 @@ class ResourceFailureHandler(Generic[ResourceT]):
 
     @staticmethod
     def get_time_series_result_from_violations(
-        resource: Union[pd.Series, TimeSeries], violations: Mapping[str, Violation]
-    ) -> Union[ResourceCreationResult[pd.Series], ResourceCreationResult[TimeSeries]]:
+        resource: pd.Series | TimeSeries, violations: Mapping[str, Violation]
+    ) -> ResourceCreationResult[pd.Series] | ResourceCreationResult[TimeSeries]:
         """Get a time series creation result from precondition failure violations."""
         resource_name = TimeSeriesResourceName.from_string(resource.name)
         entity_name = resource_name.entity_name
@@ -107,7 +107,7 @@ def _process(
     resources: Sequence[ResourceT],
     import_func: Callable[
         [Sequence[ResourceT]],
-        Union[Sequence[ResourceCreationStatus], Sequence[ResourceCreationResult]],
+        Sequence[ResourceCreationStatus] | Sequence[ResourceCreationResult],
     ],
     abort: Callable,
 ) -> None:
@@ -159,20 +159,16 @@ def bulk_import(
     resources: Sequence[ResourceT],
     import_func: Callable[
         [Sequence[ResourceT]],
-        Union[Sequence[ResourceCreationStatus], Sequence[ResourceCreationResult]],
+        Sequence[ResourceCreationStatus] | Sequence[ResourceCreationResult],
     ],
     threads: int = DEFAULT_NUMBER_OF_THREADS_FOR_IMPORT,
     retries: int = DEFAULT_NUMBER_OF_RETRIES,
-    abort_threshold: Optional[float] = DEFAULT_ABORT_THRESHOLD,
+    abort_threshold: float | None = DEFAULT_ABORT_THRESHOLD,
     # Deprecated arguments
-    resources_batches: Optional[  # pylint: disable=unused-argument
-        Sequence[Sequence[ResourceT]]
-    ] = None,
-    threads_for_import_func: Optional[int] = None,  # pylint: disable=unused-argument
-    threads_for_insert_func: Optional[int] = None,  # pylint: disable=unused-argument
-    insert_func: Optional[  # pylint: disable=unused-argument
-        Callable[[ResourceT], ResourceCreationStatus]
-    ] = None,
+    resources_batches: Sequence[Sequence[ResourceT]] | None = None,
+    threads_for_import_func: int | None = None,
+    threads_for_insert_func: int | None = None,
+    insert_func: Callable[[ResourceT], ResourceCreationStatus] | None = None,
 ) -> ResourceCreationResults[ResourceT]:
     """
     Call the provided import function with batches of the provided resources, while catching errors
@@ -236,7 +232,7 @@ def _bulk_import(
     resources: Sequence[ResourceT],
     import_func: Callable[
         [Sequence[ResourceT]],
-        Union[Sequence[ResourceCreationStatus], Sequence[ResourceCreationResult]],
+        Sequence[ResourceCreationStatus] | Sequence[ResourceCreationResult],
     ],
     threads: int,
 ) -> None:

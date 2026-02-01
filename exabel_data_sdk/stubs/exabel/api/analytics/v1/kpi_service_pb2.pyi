@@ -40,13 +40,13 @@ class ListKpiMappingResultsResponse(google.protobuf.message.Message):
     NEXT_PAGE_TOKEN_FIELD_NUMBER: builtins.int
     TOTAL_SIZE_FIELD_NUMBER: builtins.int
     next_page_token: builtins.str
-    'Token for the next page of results, which can be sent to a subsequent list query.'
+    'Token for the next page of results, which can be sent to a subsequent list query.\n    The end of the list is reached when the token is empty.\n    '
     total_size: builtins.int
     'Total number of rows, irrespective of paging.'
 
     @property
     def results(self) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[exabel.api.analytics.v1.kpi_messages_pb2.CompanyKpiMappingResults]:
-        """List of results, one for each company. The end of the list is reached when the token is empty."""
+        """List of results, one for each company."""
 
     def __init__(self, *, results: collections.abc.Iterable[exabel.api.analytics.v1.kpi_messages_pb2.CompanyKpiMappingResults] | None=..., next_page_token: builtins.str | None=..., total_size: builtins.int | None=...) -> None:
         ...
@@ -65,7 +65,7 @@ class ListCompanyBaseModelResultsRequest(google.protobuf.message.Message):
     parent: builtins.str
     'Resource name of the company get results for.'
     kpi_source: exabel.api.analytics.v1.kpi_messages_pb2.KpiSource.ValueType
-    'Optional KPI source.\n    If not specified, all KPIs are returned.\n    '
+    'This field is no longer in use.'
 
     @property
     def period(self) -> exabel.api.analytics.v1.kpi_messages_pb2.FiscalPeriodSelector:
@@ -120,7 +120,7 @@ class ListCompanyHierarchicalModelResultsRequest(google.protobuf.message.Message
     parent: builtins.str
     'Resource name of the company get results for.'
     kpi_source: exabel.api.analytics.v1.kpi_messages_pb2.KpiSource.ValueType
-    'Optional KPI source.\n    If not specified, all KPIs are returned.\n    '
+    'This field is no longer in use.'
 
     @property
     def period(self) -> exabel.api.analytics.v1.kpi_messages_pb2.FiscalPeriodSelector:
@@ -271,3 +271,47 @@ class ListCompanyKpiModelResultsResponse(google.protobuf.message.Message):
     def ClearField(self, field_name: typing.Literal['custom_models', b'custom_models', 'exabel_model', b'exabel_model', 'hierarchical_model', b'hierarchical_model', 'kpi_mapping_models', b'kpi_mapping_models']) -> None:
         ...
 global___ListCompanyKpiModelResultsResponse = ListCompanyKpiModelResultsResponse
+
+@typing.final
+class ListKpiScreenResultsRequest(google.protobuf.message.Message):
+    """Request to ListKpiScreenResults."""
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    NAME_FIELD_NUMBER: builtins.int
+    PAGE_SIZE_FIELD_NUMBER: builtins.int
+    PAGE_TOKEN_FIELD_NUMBER: builtins.int
+    name: builtins.str
+    'Resource name of the KPI screen, e.g. `kpiScreens/123`.'
+    page_size: builtins.int
+    'Maximum number of companies to return. Defaults to 20, and the maximum allowed value is 100.'
+    page_token: builtins.str
+    'Token for a specific page of results, as returned from a previous list request with the same\n    query parameters.\n    '
+
+    def __init__(self, *, name: builtins.str | None=..., page_size: builtins.int | None=..., page_token: builtins.str | None=...) -> None:
+        ...
+
+    def ClearField(self, field_name: typing.Literal['name', b'name', 'page_size', b'page_size', 'page_token', b'page_token']) -> None:
+        ...
+global___ListKpiScreenResultsRequest = ListKpiScreenResultsRequest
+
+@typing.final
+class ListKpiScreenResultsResponse(google.protobuf.message.Message):
+    """Response from ListKpiScreenResults."""
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    RESULTS_FIELD_NUMBER: builtins.int
+    NEXT_PAGE_TOKEN_FIELD_NUMBER: builtins.int
+    TOTAL_SIZE_FIELD_NUMBER: builtins.int
+    next_page_token: builtins.str
+    'Token for the next page of results, which can be sent to a subsequent list query.\n    The end of the list is reached when the token is empty.\n    '
+    total_size: builtins.int
+    'Total number of rows, irrespective of paging.'
+
+    @property
+    def results(self) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[exabel.api.analytics.v1.kpi_messages_pb2.KpiScreenCompanyResult]:
+        """List of results, one for each company."""
+
+    def __init__(self, *, results: collections.abc.Iterable[exabel.api.analytics.v1.kpi_messages_pb2.KpiScreenCompanyResult] | None=..., next_page_token: builtins.str | None=..., total_size: builtins.int | None=...) -> None:
+        ...
+
+    def ClearField(self, field_name: typing.Literal['next_page_token', b'next_page_token', 'results', b'results', 'total_size', b'total_size']) -> None:
+        ...
+global___ListKpiScreenResultsResponse = ListKpiScreenResultsResponse

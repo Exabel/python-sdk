@@ -1,4 +1,4 @@
-from typing import Any, Callable, Optional, TypeVar, cast
+from typing import Any, Callable, TypeVar, cast
 
 from google.rpc.error_details_pb2 import PreconditionFailure as PreconditionFailureProto
 from google.rpc.status_pb2 import Status as StatusProto
@@ -25,7 +25,7 @@ def is_status_detail(metadata: Any) -> bool:
     )
 
 
-def extract_precondition_failure_proto(e: RpcError) -> Optional[PreconditionFailureProto]:
+def extract_precondition_failure_proto(e: RpcError) -> PreconditionFailureProto | None:
     """
     Try to find a precondition failure in the gRPC exception, which indicates that we have thrown
     the exception with structured precondition failure violations.
@@ -46,8 +46,8 @@ def extract_precondition_failure_proto(e: RpcError) -> Optional[PreconditionFail
 
 
 def precondition_failure_proto_to_precondition_failure(
-    precondition_failure: Optional[PreconditionFailureProto] = None,
-) -> Optional[PreconditionFailure]:
+    precondition_failure: PreconditionFailureProto | None = None,
+) -> PreconditionFailure | None:
     """Convert PreconditionFailureProto into a PreconditionFailure."""
     if precondition_failure is None:
         return None

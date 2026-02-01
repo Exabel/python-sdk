@@ -1,5 +1,4 @@
-# pylint: disable=unused-import
-
+# ruff: noqa: F401
 from exabel_data_sdk.scripts.create_relationship_type import CreateRelationshipType
 from exabel_data_sdk.scripts.create_signal import CreateSignal
 from exabel_data_sdk.scripts.delete_entities import DeleteEntities

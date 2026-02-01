@@ -1,0 +1,113 @@
+"""Client and server classes corresponding to protobuf-defined services."""
+import grpc
+import warnings
+from .....exabel.api.data.v1 import holiday_messages_pb2 as exabel_dot_api_dot_data_dot_v1_dot_holiday__messages__pb2
+from .....exabel.api.data.v1 import holiday_service_pb2 as exabel_dot_api_dot_data_dot_v1_dot_holiday__service__pb2
+from google.protobuf import empty_pb2 as google_dot_protobuf_dot_empty__pb2
+GRPC_GENERATED_VERSION = '1.71.2'
+GRPC_VERSION = grpc.__version__
+_version_not_supported = False
+try:
+    from grpc._utilities import first_version_is_lower
+    _version_not_supported = first_version_is_lower(GRPC_VERSION, GRPC_GENERATED_VERSION)
+except ImportError:
+    _version_not_supported = True
+if _version_not_supported:
+    raise RuntimeError(f'The grpc package installed is at version {GRPC_VERSION},' + f' but the generated code in exabel/api/data/v1/holiday_service_pb2_grpc.py depends on' + f' grpcio>={GRPC_GENERATED_VERSION}.' + f' Please upgrade your grpc module to grpcio>={GRPC_GENERATED_VERSION}' + f' or downgrade your generated code using grpcio-tools<={GRPC_VERSION}.')
+
+class HolidayServiceStub(object):
+    """Service for managing custom holiday specifications for Prophet forecasting.
+
+    Holiday specifications define sets of holidays with their properties (dates, windows, weights)
+    that can be used when forecasting with the Prophet model.
+    """
+
+    def __init__(self, channel):
+        """Constructor.
+
+        Args:
+            channel: A grpc.Channel.
+        """
+        self.ListHolidaySpecifications = channel.unary_unary('/exabel.api.data.v1.HolidayService/ListHolidaySpecifications', request_serializer=exabel_dot_api_dot_data_dot_v1_dot_holiday__service__pb2.ListHolidaySpecificationsRequest.SerializeToString, response_deserializer=exabel_dot_api_dot_data_dot_v1_dot_holiday__service__pb2.ListHolidaySpecificationsResponse.FromString, _registered_method=True)
+        self.GetHolidaySpecification = channel.unary_unary('/exabel.api.data.v1.HolidayService/GetHolidaySpecification', request_serializer=exabel_dot_api_dot_data_dot_v1_dot_holiday__service__pb2.GetHolidaySpecificationRequest.SerializeToString, response_deserializer=exabel_dot_api_dot_data_dot_v1_dot_holiday__messages__pb2.HolidaySpecification.FromString, _registered_method=True)
+        self.CreateHolidaySpecification = channel.unary_unary('/exabel.api.data.v1.HolidayService/CreateHolidaySpecification', request_serializer=exabel_dot_api_dot_data_dot_v1_dot_holiday__service__pb2.CreateHolidaySpecificationRequest.SerializeToString, response_deserializer=exabel_dot_api_dot_data_dot_v1_dot_holiday__messages__pb2.HolidaySpecification.FromString, _registered_method=True)
+        self.UpdateHolidaySpecification = channel.unary_unary('/exabel.api.data.v1.HolidayService/UpdateHolidaySpecification', request_serializer=exabel_dot_api_dot_data_dot_v1_dot_holiday__service__pb2.UpdateHolidaySpecificationRequest.SerializeToString, response_deserializer=exabel_dot_api_dot_data_dot_v1_dot_holiday__messages__pb2.HolidaySpecification.FromString, _registered_method=True)
+        self.DeleteHolidaySpecification = channel.unary_unary('/exabel.api.data.v1.HolidayService/DeleteHolidaySpecification', request_serializer=exabel_dot_api_dot_data_dot_v1_dot_holiday__service__pb2.DeleteHolidaySpecificationRequest.SerializeToString, response_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString, _registered_method=True)
+
+class HolidayServiceServicer(object):
+    """Service for managing custom holiday specifications for Prophet forecasting.
+
+    Holiday specifications define sets of holidays with their properties (dates, windows, weights)
+    that can be used when forecasting with the Prophet model.
+    """
+
+    def ListHolidaySpecifications(self, request, context):
+        """Lists all holiday specifications.
+        """
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def GetHolidaySpecification(self, request, context):
+        """Gets one holiday specification.
+        """
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def CreateHolidaySpecification(self, request, context):
+        """Creates a new holiday specification.
+        """
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def UpdateHolidaySpecification(self, request, context):
+        """Updates an existing holiday specification.
+        """
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def DeleteHolidaySpecification(self, request, context):
+        """Deletes a holiday specification.
+
+        Note: Deleting a holiday specification that is referenced by KPI mapping groups
+        will cause forecasting to fail for those groups until the reference is removed or updated.
+        """
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+def add_HolidayServiceServicer_to_server(servicer, server):
+    rpc_method_handlers = {'ListHolidaySpecifications': grpc.unary_unary_rpc_method_handler(servicer.ListHolidaySpecifications, request_deserializer=exabel_dot_api_dot_data_dot_v1_dot_holiday__service__pb2.ListHolidaySpecificationsRequest.FromString, response_serializer=exabel_dot_api_dot_data_dot_v1_dot_holiday__service__pb2.ListHolidaySpecificationsResponse.SerializeToString), 'GetHolidaySpecification': grpc.unary_unary_rpc_method_handler(servicer.GetHolidaySpecification, request_deserializer=exabel_dot_api_dot_data_dot_v1_dot_holiday__service__pb2.GetHolidaySpecificationRequest.FromString, response_serializer=exabel_dot_api_dot_data_dot_v1_dot_holiday__messages__pb2.HolidaySpecification.SerializeToString), 'CreateHolidaySpecification': grpc.unary_unary_rpc_method_handler(servicer.CreateHolidaySpecification, request_deserializer=exabel_dot_api_dot_data_dot_v1_dot_holiday__service__pb2.CreateHolidaySpecificationRequest.FromString, response_serializer=exabel_dot_api_dot_data_dot_v1_dot_holiday__messages__pb2.HolidaySpecification.SerializeToString), 'UpdateHolidaySpecification': grpc.unary_unary_rpc_method_handler(servicer.UpdateHolidaySpecification, request_deserializer=exabel_dot_api_dot_data_dot_v1_dot_holiday__service__pb2.UpdateHolidaySpecificationRequest.FromString, response_serializer=exabel_dot_api_dot_data_dot_v1_dot_holiday__messages__pb2.HolidaySpecification.SerializeToString), 'DeleteHolidaySpecification': grpc.unary_unary_rpc_method_handler(servicer.DeleteHolidaySpecification, request_deserializer=exabel_dot_api_dot_data_dot_v1_dot_holiday__service__pb2.DeleteHolidaySpecificationRequest.FromString, response_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString)}
+    generic_handler = grpc.method_handlers_generic_handler('exabel.api.data.v1.HolidayService', rpc_method_handlers)
+    server.add_generic_rpc_handlers((generic_handler,))
+    server.add_registered_method_handlers('exabel.api.data.v1.HolidayService', rpc_method_handlers)
+
+class HolidayService(object):
+    """Service for managing custom holiday specifications for Prophet forecasting.
+
+    Holiday specifications define sets of holidays with their properties (dates, windows, weights)
+    that can be used when forecasting with the Prophet model.
+    """
+
+    @staticmethod
+    def ListHolidaySpecifications(request, target, options=(), channel_credentials=None, call_credentials=None, insecure=False, compression=None, wait_for_ready=None, timeout=None, metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/exabel.api.data.v1.HolidayService/ListHolidaySpecifications', exabel_dot_api_dot_data_dot_v1_dot_holiday__service__pb2.ListHolidaySpecificationsRequest.SerializeToString, exabel_dot_api_dot_data_dot_v1_dot_holiday__service__pb2.ListHolidaySpecificationsResponse.FromString, options, channel_credentials, insecure, call_credentials, compression, wait_for_ready, timeout, metadata, _registered_method=True)
+
+    @staticmethod
+    def GetHolidaySpecification(request, target, options=(), channel_credentials=None, call_credentials=None, insecure=False, compression=None, wait_for_ready=None, timeout=None, metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/exabel.api.data.v1.HolidayService/GetHolidaySpecification', exabel_dot_api_dot_data_dot_v1_dot_holiday__service__pb2.GetHolidaySpecificationRequest.SerializeToString, exabel_dot_api_dot_data_dot_v1_dot_holiday__messages__pb2.HolidaySpecification.FromString, options, channel_credentials, insecure, call_credentials, compression, wait_for_ready, timeout, metadata, _registered_method=True)
+
+    @staticmethod
+    def CreateHolidaySpecification(request, target, options=(), channel_credentials=None, call_credentials=None, insecure=False, compression=None, wait_for_ready=None, timeout=None, metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/exabel.api.data.v1.HolidayService/CreateHolidaySpecification', exabel_dot_api_dot_data_dot_v1_dot_holiday__service__pb2.CreateHolidaySpecificationRequest.SerializeToString, exabel_dot_api_dot_data_dot_v1_dot_holiday__messages__pb2.HolidaySpecification.FromString, options, channel_credentials, insecure, call_credentials, compression, wait_for_ready, timeout, metadata, _registered_method=True)
+
+    @staticmethod
+    def UpdateHolidaySpecification(request, target, options=(), channel_credentials=None, call_credentials=None, insecure=False, compression=None, wait_for_ready=None, timeout=None, metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/exabel.api.data.v1.HolidayService/UpdateHolidaySpecification', exabel_dot_api_dot_data_dot_v1_dot_holiday__service__pb2.UpdateHolidaySpecificationRequest.SerializeToString, exabel_dot_api_dot_data_dot_v1_dot_holiday__messages__pb2.HolidaySpecification.FromString, options, channel_credentials, insecure, call_credentials, compression, wait_for_ready, timeout, metadata, _registered_method=True)
+
+    @staticmethod
+    def DeleteHolidaySpecification(request, target, options=(), channel_credentials=None, call_credentials=None, insecure=False, compression=None, wait_for_ready=None, timeout=None, metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/exabel.api.data.v1.HolidayService/DeleteHolidaySpecification', exabel_dot_api_dot_data_dot_v1_dot_holiday__service__pb2.DeleteHolidaySpecificationRequest.SerializeToString, google_dot_protobuf_dot_empty__pb2.Empty.FromString, options, channel_credentials, insecure, call_credentials, compression, wait_for_ready, timeout, metadata, _registered_method=True)

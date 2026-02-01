@@ -1,6 +1,5 @@
 import argparse
 import sys
-from typing import List
 
 from exabel_data_sdk import ExabelClient
 from exabel_data_sdk.client.api.data_classes.relationship_type import RelationshipType
@@ -15,7 +14,7 @@ class ListRelationshipTypes(BaseScript):
 
     def run_script(self, client: ExabelClient, args: argparse.Namespace) -> None:
         page_token = None
-        all_relationship_types: List[RelationshipType] = []
+        all_relationship_types: list[RelationshipType] = []
         while True:
             result = client.relationship_api.list_relationship_types(
                 page_size=PAGE_SIZE, page_token=page_token

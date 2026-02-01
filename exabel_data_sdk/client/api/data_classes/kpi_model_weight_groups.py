@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import Optional, Sequence
+from typing import Sequence
 
 from exabel_data_sdk.client.api.data_classes.kpi_mapping_group_reference import (
     KpiMappingGroupReference,
@@ -26,7 +26,7 @@ class KpiModelFeatureWeight:
     """
 
     display_name: str
-    weight: Optional[float]
+    weight: float | None
 
     @staticmethod
     def from_proto(
@@ -51,7 +51,7 @@ class KpiModelWeightGroup:
     """
 
     display_name: str
-    group: Optional[KpiMappingGroupReference]
+    group: KpiMappingGroupReference | None
     weights: Sequence[KpiModelFeatureWeight]
 
     @staticmethod

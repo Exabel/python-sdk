@@ -1,5 +1,4 @@
 from enum import Enum
-from typing import Optional
 
 from exabel_data_sdk.stubs.exabel.api.analytics.v1.all_pb2 import (
     PredictionModelRun as ProtoPredictionModelRun,
@@ -39,10 +38,10 @@ class PredictionModelRun:
 
     def __init__(
         self,
-        name: Optional[str] = None,
+        name: str | None = None,
         description: str = "",
         configuration: ModelConfiguration = ModelConfiguration.LATEST,
-        configuration_source: Optional[int] = None,
+        configuration_source: int | None = None,
         auto_activate: bool = False,
     ):
         """

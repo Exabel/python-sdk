@@ -1,14 +1,14 @@
 import logging
 import pickle
 from time import time
-from typing import List, Mapping, Optional, Sequence, Union
+from typing import Sequence
 
 import pandas as pd
 from requests import Session
 from requests.adapters import HTTPAdapter
 from urllib3 import Retry
 
-from exabel_data_sdk.client.user_login import UserLogin
+from exabel_data_sdk.client.client_config import ClientConfig
 from exabel_data_sdk.query.column import Column
 from exabel_data_sdk.query.predicate import Predicate
 from exabel_data_sdk.query.query import Query
@@ -21,64 +21,32 @@ logger = logging.getLogger(__name__)
 class ExportApi:
     """
     API class for data export operations.
-
-    If authentication headers are not provided, this method will attempt to obtain them by logging
-    in with the UserLogin script.
-
-    Args:
-        auth_headers:   authentication headers for the HTTPS requests to the backend server
-        backend:        the address of the backend server. This field is only for internal use at
-                        Exabel and should never be set by customers or partners.
-        reauthenticate: if True, the user will be prompted to log in again.
-        user:           the Exabel user to log in as, e.g. `my_user@enterprise.com`. If not
-                        provided, the default user will be logged in.
-        retries:        the number of times to retry requests
     """
 
-    def __init__(
-        self,
-        auth_headers: Optional[Mapping[str, str]] = None,
-        *,
-        backend: str = "endpoints.exabel.com",
-        reauthenticate: bool = False,
-        user: Optional[str] = None,
-        retries: int = 0,
-    ):
-        if auth_headers is None:
-            # Attempt to log in
-            auth_headers = UserLogin(reauthenticate=reauthenticate, user=user).get_auth_headers()
+    def __init__(self, client_config: ClientConfig):
+        auth_headers = {}
+        if client_config.access_token:
+            auth_headers["Authorization"] = f"Bearer {client_config.access_token}"
+        elif client_config.api_key:
+            auth_headers["x-api-key"] = client_config.api_key
         session = Session()
         session.headers.update(auth_headers)
-        if retries:
+        if client_config.retries:
             retry = Retry(
-                total=retries,
+                total=client_config.retries,
                 backoff_factor=1.0,
                 allowed_methods=["POST"],
                 status_forcelist=[500, 502, 503, 504],
             )
             session.mount("https://", HTTPAdapter(max_retries=retry))
         self._session = session
-        self._backend = backend
-
-    @staticmethod
-    def from_api_key(api_key: str, use_test_backend: bool = False, retries: int = 0) -> "ExportApi":
-        """Create an `ExportApi` from an API key."""
-        backend = "export.api-test.exabel.com" if use_test_backend else "export.api.exabel.com"
-        return ExportApi(auth_headers={"x-api-key": api_key}, backend=backend, retries=retries)
-
-    @staticmethod
-    def from_access_token(
-        access_token: str, use_test_backend: bool = False, retries: int = 0
-    ) -> "ExportApi":
-        """Create an `ExportApi` from an access token."""
-        backend = "export.api-test.exabel.com" if use_test_backend else "export.api.exabel.com"
-        return ExportApi(
-            auth_headers={"authorization": f"Bearer {access_token}"},
-            backend=backend,
-            retries=retries,
+        self._backend = (
+            client_config.export_api_host
+            if not client_config.export_api_host or client_config.export_api_port == 443
+            else f"{client_config.export_api_host}:{client_config.export_api_port}"
         )
 
-    def run_query_bytes(self, query: Union[str, Query], file_format: str) -> bytes:
+    def run_query_bytes(self, query: str | Query, file_format: str) -> bytes:
         """
         Run an export data query, and returns a byte string with the file in the requested format.
         Raises an exception if the status code is not 200.
@@ -114,7 +82,7 @@ class ExportApi:
         error_message = f"Got {response.status_code}: {error_message} for query {query}"
         raise ValueError(error_message)
 
-    def run_query(self, query: Union[str, Query]) -> pd.DataFrame:
+    def run_query(self, query: str | Query) -> pd.DataFrame:
         """
         Run an export data query, and returns a DataFrame with the results.
         Raises an exception if the status code is not 200.
@@ -126,17 +94,17 @@ class ExportApi:
 
     def signal_query(
         self,
-        signal: Union[str, Column, Sequence[Union[str, Column]]],
-        bloomberg_ticker: Optional[Union[str, Sequence[str]]] = None,
+        signal: str | Column | Sequence[str | Column],
+        bloomberg_ticker: str | Sequence[str] | None = None,
         *,
-        factset_id: Optional[Union[str, Sequence[str]]] = None,
-        resource_name: Optional[Union[str, Sequence[str]]] = None,
-        tag: Optional[Union[str, Sequence[str]]] = None,
-        start_time: Optional[Union[str, pd.Timestamp]] = None,
-        end_time: Optional[Union[str, pd.Timestamp]] = None,
-        identifier: Optional[Union[Column, Sequence[Column]]] = None,
-        version: Optional[Union[str, pd.Timestamp, Sequence[str], Sequence[pd.Timestamp]]] = None,
-    ) -> Union[pd.Series, pd.DataFrame]:
+        factset_id: str | Sequence[str] | None = None,
+        resource_name: str | Sequence[str] | None = None,
+        tag: str | Sequence[str] | None = None,
+        start_time: str | pd.Timestamp | None = None,
+        end_time: str | pd.Timestamp | None = None,
+        identifier: Column | Sequence[Column] | None = None,
+        version: str | pd.Timestamp | Sequence[str] | Sequence[pd.Timestamp] | None = None,
+    ) -> pd.Series | pd.DataFrame:
         """
         Run a query for one or more signals.
 
@@ -178,7 +146,7 @@ class ExportApi:
 
         # Specify entity filter
         multi_entity = False
-        predicates: List[Predicate] = []
+        predicates: list[Predicate] = []
         if factset_id:
             if isinstance(factset_id, str):
                 predicates.append(Signals.FACTSET_ID.equal(factset_id))
@@ -207,7 +175,7 @@ class ExportApi:
             raise ValueError("At most one entity identification method can be specified")
 
         # Specify the identifier(s)
-        index: List[Column] = []
+        index: list[Column] = []
         if identifier is None:
             if multi_entity:
                 index.append(Signals.NAME)
@@ -226,7 +194,7 @@ class ExportApi:
                 index.insert(0, Signals.VERSION)
 
         # The columns to query for
-        columns: List[Union[str, Column]] = list(index)
+        columns: list[str | Column] = list(index)
         if isinstance(signal, (str, Column)):
             columns.append(signal)
         else:
@@ -247,17 +215,17 @@ class ExportApi:
     def batched_signal_query(
         self,
         batch_size: int,
-        signal: Union[str, Column, Sequence[Union[str, Column]]],
+        signal: str | Column | Sequence[str | Column],
         *,
-        bloomberg_ticker: Optional[Sequence[str]] = None,
-        factset_id: Optional[Sequence[str]] = None,
-        resource_name: Optional[Sequence[str]] = None,
-        start_time: Optional[Union[str, pd.Timestamp]] = None,
-        end_time: Optional[Union[str, pd.Timestamp]] = None,
-        identifier: Optional[Union[Column, Sequence[Column]]] = None,
-        version: Optional[Union[str, pd.Timestamp, Sequence[str], Sequence[pd.Timestamp]]] = None,
+        bloomberg_ticker: Sequence[str] | None = None,
+        factset_id: Sequence[str] | None = None,
+        resource_name: Sequence[str] | None = None,
+        start_time: str | pd.Timestamp | None = None,
+        end_time: str | pd.Timestamp | None = None,
+        identifier: Column | Sequence[Column] | None = None,
+        version: str | pd.Timestamp | Sequence[str] | Sequence[pd.Timestamp] | None = None,
         show_progress: bool = False,
-    ) -> Union[pd.Series, pd.DataFrame]:
+    ) -> pd.Series | pd.DataFrame:
         """
         Run a query for one or more signals.
 
@@ -275,7 +243,7 @@ class ExportApi:
             or a pandas DataFrame if there are multiple time series in the result.
             The index is a MultiIndex with entity on the first level and time on the second level.
         """
-        entity_identifiers: List[str] = []
+        entity_identifiers: list[str] = []
         entities: Sequence[str] = []
         if factset_id:
             entity_identifiers.append("factset_id")

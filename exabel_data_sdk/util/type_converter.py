@@ -1,9 +1,7 @@
-from typing import Union
-
 from exabel_data_sdk.util.exceptions import TypeConversionError
 
 
-def type_converter(value: str, type_: type) -> Union[str, int, float, bool]:
+def type_converter(value: str, type_: type) -> str | int | float | bool:
     """
     Convert a string value to the given type.
     """

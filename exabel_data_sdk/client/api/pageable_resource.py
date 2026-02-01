@@ -1,4 +1,4 @@
-from typing import Callable, Iterator, Optional, TypeVar
+from typing import Callable, Iterator, TypeVar
 
 from exabel_data_sdk.client.api.data_classes.data_set import DataSet
 from exabel_data_sdk.client.api.data_classes.entity import Entity
@@ -35,7 +35,7 @@ class PageableResourceMixin:
         Return an iterator with all the resources returnable by function, paging through the
         results.
         """
-        page_token: Optional[str] = None
+        page_token: str | None = None
         while True:
             result = pageable_func(**kwargs, page_token=page_token, page_size=page_size)
             yield from result.results

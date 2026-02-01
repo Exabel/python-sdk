@@ -1,4 +1,4 @@
-from typing import Optional, Sequence
+from typing import Sequence
 
 from google.protobuf.field_mask_pb2 import FieldMask
 
@@ -62,7 +62,7 @@ class LibraryApi:
         return Folder.from_proto(proto_folder)
 
     def update_folder(
-        self, folder: Folder, update_mask: Optional[FieldMask] = None, allow_missing: bool = False
+        self, folder: Folder, update_mask: FieldMask | None = None, allow_missing: bool = False
     ) -> Folder:
         """
         Update a folder.
@@ -98,7 +98,7 @@ class LibraryApi:
     def list_items(
         self,
         item_type: FolderItemType,
-        folder_name: Optional[str] = None,
+        folder_name: str | None = None,
     ) -> Sequence[FolderItem]:
         """
         List all items of a specific type.
@@ -165,9 +165,9 @@ class LibraryApi:
     def search_items(
         self,
         query: str,
-        folder_item_type: Optional[FolderItemType] = None,
-        page_size: Optional[int] = None,
-        page_token: Optional[str] = None,
+        folder_item_type: FolderItemType | None = None,
+        page_size: int | None = None,
+        page_token: str | None = None,
     ) -> PagingResult[FolderItem]:
         """
         Search for folder items.
