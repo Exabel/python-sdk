@@ -1,7 +1,7 @@
 [project]
-name = "exabel-data-sdk"
+name = "exabel"
 description = "Python SDK for the Exabel Data API"
-version = "7.0.0"
+version = "8.0.0"
 license = "MIT"
 license-files = ["LICENSE"]
 readme = "README.md"
@@ -59,13 +59,13 @@ build-backend = "uv_build"
 package = true
 
 [tool.uv.build-backend]
-module-name = "exabel_data_sdk"
+module-name = "exabel"
 module-root = ""
 source-exclude = [
-    "exabel_data_sdk/tests/**",
+    "exabel/tests/**",
 ]
 wheel-exclude = [
-    "exabel_data_sdk/tests/**",
+    "exabel/tests/**",
 ]
 
 [tool.mypy]
@@ -98,12 +98,12 @@ ignore_errors = true
 follow_imports = "skip"
 
 [[tool.mypy.overrides]]
-module = "exabel_data_sdk.stubs.*"
+module = "exabel.stubs.*"
 disallow_untyped_defs = false
 disable_error_code = ["name-defined"]
 
 [tool.ruff]
-src = ["exabel_data_sdk"]
+src = ["exabel"]
 force-exclude = true
 extend-exclude = ["stubs"]
 line-length = 100
@@ -199,7 +199,7 @@ ignore = [
 "**/__init__.py" = ["F401"] # unused-import
 
 [tool.ruff.lint.isort]
-known-first-party = ["exabel_data_sdk"]
+known-first-party = ["exabel"]
 detect-same-package = false
 
 [tool.ruff.lint.pep8-naming]

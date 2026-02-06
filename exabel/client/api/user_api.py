@@ -1,0 +1,33 @@
+from typing import Sequence
+
+from exabel.client.api.api_client.grpc.user_grpc_client import UserGrpcClient
+from exabel.client.api.data_classes.group import Group
+from exabel.client.api.data_classes.user import User
+from exabel.client.client_config import ClientConfig
+from exabel.stubs.exabel.api.management.v1.user_service_pb2 import (
+    ListGroupsRequest,
+    ListUsersRequest,
+)
+
+
+class UserApi:
+    """
+    API class for user operations.
+    """
+
+    def __init__(self, config: ClientConfig):
+        self.client = UserGrpcClient(config)
+
+    def list_users(self) -> Sequence[User]:
+        """
+        List all users.
+        """
+        response = self.client.list_users(ListUsersRequest())
+        return [User.from_proto(user) for user in response.users]
+
+    def list_groups(self) -> Sequence[Group]:
+        """
+        List all groups.
+        """
+        response = self.client.list_groups(ListGroupsRequest())
+        return [Group.from_proto(group) for group in response.groups]
