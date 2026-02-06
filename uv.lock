@@ -360,7 +360,7 @@ requires-dist = [
     { name = "grpcio" },
     { name = "openpyxl" },
     { name = "pandas" },
-    { name = "protobuf", specifier = ">=4" },
+    { name = "protobuf", specifier = ">=6" },
     { name = "pyarrow", marker = "extra == 'athena'" },
     { name = "pyathena", marker = "extra == 'athena'" },
     { name = "requests" },
