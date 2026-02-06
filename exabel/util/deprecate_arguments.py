@@ -1,0 +1,146 @@
+import functools
+import warnings
+from typing import Any, Callable, TypeVar, overload
+
+from exabel.util.warnings import ExabelDeprecationWarning
+
+FunctionT = TypeVar("FunctionT", bound=Callable[..., Any])
+
+
+@overload
+def deprecate_arguments(
+    **deprecation_replacements: str | None,
+) -> Callable[[FunctionT], FunctionT]: ...
+
+
+@overload
+def deprecate_arguments(
+    __func: None,
+    **deprecation_replacements: str | None,
+) -> Callable[[FunctionT], FunctionT]: ...
+
+
+@overload
+def deprecate_arguments(
+    __func: FunctionT,
+    **deprecation_replacements: str | None,
+) -> FunctionT: ...
+
+
+def deprecate_arguments(
+    __func: FunctionT | None = None,
+    **deprecation_replacements: str | None,
+) -> FunctionT:
+    """
+    Decorator for warning about and replacing deprecated arguments in a function that will be
+    removed in a future release.
+
+    Only works for deprecating [keyword-only arguments](https://peps.python.org/pep-3102/).
+
+    Args:
+        deprecation_replacements: a mapping from deprecated argument names to the new argument
+            names or `None` if the argument has been removed and no longer serves any purpose.
+    """
+
+    if not deprecation_replacements:
+        raise ValueError("No deprecations specified")
+
+    def decorator(func: FunctionT) -> FunctionT:
+        @functools.wraps(func)
+        def wrapper(*args: Any, **kwargs: Any) -> Any:
+            func_name = func.__qualname__
+            module_name = func.__module__
+            if module_name != "__main__":
+                func_name = f"{module_name}.{func_name}"
+            new_kwargs = {}
+            for arg_name, arg_value in kwargs.items():
+                if arg_name in deprecation_replacements:
+                    warning_message = (
+                        f"Argument '{arg_name}' is deprecated in '{func_name}' and will be removed "
+                        "in a future release. "
+                    )
+                    replacement = deprecation_replacements[arg_name]
+                    if replacement:
+                        if replacement in kwargs:
+                            raise ValueError(
+                                f"Cannot specify both '{arg_name}' and '{replacement}' in "
+                                f"'{func_name}'."
+                            )
+                        new_kwargs[replacement] = arg_value
+                        warning_message += f"Use '{replacement}' instead."
+                    warnings.warn(
+                        warning_message,
+                        ExabelDeprecationWarning,
+                    )
+                else:
+                    new_kwargs[arg_name] = arg_value
+            return func(*args, **new_kwargs)
+
+        return wrapper  # type: ignore[return-value]
+
+    if __func:
+        return decorator(__func)
+    return decorator  # type: ignore[return-value]
+
+
+@overload
+def deprecate_argument_value(
+    **deprecated_values: object,
+) -> Callable[[FunctionT], FunctionT]: ...
+
+
+@overload
+def deprecate_argument_value(
+    __func: None,
+    **deprecated_values: object,
+) -> Callable[[FunctionT], FunctionT]: ...
+
+
+@overload
+def deprecate_argument_value(
+    __func: FunctionT,
+    **deprecated_values: object,
+) -> FunctionT: ...
+
+
+def deprecate_argument_value(
+    __func: FunctionT | None = None,
+    **deprecated_values: object,
+) -> FunctionT:
+    """
+    Decorator for warning about keyword argument values which are no longer supported.
+
+    Only works for deprecating [keyword-only arguments](https://peps.python.org/pep-3102/).
+
+    Args:
+        deprecated_values: a mapping from deprecated argument names to the value which is
+            deprecated.
+    """
+
+    if not deprecated_values:
+        raise ValueError("No deprecations specified")
+
+    def decorator(func: FunctionT) -> FunctionT:
+        @functools.wraps(func)
+        def wrapper(*args: Any, **kwargs: Any) -> Any:
+            func_name = func.__qualname__
+            module_name = func.__module__
+            if module_name != "__main__":
+                func_name = f"{module_name}.{func_name}"
+            for arg_name, arg_value in kwargs.items():
+                if arg_name in deprecated_values and arg_value == deprecated_values[arg_name]:
+                    warning_message = (
+                        f"Option '{arg_name}={arg_value}' is deprecated in '{func_name}' and will "
+                        f"be removed in a future release."
+                    )
+                    warnings.warn(
+                        warning_message,
+                        ExabelDeprecationWarning,
+                    )
+            return func(*args, **kwargs)
+
+        return wrapper  # type: ignore[return-value]
+
+    if __func:
+        return decorator(__func)
+    return decorator  # type: ignore[return-value]

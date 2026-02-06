@@ -5,10 +5,10 @@ A Python SDK which provides easy access to Exabel APIs.
 ## Installation
 
 ```shell
-pip install exabel-data-sdk
+pip install exabel
 ```
 
-or download from [PyPI](https://pypi.org/project/exabel-data-sdk/).
+or download from [PyPI](https://pypi.org/project/exabel/).
 
 The SDK requires Python 3.10 or later.
 
@@ -18,10 +18,10 @@ For installation with support for exporting data from a various SQL based data s
 
 ```shell
 # Install the Exabel Python SDK with Snowflake support:
-pip install exabel-data-sdk[snowflake]
+pip install exabel[snowflake]
 
 # Or install multiple data sources at the same time:
-pip install exabel-data-sdk[snowflake,bigquery,athena]
+pip install exabel[snowflake,bigquery,athena]
 ```
 
 Supported data sources are:
@@ -40,7 +40,7 @@ until the token expires.
 
 [Export API Developer guide](https://help.exabel.com/docs/exporting-via-exabel-sdk)
 
-[Examples of usage](https://github.com/Exabel/python-sdk/tree/main/exabel_data_sdk/examples).
+[Examples of usage](https://github.com/Exabel/python-sdk/tree/main/exabel/examples).
 
 ## Exabel API documentation
 

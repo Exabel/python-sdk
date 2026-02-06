@@ -1,0 +1,22 @@
+from exabel.client.api.data_classes.entity_type import EntityType
+from exabel.stubs.exabel.api.data.v1.all_pb2 import EntityType as ProtoEntityType
+
+
+class TestEntityType:
+    def test_from_proto(self):
+        proto_entity_type = ProtoEntityType(
+            name="entityTypes/country",
+            display_name="Country entity type",
+            description="description",
+            read_only=True,
+            is_associative=True,
+        )
+
+        entity_type = EntityType(
+            name="entityTypes/country",
+            display_name="Country entity type",
+            description="description",
+            read_only=True,
+            is_associative=True,
+        )
+        assert entity_type == EntityType.from_proto(proto_entity_type)
