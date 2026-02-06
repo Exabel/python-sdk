@@ -60,7 +60,7 @@ class ReadSnowflake(SqlScript):
 
     def read_key(self, file: str, passphrase: str | None) -> bytes:
         """Read the key from given file. Use the provided passphrase to decrypt the file.
-        If not passphrase is provided, promt the user to enter one. Provide an empty
+        If no passphrase is provided, prompt the user to enter one. Provide an empty
         string as passphrase for unencrypted keys."""
         from cryptography.hazmat.primitives import serialization
 

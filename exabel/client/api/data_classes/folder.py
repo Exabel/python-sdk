@@ -13,7 +13,7 @@ class Folder:
         display_name (str): The display name of the folder.
         write (bool):       Whether the caller has write access to the folder.
         items (list):       The items in the folder.
-        description (str)   An optional description of the folder.
+        description (str):  An optional description of the folder.
     """
 
     def __init__(
@@ -32,7 +32,7 @@ class Folder:
             display_name (str): The display name of the folder.
             write (bool):       Whether the caller has write access to the folder.
             items (list):       The items in the folder.
-            description (str)   An optional description of the folder.
+            description (str):  An optional description of the folder.
         """
         self.name = name
         self.display_name = display_name

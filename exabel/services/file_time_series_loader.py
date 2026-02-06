@@ -82,7 +82,7 @@ class FileTimeSeriesLoader:
         total_rows: int | None = None,
     ) -> Sequence[TimeSeriesFileLoadingResult]:
         """
-        Load a file and upload the time series to the Exabel Data API
+        Load a file and upload the time series to the Exabel Data API.
 
         If the file has multiple sheets, time series from all the sheets are loaded.
 
@@ -590,7 +590,7 @@ class FileTimeSeriesLoader:
         total_rows: int | None = None,
     ) -> Sequence[TimeSeriesFileLoadingResult]:
         """
-        Load a file and upload the time series metadata to the Exabel Data API
+        Load a file and upload the time series metadata to the Exabel Data API.
 
         If the file has multiple sheets, time series from all the sheets are loaded.
 

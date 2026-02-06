@@ -76,7 +76,7 @@ class TagApi(PageableResourceMixin):
 
     def list_tags(self, page_size: int = 1000, page_token: str | None = None) -> PagingResult[Tag]:
         """
-        List tags accesible to the user.
+        List tags accessible to the user.
 
         Args:
             page_size:  The maximum number of results to return. Defaults to 1000, which is also

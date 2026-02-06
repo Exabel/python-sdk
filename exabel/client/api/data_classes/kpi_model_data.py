@@ -31,7 +31,7 @@ class KpiModelData:
         mape_pit:           The point-in-time MAPE (mean absolute percentage error).
         mae:                The MAE (mean absolute error).
         mae_pit:            The point-in-time MAE (mean absolute error).
-        error_count:        Number of data points used to calcuate the MAE and MAPE.
+        error_count:        Number of data points used to calculate the MAE and MAPE.
         hit_rate:           The hit rate.
         hit_rate_count:     Number of data points used to calculate the hit rate.
         revision_1_week:    The 1 week revision.

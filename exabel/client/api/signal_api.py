@@ -72,7 +72,7 @@ class SignalApi(PageableResourceMixin):
 
     def create_signal(self, signal: Signal, create_library_signal: bool = False) -> Signal:
         """
-        Create one signal and returns it.
+        Create one signal and return it.
 
         Args:
             signal: The signal to create.
@@ -141,7 +141,7 @@ class SignalApi(PageableResourceMixin):
         Args:
             entity_names:   The resource names of the entities to filter on. At least one
                             entity must be specified. A derived signal is returned only if
-                            at least one of the entities are included in the signal.
+                            at least one of the entities is included in the signal.
 
         Returns:
             Dictionary mapping data set resource names to DerivedSignals collections.

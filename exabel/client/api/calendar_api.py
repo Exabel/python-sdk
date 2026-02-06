@@ -137,7 +137,7 @@ class CalendarApi:
 
         Returns:
             A list containing the resource names of all the companies for which the customer has
-            uploaded fiscal periods
+            uploaded fiscal periods.
         """
         request = ListCompaniesWithFiscalPeriodsRequest()
         return self.client.list_companies_with_fiscal_periods(request).companies

@@ -10,7 +10,7 @@ from exabel.services.file_time_series_loader import FileTimeSeriesLoader
 
 class CsvTimeSeriesLoader:
     """
-    Processes CSV file with time series and uploads the time series to the Exabel Data API.
+    Processes a CSV file with time series and uploads the time series to the Exabel Data API.
     """
 
     def __init__(self, client: ExabelClient):
@@ -36,7 +36,7 @@ class CsvTimeSeriesLoader:
         case_sensitive_signals: bool = False,
     ) -> FileLoadingResult:
         """
-        Load a CSV file and upload the time series to the Exabel Data API
+        Load a CSV file and upload the time series to the Exabel Data API.
 
         Args:
             filename: the location of the CSV file
@@ -56,7 +56,7 @@ class CsvTimeSeriesLoader:
                                 setting does not match what is found in the file
             threads: the number of parallel upload threads to run
             dry_run: if True, the file is processed, but no time series are actually uploaded
-            error_on_any_failure: if True, an  exception is raised if any time series failed to be
+            error_on_any_failure: if True, an exception is raised if any time series failed to be
                 created
             retries: the maximum number of retries to make for each failed request
             abort_threshold: the threshold for the proportion of failed requests that will cause the

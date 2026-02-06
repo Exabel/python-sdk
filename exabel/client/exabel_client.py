@@ -61,7 +61,7 @@ class ExabelClient:
             export_api_port:     Override default Exabel Export API port.
             timeout:             Override default timeout in seconds to use for API requests (only
                                  affects gRPC APIs).
-            retries:             Override default number of retrie for requests (only affects Export
+            retries:             Override default number of retries for requests (only affects Export
                                  API).
             root_certificates:   Additional allowed root certificates for verifying TLS connection
                                  (only affects gRPC APIs).

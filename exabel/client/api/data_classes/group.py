@@ -16,7 +16,7 @@ class Group:
 
     def __init__(self, name: str, display_name: str, users: Sequence[User]):
         """
-        Create a user.
+        Create a group.
 
         Args:
             name (str):         The resource name of the group, for example "groups/123".

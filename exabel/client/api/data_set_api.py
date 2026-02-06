@@ -38,7 +38,7 @@ class DataSetApi:
 
         Args:
             name:   The resource name of the requested data set, for example
-                    "dataSet/123".
+                    "dataSets/123".
         """
         try:
             response = self.client.get_data_set(GetDataSetRequest(name=name))

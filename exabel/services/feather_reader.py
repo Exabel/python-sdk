@@ -33,7 +33,7 @@ class FeatherReader:
     @staticmethod
     def read_file(filename: str, string_columns: Iterable[int]) -> pd.DataFrame:
         """
-        Read the Feather file and return a pandas DataFrame
+        Read the Feather file and return a pandas DataFrame.
 
         Args:
             filename: the location of the Feather file

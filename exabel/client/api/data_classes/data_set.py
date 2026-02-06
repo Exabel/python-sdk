@@ -28,6 +28,11 @@ class DataSet:
     derived_signals: Sequence[str] = field(default_factory=list)
     highlighted_signals: Sequence[str] = field(default_factory=list)
 
+    def __post_init__(self) -> None:
+        self.signals = self.signals or []
+        self.derived_signals = self.derived_signals or []
+        self.highlighted_signals = self.highlighted_signals or []
+
     @staticmethod
     def from_proto(data_set: ProtoDataSet) -> "DataSet":
         """Create a DataSet from the given protobuf DataSet."""

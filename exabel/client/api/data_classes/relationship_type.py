@@ -31,6 +31,9 @@ class RelationshipType:
     read_only: bool = False
     is_ownership: bool = False
 
+    def __post_init__(self) -> None:
+        self.properties = self.properties or {}
+
     @staticmethod
     def from_proto(relationship_type: ProtoRelationshipType) -> "RelationshipType":
         """Create a RelationshipType from the given protobuf RelationshipType."""

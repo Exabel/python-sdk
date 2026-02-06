@@ -257,7 +257,7 @@ class EntityApi(PageableResourceMixin):
         Search for entities.
 
         Args:
-            entity_type: The resource name of the entity type which is search for, for example
+            entity_type: The resource name of the entity type to search for, for example
                     "entityTypes/ns.type1"
         """
         terms = []

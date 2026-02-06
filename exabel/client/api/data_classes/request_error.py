@@ -78,7 +78,7 @@ class PreconditionFailure:
 @dataclass
 class RequestError(Exception):
     """
-    Represents an error returned from the Exabel Api.
+    Represents an error returned from the Exabel API.
 
     Attributes:
         error_type (ErrorType):                     Type of error.

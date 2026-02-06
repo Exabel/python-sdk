@@ -8,7 +8,7 @@ from exabel.stubs.exabel.api.analytics.v1.all_pb2 import (
 
 class PredictionModelApiClient(ABC):
     """
-    Superclass for clients that sends prediction model requests to the Exabel Analytics API.
+    Superclass for clients that send prediction model requests to the Exabel Analytics API.
     """
 
     @abstractmethod

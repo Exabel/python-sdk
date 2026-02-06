@@ -31,6 +31,9 @@ class Entity:
     properties: Mapping[str, str | bool | int | float] = field(default_factory=dict)
     read_only: bool = False
 
+    def __post_init__(self) -> None:
+        self.properties = self.properties or {}
+
     @staticmethod
     def from_proto(entity: ProtoEntity) -> "Entity":
         """Create an Entity from the given protobuf Entity."""

@@ -58,7 +58,7 @@ class TimeSeriesApi(PageableResourceMixin):
         Get the resource names of all time series for one signal.
 
         Args:
-            signal:     The signal to get time series for, for example "signal/ns.signal1".
+            signal:     The signal to get time series for, for example "signals/ns.signal1".
             page_size:  The maximum number of results to return. Defaults to 1000, which is also
                         the maximum size of this field.
             page_token: The page token to resume the results from.
@@ -186,7 +186,7 @@ class TimeSeriesApi(PageableResourceMixin):
                         "signals/ns3.signal/entityTypes/ns1.type/entities/ns2.entity". The
                         namespaces must be empty (being global) or one of the predetermined
                         namespaces the customer has access to. If ns2 is not empty, it must be
-                        equals to ns3, and if ns1 is not empty, all three namespaces must be equal.
+                        equal to ns3, and if ns1 is not empty, all three namespaces must be equal.
             series:     The time series data
             create_tag: Deprecated.
             default_known_time:
@@ -227,7 +227,7 @@ class TimeSeriesApi(PageableResourceMixin):
                         "signals/ns3.signal/entityTypes/ns1.type/entities/ns2.entity".
                         The namespaces must be empty (being global) or one of the predetermined
                         namespaces the customer has access to. If ns2 is not empty, it must be
-                        equals to ns3, and if ns1 is not empty, all three namespaces must be equal.
+                        equal to ns3, and if ns1 is not empty, all three namespaces must be equal.
             series:     The time series data
             create_tag: Deprecated.
             default_known_time:

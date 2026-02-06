@@ -18,7 +18,7 @@ logger = logging.getLogger(__name__)
 
 class CsvScript(BaseScript):
     """
-    Base class for scripts that process a CSV files with data to be loaded into the Exabel API.
+    Base class for scripts that process a CSV file with data to be loaded into the Exabel API.
 
     The first row of the CSV file should be a header row with column names.
     Each script will provide additional command line arguments that specify which columns to use.

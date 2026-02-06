@@ -13,7 +13,7 @@ class CommandLineScript(abc.ABC):
         self.parser = argparse.ArgumentParser(description=description)
 
     def parse_arguments(self) -> argparse.Namespace:
-        """Parse arguments input"""
+        """Parse arguments input."""
         return self.parser.parse_args(self.argv[1:])
 
     def setup_logging(
@@ -22,7 +22,7 @@ class CommandLineScript(abc.ABC):
         level: int = logging.INFO,
         stream: TextIO = sys.stdout,
     ) -> None:
-        """Setup logging"""
+        """Set up logging."""
         logging.basicConfig(format=format, level=level, stream=stream)
         logging.captureWarnings(True)
 

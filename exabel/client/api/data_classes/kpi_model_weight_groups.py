@@ -17,7 +17,7 @@ from exabel.stubs.exabel.api.analytics.v1.kpi_messages_pb2 import (
 
 @dataclass
 class KpiModelFeatureWeight:
-    """ "
+    """
     The weight for a single feature.
 
     Attributes:
@@ -41,7 +41,7 @@ class KpiModelFeatureWeight:
 
 @dataclass
 class KpiModelWeightGroup:
-    """ "
+    """
     Represents a weight group.
 
     Attributes:

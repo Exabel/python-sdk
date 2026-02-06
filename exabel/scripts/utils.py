@@ -109,7 +109,7 @@ def time_series_resource_name(argument: str) -> str:
 
 def read_signals_from_file(file_name: str) -> Sequence[str]:
     """
-    Reads a list of signal resource name from a file which has one per line.
+    Reads a list of signal resource names from a file which has one per line.
     """
     signals = []
     with open(file_name, "r", encoding="utf-8") as signals_file:

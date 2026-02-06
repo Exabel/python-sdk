@@ -14,7 +14,7 @@ from exabel.services.csv_loading_constants import (
 
 class DeleteTimeSeriesPoints(ListTimeSeries):
     """
-    Deletes all time series data points for a specifc date and known time.
+    Deletes all time series data points for a specific date and known time.
     The script fetches all time series for a given signal, entity type or
     entity, or a combination of these.
     """

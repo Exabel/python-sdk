@@ -8,7 +8,7 @@ from exabel.scripts.base_script import BaseScript
 
 class ListFolderAccessors(BaseScript):
     """
-    List folder accessors
+    List folder accessors.
     """
 
     def __init__(self, argv: Sequence[str], description: str):

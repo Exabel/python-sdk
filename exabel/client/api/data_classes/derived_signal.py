@@ -90,7 +90,7 @@ class DerivedSignalMetaData:
 
     @staticmethod
     def from_proto(metadata: ProtoDerivedSignalMetadata) -> "DerivedSignalMetaData":
-        """Create a DerivedSignalMetaData from the given protobuf DerivedSignalMetaData."""
+        """Create a DerivedSignalMetaData from the given protobuf DerivedSignalMetadata."""
         return DerivedSignalMetaData(
             unit=DerivedSignalUnit(metadata.unit),
             decimals=metadata.decimals.value if metadata.HasField("decimals") else None,

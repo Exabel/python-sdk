@@ -1,5 +1,5 @@
 """
-This file is here to keep backwards capability with the old name of the time series import script.
+This file is here to keep backwards compatibility with the old name of the time series import script.
 """
 
 import sys

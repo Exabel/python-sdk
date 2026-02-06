@@ -8,7 +8,7 @@ from exabel.scripts.base_script import BaseScript
 
 class MoveItems(BaseScript):
     """
-    Move items to a folder
+    Move items to a folder.
     """
 
     def __init__(self, argv: Sequence[str], description: str):
