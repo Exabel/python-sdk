@@ -162,7 +162,7 @@ class ForecastingOptions(google.protobuf.message.Message):
     model_type: builtins.str
     """Forecasting model type.
 
-    Supported values: `auto`, `prophet`, `sarima`, `theta`, `unobserved`, `holt_winters`.
+    Supported values: `auto`, `prophet`, `sarima`, `theta`, `unobserved_components`, `holt_winters`.
 
     Default: `auto`.
 
