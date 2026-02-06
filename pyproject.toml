@@ -48,6 +48,7 @@ athena = ["pyathena", "pyarrow", "sqlalchemy"]
 
 [project.urls]
 Homepage = "https://github.com/Exabel/python-sdk"
+Documentation = "https://help.exabel.com/docs/exporting-via-exabel-sdk"
 Source = "https://github.com/Exabel/python-sdk"
 Changelog = "https://github.com/Exabel/python-sdk/releases"
 
