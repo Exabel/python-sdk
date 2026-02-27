@@ -8,7 +8,7 @@ A Python SDK which provides easy access to Exabel APIs.
 pip install exabel
 ```
 
-or download from [PyPI](https://pypi.org/project/exabel/).
+or download from [PyPI](https://pypi.org/project/exabel).
 
 The SDK requires Python 3.10 or later.
 
@@ -32,11 +32,7 @@ Supported data sources are:
 
 ## Getting started
 
-To use the SDK against the Data API, Analytics API or Management API, you need an API key provided by Exabel.
-
-The Exabel Export API can be used by authenticating with username and password.
-The first time you run the script a web browser window is opened where you are asked to provide username and password. The script stores an access token in ``~/.exabel``, so you will not be asked again
-until the token expires.
+To use the SDK against, you need an API key or personal access token. THis can be found in the Exabel app.
 
 [Export API Developer guide](https://help.exabel.com/docs/exporting-via-exabel-sdk)
 
@@ -67,3 +63,10 @@ The Exabel Analytics API can be used to manage derived signals and prediction mo
 The Exabel Management API can be used to manage the library on the Exabel Platform.
 
 [Management API Developer guide](https://help.exabel.com/docs/management-api)
+
+## Protocols
+
+For efficiency, the SDK uses gRPC when communicating with the Data API, Analytics API,
+and Management API. The Export API is only available as a REST API.
+
+gRPC uses HTTPS on server port 21443, while REST uses HTTPS on server port 443.
