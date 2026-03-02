@@ -32,7 +32,7 @@ Supported data sources are:
 
 ## Getting started
 
-To use the SDK against, you need an API key or personal access token. THis can be found in the Exabel app.
+To use the SDK against, you need an API key or personal access token. This can be found in the Exabel app.
 
 [Export API Developer guide](https://help.exabel.com/docs/exporting-via-exabel-sdk)
 
