@@ -33,7 +33,7 @@ dependencies = [
 
 [dependency-groups]
 dev = [
-    "ruff",
+    "ruff==0.15.2",
     "mypy",
     "pytest",
     "types-protobuf",
@@ -163,6 +163,7 @@ ignore = [
     "PLC2801",  # unnecessary-dunder-call
     "PLR5501",  # collapsible-else-if
     "PLC2401",  # non-ascii-name
+    "PLC0207",  # missing-maxsplit-arg
 
     # Pylint optional checkers (not enabled by default in pylint)
     "PLC2701",  # import-private-name
