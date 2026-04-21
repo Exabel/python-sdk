@@ -3,39 +3,44 @@
 isort:skip_file
 Copyright (c) 2022 Exabel AS. All rights reserved."""
 
-import builtins
-import collections.abc
-from . import folder_messages_pb2
-import google.protobuf.descriptor
-import google.protobuf.field_mask_pb2
-import google.protobuf.internal.containers
-import google.protobuf.message
-import typing
-from ..... import exabel
+from collections import abc as _abc
+from . import folder_messages_pb2 as _folder_messages_pb2
+from google.protobuf import descriptor as _descriptor
+from google.protobuf import field_mask_pb2 as _field_mask_pb2
+from google.protobuf import message as _message
+from google.protobuf.internal import containers as _containers
+import builtins as _builtins
+import sys
+import typing as _typing
 
-DESCRIPTOR: google.protobuf.descriptor.FileDescriptor
+if sys.version_info >= (3, 10):
+    from typing import TypeAlias as _TypeAlias
+else:
+    from typing_extensions import TypeAlias as _TypeAlias
 
-@typing.final
-class ListFoldersRequest(google.protobuf.message.Message):
+DESCRIPTOR: _descriptor.FileDescriptor
+
+@_typing.final
+class ListFoldersRequest(_message.Message):
     """Request to ListFolders."""
 
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    DESCRIPTOR: _descriptor.Descriptor
 
     def __init__(
         self,
     ) -> None: ...
 
-global___ListFoldersRequest = ListFoldersRequest
+Global___ListFoldersRequest: _TypeAlias = ListFoldersRequest  # noqa: Y015
 
-@typing.final
-class ListFoldersResponse(google.protobuf.message.Message):
+@_typing.final
+class ListFoldersResponse(_message.Message):
     """Response from ListFolders."""
 
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    DESCRIPTOR: _descriptor.Descriptor
 
-    FOLDERS_FIELD_NUMBER: builtins.int
-    @property
-    def folders(self) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[exabel.api.management.v1.folder_messages_pb2.Folder]:
+    FOLDERS_FIELD_NUMBER: _builtins.int
+    @_builtins.property
+    def folders(self) -> _containers.RepeatedCompositeFieldContainer[_folder_messages_pb2.Folder]:
         """List of accessible folders.
 
         The items field for each folder will be empty when listing folders - use the "Get folder"
@@ -45,72 +50,76 @@ class ListFoldersResponse(google.protobuf.message.Message):
     def __init__(
         self,
         *,
-        folders: collections.abc.Iterable[exabel.api.management.v1.folder_messages_pb2.Folder] | None = ...,
+        folders: _abc.Iterable[_folder_messages_pb2.Folder] | None = ...,
     ) -> None: ...
-    def ClearField(self, field_name: typing.Literal["folders", b"folders"]) -> None: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["folders", b"folders"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
-global___ListFoldersResponse = ListFoldersResponse
+Global___ListFoldersResponse: _TypeAlias = ListFoldersResponse  # noqa: Y015
 
-@typing.final
-class GetFolderRequest(google.protobuf.message.Message):
+@_typing.final
+class GetFolderRequest(_message.Message):
     """Request to GetFolder."""
 
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    DESCRIPTOR: _descriptor.Descriptor
 
-    NAME_FIELD_NUMBER: builtins.int
-    name: builtins.str
+    NAME_FIELD_NUMBER: _builtins.int
+    name: _builtins.str
     """The folder resource name."""
     def __init__(
         self,
         *,
-        name: builtins.str | None = ...,
+        name: _builtins.str | None = ...,
     ) -> None: ...
-    def ClearField(self, field_name: typing.Literal["name", b"name"]) -> None: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["name", b"name"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
-global___GetFolderRequest = GetFolderRequest
+Global___GetFolderRequest: _TypeAlias = GetFolderRequest  # noqa: Y015
 
-@typing.final
-class CreateFolderRequest(google.protobuf.message.Message):
+@_typing.final
+class CreateFolderRequest(_message.Message):
     """Request to CreateFolder."""
 
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    DESCRIPTOR: _descriptor.Descriptor
 
-    FOLDER_FIELD_NUMBER: builtins.int
-    @property
-    def folder(self) -> exabel.api.management.v1.folder_messages_pb2.Folder:
+    FOLDER_FIELD_NUMBER: _builtins.int
+    @_builtins.property
+    def folder(self) -> _folder_messages_pb2.Folder:
         """The folder to create. Only the display name and description can be set."""
 
     def __init__(
         self,
         *,
-        folder: exabel.api.management.v1.folder_messages_pb2.Folder | None = ...,
+        folder: _folder_messages_pb2.Folder | None = ...,
     ) -> None: ...
-    def HasField(self, field_name: typing.Literal["folder", b"folder"]) -> builtins.bool: ...
-    def ClearField(self, field_name: typing.Literal["folder", b"folder"]) -> None: ...
+    _HasFieldArgType: _TypeAlias = _typing.Literal["folder", b"folder"]  # noqa: Y015
+    def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["folder", b"folder"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
-global___CreateFolderRequest = CreateFolderRequest
+Global___CreateFolderRequest: _TypeAlias = CreateFolderRequest  # noqa: Y015
 
-@typing.final
-class UpdateFolderRequest(google.protobuf.message.Message):
+@_typing.final
+class UpdateFolderRequest(_message.Message):
     """Request to UpdateFolder."""
 
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    DESCRIPTOR: _descriptor.Descriptor
 
-    FOLDER_FIELD_NUMBER: builtins.int
-    UPDATE_MASK_FIELD_NUMBER: builtins.int
-    ALLOW_MISSING_FIELD_NUMBER: builtins.int
-    allow_missing: builtins.bool
+    FOLDER_FIELD_NUMBER: _builtins.int
+    UPDATE_MASK_FIELD_NUMBER: _builtins.int
+    ALLOW_MISSING_FIELD_NUMBER: _builtins.int
+    allow_missing: _builtins.bool
     """If set to `true`, a new folder will be created if it did not exist, and `update_mask` is
     ignored.
     """
-    @property
-    def folder(self) -> exabel.api.management.v1.folder_messages_pb2.Folder:
+    @_builtins.property
+    def folder(self) -> _folder_messages_pb2.Folder:
         """The updated folder. The resource name must be set. Only the display name, and description can
         be set.
         """
 
-    @property
-    def update_mask(self) -> google.protobuf.field_mask_pb2.FieldMask:
+    @_builtins.property
+    def update_mask(self) -> _field_mask_pb2.FieldMask:
         """Use this to update only selected fields. For example, specify `display_name` to update only the
         display name. If `allow_missing` is set, this field is ignored.
         Currently, only the display name and description may be modified.
@@ -121,138 +130,145 @@ class UpdateFolderRequest(google.protobuf.message.Message):
     def __init__(
         self,
         *,
-        folder: exabel.api.management.v1.folder_messages_pb2.Folder | None = ...,
-        update_mask: google.protobuf.field_mask_pb2.FieldMask | None = ...,
-        allow_missing: builtins.bool | None = ...,
+        folder: _folder_messages_pb2.Folder | None = ...,
+        update_mask: _field_mask_pb2.FieldMask | None = ...,
+        allow_missing: _builtins.bool | None = ...,
     ) -> None: ...
-    def HasField(self, field_name: typing.Literal["folder", b"folder", "update_mask", b"update_mask"]) -> builtins.bool: ...
-    def ClearField(self, field_name: typing.Literal["allow_missing", b"allow_missing", "folder", b"folder", "update_mask", b"update_mask"]) -> None: ...
+    _HasFieldArgType: _TypeAlias = _typing.Literal["folder", b"folder", "update_mask", b"update_mask"]  # noqa: Y015
+    def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["allow_missing", b"allow_missing", "folder", b"folder", "update_mask", b"update_mask"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
-global___UpdateFolderRequest = UpdateFolderRequest
+Global___UpdateFolderRequest: _TypeAlias = UpdateFolderRequest  # noqa: Y015
 
-@typing.final
-class DeleteFolderRequest(google.protobuf.message.Message):
+@_typing.final
+class DeleteFolderRequest(_message.Message):
     """Request to DeleteFolder."""
 
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    DESCRIPTOR: _descriptor.Descriptor
 
-    NAME_FIELD_NUMBER: builtins.int
-    name: builtins.str
+    NAME_FIELD_NUMBER: _builtins.int
+    name: _builtins.str
     """The resource name of the folder to delete, for example `folders/1`."""
     def __init__(
         self,
         *,
-        name: builtins.str | None = ...,
+        name: _builtins.str | None = ...,
     ) -> None: ...
-    def ClearField(self, field_name: typing.Literal["name", b"name"]) -> None: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["name", b"name"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
-global___DeleteFolderRequest = DeleteFolderRequest
+Global___DeleteFolderRequest: _TypeAlias = DeleteFolderRequest  # noqa: Y015
 
-@typing.final
-class ListItemsRequest(google.protobuf.message.Message):
+@_typing.final
+class ListItemsRequest(_message.Message):
     """Request to ListItems."""
 
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    DESCRIPTOR: _descriptor.Descriptor
 
-    PARENT_FIELD_NUMBER: builtins.int
-    ITEM_TYPE_FIELD_NUMBER: builtins.int
-    parent: builtins.str
+    PARENT_FIELD_NUMBER: _builtins.int
+    ITEM_TYPE_FIELD_NUMBER: _builtins.int
+    parent: _builtins.str
     """The folder to list items from. Optional."""
-    item_type: exabel.api.management.v1.folder_messages_pb2.FolderItemType.ValueType
+    item_type: _folder_messages_pb2.FolderItemType.ValueType
     """Specify an item type to list."""
     def __init__(
         self,
         *,
-        parent: builtins.str | None = ...,
-        item_type: exabel.api.management.v1.folder_messages_pb2.FolderItemType.ValueType | None = ...,
+        parent: _builtins.str | None = ...,
+        item_type: _folder_messages_pb2.FolderItemType.ValueType | None = ...,
     ) -> None: ...
-    def ClearField(self, field_name: typing.Literal["item_type", b"item_type", "parent", b"parent"]) -> None: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["item_type", b"item_type", "parent", b"parent"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
-global___ListItemsRequest = ListItemsRequest
+Global___ListItemsRequest: _TypeAlias = ListItemsRequest  # noqa: Y015
 
-@typing.final
-class ListItemsResponse(google.protobuf.message.Message):
+@_typing.final
+class ListItemsResponse(_message.Message):
     """Response from ListItems."""
 
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    DESCRIPTOR: _descriptor.Descriptor
 
-    ITEMS_FIELD_NUMBER: builtins.int
-    @property
-    def items(self) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[exabel.api.management.v1.folder_messages_pb2.FolderItem]:
+    ITEMS_FIELD_NUMBER: _builtins.int
+    @_builtins.property
+    def items(self) -> _containers.RepeatedCompositeFieldContainer[_folder_messages_pb2.FolderItem]:
         """List of folder items."""
 
     def __init__(
         self,
         *,
-        items: collections.abc.Iterable[exabel.api.management.v1.folder_messages_pb2.FolderItem] | None = ...,
+        items: _abc.Iterable[_folder_messages_pb2.FolderItem] | None = ...,
     ) -> None: ...
-    def ClearField(self, field_name: typing.Literal["items", b"items"]) -> None: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["items", b"items"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
-global___ListItemsResponse = ListItemsResponse
+Global___ListItemsResponse: _TypeAlias = ListItemsResponse  # noqa: Y015
 
-@typing.final
-class MoveItemsRequest(google.protobuf.message.Message):
+@_typing.final
+class MoveItemsRequest(_message.Message):
     """Request to MoveItems."""
 
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    DESCRIPTOR: _descriptor.Descriptor
 
-    ITEMS_FIELD_NUMBER: builtins.int
-    TARGET_FOLDER_FIELD_NUMBER: builtins.int
-    target_folder: builtins.str
+    ITEMS_FIELD_NUMBER: _builtins.int
+    TARGET_FOLDER_FIELD_NUMBER: _builtins.int
+    target_folder: _builtins.str
     """The resource name of the target folder, for example `folders/10`."""
-    @property
-    def items(self) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[builtins.str]:
+    @_builtins.property
+    def items(self) -> _containers.RepeatedScalarFieldContainer[_builtins.str]:
         """List of resource names of the items to move, e.g. `models/123` or `derivedSignals/987`."""
 
     def __init__(
         self,
         *,
-        items: collections.abc.Iterable[builtins.str] | None = ...,
-        target_folder: builtins.str | None = ...,
+        items: _abc.Iterable[_builtins.str] | None = ...,
+        target_folder: _builtins.str | None = ...,
     ) -> None: ...
-    def ClearField(self, field_name: typing.Literal["items", b"items", "target_folder", b"target_folder"]) -> None: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["items", b"items", "target_folder", b"target_folder"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
-global___MoveItemsRequest = MoveItemsRequest
+Global___MoveItemsRequest: _TypeAlias = MoveItemsRequest  # noqa: Y015
 
-@typing.final
-class MoveItemsResponse(google.protobuf.message.Message):
+@_typing.final
+class MoveItemsResponse(_message.Message):
     """Response from MoveItems."""
 
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    DESCRIPTOR: _descriptor.Descriptor
 
     def __init__(
         self,
     ) -> None: ...
 
-global___MoveItemsResponse = MoveItemsResponse
+Global___MoveItemsResponse: _TypeAlias = MoveItemsResponse  # noqa: Y015
 
-@typing.final
-class ListFolderAccessorsRequest(google.protobuf.message.Message):
+@_typing.final
+class ListFolderAccessorsRequest(_message.Message):
     """Request to ListFolderAccessors."""
 
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    DESCRIPTOR: _descriptor.Descriptor
 
-    NAME_FIELD_NUMBER: builtins.int
-    name: builtins.str
+    NAME_FIELD_NUMBER: _builtins.int
+    name: _builtins.str
     """The folder resource name."""
     def __init__(
         self,
         *,
-        name: builtins.str | None = ...,
+        name: _builtins.str | None = ...,
     ) -> None: ...
-    def ClearField(self, field_name: typing.Literal["name", b"name"]) -> None: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["name", b"name"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
-global___ListFolderAccessorsRequest = ListFolderAccessorsRequest
+Global___ListFolderAccessorsRequest: _TypeAlias = ListFolderAccessorsRequest  # noqa: Y015
 
-@typing.final
-class ListFolderAccessorsResponse(google.protobuf.message.Message):
+@_typing.final
+class ListFolderAccessorsResponse(_message.Message):
     """Response from ListFolderAccessors."""
 
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    DESCRIPTOR: _descriptor.Descriptor
 
-    FOLDER_ACCESSORS_FIELD_NUMBER: builtins.int
-    @property
-    def folder_accessors(self) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[exabel.api.management.v1.folder_messages_pb2.FolderAccessor]:
+    FOLDER_ACCESSORS_FIELD_NUMBER: _builtins.int
+    @_builtins.property
+    def folder_accessors(self) -> _containers.RepeatedCompositeFieldContainer[_folder_messages_pb2.FolderAccessor]:
         """List of user groups with access to the folder. This does not include the users in each user
         group - those may be queried through the UserService.
         """
@@ -260,118 +276,123 @@ class ListFolderAccessorsResponse(google.protobuf.message.Message):
     def __init__(
         self,
         *,
-        folder_accessors: collections.abc.Iterable[exabel.api.management.v1.folder_messages_pb2.FolderAccessor] | None = ...,
+        folder_accessors: _abc.Iterable[_folder_messages_pb2.FolderAccessor] | None = ...,
     ) -> None: ...
-    def ClearField(self, field_name: typing.Literal["folder_accessors", b"folder_accessors"]) -> None: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["folder_accessors", b"folder_accessors"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
-global___ListFolderAccessorsResponse = ListFolderAccessorsResponse
+Global___ListFolderAccessorsResponse: _TypeAlias = ListFolderAccessorsResponse  # noqa: Y015
 
-@typing.final
-class ShareFolderRequest(google.protobuf.message.Message):
+@_typing.final
+class ShareFolderRequest(_message.Message):
     """Request to ShareFolder."""
 
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    DESCRIPTOR: _descriptor.Descriptor
 
-    FOLDER_FIELD_NUMBER: builtins.int
-    GROUP_FIELD_NUMBER: builtins.int
-    WRITE_FIELD_NUMBER: builtins.int
-    folder: builtins.str
+    FOLDER_FIELD_NUMBER: _builtins.int
+    GROUP_FIELD_NUMBER: _builtins.int
+    WRITE_FIELD_NUMBER: _builtins.int
+    folder: _builtins.str
     """Resource name of the folder to share."""
-    group: builtins.str
+    group: _builtins.str
     """Resource name of the user group to share the folder with."""
-    write: builtins.bool
+    write: _builtins.bool
     """Whether the user group should have write access."""
     def __init__(
         self,
         *,
-        folder: builtins.str | None = ...,
-        group: builtins.str | None = ...,
-        write: builtins.bool | None = ...,
+        folder: _builtins.str | None = ...,
+        group: _builtins.str | None = ...,
+        write: _builtins.bool | None = ...,
     ) -> None: ...
-    def ClearField(self, field_name: typing.Literal["folder", b"folder", "group", b"group", "write", b"write"]) -> None: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["folder", b"folder", "group", b"group", "write", b"write"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
-global___ShareFolderRequest = ShareFolderRequest
+Global___ShareFolderRequest: _TypeAlias = ShareFolderRequest  # noqa: Y015
 
-@typing.final
-class UnshareFolderRequest(google.protobuf.message.Message):
+@_typing.final
+class UnshareFolderRequest(_message.Message):
     """Request to UnshareFolder."""
 
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    DESCRIPTOR: _descriptor.Descriptor
 
-    FOLDER_FIELD_NUMBER: builtins.int
-    GROUP_FIELD_NUMBER: builtins.int
-    folder: builtins.str
+    FOLDER_FIELD_NUMBER: _builtins.int
+    GROUP_FIELD_NUMBER: _builtins.int
+    folder: _builtins.str
     """Resource name of the folder to unshare."""
-    group: builtins.str
+    group: _builtins.str
     """Resource name of the user group to unshare the folder from."""
     def __init__(
         self,
         *,
-        folder: builtins.str | None = ...,
-        group: builtins.str | None = ...,
+        folder: _builtins.str | None = ...,
+        group: _builtins.str | None = ...,
     ) -> None: ...
-    def ClearField(self, field_name: typing.Literal["folder", b"folder", "group", b"group"]) -> None: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["folder", b"folder", "group", b"group"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
-global___UnshareFolderRequest = UnshareFolderRequest
+Global___UnshareFolderRequest: _TypeAlias = UnshareFolderRequest  # noqa: Y015
 
-@typing.final
-class SearchItemsRequest(google.protobuf.message.Message):
+@_typing.final
+class SearchItemsRequest(_message.Message):
     """Request to SearchItems."""
 
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    DESCRIPTOR: _descriptor.Descriptor
 
-    FOLDER_FIELD_NUMBER: builtins.int
-    QUERY_FIELD_NUMBER: builtins.int
-    ITEM_TYPE_FIELD_NUMBER: builtins.int
-    PAGE_TOKEN_FIELD_NUMBER: builtins.int
-    PAGE_SIZE_FIELD_NUMBER: builtins.int
-    folder: builtins.str
+    FOLDER_FIELD_NUMBER: _builtins.int
+    QUERY_FIELD_NUMBER: _builtins.int
+    ITEM_TYPE_FIELD_NUMBER: _builtins.int
+    PAGE_TOKEN_FIELD_NUMBER: _builtins.int
+    PAGE_SIZE_FIELD_NUMBER: _builtins.int
+    folder: _builtins.str
     """Resource name of the folder to search in. Only "folders/-", meaning all folders, is supported."""
-    query: builtins.str
+    query: _builtins.str
     """Search query."""
-    item_type: exabel.api.management.v1.folder_messages_pb2.FolderItemType.ValueType
+    item_type: _folder_messages_pb2.FolderItemType.ValueType
     """The type of items to search for.
     If not set, all types are included in the result.
     """
-    page_token: builtins.str
+    page_token: _builtins.str
     """Token for a specific page of results, as returned from a previous search request with the same
     query parameters.
     """
-    page_size: builtins.int
+    page_size: _builtins.int
     """Maximum number of results to return. Defaults to 20."""
     def __init__(
         self,
         *,
-        folder: builtins.str | None = ...,
-        query: builtins.str | None = ...,
-        item_type: exabel.api.management.v1.folder_messages_pb2.FolderItemType.ValueType | None = ...,
-        page_token: builtins.str | None = ...,
-        page_size: builtins.int | None = ...,
+        folder: _builtins.str | None = ...,
+        query: _builtins.str | None = ...,
+        item_type: _folder_messages_pb2.FolderItemType.ValueType | None = ...,
+        page_token: _builtins.str | None = ...,
+        page_size: _builtins.int | None = ...,
     ) -> None: ...
-    def ClearField(self, field_name: typing.Literal["folder", b"folder", "item_type", b"item_type", "page_size", b"page_size", "page_token", b"page_token", "query", b"query"]) -> None: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["folder", b"folder", "item_type", b"item_type", "page_size", b"page_size", "page_token", b"page_token", "query", b"query"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
-global___SearchItemsRequest = SearchItemsRequest
+Global___SearchItemsRequest: _TypeAlias = SearchItemsRequest  # noqa: Y015
 
-@typing.final
-class SearchItemsResponse(google.protobuf.message.Message):
+@_typing.final
+class SearchItemsResponse(_message.Message):
     """Response from SearchItems."""
 
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    DESCRIPTOR: _descriptor.Descriptor
 
-    RESULTS_FIELD_NUMBER: builtins.int
-    NEXT_PAGE_TOKEN_FIELD_NUMBER: builtins.int
-    next_page_token: builtins.str
+    RESULTS_FIELD_NUMBER: _builtins.int
+    NEXT_PAGE_TOKEN_FIELD_NUMBER: _builtins.int
+    next_page_token: _builtins.str
     """Continuation token. If non-empty, there may be more results to retrieve."""
-    @property
-    def results(self) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[exabel.api.management.v1.folder_messages_pb2.SearchResult]:
+    @_builtins.property
+    def results(self) -> _containers.RepeatedCompositeFieldContainer[_folder_messages_pb2.SearchResult]:
         """Search results."""
 
     def __init__(
         self,
         *,
-        results: collections.abc.Iterable[exabel.api.management.v1.folder_messages_pb2.SearchResult] | None = ...,
-        next_page_token: builtins.str | None = ...,
+        results: _abc.Iterable[_folder_messages_pb2.SearchResult] | None = ...,
+        next_page_token: _builtins.str | None = ...,
     ) -> None: ...
-    def ClearField(self, field_name: typing.Literal["next_page_token", b"next_page_token", "results", b"results"]) -> None: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["next_page_token", b"next_page_token", "results", b"results"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
-global___SearchItemsResponse = SearchItemsResponse
+Global___SearchItemsResponse: _TypeAlias = SearchItemsResponse  # noqa: Y015

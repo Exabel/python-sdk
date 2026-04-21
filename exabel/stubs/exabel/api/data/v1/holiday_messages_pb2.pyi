@@ -3,74 +3,80 @@
 isort:skip_file
 Copyright (c) 2025 Exabel AS. All rights reserved."""
 
-import builtins
-import collections.abc
-from ...time import date_pb2
-import google.protobuf.descriptor
-import google.protobuf.internal.containers
-import google.protobuf.message
-import typing
-from ..... import exabel
+from collections import abc as _abc
+from ...time import date_pb2 as _date_pb2
+from google.protobuf import descriptor as _descriptor
+from google.protobuf import message as _message
+from google.protobuf.internal import containers as _containers
+import builtins as _builtins
+import sys
+import typing as _typing
 
-DESCRIPTOR: google.protobuf.descriptor.FileDescriptor
+if sys.version_info >= (3, 10):
+    from typing import TypeAlias as _TypeAlias
+else:
+    from typing_extensions import TypeAlias as _TypeAlias
 
-@typing.final
-class HolidaySpecification(google.protobuf.message.Message):
+DESCRIPTOR: _descriptor.FileDescriptor
+
+@_typing.final
+class HolidaySpecification(_message.Message):
     """A holiday specification defining a set of holidays with their properties.
     Used for Prophet forecasting models.
     """
 
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    DESCRIPTOR: _descriptor.Descriptor
 
-    NAME_FIELD_NUMBER: builtins.int
-    DISPLAY_NAME_FIELD_NUMBER: builtins.int
-    HOLIDAYS_FIELD_NUMBER: builtins.int
-    name: builtins.str
+    NAME_FIELD_NUMBER: _builtins.int
+    DISPLAY_NAME_FIELD_NUMBER: _builtins.int
+    HOLIDAYS_FIELD_NUMBER: _builtins.int
+    name: _builtins.str
     """Resource name, e.g. "holidaySpecifications/123"."""
-    display_name: builtins.str
+    display_name: _builtins.str
     """Display name for the holiday specification."""
-    @property
-    def holidays(self) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[global___Holiday]:
+    @_builtins.property
+    def holidays(self) -> _containers.RepeatedCompositeFieldContainer[Global___Holiday]:
         """List of holidays in this specification."""
 
     def __init__(
         self,
         *,
-        name: builtins.str | None = ...,
-        display_name: builtins.str | None = ...,
-        holidays: collections.abc.Iterable[global___Holiday] | None = ...,
+        name: _builtins.str | None = ...,
+        display_name: _builtins.str | None = ...,
+        holidays: _abc.Iterable[Global___Holiday] | None = ...,
     ) -> None: ...
-    def ClearField(self, field_name: typing.Literal["display_name", b"display_name", "holidays", b"holidays", "name", b"name"]) -> None: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["display_name", b"display_name", "holidays", b"holidays", "name", b"name"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
-global___HolidaySpecification = HolidaySpecification
+Global___HolidaySpecification: _TypeAlias = HolidaySpecification  # noqa: Y015
 
-@typing.final
-class Holiday(google.protobuf.message.Message):
+@_typing.final
+class Holiday(_message.Message):
     """A single holiday with its occurrences and parameters.
     Parameters follow Facebook Prophet's holiday specification format.
     """
 
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    DESCRIPTOR: _descriptor.Descriptor
 
-    LABEL_FIELD_NUMBER: builtins.int
-    LOWER_WINDOW_FIELD_NUMBER: builtins.int
-    UPPER_WINDOW_FIELD_NUMBER: builtins.int
-    PRIOR_SCALE_FIELD_NUMBER: builtins.int
-    DATES_FIELD_NUMBER: builtins.int
-    label: builtins.str
+    LABEL_FIELD_NUMBER: _builtins.int
+    LOWER_WINDOW_FIELD_NUMBER: _builtins.int
+    UPPER_WINDOW_FIELD_NUMBER: _builtins.int
+    PRIOR_SCALE_FIELD_NUMBER: _builtins.int
+    DATES_FIELD_NUMBER: _builtins.int
+    label: _builtins.str
     """Label for the holiday."""
-    lower_window: builtins.int
+    lower_window: _builtins.int
     """Number of days before the holiday to include in the window.
     Can be negative to extend the window backwards.
     """
-    upper_window: builtins.int
+    upper_window: _builtins.int
     """Number of days after the holiday to include in the window.
     Can be negative to shorten the window.
     """
-    prior_scale: builtins.float
+    prior_scale: _builtins.float
     """Regularization parameter controlling the magnitude of the holiday effect."""
-    @property
-    def dates(self) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[exabel.api.time.date_pb2.Date]:
+    @_builtins.property
+    def dates(self) -> _containers.RepeatedCompositeFieldContainer[_date_pb2.Date]:
         """List of dates when this holiday occurs.
         Must contain at least one date.
         """
@@ -78,12 +84,13 @@ class Holiday(google.protobuf.message.Message):
     def __init__(
         self,
         *,
-        label: builtins.str | None = ...,
-        lower_window: builtins.int | None = ...,
-        upper_window: builtins.int | None = ...,
-        prior_scale: builtins.float | None = ...,
-        dates: collections.abc.Iterable[exabel.api.time.date_pb2.Date] | None = ...,
+        label: _builtins.str | None = ...,
+        lower_window: _builtins.int | None = ...,
+        upper_window: _builtins.int | None = ...,
+        prior_scale: _builtins.float | None = ...,
+        dates: _abc.Iterable[_date_pb2.Date] | None = ...,
     ) -> None: ...
-    def ClearField(self, field_name: typing.Literal["dates", b"dates", "label", b"label", "lower_window", b"lower_window", "prior_scale", b"prior_scale", "upper_window", b"upper_window"]) -> None: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["dates", b"dates", "label", b"label", "lower_window", b"lower_window", "prior_scale", b"prior_scale", "upper_window", b"upper_window"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
-global___Holiday = Holiday
+Global___Holiday: _TypeAlias = Holiday  # noqa: Y015

@@ -3,113 +3,122 @@
 isort:skip_file
 Copyright (c) 2019-2022 Exabel AS. All rights reserved."""
 
-import builtins
-import collections.abc
-from . import relationship_messages_pb2
-import google.protobuf.descriptor
-import google.protobuf.field_mask_pb2
-import google.protobuf.internal.containers
-import google.protobuf.message
-import typing
-from ..... import exabel
+from collections import abc as _abc
+from . import relationship_messages_pb2 as _relationship_messages_pb2
+from google.protobuf import descriptor as _descriptor
+from google.protobuf import field_mask_pb2 as _field_mask_pb2
+from google.protobuf import message as _message
+from google.protobuf.internal import containers as _containers
+import builtins as _builtins
+import sys
+import typing as _typing
 
-DESCRIPTOR: google.protobuf.descriptor.FileDescriptor
+if sys.version_info >= (3, 10):
+    from typing import TypeAlias as _TypeAlias
+else:
+    from typing_extensions import TypeAlias as _TypeAlias
 
-@typing.final
-class ListRelationshipTypesRequest(google.protobuf.message.Message):
+DESCRIPTOR: _descriptor.FileDescriptor
+
+@_typing.final
+class ListRelationshipTypesRequest(_message.Message):
     """The request to list relationship types."""
 
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    DESCRIPTOR: _descriptor.Descriptor
 
-    PAGE_SIZE_FIELD_NUMBER: builtins.int
-    PAGE_TOKEN_FIELD_NUMBER: builtins.int
-    page_size: builtins.int
+    PAGE_SIZE_FIELD_NUMBER: _builtins.int
+    PAGE_TOKEN_FIELD_NUMBER: _builtins.int
+    page_size: _builtins.int
     """Maximum number of results to return. Defaults to 1000, which is the maximum allowed value."""
-    page_token: builtins.str
+    page_token: _builtins.str
     """Token for a specific page of results, as returned from a previous list request with the same
     query parameters.
     """
     def __init__(
         self,
         *,
-        page_size: builtins.int | None = ...,
-        page_token: builtins.str | None = ...,
+        page_size: _builtins.int | None = ...,
+        page_token: _builtins.str | None = ...,
     ) -> None: ...
-    def ClearField(self, field_name: typing.Literal["page_size", b"page_size", "page_token", b"page_token"]) -> None: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["page_size", b"page_size", "page_token", b"page_token"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
-global___ListRelationshipTypesRequest = ListRelationshipTypesRequest
+Global___ListRelationshipTypesRequest: _TypeAlias = ListRelationshipTypesRequest  # noqa: Y015
 
-@typing.final
-class ListRelationshipTypesResponse(google.protobuf.message.Message):
+@_typing.final
+class ListRelationshipTypesResponse(_message.Message):
     """The response to list relationship types. Returns all known relationship types."""
 
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    DESCRIPTOR: _descriptor.Descriptor
 
-    RELATIONSHIP_TYPES_FIELD_NUMBER: builtins.int
-    NEXT_PAGE_TOKEN_FIELD_NUMBER: builtins.int
-    TOTAL_SIZE_FIELD_NUMBER: builtins.int
-    next_page_token: builtins.str
+    RELATIONSHIP_TYPES_FIELD_NUMBER: _builtins.int
+    NEXT_PAGE_TOKEN_FIELD_NUMBER: _builtins.int
+    TOTAL_SIZE_FIELD_NUMBER: _builtins.int
+    next_page_token: _builtins.str
     """Token for the next page of results, which can be sent to a subsequent query.
     The end of the list is reached when the number of results is less than the page size
     (NOT when the token is empty).
     """
-    total_size: builtins.int
+    total_size: _builtins.int
     """Total number of results, irrespective of paging."""
-    @property
-    def relationship_types(self) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[exabel.api.data.v1.relationship_messages_pb2.RelationshipType]:
+    @_builtins.property
+    def relationship_types(self) -> _containers.RepeatedCompositeFieldContainer[_relationship_messages_pb2.RelationshipType]:
         """List of relationship types."""
 
     def __init__(
         self,
         *,
-        relationship_types: collections.abc.Iterable[exabel.api.data.v1.relationship_messages_pb2.RelationshipType] | None = ...,
-        next_page_token: builtins.str | None = ...,
-        total_size: builtins.int | None = ...,
+        relationship_types: _abc.Iterable[_relationship_messages_pb2.RelationshipType] | None = ...,
+        next_page_token: _builtins.str | None = ...,
+        total_size: _builtins.int | None = ...,
     ) -> None: ...
-    def ClearField(self, field_name: typing.Literal["next_page_token", b"next_page_token", "relationship_types", b"relationship_types", "total_size", b"total_size"]) -> None: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["next_page_token", b"next_page_token", "relationship_types", b"relationship_types", "total_size", b"total_size"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
-global___ListRelationshipTypesResponse = ListRelationshipTypesResponse
+Global___ListRelationshipTypesResponse: _TypeAlias = ListRelationshipTypesResponse  # noqa: Y015
 
-@typing.final
-class CreateRelationshipTypeRequest(google.protobuf.message.Message):
+@_typing.final
+class CreateRelationshipTypeRequest(_message.Message):
     """The request to create one relationship type."""
 
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    DESCRIPTOR: _descriptor.Descriptor
 
-    RELATIONSHIP_TYPE_FIELD_NUMBER: builtins.int
-    @property
-    def relationship_type(self) -> exabel.api.data.v1.relationship_messages_pb2.RelationshipType:
+    RELATIONSHIP_TYPE_FIELD_NUMBER: _builtins.int
+    @_builtins.property
+    def relationship_type(self) -> _relationship_messages_pb2.RelationshipType:
         """The relationship type to create."""
 
     def __init__(
         self,
         *,
-        relationship_type: exabel.api.data.v1.relationship_messages_pb2.RelationshipType | None = ...,
+        relationship_type: _relationship_messages_pb2.RelationshipType | None = ...,
     ) -> None: ...
-    def HasField(self, field_name: typing.Literal["relationship_type", b"relationship_type"]) -> builtins.bool: ...
-    def ClearField(self, field_name: typing.Literal["relationship_type", b"relationship_type"]) -> None: ...
+    _HasFieldArgType: _TypeAlias = _typing.Literal["relationship_type", b"relationship_type"]  # noqa: Y015
+    def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["relationship_type", b"relationship_type"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
-global___CreateRelationshipTypeRequest = CreateRelationshipTypeRequest
+Global___CreateRelationshipTypeRequest: _TypeAlias = CreateRelationshipTypeRequest  # noqa: Y015
 
-@typing.final
-class UpdateRelationshipTypeRequest(google.protobuf.message.Message):
+@_typing.final
+class UpdateRelationshipTypeRequest(_message.Message):
     """The request to update one relationship type."""
 
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    DESCRIPTOR: _descriptor.Descriptor
 
-    RELATIONSHIP_TYPE_FIELD_NUMBER: builtins.int
-    UPDATE_MASK_FIELD_NUMBER: builtins.int
-    ALLOW_MISSING_FIELD_NUMBER: builtins.int
-    allow_missing: builtins.bool
+    RELATIONSHIP_TYPE_FIELD_NUMBER: _builtins.int
+    UPDATE_MASK_FIELD_NUMBER: _builtins.int
+    ALLOW_MISSING_FIELD_NUMBER: _builtins.int
+    allow_missing: _builtins.bool
     """If set to `true`, a new relationship type will be created if it did not exist, and
     `update_mask` is ignored.
     """
-    @property
-    def relationship_type(self) -> exabel.api.data.v1.relationship_messages_pb2.RelationshipType:
+    @_builtins.property
+    def relationship_type(self) -> _relationship_messages_pb2.RelationshipType:
         """The relationship type to update."""
 
-    @property
-    def update_mask(self) -> google.protobuf.field_mask_pb2.FieldMask:
+    @_builtins.property
+    def update_mask(self) -> _field_mask_pb2.FieldMask:
         """Use this to update only selected fields. For example, specify `description` to update only the
         description. If `allow_missing` is set, this field is ignored.
 
@@ -119,194 +128,203 @@ class UpdateRelationshipTypeRequest(google.protobuf.message.Message):
     def __init__(
         self,
         *,
-        relationship_type: exabel.api.data.v1.relationship_messages_pb2.RelationshipType | None = ...,
-        update_mask: google.protobuf.field_mask_pb2.FieldMask | None = ...,
-        allow_missing: builtins.bool | None = ...,
+        relationship_type: _relationship_messages_pb2.RelationshipType | None = ...,
+        update_mask: _field_mask_pb2.FieldMask | None = ...,
+        allow_missing: _builtins.bool | None = ...,
     ) -> None: ...
-    def HasField(self, field_name: typing.Literal["relationship_type", b"relationship_type", "update_mask", b"update_mask"]) -> builtins.bool: ...
-    def ClearField(self, field_name: typing.Literal["allow_missing", b"allow_missing", "relationship_type", b"relationship_type", "update_mask", b"update_mask"]) -> None: ...
+    _HasFieldArgType: _TypeAlias = _typing.Literal["relationship_type", b"relationship_type", "update_mask", b"update_mask"]  # noqa: Y015
+    def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["allow_missing", b"allow_missing", "relationship_type", b"relationship_type", "update_mask", b"update_mask"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
-global___UpdateRelationshipTypeRequest = UpdateRelationshipTypeRequest
+Global___UpdateRelationshipTypeRequest: _TypeAlias = UpdateRelationshipTypeRequest  # noqa: Y015
 
-@typing.final
-class DeleteRelationshipTypeRequest(google.protobuf.message.Message):
+@_typing.final
+class DeleteRelationshipTypeRequest(_message.Message):
     """The request to delete one relationship type."""
 
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    DESCRIPTOR: _descriptor.Descriptor
 
-    NAME_FIELD_NUMBER: builtins.int
-    name: builtins.str
+    NAME_FIELD_NUMBER: _builtins.int
+    name: _builtins.str
     """The resource name of the relationship type to delete, for example `relationshipTypes/ns.type1`."""
     def __init__(
         self,
         *,
-        name: builtins.str | None = ...,
+        name: _builtins.str | None = ...,
     ) -> None: ...
-    def ClearField(self, field_name: typing.Literal["name", b"name"]) -> None: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["name", b"name"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
-global___DeleteRelationshipTypeRequest = DeleteRelationshipTypeRequest
+Global___DeleteRelationshipTypeRequest: _TypeAlias = DeleteRelationshipTypeRequest  # noqa: Y015
 
-@typing.final
-class GetRelationshipTypeRequest(google.protobuf.message.Message):
+@_typing.final
+class GetRelationshipTypeRequest(_message.Message):
     """The response to get one relationship type."""
 
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    DESCRIPTOR: _descriptor.Descriptor
 
-    NAME_FIELD_NUMBER: builtins.int
-    name: builtins.str
+    NAME_FIELD_NUMBER: _builtins.int
+    name: _builtins.str
     """The resource name of the requested relationship type, for example `relationshipTypes/ns.type1`."""
     def __init__(
         self,
         *,
-        name: builtins.str | None = ...,
+        name: _builtins.str | None = ...,
     ) -> None: ...
-    def ClearField(self, field_name: typing.Literal["name", b"name"]) -> None: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["name", b"name"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
-global___GetRelationshipTypeRequest = GetRelationshipTypeRequest
+Global___GetRelationshipTypeRequest: _TypeAlias = GetRelationshipTypeRequest  # noqa: Y015
 
-@typing.final
-class ListRelationshipsRequest(google.protobuf.message.Message):
+@_typing.final
+class ListRelationshipsRequest(_message.Message):
     """The request to list relationship of a specific type."""
 
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    DESCRIPTOR: _descriptor.Descriptor
 
-    PARENT_FIELD_NUMBER: builtins.int
-    FROM_ENTITY_FIELD_NUMBER: builtins.int
-    TO_ENTITY_FIELD_NUMBER: builtins.int
-    PAGE_SIZE_FIELD_NUMBER: builtins.int
-    PAGE_TOKEN_FIELD_NUMBER: builtins.int
-    parent: builtins.str
+    PARENT_FIELD_NUMBER: _builtins.int
+    FROM_ENTITY_FIELD_NUMBER: _builtins.int
+    TO_ENTITY_FIELD_NUMBER: _builtins.int
+    PAGE_SIZE_FIELD_NUMBER: _builtins.int
+    PAGE_TOKEN_FIELD_NUMBER: _builtins.int
+    parent: _builtins.str
     """The type of the relationship, for example `relationshipTypes/ns.type1`.
     Use parent `relationshipTypes/-` to include all types.
     """
-    from_entity: builtins.str
+    from_entity: _builtins.str
     """Resource name of entity to list relationships from, e.g.
     `entityTypes/ns.type1/entities/ns.entity1`.
     """
-    to_entity: builtins.str
+    to_entity: _builtins.str
     """Resource name of entity to list relationships to, e.g.
     `entityTypes/ns.type2/entities/ns.entity2`.
     """
-    page_size: builtins.int
+    page_size: _builtins.int
     """Maximum number of results to return. Defaults to 1000, which is the maximum allowed value."""
-    page_token: builtins.str
+    page_token: _builtins.str
     """Token for a specific page of results, as returned from a previous list request with the
     same query parameters.
     """
     def __init__(
         self,
         *,
-        parent: builtins.str | None = ...,
-        from_entity: builtins.str | None = ...,
-        to_entity: builtins.str | None = ...,
-        page_size: builtins.int | None = ...,
-        page_token: builtins.str | None = ...,
+        parent: _builtins.str | None = ...,
+        from_entity: _builtins.str | None = ...,
+        to_entity: _builtins.str | None = ...,
+        page_size: _builtins.int | None = ...,
+        page_token: _builtins.str | None = ...,
     ) -> None: ...
-    def ClearField(self, field_name: typing.Literal["from_entity", b"from_entity", "page_size", b"page_size", "page_token", b"page_token", "parent", b"parent", "to_entity", b"to_entity"]) -> None: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["from_entity", b"from_entity", "page_size", b"page_size", "page_token", b"page_token", "parent", b"parent", "to_entity", b"to_entity"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
-global___ListRelationshipsRequest = ListRelationshipsRequest
+Global___ListRelationshipsRequest: _TypeAlias = ListRelationshipsRequest  # noqa: Y015
 
-@typing.final
-class ListRelationshipsResponse(google.protobuf.message.Message):
+@_typing.final
+class ListRelationshipsResponse(_message.Message):
     """The response to list relationships."""
 
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    DESCRIPTOR: _descriptor.Descriptor
 
-    RELATIONSHIPS_FIELD_NUMBER: builtins.int
-    NEXT_PAGE_TOKEN_FIELD_NUMBER: builtins.int
-    TOTAL_SIZE_FIELD_NUMBER: builtins.int
-    next_page_token: builtins.str
+    RELATIONSHIPS_FIELD_NUMBER: _builtins.int
+    NEXT_PAGE_TOKEN_FIELD_NUMBER: _builtins.int
+    TOTAL_SIZE_FIELD_NUMBER: _builtins.int
+    next_page_token: _builtins.str
     """Token for the next page of results, which can be sent to a subsequent query.
     The end of the list is reached when the number of results is less than the page size
     (NOT when the token is empty).
     """
-    total_size: builtins.int
+    total_size: _builtins.int
     """Total number of results, irrespective of paging."""
-    @property
-    def relationships(self) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[exabel.api.data.v1.relationship_messages_pb2.Relationship]:
+    @_builtins.property
+    def relationships(self) -> _containers.RepeatedCompositeFieldContainer[_relationship_messages_pb2.Relationship]:
         """List of relationships. **Does not** return `description` or `properties`."""
 
     def __init__(
         self,
         *,
-        relationships: collections.abc.Iterable[exabel.api.data.v1.relationship_messages_pb2.Relationship] | None = ...,
-        next_page_token: builtins.str | None = ...,
-        total_size: builtins.int | None = ...,
+        relationships: _abc.Iterable[_relationship_messages_pb2.Relationship] | None = ...,
+        next_page_token: _builtins.str | None = ...,
+        total_size: _builtins.int | None = ...,
     ) -> None: ...
-    def ClearField(self, field_name: typing.Literal["next_page_token", b"next_page_token", "relationships", b"relationships", "total_size", b"total_size"]) -> None: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["next_page_token", b"next_page_token", "relationships", b"relationships", "total_size", b"total_size"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
-global___ListRelationshipsResponse = ListRelationshipsResponse
+Global___ListRelationshipsResponse: _TypeAlias = ListRelationshipsResponse  # noqa: Y015
 
-@typing.final
-class GetRelationshipRequest(google.protobuf.message.Message):
+@_typing.final
+class GetRelationshipRequest(_message.Message):
     """The request to get one relationship."""
 
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    DESCRIPTOR: _descriptor.Descriptor
 
-    PARENT_FIELD_NUMBER: builtins.int
-    FROM_ENTITY_FIELD_NUMBER: builtins.int
-    TO_ENTITY_FIELD_NUMBER: builtins.int
-    parent: builtins.str
+    PARENT_FIELD_NUMBER: _builtins.int
+    FROM_ENTITY_FIELD_NUMBER: _builtins.int
+    TO_ENTITY_FIELD_NUMBER: _builtins.int
+    parent: _builtins.str
     """The type of the relationship, for example `relationshipTypes/ns.type1`."""
-    from_entity: builtins.str
+    from_entity: _builtins.str
     """Resource name of entity the relationship starts from, e.g.
     `entityTypes/ns.type1/entities/ns.entity1`.
     """
-    to_entity: builtins.str
+    to_entity: _builtins.str
     """Resource name of entity the relationship goes to, e.g.
     `entityTypes/ns.type2/entities/ns.entity2`.
     """
     def __init__(
         self,
         *,
-        parent: builtins.str | None = ...,
-        from_entity: builtins.str | None = ...,
-        to_entity: builtins.str | None = ...,
+        parent: _builtins.str | None = ...,
+        from_entity: _builtins.str | None = ...,
+        to_entity: _builtins.str | None = ...,
     ) -> None: ...
-    def ClearField(self, field_name: typing.Literal["from_entity", b"from_entity", "parent", b"parent", "to_entity", b"to_entity"]) -> None: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["from_entity", b"from_entity", "parent", b"parent", "to_entity", b"to_entity"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
-global___GetRelationshipRequest = GetRelationshipRequest
+Global___GetRelationshipRequest: _TypeAlias = GetRelationshipRequest  # noqa: Y015
 
-@typing.final
-class CreateRelationshipRequest(google.protobuf.message.Message):
+@_typing.final
+class CreateRelationshipRequest(_message.Message):
     """The request to create one relationship."""
 
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    DESCRIPTOR: _descriptor.Descriptor
 
-    RELATIONSHIP_FIELD_NUMBER: builtins.int
-    @property
-    def relationship(self) -> exabel.api.data.v1.relationship_messages_pb2.Relationship:
+    RELATIONSHIP_FIELD_NUMBER: _builtins.int
+    @_builtins.property
+    def relationship(self) -> _relationship_messages_pb2.Relationship:
         """The relationship to create."""
 
     def __init__(
         self,
         *,
-        relationship: exabel.api.data.v1.relationship_messages_pb2.Relationship | None = ...,
+        relationship: _relationship_messages_pb2.Relationship | None = ...,
     ) -> None: ...
-    def HasField(self, field_name: typing.Literal["relationship", b"relationship"]) -> builtins.bool: ...
-    def ClearField(self, field_name: typing.Literal["relationship", b"relationship"]) -> None: ...
+    _HasFieldArgType: _TypeAlias = _typing.Literal["relationship", b"relationship"]  # noqa: Y015
+    def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["relationship", b"relationship"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
-global___CreateRelationshipRequest = CreateRelationshipRequest
+Global___CreateRelationshipRequest: _TypeAlias = CreateRelationshipRequest  # noqa: Y015
 
-@typing.final
-class UpdateRelationshipRequest(google.protobuf.message.Message):
+@_typing.final
+class UpdateRelationshipRequest(_message.Message):
     """The request to update one relationship."""
 
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    DESCRIPTOR: _descriptor.Descriptor
 
-    RELATIONSHIP_FIELD_NUMBER: builtins.int
-    UPDATE_MASK_FIELD_NUMBER: builtins.int
-    ALLOW_MISSING_FIELD_NUMBER: builtins.int
-    allow_missing: builtins.bool
+    RELATIONSHIP_FIELD_NUMBER: _builtins.int
+    UPDATE_MASK_FIELD_NUMBER: _builtins.int
+    ALLOW_MISSING_FIELD_NUMBER: _builtins.int
+    allow_missing: _builtins.bool
     """If set to `true`, a new relationship will be created if it did not exist, and `update_mask` is
     ignored.
     """
-    @property
-    def relationship(self) -> exabel.api.data.v1.relationship_messages_pb2.Relationship:
+    @_builtins.property
+    def relationship(self) -> _relationship_messages_pb2.Relationship:
         """The relationship to update."""
 
-    @property
-    def update_mask(self) -> google.protobuf.field_mask_pb2.FieldMask:
+    @_builtins.property
+    def update_mask(self) -> _field_mask_pb2.FieldMask:
         """Use this to update only selected fields. For example, specify `description` to update only the
         description. If `allow_missing` is set, this field is ignored.
 
@@ -316,41 +334,44 @@ class UpdateRelationshipRequest(google.protobuf.message.Message):
     def __init__(
         self,
         *,
-        relationship: exabel.api.data.v1.relationship_messages_pb2.Relationship | None = ...,
-        update_mask: google.protobuf.field_mask_pb2.FieldMask | None = ...,
-        allow_missing: builtins.bool | None = ...,
+        relationship: _relationship_messages_pb2.Relationship | None = ...,
+        update_mask: _field_mask_pb2.FieldMask | None = ...,
+        allow_missing: _builtins.bool | None = ...,
     ) -> None: ...
-    def HasField(self, field_name: typing.Literal["relationship", b"relationship", "update_mask", b"update_mask"]) -> builtins.bool: ...
-    def ClearField(self, field_name: typing.Literal["allow_missing", b"allow_missing", "relationship", b"relationship", "update_mask", b"update_mask"]) -> None: ...
+    _HasFieldArgType: _TypeAlias = _typing.Literal["relationship", b"relationship", "update_mask", b"update_mask"]  # noqa: Y015
+    def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["allow_missing", b"allow_missing", "relationship", b"relationship", "update_mask", b"update_mask"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
-global___UpdateRelationshipRequest = UpdateRelationshipRequest
+Global___UpdateRelationshipRequest: _TypeAlias = UpdateRelationshipRequest  # noqa: Y015
 
-@typing.final
-class DeleteRelationshipRequest(google.protobuf.message.Message):
+@_typing.final
+class DeleteRelationshipRequest(_message.Message):
     """The request to delete one relationship."""
 
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    DESCRIPTOR: _descriptor.Descriptor
 
-    PARENT_FIELD_NUMBER: builtins.int
-    FROM_ENTITY_FIELD_NUMBER: builtins.int
-    TO_ENTITY_FIELD_NUMBER: builtins.int
-    parent: builtins.str
+    PARENT_FIELD_NUMBER: _builtins.int
+    FROM_ENTITY_FIELD_NUMBER: _builtins.int
+    TO_ENTITY_FIELD_NUMBER: _builtins.int
+    parent: _builtins.str
     """The parent of the relationship to delete, for example `relationshipTypes/ns.type1`."""
-    from_entity: builtins.str
+    from_entity: _builtins.str
     """Resource name of entity the relationship starts from, e.g.
     `entityTypes/ns.type1/entities/ns.entity1`.
     """
-    to_entity: builtins.str
+    to_entity: _builtins.str
     """Resource name of entity the relationship goes to, e.g.
     `entityTypes/ns.type2/entities/ns.entity2`.
     """
     def __init__(
         self,
         *,
-        parent: builtins.str | None = ...,
-        from_entity: builtins.str | None = ...,
-        to_entity: builtins.str | None = ...,
+        parent: _builtins.str | None = ...,
+        from_entity: _builtins.str | None = ...,
+        to_entity: _builtins.str | None = ...,
     ) -> None: ...
-    def ClearField(self, field_name: typing.Literal["from_entity", b"from_entity", "parent", b"parent", "to_entity", b"to_entity"]) -> None: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["from_entity", b"from_entity", "parent", b"parent", "to_entity", b"to_entity"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
-global___DeleteRelationshipRequest = DeleteRelationshipRequest
+Global___DeleteRelationshipRequest: _TypeAlias = DeleteRelationshipRequest  # noqa: Y015

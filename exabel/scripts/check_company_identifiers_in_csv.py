@@ -97,7 +97,7 @@ class CheckCompanyIdentifiersInCsv(CsvScript):
             subset=[args.identifier_column]
         )
         identifier_type = self._get_identifier_type(args.identifier_column, args.identifier_type)
-        df.rename(columns={args.identifier_column: identifier_type}, inplace=True)
+        df = df.rename(columns={args.identifier_column: identifier_type})
         identifiers = df[identifier_type].drop_duplicates()
         entity_resource_names = to_entity_resource_names(
             client.entity_api,
@@ -118,7 +118,7 @@ class CheckCompanyIdentifiersInCsv(CsvScript):
                 "identifiers in total"
             )
         if args.output_file:
-            df.rename(columns={args.identifier_column: identifier_type}, inplace=True)
+            df = df.rename(columns={args.identifier_column: identifier_type})
             result_df = df.merge(checked_data_frame, how="left", on=identifier_type)
             result_df.to_csv(args.output_file, index=False)
             print(f"Identifier mappings written to {args.output_file}")

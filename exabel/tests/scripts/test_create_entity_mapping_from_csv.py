@@ -1,3 +1,4 @@
+import os
 import tempfile
 import unittest
 from unittest import mock
@@ -11,10 +12,11 @@ class TestCreateEntityMappingFromCsv(unittest.TestCase):
     def setUp(self):
         self.client = mock.create_autospec(ExabelClient)
         self.client.entity_api = mock.create_autospec(EntityApi)
-        self.temp_file = tempfile.NamedTemporaryFile()
+        with tempfile.NamedTemporaryFile(delete=False) as temp_file:
+            self.temp_file = temp_file
 
     def tearDown(self):
-        self.temp_file.close()
+        os.unlink(self.temp_file.name)
 
     def test_create_mapping_ticker(self):
         args = [

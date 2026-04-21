@@ -3,76 +3,84 @@
 isort:skip_file
 Copyright (c) 2022 Exabel AS. All rights reserved."""
 
-import builtins
-from . import derived_signal_messages_pb2
-import google.protobuf.descriptor
-import google.protobuf.field_mask_pb2
-import google.protobuf.message
-import typing
-from ..... import exabel
+from . import derived_signal_messages_pb2 as _derived_signal_messages_pb2
+from google.protobuf import descriptor as _descriptor
+from google.protobuf import field_mask_pb2 as _field_mask_pb2
+from google.protobuf import message as _message
+import builtins as _builtins
+import sys
+import typing as _typing
 
-DESCRIPTOR: google.protobuf.descriptor.FileDescriptor
+if sys.version_info >= (3, 10):
+    from typing import TypeAlias as _TypeAlias
+else:
+    from typing_extensions import TypeAlias as _TypeAlias
 
-@typing.final
-class GetDerivedSignalRequest(google.protobuf.message.Message):
+DESCRIPTOR: _descriptor.FileDescriptor
+
+@_typing.final
+class GetDerivedSignalRequest(_message.Message):
     """Request to GetDerivedSignal."""
 
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    DESCRIPTOR: _descriptor.Descriptor
 
-    NAME_FIELD_NUMBER: builtins.int
-    name: builtins.str
+    NAME_FIELD_NUMBER: _builtins.int
+    name: _builtins.str
     """The derived signal resource name."""
     def __init__(
         self,
         *,
-        name: builtins.str | None = ...,
+        name: _builtins.str | None = ...,
     ) -> None: ...
-    def ClearField(self, field_name: typing.Literal["name", b"name"]) -> None: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["name", b"name"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
-global___GetDerivedSignalRequest = GetDerivedSignalRequest
+Global___GetDerivedSignalRequest: _TypeAlias = GetDerivedSignalRequest  # noqa: Y015
 
-@typing.final
-class CreateDerivedSignalRequest(google.protobuf.message.Message):
+@_typing.final
+class CreateDerivedSignalRequest(_message.Message):
     """Request to CreateDerivedSignal."""
 
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    DESCRIPTOR: _descriptor.Descriptor
 
-    SIGNAL_FIELD_NUMBER: builtins.int
-    FOLDER_FIELD_NUMBER: builtins.int
-    folder: builtins.str
+    SIGNAL_FIELD_NUMBER: _builtins.int
+    FOLDER_FIELD_NUMBER: _builtins.int
+    folder: _builtins.str
     """Resource name of the Library folder to create the signal in, e.g. `folders/123`. If not
     specified, the signal will be created in an “Analytics API” folder that is shared with the
     customer user group.
     """
-    @property
-    def signal(self) -> exabel.api.analytics.v1.derived_signal_messages_pb2.DerivedSignal:
+    @_builtins.property
+    def signal(self) -> _derived_signal_messages_pb2.DerivedSignal:
         """A derived signal."""
 
     def __init__(
         self,
         *,
-        signal: exabel.api.analytics.v1.derived_signal_messages_pb2.DerivedSignal | None = ...,
-        folder: builtins.str | None = ...,
+        signal: _derived_signal_messages_pb2.DerivedSignal | None = ...,
+        folder: _builtins.str | None = ...,
     ) -> None: ...
-    def HasField(self, field_name: typing.Literal["signal", b"signal"]) -> builtins.bool: ...
-    def ClearField(self, field_name: typing.Literal["folder", b"folder", "signal", b"signal"]) -> None: ...
+    _HasFieldArgType: _TypeAlias = _typing.Literal["signal", b"signal"]  # noqa: Y015
+    def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["folder", b"folder", "signal", b"signal"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
-global___CreateDerivedSignalRequest = CreateDerivedSignalRequest
+Global___CreateDerivedSignalRequest: _TypeAlias = CreateDerivedSignalRequest  # noqa: Y015
 
-@typing.final
-class UpdateDerivedSignalRequest(google.protobuf.message.Message):
+@_typing.final
+class UpdateDerivedSignalRequest(_message.Message):
     """Request to UpdateDerivedSignal."""
 
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    DESCRIPTOR: _descriptor.Descriptor
 
-    SIGNAL_FIELD_NUMBER: builtins.int
-    UPDATE_MASK_FIELD_NUMBER: builtins.int
-    @property
-    def signal(self) -> exabel.api.analytics.v1.derived_signal_messages_pb2.DerivedSignal:
+    SIGNAL_FIELD_NUMBER: _builtins.int
+    UPDATE_MASK_FIELD_NUMBER: _builtins.int
+    @_builtins.property
+    def signal(self) -> _derived_signal_messages_pb2.DerivedSignal:
         """A derived signal."""
 
-    @property
-    def update_mask(self) -> google.protobuf.field_mask_pb2.FieldMask:
+    @_builtins.property
+    def update_mask(self) -> _field_mask_pb2.FieldMask:
         """Use this to update only selected fields. For example, specify `expression` to update only
         the expression.
 
@@ -82,28 +90,31 @@ class UpdateDerivedSignalRequest(google.protobuf.message.Message):
     def __init__(
         self,
         *,
-        signal: exabel.api.analytics.v1.derived_signal_messages_pb2.DerivedSignal | None = ...,
-        update_mask: google.protobuf.field_mask_pb2.FieldMask | None = ...,
+        signal: _derived_signal_messages_pb2.DerivedSignal | None = ...,
+        update_mask: _field_mask_pb2.FieldMask | None = ...,
     ) -> None: ...
-    def HasField(self, field_name: typing.Literal["signal", b"signal", "update_mask", b"update_mask"]) -> builtins.bool: ...
-    def ClearField(self, field_name: typing.Literal["signal", b"signal", "update_mask", b"update_mask"]) -> None: ...
+    _HasFieldArgType: _TypeAlias = _typing.Literal["signal", b"signal", "update_mask", b"update_mask"]  # noqa: Y015
+    def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["signal", b"signal", "update_mask", b"update_mask"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
-global___UpdateDerivedSignalRequest = UpdateDerivedSignalRequest
+Global___UpdateDerivedSignalRequest: _TypeAlias = UpdateDerivedSignalRequest  # noqa: Y015
 
-@typing.final
-class DeleteDerivedSignalRequest(google.protobuf.message.Message):
+@_typing.final
+class DeleteDerivedSignalRequest(_message.Message):
     """Request to DeleteDerivedSignal."""
 
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    DESCRIPTOR: _descriptor.Descriptor
 
-    NAME_FIELD_NUMBER: builtins.int
-    name: builtins.str
+    NAME_FIELD_NUMBER: _builtins.int
+    name: _builtins.str
     """The derived signal resource name."""
     def __init__(
         self,
         *,
-        name: builtins.str | None = ...,
+        name: _builtins.str | None = ...,
     ) -> None: ...
-    def ClearField(self, field_name: typing.Literal["name", b"name"]) -> None: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["name", b"name"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
-global___DeleteDerivedSignalRequest = DeleteDerivedSignalRequest
+Global___DeleteDerivedSignalRequest: _TypeAlias = DeleteDerivedSignalRequest  # noqa: Y015

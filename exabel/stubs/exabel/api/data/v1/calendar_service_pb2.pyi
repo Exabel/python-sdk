@@ -3,39 +3,44 @@
 isort:skip_file
 Copyright (c) 2019-2025 Exabel AS. All rights reserved."""
 
-import builtins
-import collections.abc
-from . import calendar_messages_pb2
-from ...time import time_range_pb2
-import google.protobuf.descriptor
-import google.protobuf.internal.containers
-import google.protobuf.message
-import typing
-from ..... import exabel
+from collections import abc as _abc
+from . import calendar_messages_pb2 as _calendar_messages_pb2
+from ...time import time_range_pb2 as _time_range_pb2
+from google.protobuf import descriptor as _descriptor
+from google.protobuf import message as _message
+from google.protobuf.internal import containers as _containers
+import builtins as _builtins
+import sys
+import typing as _typing
 
-DESCRIPTOR: google.protobuf.descriptor.FileDescriptor
+if sys.version_info >= (3, 10):
+    from typing import TypeAlias as _TypeAlias
+else:
+    from typing_extensions import TypeAlias as _TypeAlias
 
-@typing.final
-class GetCompanyCalendarRequest(google.protobuf.message.Message):
+DESCRIPTOR: _descriptor.FileDescriptor
+
+@_typing.final
+class GetCompanyCalendarRequest(_message.Message):
     """A request to get the fiscal calendar for a company."""
 
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    DESCRIPTOR: _descriptor.Descriptor
 
-    COMPANY_FIELD_NUMBER: builtins.int
-    FREQUENCY_FIELD_NUMBER: builtins.int
-    TIME_RANGE_FIELD_NUMBER: builtins.int
-    INCLUDE_UNREPORTED_FIELD_NUMBER: builtins.int
-    company: builtins.str
+    COMPANY_FIELD_NUMBER: _builtins.int
+    FREQUENCY_FIELD_NUMBER: _builtins.int
+    TIME_RANGE_FIELD_NUMBER: _builtins.int
+    INCLUDE_UNREPORTED_FIELD_NUMBER: _builtins.int
+    company: _builtins.str
     """The resource name of the company (e.g., "entityTypes/company/entities/F_12345-E")."""
-    frequency: exabel.api.data.v1.calendar_messages_pb2.Frequency.ValueType
+    frequency: _calendar_messages_pb2.Frequency.ValueType
     """The requested frequency. If not set, uses the company's reporting frequency (FQ or FS)."""
-    include_unreported: builtins.bool
+    include_unreported: _builtins.bool
     """Whether to include unreported (future) fiscal periods.
     If false, only periods that have been reported are returned.
     Default is false.
     """
-    @property
-    def time_range(self) -> exabel.api.time.time_range_pb2.TimeRange:
+    @_builtins.property
+    def time_range(self) -> _time_range_pb2.TimeRange:
         """The time range for fiscal periods. Returns all periods whose end date falls within this range.
         If not set, returns all historical periods and, if include_unreported is true, future periods
         for the current fiscal year and two fiscal years into the future.
@@ -44,84 +49,88 @@ class GetCompanyCalendarRequest(google.protobuf.message.Message):
     def __init__(
         self,
         *,
-        company: builtins.str | None = ...,
-        frequency: exabel.api.data.v1.calendar_messages_pb2.Frequency.ValueType | None = ...,
-        time_range: exabel.api.time.time_range_pb2.TimeRange | None = ...,
-        include_unreported: builtins.bool | None = ...,
+        company: _builtins.str | None = ...,
+        frequency: _calendar_messages_pb2.Frequency.ValueType | None = ...,
+        time_range: _time_range_pb2.TimeRange | None = ...,
+        include_unreported: _builtins.bool | None = ...,
     ) -> None: ...
-    def HasField(self, field_name: typing.Literal["time_range", b"time_range"]) -> builtins.bool: ...
-    def ClearField(self, field_name: typing.Literal["company", b"company", "frequency", b"frequency", "include_unreported", b"include_unreported", "time_range", b"time_range"]) -> None: ...
+    _HasFieldArgType: _TypeAlias = _typing.Literal["time_range", b"time_range"]  # noqa: Y015
+    def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["company", b"company", "frequency", b"frequency", "include_unreported", b"include_unreported", "time_range", b"time_range"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
-global___GetCompanyCalendarRequest = GetCompanyCalendarRequest
+Global___GetCompanyCalendarRequest: _TypeAlias = GetCompanyCalendarRequest  # noqa: Y015
 
-@typing.final
-class CompanyCalendar(google.protobuf.message.Message):
+@_typing.final
+class CompanyCalendar(_message.Message):
     """A company's fiscal calendar."""
 
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    DESCRIPTOR: _descriptor.Descriptor
 
-    PERIODS_FIELD_NUMBER: builtins.int
-    @property
-    def periods(self) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[exabel.api.data.v1.calendar_messages_pb2.FiscalPeriod]:
+    PERIODS_FIELD_NUMBER: _builtins.int
+    @_builtins.property
+    def periods(self) -> _containers.RepeatedCompositeFieldContainer[_calendar_messages_pb2.FiscalPeriod]:
         """The fiscal periods for the company."""
 
     def __init__(
         self,
         *,
-        periods: collections.abc.Iterable[exabel.api.data.v1.calendar_messages_pb2.FiscalPeriod] | None = ...,
+        periods: _abc.Iterable[_calendar_messages_pb2.FiscalPeriod] | None = ...,
     ) -> None: ...
-    def ClearField(self, field_name: typing.Literal["periods", b"periods"]) -> None: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["periods", b"periods"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
-global___CompanyCalendar = CompanyCalendar
+Global___CompanyCalendar: _TypeAlias = CompanyCalendar  # noqa: Y015
 
-@typing.final
-class BatchCreateFiscalPeriodsRequest(google.protobuf.message.Message):
+@_typing.final
+class BatchCreateFiscalPeriodsRequest(_message.Message):
     """A request to create multiple custom fiscal periods for a company."""
 
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    DESCRIPTOR: _descriptor.Descriptor
 
-    PARENT_FIELD_NUMBER: builtins.int
-    PERIODS_FIELD_NUMBER: builtins.int
-    parent: builtins.str
+    PARENT_FIELD_NUMBER: _builtins.int
+    PERIODS_FIELD_NUMBER: _builtins.int
+    parent: _builtins.str
     """The resource name of the company."""
-    @property
-    def periods(self) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[exabel.api.data.v1.calendar_messages_pb2.FiscalPeriod]:
+    @_builtins.property
+    def periods(self) -> _containers.RepeatedCompositeFieldContainer[_calendar_messages_pb2.FiscalPeriod]:
         """The custom fiscal periods to add."""
 
     def __init__(
         self,
         *,
-        parent: builtins.str | None = ...,
-        periods: collections.abc.Iterable[exabel.api.data.v1.calendar_messages_pb2.FiscalPeriod] | None = ...,
+        parent: _builtins.str | None = ...,
+        periods: _abc.Iterable[_calendar_messages_pb2.FiscalPeriod] | None = ...,
     ) -> None: ...
-    def ClearField(self, field_name: typing.Literal["parent", b"parent", "periods", b"periods"]) -> None: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["parent", b"parent", "periods", b"periods"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
-global___BatchCreateFiscalPeriodsRequest = BatchCreateFiscalPeriodsRequest
+Global___BatchCreateFiscalPeriodsRequest: _TypeAlias = BatchCreateFiscalPeriodsRequest  # noqa: Y015
 
-@typing.final
-class BatchCreateFiscalPeriodsResponse(google.protobuf.message.Message):
+@_typing.final
+class BatchCreateFiscalPeriodsResponse(_message.Message):
     """The response to a request to create custom fiscal periods."""
 
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    DESCRIPTOR: _descriptor.Descriptor
 
     def __init__(
         self,
     ) -> None: ...
 
-global___BatchCreateFiscalPeriodsResponse = BatchCreateFiscalPeriodsResponse
+Global___BatchCreateFiscalPeriodsResponse: _TypeAlias = BatchCreateFiscalPeriodsResponse  # noqa: Y015
 
-@typing.final
-class DeleteFiscalPeriodRequest(google.protobuf.message.Message):
+@_typing.final
+class DeleteFiscalPeriodRequest(_message.Message):
     """A request to delete a fiscal period for a company."""
 
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    DESCRIPTOR: _descriptor.Descriptor
 
-    PARENT_FIELD_NUMBER: builtins.int
-    PERIOD_FIELD_NUMBER: builtins.int
-    parent: builtins.str
+    PARENT_FIELD_NUMBER: _builtins.int
+    PERIOD_FIELD_NUMBER: _builtins.int
+    parent: _builtins.str
     """The resource name of the company."""
-    @property
-    def period(self) -> exabel.api.data.v1.calendar_messages_pb2.FiscalPeriod:
+    @_builtins.property
+    def period(self) -> _calendar_messages_pb2.FiscalPeriod:
         """The custom fiscal periods to delete. If not set, will delete all custom fiscal periods
         for the given company.
         """
@@ -129,25 +138,27 @@ class DeleteFiscalPeriodRequest(google.protobuf.message.Message):
     def __init__(
         self,
         *,
-        parent: builtins.str | None = ...,
-        period: exabel.api.data.v1.calendar_messages_pb2.FiscalPeriod | None = ...,
+        parent: _builtins.str | None = ...,
+        period: _calendar_messages_pb2.FiscalPeriod | None = ...,
     ) -> None: ...
-    def HasField(self, field_name: typing.Literal["period", b"period"]) -> builtins.bool: ...
-    def ClearField(self, field_name: typing.Literal["parent", b"parent", "period", b"period"]) -> None: ...
+    _HasFieldArgType: _TypeAlias = _typing.Literal["period", b"period"]  # noqa: Y015
+    def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["parent", b"parent", "period", b"period"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
-global___DeleteFiscalPeriodRequest = DeleteFiscalPeriodRequest
+Global___DeleteFiscalPeriodRequest: _TypeAlias = DeleteFiscalPeriodRequest  # noqa: Y015
 
-@typing.final
-class ListFiscalPeriodsRequest(google.protobuf.message.Message):
+@_typing.final
+class ListFiscalPeriodsRequest(_message.Message):
     """A request to list the custom fiscal periods for a company."""
 
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    DESCRIPTOR: _descriptor.Descriptor
 
-    PARENT_FIELD_NUMBER: builtins.int
-    FREQUENCY_FIELD_NUMBER: builtins.int
-    parent: builtins.str
+    PARENT_FIELD_NUMBER: _builtins.int
+    FREQUENCY_FIELD_NUMBER: _builtins.int
+    parent: _builtins.str
     """The resource name of the company."""
-    frequency: exabel.api.data.v1.calendar_messages_pb2.Frequency.ValueType
+    frequency: _calendar_messages_pb2.Frequency.ValueType
     """Optionally, a frequency.
     If a frequency is provided, only the custom fiscal periods of that frequency are returned.
     Otherwise, all the custom fiscal periods for the company are returned.
@@ -155,61 +166,64 @@ class ListFiscalPeriodsRequest(google.protobuf.message.Message):
     def __init__(
         self,
         *,
-        parent: builtins.str | None = ...,
-        frequency: exabel.api.data.v1.calendar_messages_pb2.Frequency.ValueType | None = ...,
+        parent: _builtins.str | None = ...,
+        frequency: _calendar_messages_pb2.Frequency.ValueType | None = ...,
     ) -> None: ...
-    def ClearField(self, field_name: typing.Literal["frequency", b"frequency", "parent", b"parent"]) -> None: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["frequency", b"frequency", "parent", b"parent"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
-global___ListFiscalPeriodsRequest = ListFiscalPeriodsRequest
+Global___ListFiscalPeriodsRequest: _TypeAlias = ListFiscalPeriodsRequest  # noqa: Y015
 
-@typing.final
-class ListFiscalPeriodsResponse(google.protobuf.message.Message):
+@_typing.final
+class ListFiscalPeriodsResponse(_message.Message):
     """The response to a request to list custom fiscal periods."""
 
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    DESCRIPTOR: _descriptor.Descriptor
 
-    PERIODS_FIELD_NUMBER: builtins.int
-    @property
-    def periods(self) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[exabel.api.data.v1.calendar_messages_pb2.FiscalPeriod]:
+    PERIODS_FIELD_NUMBER: _builtins.int
+    @_builtins.property
+    def periods(self) -> _containers.RepeatedCompositeFieldContainer[_calendar_messages_pb2.FiscalPeriod]:
         """The fiscal periods of the requested company."""
 
     def __init__(
         self,
         *,
-        periods: collections.abc.Iterable[exabel.api.data.v1.calendar_messages_pb2.FiscalPeriod] | None = ...,
+        periods: _abc.Iterable[_calendar_messages_pb2.FiscalPeriod] | None = ...,
     ) -> None: ...
-    def ClearField(self, field_name: typing.Literal["periods", b"periods"]) -> None: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["periods", b"periods"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
-global___ListFiscalPeriodsResponse = ListFiscalPeriodsResponse
+Global___ListFiscalPeriodsResponse: _TypeAlias = ListFiscalPeriodsResponse  # noqa: Y015
 
-@typing.final
-class ListCompaniesWithFiscalPeriodsRequest(google.protobuf.message.Message):
+@_typing.final
+class ListCompaniesWithFiscalPeriodsRequest(_message.Message):
     """A request to list all the companies for which custom fiscal periods have been uploaded."""
 
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    DESCRIPTOR: _descriptor.Descriptor
 
     def __init__(
         self,
     ) -> None: ...
 
-global___ListCompaniesWithFiscalPeriodsRequest = ListCompaniesWithFiscalPeriodsRequest
+Global___ListCompaniesWithFiscalPeriodsRequest: _TypeAlias = ListCompaniesWithFiscalPeriodsRequest  # noqa: Y015
 
-@typing.final
-class ListCompaniesWithFiscalPeriodsResponse(google.protobuf.message.Message):
+@_typing.final
+class ListCompaniesWithFiscalPeriodsResponse(_message.Message):
     """The response to a request to list companies with custom fiscal periods."""
 
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    DESCRIPTOR: _descriptor.Descriptor
 
-    COMPANIES_FIELD_NUMBER: builtins.int
-    @property
-    def companies(self) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[builtins.str]:
+    COMPANIES_FIELD_NUMBER: _builtins.int
+    @_builtins.property
+    def companies(self) -> _containers.RepeatedScalarFieldContainer[_builtins.str]:
         """A list of resource names of the companies that have custom fiscal periods."""
 
     def __init__(
         self,
         *,
-        companies: collections.abc.Iterable[builtins.str] | None = ...,
+        companies: _abc.Iterable[_builtins.str] | None = ...,
     ) -> None: ...
-    def ClearField(self, field_name: typing.Literal["companies", b"companies"]) -> None: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["companies", b"companies"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
-global___ListCompaniesWithFiscalPeriodsResponse = ListCompaniesWithFiscalPeriodsResponse
+Global___ListCompaniesWithFiscalPeriodsResponse: _TypeAlias = ListCompaniesWithFiscalPeriodsResponse  # noqa: Y015

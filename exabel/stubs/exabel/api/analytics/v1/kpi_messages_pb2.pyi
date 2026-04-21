@@ -3,31 +3,35 @@
 isort:skip_file
 Copyright (c) 2025 Exabel AS. All rights reserved."""
 
-import builtins
-import collections.abc
-from ...time import date_pb2
-import google.protobuf.descriptor
-import google.protobuf.internal.containers
-import google.protobuf.internal.enum_type_wrapper
-import google.protobuf.message
-import google.protobuf.timestamp_pb2
+from collections import abc as _abc
+from ...time import date_pb2 as _date_pb2
+from google.protobuf import descriptor as _descriptor
+from google.protobuf import message as _message
+from google.protobuf import timestamp_pb2 as _timestamp_pb2
+from google.protobuf.internal import containers as _containers
+from google.protobuf.internal import enum_type_wrapper as _enum_type_wrapper
+import builtins as _builtins
 import sys
-import typing
+import typing as _typing
 
 if sys.version_info >= (3, 10):
-    import typing as typing_extensions
+    from typing import TypeAlias as _TypeAlias
 else:
-    import typing_extensions
-from ..... import exabel
+    from typing_extensions import TypeAlias as _TypeAlias
 
-DESCRIPTOR: google.protobuf.descriptor.FileDescriptor
+if sys.version_info >= (3, 13):
+    from warnings import deprecated as _deprecated
+else:
+    from typing_extensions import deprecated as _deprecated
+
+DESCRIPTOR: _descriptor.FileDescriptor
 
 class _KpiSource:
-    ValueType = typing.NewType("ValueType", builtins.int)
-    V: typing_extensions.TypeAlias = ValueType
+    ValueType = _typing.NewType("ValueType", _builtins.int)
+    V: _TypeAlias = ValueType  # noqa: Y015
 
-class _KpiSourceEnumTypeWrapper(google.protobuf.internal.enum_type_wrapper._EnumTypeWrapper[_KpiSource.ValueType], builtins.type):
-    DESCRIPTOR: google.protobuf.descriptor.EnumDescriptor
+class _KpiSourceEnumTypeWrapper(_enum_type_wrapper._EnumTypeWrapper[_KpiSource.ValueType], _builtins.type):
+    DESCRIPTOR: _descriptor.EnumDescriptor
     KPI_SOURCE_UNSPECIFIED: _KpiSource.ValueType  # 0
     """Unspecified."""
     KPI_SOURCE_VISIBLE_ALPHA: _KpiSource.ValueType  # 1
@@ -48,14 +52,14 @@ KPI_SOURCE_FACTSET: KpiSource.ValueType  # 2
 """FactSet."""
 KPI_SOURCE_CUSTOM_KPI: KpiSource.ValueType  # 3
 """Custom KPI."""
-global___KpiSource = KpiSource
+Global___KpiSource: _TypeAlias = KpiSource  # noqa: Y015
 
 class _ModelQuality:
-    ValueType = typing.NewType("ValueType", builtins.int)
-    V: typing_extensions.TypeAlias = ValueType
+    ValueType = _typing.NewType("ValueType", _builtins.int)
+    V: _TypeAlias = ValueType  # noqa: Y015
 
-class _ModelQualityEnumTypeWrapper(google.protobuf.internal.enum_type_wrapper._EnumTypeWrapper[_ModelQuality.ValueType], builtins.type):
-    DESCRIPTOR: google.protobuf.descriptor.EnumDescriptor
+class _ModelQualityEnumTypeWrapper(_enum_type_wrapper._EnumTypeWrapper[_ModelQuality.ValueType], _builtins.type):
+    DESCRIPTOR: _descriptor.EnumDescriptor
     MODEL_QUALITY_UNSPECIFIED: _ModelQuality.ValueType  # 0
     """Unspecified."""
     MODEL_QUALITY_LOW: _ModelQuality.ValueType  # 10
@@ -80,14 +84,14 @@ MODEL_QUALITY_HIGH: ModelQuality.ValueType  # 30
 """High quality."""
 MODEL_QUALITY_VERY_HIGH: ModelQuality.ValueType  # 40
 """Very high quality."""
-global___ModelQuality = ModelQuality
+Global___ModelQuality: _TypeAlias = ModelQuality  # noqa: Y015
 
 class _RelativeFiscalPeriodSelector:
-    ValueType = typing.NewType("ValueType", builtins.int)
-    V: typing_extensions.TypeAlias = ValueType
+    ValueType = _typing.NewType("ValueType", _builtins.int)
+    V: _TypeAlias = ValueType  # noqa: Y015
 
-class _RelativeFiscalPeriodSelectorEnumTypeWrapper(google.protobuf.internal.enum_type_wrapper._EnumTypeWrapper[_RelativeFiscalPeriodSelector.ValueType], builtins.type):
-    DESCRIPTOR: google.protobuf.descriptor.EnumDescriptor
+class _RelativeFiscalPeriodSelectorEnumTypeWrapper(_enum_type_wrapper._EnumTypeWrapper[_RelativeFiscalPeriodSelector.ValueType], _builtins.type):
+    DESCRIPTOR: _descriptor.EnumDescriptor
     RELATIVE_FISCAL_PERIOD_SELECTOR_UNSPECIFIED: _RelativeFiscalPeriodSelector.ValueType  # 0
     """Unspecified."""
     PREVIOUS: _RelativeFiscalPeriodSelector.ValueType  # 1
@@ -108,100 +112,105 @@ CURRENT: RelativeFiscalPeriodSelector.ValueType  # 2
 """Current unreported fiscal period."""
 NEXT: RelativeFiscalPeriodSelector.ValueType  # 3
 """Next unreported fiscal period."""
-global___RelativeFiscalPeriodSelector = RelativeFiscalPeriodSelector
+Global___RelativeFiscalPeriodSelector: _TypeAlias = RelativeFiscalPeriodSelector  # noqa: Y015
 
-@typing.final
-class CompanyKpiMappingResults(google.protobuf.message.Message):
+@_typing.final
+class CompanyKpiMappingResults(_message.Message):
     """KPI mapping results for a single company."""
 
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    DESCRIPTOR: _descriptor.Descriptor
 
-    ENTITY_FIELD_NUMBER: builtins.int
-    KPI_RESULTS_FIELD_NUMBER: builtins.int
-    @property
-    def entity(self) -> global___Company:
+    ENTITY_FIELD_NUMBER: _builtins.int
+    KPI_RESULTS_FIELD_NUMBER: _builtins.int
+    @_builtins.property
+    def entity(self) -> Global___Company:
         """The company these results apply to."""
 
-    @property
-    def kpi_results(self) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[global___SingleCompanyKpiMappingResults]:
+    @_builtins.property
+    def kpi_results(self) -> _containers.RepeatedCompositeFieldContainer[Global___SingleCompanyKpiMappingResults]:
         """The results for each KPI."""
 
     def __init__(
         self,
         *,
-        entity: global___Company | None = ...,
-        kpi_results: collections.abc.Iterable[global___SingleCompanyKpiMappingResults] | None = ...,
+        entity: Global___Company | None = ...,
+        kpi_results: _abc.Iterable[Global___SingleCompanyKpiMappingResults] | None = ...,
     ) -> None: ...
-    def HasField(self, field_name: typing.Literal["entity", b"entity"]) -> builtins.bool: ...
-    def ClearField(self, field_name: typing.Literal["entity", b"entity", "kpi_results", b"kpi_results"]) -> None: ...
+    _HasFieldArgType: _TypeAlias = _typing.Literal["entity", b"entity"]  # noqa: Y015
+    def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["entity", b"entity", "kpi_results", b"kpi_results"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
-global___CompanyKpiMappingResults = CompanyKpiMappingResults
+Global___CompanyKpiMappingResults: _TypeAlias = CompanyKpiMappingResults  # noqa: Y015
 
-@typing.final
-class Company(google.protobuf.message.Message):
+@_typing.final
+class Company(_message.Message):
     """A company."""
 
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    DESCRIPTOR: _descriptor.Descriptor
 
-    NAME_FIELD_NUMBER: builtins.int
-    DISPLAY_NAME_FIELD_NUMBER: builtins.int
-    BLOOMBERG_TICKER_FIELD_NUMBER: builtins.int
-    name: builtins.str
+    NAME_FIELD_NUMBER: _builtins.int
+    DISPLAY_NAME_FIELD_NUMBER: _builtins.int
+    BLOOMBERG_TICKER_FIELD_NUMBER: _builtins.int
+    name: _builtins.str
     """The resource name of the company."""
-    display_name: builtins.str
+    display_name: _builtins.str
     """The display name of the company."""
-    bloomberg_ticker: builtins.str
+    bloomberg_ticker: _builtins.str
     """The bloomberg ticker of the company."""
     def __init__(
         self,
         *,
-        name: builtins.str | None = ...,
-        display_name: builtins.str | None = ...,
-        bloomberg_ticker: builtins.str | None = ...,
+        name: _builtins.str | None = ...,
+        display_name: _builtins.str | None = ...,
+        bloomberg_ticker: _builtins.str | None = ...,
     ) -> None: ...
-    def ClearField(self, field_name: typing.Literal["bloomberg_ticker", b"bloomberg_ticker", "display_name", b"display_name", "name", b"name"]) -> None: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["bloomberg_ticker", b"bloomberg_ticker", "display_name", b"display_name", "name", b"name"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
-global___Company = Company
+Global___Company: _TypeAlias = Company  # noqa: Y015
 
-@typing.final
-class SingleCompanyKpiMappingResults(google.protobuf.message.Message):
+@_typing.final
+class SingleCompanyKpiMappingResults(_message.Message):
     """KPI mapping results for a single company KPI."""
 
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    DESCRIPTOR: _descriptor.Descriptor
 
-    KPI_FIELD_NUMBER: builtins.int
-    DATA_FIELD_NUMBER: builtins.int
-    @property
-    def kpi(self) -> global___Kpi:
+    KPI_FIELD_NUMBER: _builtins.int
+    DATA_FIELD_NUMBER: _builtins.int
+    @_builtins.property
+    def kpi(self) -> Global___Kpi:
         """The KPI."""
 
-    @property
-    def data(self) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[global___KpiMappingResultData]:
+    @_builtins.property
+    def data(self) -> _containers.RepeatedCompositeFieldContainer[Global___KpiMappingResultData]:
         """The KPI mapping results for this KPI."""
 
     def __init__(
         self,
         *,
-        kpi: global___Kpi | None = ...,
-        data: collections.abc.Iterable[global___KpiMappingResultData] | None = ...,
+        kpi: Global___Kpi | None = ...,
+        data: _abc.Iterable[Global___KpiMappingResultData] | None = ...,
     ) -> None: ...
-    def HasField(self, field_name: typing.Literal["kpi", b"kpi"]) -> builtins.bool: ...
-    def ClearField(self, field_name: typing.Literal["data", b"data", "kpi", b"kpi"]) -> None: ...
+    _HasFieldArgType: _TypeAlias = _typing.Literal["kpi", b"kpi"]  # noqa: Y015
+    def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["data", b"data", "kpi", b"kpi"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
-global___SingleCompanyKpiMappingResults = SingleCompanyKpiMappingResults
+Global___SingleCompanyKpiMappingResults: _TypeAlias = SingleCompanyKpiMappingResults  # noqa: Y015
 
-@typing.final
-class Kpi(google.protobuf.message.Message):
+@_typing.final
+class Kpi(_message.Message):
     """A KPI."""
 
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    DESCRIPTOR: _descriptor.Descriptor
 
-    TYPE_FIELD_NUMBER: builtins.int
-    VALUE_FIELD_NUMBER: builtins.int
-    DISPLAY_NAME_FIELD_NUMBER: builtins.int
-    FREQ_FIELD_NUMBER: builtins.int
-    IS_RATIO_FIELD_NUMBER: builtins.int
-    type: builtins.str
+    TYPE_FIELD_NUMBER: _builtins.int
+    VALUE_FIELD_NUMBER: _builtins.int
+    DISPLAY_NAME_FIELD_NUMBER: _builtins.int
+    FREQ_FIELD_NUMBER: _builtins.int
+    IS_RATIO_FIELD_NUMBER: _builtins.int
+    type: _builtins.str
     """The type of the KPI. A KPI is one of the following types:
     - `FACTSET_ESTIMATES`: FactSet actuals/estimates.
     - `FACTSET_FUNDAMENTALS`: FactSet fundamentals.
@@ -209,7 +218,7 @@ class Kpi(google.protobuf.message.Message):
     - `VISIBLE_ALPHA_STANDARD_KPI`: Visible Alpha standard KPI.
     - `CUSTOM_KPI`: Custom KPI.
     """
-    value: builtins.str
+    value: _builtins.str
     """A value which is dependent on the type:
     - `FACTSET_ESTIMATES`: Reporting number, e.g. `SALES`.
     - `FACTSET_FUNDAMENTALS`: Reporting number, e.g. `SALES`.
@@ -217,237 +226,274 @@ class Kpi(google.protobuf.message.Message):
     - `VISIBLE_ALPHA_STANDARD_KPI`: Line item parameter id. For example, the "Total revenue" parameter has a parameter id of `190`.
     - `CUSTOM_KPI`: Custom KPI id. For example, `1234`.
     """
-    display_name: builtins.str
+    display_name: _builtins.str
     """The display name of the KPI."""
-    freq: builtins.str
+    freq: _builtins.str
     """A textual representation of the KPI frequency. Either `FQ`, `FS` or `FY`."""
-    is_ratio: builtins.bool
+    is_ratio: _builtins.bool
     """Whether this KPI is a ratio or not."""
     def __init__(
         self,
         *,
-        type: builtins.str | None = ...,
-        value: builtins.str | None = ...,
-        display_name: builtins.str | None = ...,
-        freq: builtins.str | None = ...,
-        is_ratio: builtins.bool | None = ...,
+        type: _builtins.str | None = ...,
+        value: _builtins.str | None = ...,
+        display_name: _builtins.str | None = ...,
+        freq: _builtins.str | None = ...,
+        is_ratio: _builtins.bool | None = ...,
     ) -> None: ...
-    def HasField(self, field_name: typing.Literal["_freq", b"_freq", "_is_ratio", b"_is_ratio", "_value", b"_value", "freq", b"freq", "is_ratio", b"is_ratio", "value", b"value"]) -> builtins.bool: ...
-    def ClearField(self, field_name: typing.Literal["_freq", b"_freq", "_is_ratio", b"_is_ratio", "_value", b"_value", "display_name", b"display_name", "freq", b"freq", "is_ratio", b"is_ratio", "type", b"type", "value", b"value"]) -> None: ...
-    @typing.overload
-    def WhichOneof(self, oneof_group: typing.Literal["_freq", b"_freq"]) -> typing.Literal["freq"] | None: ...
-    @typing.overload
-    def WhichOneof(self, oneof_group: typing.Literal["_is_ratio", b"_is_ratio"]) -> typing.Literal["is_ratio"] | None: ...
-    @typing.overload
-    def WhichOneof(self, oneof_group: typing.Literal["_value", b"_value"]) -> typing.Literal["value"] | None: ...
+    _HasFieldArgType: _TypeAlias = _typing.Literal["_freq", b"_freq", "_is_ratio", b"_is_ratio", "_value", b"_value", "freq", b"freq", "is_ratio", b"is_ratio", "value", b"value"]  # noqa: Y015
+    def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["_freq", b"_freq", "_is_ratio", b"_is_ratio", "_value", b"_value", "display_name", b"display_name", "freq", b"freq", "is_ratio", b"is_ratio", "type", b"type", "value", b"value"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
+    _WhichOneofReturnType__freq: _TypeAlias = _typing.Literal["freq"]  # noqa: Y015
+    _WhichOneofArgType__freq: _TypeAlias = _typing.Literal["_freq", b"_freq"]  # noqa: Y015
+    _WhichOneofReturnType__is_ratio: _TypeAlias = _typing.Literal["is_ratio"]  # noqa: Y015
+    _WhichOneofArgType__is_ratio: _TypeAlias = _typing.Literal["_is_ratio", b"_is_ratio"]  # noqa: Y015
+    _WhichOneofReturnType__value: _TypeAlias = _typing.Literal["value"]  # noqa: Y015
+    _WhichOneofArgType__value: _TypeAlias = _typing.Literal["_value", b"_value"]  # noqa: Y015
+    @_typing.overload
+    def WhichOneof(self, oneof_group: _WhichOneofArgType__freq) -> _WhichOneofReturnType__freq | None: ...
+    @_typing.overload
+    def WhichOneof(self, oneof_group: _WhichOneofArgType__is_ratio) -> _WhichOneofReturnType__is_ratio | None: ...
+    @_typing.overload
+    def WhichOneof(self, oneof_group: _WhichOneofArgType__value) -> _WhichOneofReturnType__value | None: ...
 
-global___Kpi = Kpi
+Global___Kpi: _TypeAlias = Kpi  # noqa: Y015
 
-@typing.final
-class KpiMappingResultData(google.protobuf.message.Message):
+@_typing.final
+class KpiMappingResultData(_message.Message):
     """Data for a KPI mapping result."""
 
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    DESCRIPTOR: _descriptor.Descriptor
 
-    SOURCE_FIELD_NUMBER: builtins.int
-    MODEL_MAPE_FIELD_NUMBER: builtins.int
-    MODEL_MAE_FIELD_NUMBER: builtins.int
-    MODEL_HIT_RATE_FIELD_NUMBER: builtins.int
-    MODEL_QUALITY_FIELD_NUMBER: builtins.int
-    LAST_VALUE_DATE_FIELD_NUMBER: builtins.int
-    NUMBER_OF_DATA_POINTS_FIELD_NUMBER: builtins.int
-    PERIOD_OVER_PERIOD_MAE_FIELD_NUMBER: builtins.int
-    YEAR_OVER_YEAR_MAE_FIELD_NUMBER: builtins.int
-    ABSOLUTE_CORRELATION_FIELD_NUMBER: builtins.int
-    PERIOD_OVER_PERIOD_CORRELATION_FIELD_NUMBER: builtins.int
-    YEAR_OVER_YEAR_CORRELATION_FIELD_NUMBER: builtins.int
-    ABSOLUTE_P_VALUE_FIELD_NUMBER: builtins.int
-    PERIOD_OVER_PERIOD_P_VALUE_FIELD_NUMBER: builtins.int
-    YEAR_OVER_YEAR_P_VALUE_FIELD_NUMBER: builtins.int
-    model_mape: builtins.float
+    SOURCE_FIELD_NUMBER: _builtins.int
+    MODEL_MAPE_FIELD_NUMBER: _builtins.int
+    MODEL_MAE_FIELD_NUMBER: _builtins.int
+    MODEL_HIT_RATE_FIELD_NUMBER: _builtins.int
+    MODEL_QUALITY_FIELD_NUMBER: _builtins.int
+    LAST_VALUE_DATE_FIELD_NUMBER: _builtins.int
+    NUMBER_OF_DATA_POINTS_FIELD_NUMBER: _builtins.int
+    PERIOD_OVER_PERIOD_MAE_FIELD_NUMBER: _builtins.int
+    YEAR_OVER_YEAR_MAE_FIELD_NUMBER: _builtins.int
+    ABSOLUTE_CORRELATION_FIELD_NUMBER: _builtins.int
+    PERIOD_OVER_PERIOD_CORRELATION_FIELD_NUMBER: _builtins.int
+    YEAR_OVER_YEAR_CORRELATION_FIELD_NUMBER: _builtins.int
+    ABSOLUTE_P_VALUE_FIELD_NUMBER: _builtins.int
+    PERIOD_OVER_PERIOD_P_VALUE_FIELD_NUMBER: _builtins.int
+    YEAR_OVER_YEAR_P_VALUE_FIELD_NUMBER: _builtins.int
+    model_mape: _builtins.float
     """Mean absolute percentage error for a model built using this proxy."""
-    model_mae: builtins.float
+    model_mae: _builtins.float
     """Mean absolute error for a model built using this proxy."""
-    model_hit_rate: builtins.float
+    model_hit_rate: _builtins.float
     """Hit rate for a model built using this proxy."""
-    model_quality: global___ModelQuality.ValueType
+    model_quality: Global___ModelQuality.ValueType
     """Model quality for a model built using this proxy."""
-    number_of_data_points: builtins.int
+    number_of_data_points: _builtins.int
     """Number of data points (after resampling).
     This is the number of data points where both the KPI and the proxy have data.
     """
-    period_over_period_mae: builtins.float
+    period_over_period_mae: _builtins.float
     """Period-over-period mean absolute error."""
-    year_over_year_mae: builtins.float
+    year_over_year_mae: _builtins.float
     """Year-over-year mean absolute error."""
-    absolute_correlation: builtins.float
+    absolute_correlation: _builtins.float
     """Absolute correlation."""
-    period_over_period_correlation: builtins.float
+    period_over_period_correlation: _builtins.float
     """Period-over-period correlation."""
-    year_over_year_correlation: builtins.float
+    year_over_year_correlation: _builtins.float
     """Year-over-year correlation."""
-    absolute_p_value: builtins.float
+    absolute_p_value: _builtins.float
     """Absolute P-value."""
-    period_over_period_p_value: builtins.float
+    period_over_period_p_value: _builtins.float
     """Period-over-period P-value."""
-    year_over_year_p_value: builtins.float
+    year_over_year_p_value: _builtins.float
     """Year-over-year P-value."""
-    @property
-    def source(self) -> global___KpiMappingGroupReference:
+    @_builtins.property
+    def source(self) -> Global___KpiMappingGroupReference:
         """The KPI mapping group from which this result originates"""
 
-    @property
-    def last_value_date(self) -> exabel.api.time.date_pb2.Date:
+    @_builtins.property
+    def last_value_date(self) -> _date_pb2.Date:
         """The date of the last observed proxy value."""
 
     def __init__(
         self,
         *,
-        source: global___KpiMappingGroupReference | None = ...,
-        model_mape: builtins.float | None = ...,
-        model_mae: builtins.float | None = ...,
-        model_hit_rate: builtins.float | None = ...,
-        model_quality: global___ModelQuality.ValueType | None = ...,
-        last_value_date: exabel.api.time.date_pb2.Date | None = ...,
-        number_of_data_points: builtins.int | None = ...,
-        period_over_period_mae: builtins.float | None = ...,
-        year_over_year_mae: builtins.float | None = ...,
-        absolute_correlation: builtins.float | None = ...,
-        period_over_period_correlation: builtins.float | None = ...,
-        year_over_year_correlation: builtins.float | None = ...,
-        absolute_p_value: builtins.float | None = ...,
-        period_over_period_p_value: builtins.float | None = ...,
-        year_over_year_p_value: builtins.float | None = ...,
+        source: Global___KpiMappingGroupReference | None = ...,
+        model_mape: _builtins.float | None = ...,
+        model_mae: _builtins.float | None = ...,
+        model_hit_rate: _builtins.float | None = ...,
+        model_quality: Global___ModelQuality.ValueType | None = ...,
+        last_value_date: _date_pb2.Date | None = ...,
+        number_of_data_points: _builtins.int | None = ...,
+        period_over_period_mae: _builtins.float | None = ...,
+        year_over_year_mae: _builtins.float | None = ...,
+        absolute_correlation: _builtins.float | None = ...,
+        period_over_period_correlation: _builtins.float | None = ...,
+        year_over_year_correlation: _builtins.float | None = ...,
+        absolute_p_value: _builtins.float | None = ...,
+        period_over_period_p_value: _builtins.float | None = ...,
+        year_over_year_p_value: _builtins.float | None = ...,
     ) -> None: ...
-    def HasField(self, field_name: typing.Literal["_absolute_correlation", b"_absolute_correlation", "_absolute_p_value", b"_absolute_p_value", "_model_hit_rate", b"_model_hit_rate", "_model_mae", b"_model_mae", "_model_mape", b"_model_mape", "_number_of_data_points", b"_number_of_data_points", "_period_over_period_correlation", b"_period_over_period_correlation", "_period_over_period_mae", b"_period_over_period_mae", "_period_over_period_p_value", b"_period_over_period_p_value", "_year_over_year_correlation", b"_year_over_year_correlation", "_year_over_year_mae", b"_year_over_year_mae", "_year_over_year_p_value", b"_year_over_year_p_value", "absolute_correlation", b"absolute_correlation", "absolute_p_value", b"absolute_p_value", "last_value_date", b"last_value_date", "model_hit_rate", b"model_hit_rate", "model_mae", b"model_mae", "model_mape", b"model_mape", "number_of_data_points", b"number_of_data_points", "period_over_period_correlation", b"period_over_period_correlation", "period_over_period_mae", b"period_over_period_mae", "period_over_period_p_value", b"period_over_period_p_value", "source", b"source", "year_over_year_correlation", b"year_over_year_correlation", "year_over_year_mae", b"year_over_year_mae", "year_over_year_p_value", b"year_over_year_p_value"]) -> builtins.bool: ...
-    def ClearField(self, field_name: typing.Literal["_absolute_correlation", b"_absolute_correlation", "_absolute_p_value", b"_absolute_p_value", "_model_hit_rate", b"_model_hit_rate", "_model_mae", b"_model_mae", "_model_mape", b"_model_mape", "_number_of_data_points", b"_number_of_data_points", "_period_over_period_correlation", b"_period_over_period_correlation", "_period_over_period_mae", b"_period_over_period_mae", "_period_over_period_p_value", b"_period_over_period_p_value", "_year_over_year_correlation", b"_year_over_year_correlation", "_year_over_year_mae", b"_year_over_year_mae", "_year_over_year_p_value", b"_year_over_year_p_value", "absolute_correlation", b"absolute_correlation", "absolute_p_value", b"absolute_p_value", "last_value_date", b"last_value_date", "model_hit_rate", b"model_hit_rate", "model_mae", b"model_mae", "model_mape", b"model_mape", "model_quality", b"model_quality", "number_of_data_points", b"number_of_data_points", "period_over_period_correlation", b"period_over_period_correlation", "period_over_period_mae", b"period_over_period_mae", "period_over_period_p_value", b"period_over_period_p_value", "source", b"source", "year_over_year_correlation", b"year_over_year_correlation", "year_over_year_mae", b"year_over_year_mae", "year_over_year_p_value", b"year_over_year_p_value"]) -> None: ...
-    @typing.overload
-    def WhichOneof(self, oneof_group: typing.Literal["_absolute_correlation", b"_absolute_correlation"]) -> typing.Literal["absolute_correlation"] | None: ...
-    @typing.overload
-    def WhichOneof(self, oneof_group: typing.Literal["_absolute_p_value", b"_absolute_p_value"]) -> typing.Literal["absolute_p_value"] | None: ...
-    @typing.overload
-    def WhichOneof(self, oneof_group: typing.Literal["_model_hit_rate", b"_model_hit_rate"]) -> typing.Literal["model_hit_rate"] | None: ...
-    @typing.overload
-    def WhichOneof(self, oneof_group: typing.Literal["_model_mae", b"_model_mae"]) -> typing.Literal["model_mae"] | None: ...
-    @typing.overload
-    def WhichOneof(self, oneof_group: typing.Literal["_model_mape", b"_model_mape"]) -> typing.Literal["model_mape"] | None: ...
-    @typing.overload
-    def WhichOneof(self, oneof_group: typing.Literal["_number_of_data_points", b"_number_of_data_points"]) -> typing.Literal["number_of_data_points"] | None: ...
-    @typing.overload
-    def WhichOneof(self, oneof_group: typing.Literal["_period_over_period_correlation", b"_period_over_period_correlation"]) -> typing.Literal["period_over_period_correlation"] | None: ...
-    @typing.overload
-    def WhichOneof(self, oneof_group: typing.Literal["_period_over_period_mae", b"_period_over_period_mae"]) -> typing.Literal["period_over_period_mae"] | None: ...
-    @typing.overload
-    def WhichOneof(self, oneof_group: typing.Literal["_period_over_period_p_value", b"_period_over_period_p_value"]) -> typing.Literal["period_over_period_p_value"] | None: ...
-    @typing.overload
-    def WhichOneof(self, oneof_group: typing.Literal["_year_over_year_correlation", b"_year_over_year_correlation"]) -> typing.Literal["year_over_year_correlation"] | None: ...
-    @typing.overload
-    def WhichOneof(self, oneof_group: typing.Literal["_year_over_year_mae", b"_year_over_year_mae"]) -> typing.Literal["year_over_year_mae"] | None: ...
-    @typing.overload
-    def WhichOneof(self, oneof_group: typing.Literal["_year_over_year_p_value", b"_year_over_year_p_value"]) -> typing.Literal["year_over_year_p_value"] | None: ...
+    _HasFieldArgType: _TypeAlias = _typing.Literal["_absolute_correlation", b"_absolute_correlation", "_absolute_p_value", b"_absolute_p_value", "_model_hit_rate", b"_model_hit_rate", "_model_mae", b"_model_mae", "_model_mape", b"_model_mape", "_number_of_data_points", b"_number_of_data_points", "_period_over_period_correlation", b"_period_over_period_correlation", "_period_over_period_mae", b"_period_over_period_mae", "_period_over_period_p_value", b"_period_over_period_p_value", "_year_over_year_correlation", b"_year_over_year_correlation", "_year_over_year_mae", b"_year_over_year_mae", "_year_over_year_p_value", b"_year_over_year_p_value", "absolute_correlation", b"absolute_correlation", "absolute_p_value", b"absolute_p_value", "last_value_date", b"last_value_date", "model_hit_rate", b"model_hit_rate", "model_mae", b"model_mae", "model_mape", b"model_mape", "number_of_data_points", b"number_of_data_points", "period_over_period_correlation", b"period_over_period_correlation", "period_over_period_mae", b"period_over_period_mae", "period_over_period_p_value", b"period_over_period_p_value", "source", b"source", "year_over_year_correlation", b"year_over_year_correlation", "year_over_year_mae", b"year_over_year_mae", "year_over_year_p_value", b"year_over_year_p_value"]  # noqa: Y015
+    def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["_absolute_correlation", b"_absolute_correlation", "_absolute_p_value", b"_absolute_p_value", "_model_hit_rate", b"_model_hit_rate", "_model_mae", b"_model_mae", "_model_mape", b"_model_mape", "_number_of_data_points", b"_number_of_data_points", "_period_over_period_correlation", b"_period_over_period_correlation", "_period_over_period_mae", b"_period_over_period_mae", "_period_over_period_p_value", b"_period_over_period_p_value", "_year_over_year_correlation", b"_year_over_year_correlation", "_year_over_year_mae", b"_year_over_year_mae", "_year_over_year_p_value", b"_year_over_year_p_value", "absolute_correlation", b"absolute_correlation", "absolute_p_value", b"absolute_p_value", "last_value_date", b"last_value_date", "model_hit_rate", b"model_hit_rate", "model_mae", b"model_mae", "model_mape", b"model_mape", "model_quality", b"model_quality", "number_of_data_points", b"number_of_data_points", "period_over_period_correlation", b"period_over_period_correlation", "period_over_period_mae", b"period_over_period_mae", "period_over_period_p_value", b"period_over_period_p_value", "source", b"source", "year_over_year_correlation", b"year_over_year_correlation", "year_over_year_mae", b"year_over_year_mae", "year_over_year_p_value", b"year_over_year_p_value"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
+    _WhichOneofReturnType__absolute_correlation: _TypeAlias = _typing.Literal["absolute_correlation"]  # noqa: Y015
+    _WhichOneofArgType__absolute_correlation: _TypeAlias = _typing.Literal["_absolute_correlation", b"_absolute_correlation"]  # noqa: Y015
+    _WhichOneofReturnType__absolute_p_value: _TypeAlias = _typing.Literal["absolute_p_value"]  # noqa: Y015
+    _WhichOneofArgType__absolute_p_value: _TypeAlias = _typing.Literal["_absolute_p_value", b"_absolute_p_value"]  # noqa: Y015
+    _WhichOneofReturnType__model_hit_rate: _TypeAlias = _typing.Literal["model_hit_rate"]  # noqa: Y015
+    _WhichOneofArgType__model_hit_rate: _TypeAlias = _typing.Literal["_model_hit_rate", b"_model_hit_rate"]  # noqa: Y015
+    _WhichOneofReturnType__model_mae: _TypeAlias = _typing.Literal["model_mae"]  # noqa: Y015
+    _WhichOneofArgType__model_mae: _TypeAlias = _typing.Literal["_model_mae", b"_model_mae"]  # noqa: Y015
+    _WhichOneofReturnType__model_mape: _TypeAlias = _typing.Literal["model_mape"]  # noqa: Y015
+    _WhichOneofArgType__model_mape: _TypeAlias = _typing.Literal["_model_mape", b"_model_mape"]  # noqa: Y015
+    _WhichOneofReturnType__number_of_data_points: _TypeAlias = _typing.Literal["number_of_data_points"]  # noqa: Y015
+    _WhichOneofArgType__number_of_data_points: _TypeAlias = _typing.Literal["_number_of_data_points", b"_number_of_data_points"]  # noqa: Y015
+    _WhichOneofReturnType__period_over_period_correlation: _TypeAlias = _typing.Literal["period_over_period_correlation"]  # noqa: Y015
+    _WhichOneofArgType__period_over_period_correlation: _TypeAlias = _typing.Literal["_period_over_period_correlation", b"_period_over_period_correlation"]  # noqa: Y015
+    _WhichOneofReturnType__period_over_period_mae: _TypeAlias = _typing.Literal["period_over_period_mae"]  # noqa: Y015
+    _WhichOneofArgType__period_over_period_mae: _TypeAlias = _typing.Literal["_period_over_period_mae", b"_period_over_period_mae"]  # noqa: Y015
+    _WhichOneofReturnType__period_over_period_p_value: _TypeAlias = _typing.Literal["period_over_period_p_value"]  # noqa: Y015
+    _WhichOneofArgType__period_over_period_p_value: _TypeAlias = _typing.Literal["_period_over_period_p_value", b"_period_over_period_p_value"]  # noqa: Y015
+    _WhichOneofReturnType__year_over_year_correlation: _TypeAlias = _typing.Literal["year_over_year_correlation"]  # noqa: Y015
+    _WhichOneofArgType__year_over_year_correlation: _TypeAlias = _typing.Literal["_year_over_year_correlation", b"_year_over_year_correlation"]  # noqa: Y015
+    _WhichOneofReturnType__year_over_year_mae: _TypeAlias = _typing.Literal["year_over_year_mae"]  # noqa: Y015
+    _WhichOneofArgType__year_over_year_mae: _TypeAlias = _typing.Literal["_year_over_year_mae", b"_year_over_year_mae"]  # noqa: Y015
+    _WhichOneofReturnType__year_over_year_p_value: _TypeAlias = _typing.Literal["year_over_year_p_value"]  # noqa: Y015
+    _WhichOneofArgType__year_over_year_p_value: _TypeAlias = _typing.Literal["_year_over_year_p_value", b"_year_over_year_p_value"]  # noqa: Y015
+    @_typing.overload
+    def WhichOneof(self, oneof_group: _WhichOneofArgType__absolute_correlation) -> _WhichOneofReturnType__absolute_correlation | None: ...
+    @_typing.overload
+    def WhichOneof(self, oneof_group: _WhichOneofArgType__absolute_p_value) -> _WhichOneofReturnType__absolute_p_value | None: ...
+    @_typing.overload
+    def WhichOneof(self, oneof_group: _WhichOneofArgType__model_hit_rate) -> _WhichOneofReturnType__model_hit_rate | None: ...
+    @_typing.overload
+    def WhichOneof(self, oneof_group: _WhichOneofArgType__model_mae) -> _WhichOneofReturnType__model_mae | None: ...
+    @_typing.overload
+    def WhichOneof(self, oneof_group: _WhichOneofArgType__model_mape) -> _WhichOneofReturnType__model_mape | None: ...
+    @_typing.overload
+    def WhichOneof(self, oneof_group: _WhichOneofArgType__number_of_data_points) -> _WhichOneofReturnType__number_of_data_points | None: ...
+    @_typing.overload
+    def WhichOneof(self, oneof_group: _WhichOneofArgType__period_over_period_correlation) -> _WhichOneofReturnType__period_over_period_correlation | None: ...
+    @_typing.overload
+    def WhichOneof(self, oneof_group: _WhichOneofArgType__period_over_period_mae) -> _WhichOneofReturnType__period_over_period_mae | None: ...
+    @_typing.overload
+    def WhichOneof(self, oneof_group: _WhichOneofArgType__period_over_period_p_value) -> _WhichOneofReturnType__period_over_period_p_value | None: ...
+    @_typing.overload
+    def WhichOneof(self, oneof_group: _WhichOneofArgType__year_over_year_correlation) -> _WhichOneofReturnType__year_over_year_correlation | None: ...
+    @_typing.overload
+    def WhichOneof(self, oneof_group: _WhichOneofArgType__year_over_year_mae) -> _WhichOneofReturnType__year_over_year_mae | None: ...
+    @_typing.overload
+    def WhichOneof(self, oneof_group: _WhichOneofArgType__year_over_year_p_value) -> _WhichOneofReturnType__year_over_year_p_value | None: ...
 
-global___KpiMappingResultData = KpiMappingResultData
+Global___KpiMappingResultData: _TypeAlias = KpiMappingResultData  # noqa: Y015
 
-@typing.final
-class KpiMappingGroupReference(google.protobuf.message.Message):
+@_typing.final
+class KpiMappingGroupReference(_message.Message):
     """KPI mapping group minimal set of fields."""
 
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    DESCRIPTOR: _descriptor.Descriptor
 
-    NAME_FIELD_NUMBER: builtins.int
-    DISPLAY_NAME_FIELD_NUMBER: builtins.int
-    VENDOR_DISPLAY_NAME_FIELD_NUMBER: builtins.int
-    name: builtins.str
+    NAME_FIELD_NUMBER: _builtins.int
+    DISPLAY_NAME_FIELD_NUMBER: _builtins.int
+    VENDOR_DISPLAY_NAME_FIELD_NUMBER: _builtins.int
+    name: _builtins.str
     """Resource name."""
-    display_name: builtins.str
+    display_name: _builtins.str
     """Display name."""
-    vendor_display_name: builtins.str
+    vendor_display_name: _builtins.str
     """Vendor display name."""
     def __init__(
         self,
         *,
-        name: builtins.str | None = ...,
-        display_name: builtins.str | None = ...,
-        vendor_display_name: builtins.str | None = ...,
+        name: _builtins.str | None = ...,
+        display_name: _builtins.str | None = ...,
+        vendor_display_name: _builtins.str | None = ...,
     ) -> None: ...
-    def ClearField(self, field_name: typing.Literal["display_name", b"display_name", "name", b"name", "vendor_display_name", b"vendor_display_name"]) -> None: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["display_name", b"display_name", "name", b"name", "vendor_display_name", b"vendor_display_name"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
-global___KpiMappingGroupReference = KpiMappingGroupReference
+Global___KpiMappingGroupReference: _TypeAlias = KpiMappingGroupReference  # noqa: Y015
 
-@typing.final
-class CompanyKpiModelResult(google.protobuf.message.Message):
+@_typing.final
+class CompanyKpiModelResult(_message.Message):
     """Result for a single company KPI."""
 
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    DESCRIPTOR: _descriptor.Descriptor
 
-    KPI_FIELD_NUMBER: builtins.int
-    MODEL_FIELD_NUMBER: builtins.int
-    ACCESSIBLE_MAPPINGS_COUNT_FIELD_NUMBER: builtins.int
-    TOTAL_MAPPINGS_COUNT_FIELD_NUMBER: builtins.int
-    MODELS_COUNT_FIELD_NUMBER: builtins.int
-    accessible_mappings_count: builtins.int
+    KPI_FIELD_NUMBER: _builtins.int
+    MODEL_FIELD_NUMBER: _builtins.int
+    ACCESSIBLE_MAPPINGS_COUNT_FIELD_NUMBER: _builtins.int
+    TOTAL_MAPPINGS_COUNT_FIELD_NUMBER: _builtins.int
+    MODELS_COUNT_FIELD_NUMBER: _builtins.int
+    accessible_mappings_count: _builtins.int
     """Number of KPI mappings for this company KPI that the current user has access to."""
-    total_mappings_count: builtins.int
+    total_mappings_count: _builtins.int
     """Total number of KPI mappings for this company KPI, including both accessible
     KPI mappings and public KPI mappings.
     """
-    models_count: builtins.int
+    models_count: _builtins.int
     """Number of models for this company KPI."""
-    @property
-    def kpi(self) -> global___Kpi:
+    @_builtins.property
+    def kpi(self) -> Global___Kpi:
         """KPI."""
 
-    @property
-    def model(self) -> global___KpiModel:
+    @_builtins.property
+    def model(self) -> Global___KpiModel:
         """KPI model."""
 
     def __init__(
         self,
         *,
-        kpi: global___Kpi | None = ...,
-        model: global___KpiModel | None = ...,
-        accessible_mappings_count: builtins.int | None = ...,
-        total_mappings_count: builtins.int | None = ...,
-        models_count: builtins.int | None = ...,
+        kpi: Global___Kpi | None = ...,
+        model: Global___KpiModel | None = ...,
+        accessible_mappings_count: _builtins.int | None = ...,
+        total_mappings_count: _builtins.int | None = ...,
+        models_count: _builtins.int | None = ...,
     ) -> None: ...
-    def HasField(self, field_name: typing.Literal["kpi", b"kpi", "model", b"model"]) -> builtins.bool: ...
-    def ClearField(self, field_name: typing.Literal["accessible_mappings_count", b"accessible_mappings_count", "kpi", b"kpi", "model", b"model", "models_count", b"models_count", "total_mappings_count", b"total_mappings_count"]) -> None: ...
+    _HasFieldArgType: _TypeAlias = _typing.Literal["kpi", b"kpi", "model", b"model"]  # noqa: Y015
+    def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["accessible_mappings_count", b"accessible_mappings_count", "kpi", b"kpi", "model", b"model", "models_count", b"models_count", "total_mappings_count", b"total_mappings_count"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
-global___CompanyKpiModelResult = CompanyKpiModelResult
+Global___CompanyKpiModelResult: _TypeAlias = CompanyKpiModelResult  # noqa: Y015
 
-@typing.final
-class KpiModel(google.protobuf.message.Message):
+@_typing.final
+class KpiModel(_message.Message):
     """A KPI model."""
 
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    DESCRIPTOR: _descriptor.Descriptor
 
-    NAME_FIELD_NUMBER: builtins.int
-    ID_FIELD_NUMBER: builtins.int
-    DISPLAY_NAME_FIELD_NUMBER: builtins.int
-    DATA_FIELD_NUMBER: builtins.int
-    WEIGHTS_FIELD_NUMBER: builtins.int
-    MODEL_RUNS_FIELD_NUMBER: builtins.int
-    HIERARCHICAL_MODEL_KPI_SOURCE_FIELD_NUMBER: builtins.int
-    name: builtins.str
+    NAME_FIELD_NUMBER: _builtins.int
+    ID_FIELD_NUMBER: _builtins.int
+    DISPLAY_NAME_FIELD_NUMBER: _builtins.int
+    DATA_FIELD_NUMBER: _builtins.int
+    WEIGHTS_FIELD_NUMBER: _builtins.int
+    MODEL_RUNS_FIELD_NUMBER: _builtins.int
+    HIERARCHICAL_MODEL_KPI_SOURCE_FIELD_NUMBER: _builtins.int
+    name: _builtins.str
     """Resource name."""
-    id: builtins.int
+    id: _builtins.int
     """Integer id."""
-    display_name: builtins.str
+    display_name: _builtins.str
     """Display name."""
-    @property
-    def data(self) -> global___KpiModelData:
+    @_builtins.property
+    def data(self) -> Global___KpiModelData:
         """Model data."""
 
-    @property
-    def weights(self) -> global___KpiModelWeightGroups:
+    @_builtins.property
+    def weights(self) -> Global___KpiModelWeightGroups:
         """Model weights."""
 
-    @property
-    def model_runs(self) -> global___KpiModelRuns:
+    @_builtins.property
+    def model_runs(self) -> Global___KpiModelRuns:
         """Model runs."""
 
-    @property
-    def hierarchical_model_kpi_source(self) -> global___HierarchicalModelKpiSource:
+    @_builtins.property
+    def hierarchical_model_kpi_source(self) -> Global___HierarchicalModelKpiSource:
         """Hierarchical model KPI source data.
         This field specifies what was used as input for the KPI in the hierarchical model.
         The field is only set for hierarchical models.
@@ -456,31 +502,33 @@ class KpiModel(google.protobuf.message.Message):
     def __init__(
         self,
         *,
-        name: builtins.str | None = ...,
-        id: builtins.int | None = ...,
-        display_name: builtins.str | None = ...,
-        data: global___KpiModelData | None = ...,
-        weights: global___KpiModelWeightGroups | None = ...,
-        model_runs: global___KpiModelRuns | None = ...,
-        hierarchical_model_kpi_source: global___HierarchicalModelKpiSource | None = ...,
+        name: _builtins.str | None = ...,
+        id: _builtins.int | None = ...,
+        display_name: _builtins.str | None = ...,
+        data: Global___KpiModelData | None = ...,
+        weights: Global___KpiModelWeightGroups | None = ...,
+        model_runs: Global___KpiModelRuns | None = ...,
+        hierarchical_model_kpi_source: Global___HierarchicalModelKpiSource | None = ...,
     ) -> None: ...
-    def HasField(self, field_name: typing.Literal["data", b"data", "hierarchical_model_kpi_source", b"hierarchical_model_kpi_source", "model_runs", b"model_runs", "weights", b"weights"]) -> builtins.bool: ...
-    def ClearField(self, field_name: typing.Literal["data", b"data", "display_name", b"display_name", "hierarchical_model_kpi_source", b"hierarchical_model_kpi_source", "id", b"id", "model_runs", b"model_runs", "name", b"name", "weights", b"weights"]) -> None: ...
+    _HasFieldArgType: _TypeAlias = _typing.Literal["data", b"data", "hierarchical_model_kpi_source", b"hierarchical_model_kpi_source", "model_runs", b"model_runs", "weights", b"weights"]  # noqa: Y015
+    def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["data", b"data", "display_name", b"display_name", "hierarchical_model_kpi_source", b"hierarchical_model_kpi_source", "id", b"id", "model_runs", b"model_runs", "name", b"name", "weights", b"weights"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
-global___KpiModel = KpiModel
+Global___KpiModel: _TypeAlias = KpiModel  # noqa: Y015
 
-@typing.final
-class HierarchicalModelKpiSource(google.protobuf.message.Message):
+@_typing.final
+class HierarchicalModelKpiSource(_message.Message):
     """Hierarchical model KPI source data."""
 
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    DESCRIPTOR: _descriptor.Descriptor
 
     class _HierarchicalModelKpiSourceType:
-        ValueType = typing.NewType("ValueType", builtins.int)
-        V: typing_extensions.TypeAlias = ValueType
+        ValueType = _typing.NewType("ValueType", _builtins.int)
+        V: _TypeAlias = ValueType  # noqa: Y015
 
-    class _HierarchicalModelKpiSourceTypeEnumTypeWrapper(google.protobuf.internal.enum_type_wrapper._EnumTypeWrapper[HierarchicalModelKpiSource._HierarchicalModelKpiSourceType.ValueType], builtins.type):
-        DESCRIPTOR: google.protobuf.descriptor.EnumDescriptor
+    class _HierarchicalModelKpiSourceTypeEnumTypeWrapper(_enum_type_wrapper._EnumTypeWrapper[HierarchicalModelKpiSource._HierarchicalModelKpiSourceType.ValueType], _builtins.type):
+        DESCRIPTOR: _descriptor.EnumDescriptor
         UNSPECIFIED: HierarchicalModelKpiSource._HierarchicalModelKpiSourceType.ValueType  # 0
         """Unspecified."""
         MODEL: HierarchicalModelKpiSource._HierarchicalModelKpiSourceType.ValueType  # 1
@@ -502,48 +550,49 @@ class HierarchicalModelKpiSource(google.protobuf.message.Message):
     FREE_VARIABLE: HierarchicalModelKpiSource.HierarchicalModelKpiSourceType.ValueType  # 3
     """Free variable."""
 
-    TYPE_FIELD_NUMBER: builtins.int
-    MODEL_FIELD_NUMBER: builtins.int
-    type: global___HierarchicalModelKpiSource.HierarchicalModelKpiSourceType.ValueType
+    TYPE_FIELD_NUMBER: _builtins.int
+    MODEL_FIELD_NUMBER: _builtins.int
+    type: Global___HierarchicalModelKpiSource.HierarchicalModelKpiSourceType.ValueType
     """The type of the hierarchical model KPI source."""
-    model: builtins.str
+    model: _builtins.str
     """Optional model resource name.
     Only set if the type is MODEL.
     """
     def __init__(
         self,
         *,
-        type: global___HierarchicalModelKpiSource.HierarchicalModelKpiSourceType.ValueType | None = ...,
-        model: builtins.str | None = ...,
+        type: Global___HierarchicalModelKpiSource.HierarchicalModelKpiSourceType.ValueType | None = ...,
+        model: _builtins.str | None = ...,
     ) -> None: ...
-    def ClearField(self, field_name: typing.Literal["model", b"model", "type", b"type"]) -> None: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["model", b"model", "type", b"type"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
-global___HierarchicalModelKpiSource = HierarchicalModelKpiSource
+Global___HierarchicalModelKpiSource: _TypeAlias = HierarchicalModelKpiSource  # noqa: Y015
 
-@typing.final
-class KpiModelRuns(google.protobuf.message.Message):
+@_typing.final
+class KpiModelRuns(_message.Message):
     """Information about the runs for this model."""
 
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    DESCRIPTOR: _descriptor.Descriptor
 
-    INITIAL_RUN_FIELD_NUMBER: builtins.int
-    DAILY_RUN_FIELD_NUMBER: builtins.int
-    PIT_BACKTEST_RUN_FIELD_NUMBER: builtins.int
-    @property
-    def initial_run(self) -> global___KpiModelRun:
+    INITIAL_RUN_FIELD_NUMBER: _builtins.int
+    DAILY_RUN_FIELD_NUMBER: _builtins.int
+    PIT_BACKTEST_RUN_FIELD_NUMBER: _builtins.int
+    @_builtins.property
+    def initial_run(self) -> Global___KpiModelRun:
         """Initial run.
         The initial run performs backtesting and the initial prediction.
         It runs when the model is first created.
         """
 
-    @property
-    def daily_run(self) -> global___KpiModelRun:
+    @_builtins.property
+    def daily_run(self) -> Global___KpiModelRun:
         """Latest daily run.
         The daily run updates the model prediction based on the latest available data.
         """
 
-    @property
-    def pit_backtest_run(self) -> global___KpiModelRun:
+    @_builtins.property
+    def pit_backtest_run(self) -> Global___KpiModelRun:
         """Point-in-time backtest run.
         This run performs point-in-time backtesting of the model.
         The point-in-time backtests can be used to estimate the model error based on when we are in a quarter.
@@ -553,329 +602,379 @@ class KpiModelRuns(google.protobuf.message.Message):
     def __init__(
         self,
         *,
-        initial_run: global___KpiModelRun | None = ...,
-        daily_run: global___KpiModelRun | None = ...,
-        pit_backtest_run: global___KpiModelRun | None = ...,
+        initial_run: Global___KpiModelRun | None = ...,
+        daily_run: Global___KpiModelRun | None = ...,
+        pit_backtest_run: Global___KpiModelRun | None = ...,
     ) -> None: ...
-    def HasField(self, field_name: typing.Literal["daily_run", b"daily_run", "initial_run", b"initial_run", "pit_backtest_run", b"pit_backtest_run"]) -> builtins.bool: ...
-    def ClearField(self, field_name: typing.Literal["daily_run", b"daily_run", "initial_run", b"initial_run", "pit_backtest_run", b"pit_backtest_run"]) -> None: ...
+    _HasFieldArgType: _TypeAlias = _typing.Literal["daily_run", b"daily_run", "initial_run", b"initial_run", "pit_backtest_run", b"pit_backtest_run"]  # noqa: Y015
+    def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["daily_run", b"daily_run", "initial_run", b"initial_run", "pit_backtest_run", b"pit_backtest_run"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
-global___KpiModelRuns = KpiModelRuns
+Global___KpiModelRuns: _TypeAlias = KpiModelRuns  # noqa: Y015
 
-@typing.final
-class KpiModelRun(google.protobuf.message.Message):
+@_typing.final
+class KpiModelRun(_message.Message):
     """Information about a single KPI model run."""
 
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    DESCRIPTOR: _descriptor.Descriptor
 
-    CREATED_AT_FIELD_NUMBER: builtins.int
-    STARTED_AT_FIELD_NUMBER: builtins.int
-    FINISHED_AT_FIELD_NUMBER: builtins.int
-    ERROR_FIELD_NUMBER: builtins.int
-    error: builtins.str
+    CREATED_AT_FIELD_NUMBER: _builtins.int
+    STARTED_AT_FIELD_NUMBER: _builtins.int
+    FINISHED_AT_FIELD_NUMBER: _builtins.int
+    ERROR_FIELD_NUMBER: _builtins.int
+    error: _builtins.str
     """An optional error message if the run failed."""
-    @property
-    def created_at(self) -> google.protobuf.timestamp_pb2.Timestamp:
+    @_builtins.property
+    def created_at(self) -> _timestamp_pb2.Timestamp:
         """The time the run was created."""
 
-    @property
-    def started_at(self) -> google.protobuf.timestamp_pb2.Timestamp:
+    @_builtins.property
+    def started_at(self) -> _timestamp_pb2.Timestamp:
         """The time the run was started."""
 
-    @property
-    def finished_at(self) -> google.protobuf.timestamp_pb2.Timestamp:
+    @_builtins.property
+    def finished_at(self) -> _timestamp_pb2.Timestamp:
         """The time the run finished."""
 
     def __init__(
         self,
         *,
-        created_at: google.protobuf.timestamp_pb2.Timestamp | None = ...,
-        started_at: google.protobuf.timestamp_pb2.Timestamp | None = ...,
-        finished_at: google.protobuf.timestamp_pb2.Timestamp | None = ...,
-        error: builtins.str | None = ...,
+        created_at: _timestamp_pb2.Timestamp | None = ...,
+        started_at: _timestamp_pb2.Timestamp | None = ...,
+        finished_at: _timestamp_pb2.Timestamp | None = ...,
+        error: _builtins.str | None = ...,
     ) -> None: ...
-    def HasField(self, field_name: typing.Literal["_error", b"_error", "created_at", b"created_at", "error", b"error", "finished_at", b"finished_at", "started_at", b"started_at"]) -> builtins.bool: ...
-    def ClearField(self, field_name: typing.Literal["_error", b"_error", "created_at", b"created_at", "error", b"error", "finished_at", b"finished_at", "started_at", b"started_at"]) -> None: ...
-    def WhichOneof(self, oneof_group: typing.Literal["_error", b"_error"]) -> typing.Literal["error"] | None: ...
+    _HasFieldArgType: _TypeAlias = _typing.Literal["_error", b"_error", "created_at", b"created_at", "error", b"error", "finished_at", b"finished_at", "started_at", b"started_at"]  # noqa: Y015
+    def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["_error", b"_error", "created_at", b"created_at", "error", b"error", "finished_at", b"finished_at", "started_at", b"started_at"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
+    _WhichOneofReturnType__error: _TypeAlias = _typing.Literal["error"]  # noqa: Y015
+    _WhichOneofArgType__error: _TypeAlias = _typing.Literal["_error", b"_error"]  # noqa: Y015
+    def WhichOneof(self, oneof_group: _WhichOneofArgType__error) -> _WhichOneofReturnType__error | None: ...
 
-global___KpiModelRun = KpiModelRun
+Global___KpiModelRun: _TypeAlias = KpiModelRun  # noqa: Y015
 
-@typing.final
-class KpiMappingModel(google.protobuf.message.Message):
+@_typing.final
+class KpiMappingModel(_message.Message):
     """Single-predictor KPI mapping model."""
 
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    DESCRIPTOR: _descriptor.Descriptor
 
-    SOURCE_FIELD_NUMBER: builtins.int
-    KPI_MODEL_DATA_FIELD_NUMBER: builtins.int
-    @property
-    def source(self) -> global___KpiMappingGroupReference:
+    SOURCE_FIELD_NUMBER: _builtins.int
+    KPI_MODEL_DATA_FIELD_NUMBER: _builtins.int
+    @_builtins.property
+    def source(self) -> Global___KpiMappingGroupReference:
         """The KPI mapping group from which the model originates"""
 
-    @property
-    def kpi_model_data(self) -> global___KpiModelData:
+    @_builtins.property
+    def kpi_model_data(self) -> Global___KpiModelData:
         """Model data."""
 
     def __init__(
         self,
         *,
-        source: global___KpiMappingGroupReference | None = ...,
-        kpi_model_data: global___KpiModelData | None = ...,
+        source: Global___KpiMappingGroupReference | None = ...,
+        kpi_model_data: Global___KpiModelData | None = ...,
     ) -> None: ...
-    def HasField(self, field_name: typing.Literal["kpi_model_data", b"kpi_model_data", "source", b"source"]) -> builtins.bool: ...
-    def ClearField(self, field_name: typing.Literal["kpi_model_data", b"kpi_model_data", "source", b"source"]) -> None: ...
+    _HasFieldArgType: _TypeAlias = _typing.Literal["kpi_model_data", b"kpi_model_data", "source", b"source"]  # noqa: Y015
+    def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["kpi_model_data", b"kpi_model_data", "source", b"source"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
-global___KpiMappingModel = KpiMappingModel
+Global___KpiMappingModel: _TypeAlias = KpiMappingModel  # noqa: Y015
 
-@typing.final
-class KpiModelData(google.protobuf.message.Message):
+@_typing.final
+class KpiModelData(_message.Message):
     """Data for a KPI model."""
 
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    DESCRIPTOR: _descriptor.Descriptor
 
-    PREDICTION_FIELD_NUMBER: builtins.int
-    PREDICTION_YOY_REL_FIELD_NUMBER: builtins.int
-    PREDICTION_YOY_ABS_FIELD_NUMBER: builtins.int
-    CONSENSUS_FIELD_NUMBER: builtins.int
-    CONSENSUS_YOY_REL_FIELD_NUMBER: builtins.int
-    CONSENSUS_YOY_ABS_FIELD_NUMBER: builtins.int
-    DELTA_ABS_FIELD_NUMBER: builtins.int
-    DELTA_REL_FIELD_NUMBER: builtins.int
-    DELTA_BY_ERROR_FIELD_NUMBER: builtins.int
-    MODEL_QUALITY_FIELD_NUMBER: builtins.int
-    MAPE_FIELD_NUMBER: builtins.int
-    MAPE_PIT_FIELD_NUMBER: builtins.int
-    MAE_FIELD_NUMBER: builtins.int
-    MAE_PIT_FIELD_NUMBER: builtins.int
-    ERROR_COUNT_FIELD_NUMBER: builtins.int
-    HIT_RATE_FIELD_NUMBER: builtins.int
-    HIT_RATE_COUNT_FIELD_NUMBER: builtins.int
-    REVISION_1_WEEK_FIELD_NUMBER: builtins.int
-    REVISION_1_MONTH_FIELD_NUMBER: builtins.int
-    DATE_FIELD_NUMBER: builtins.int
-    ERROR_FIELD_NUMBER: builtins.int
-    prediction: builtins.float
+    PREDICTION_FIELD_NUMBER: _builtins.int
+    PREDICTION_YOY_REL_FIELD_NUMBER: _builtins.int
+    PREDICTION_YOY_ABS_FIELD_NUMBER: _builtins.int
+    CONSENSUS_FIELD_NUMBER: _builtins.int
+    CONSENSUS_YOY_REL_FIELD_NUMBER: _builtins.int
+    CONSENSUS_YOY_ABS_FIELD_NUMBER: _builtins.int
+    DELTA_ABS_FIELD_NUMBER: _builtins.int
+    DELTA_REL_FIELD_NUMBER: _builtins.int
+    DELTA_BY_ERROR_FIELD_NUMBER: _builtins.int
+    MODEL_QUALITY_FIELD_NUMBER: _builtins.int
+    MAPE_FIELD_NUMBER: _builtins.int
+    MAPE_PIT_FIELD_NUMBER: _builtins.int
+    MAE_FIELD_NUMBER: _builtins.int
+    MAE_PIT_FIELD_NUMBER: _builtins.int
+    ERROR_COUNT_FIELD_NUMBER: _builtins.int
+    HIT_RATE_FIELD_NUMBER: _builtins.int
+    HIT_RATE_COUNT_FIELD_NUMBER: _builtins.int
+    REVISION_1_WEEK_FIELD_NUMBER: _builtins.int
+    REVISION_1_MONTH_FIELD_NUMBER: _builtins.int
+    DATE_FIELD_NUMBER: _builtins.int
+    ERROR_FIELD_NUMBER: _builtins.int
+    prediction: _builtins.float
     """Absolute prediction."""
-    prediction_yoy_rel: builtins.float
+    prediction_yoy_rel: _builtins.float
     """Year-over-year prediction relative change.
     This is the absolute prediction compared to the observed value for the
     same period one year ago.
     """
-    prediction_yoy_abs: builtins.float
+    prediction_yoy_abs: _builtins.float
     """Year-over-year prediction absolute change.
     This is the absolute prediction compared to the observed value for the
     same period one year ago.
     """
-    consensus: builtins.float
+    consensus: _builtins.float
     """Consensus.
     Only available for Visible Alpha KPIs for users with a subscription with export allowed.
     """
-    consensus_yoy_rel: builtins.float
+    consensus_yoy_rel: _builtins.float
     """Year-over-year consensus relative change.
     This is the consensus compared to the observed value for the
     same period one year ago.
     """
-    consensus_yoy_abs: builtins.float
+    consensus_yoy_abs: _builtins.float
     """Year-over-year consensus absolute change.
     This is the consensus compared to the observed value for the
     same period one year ago.
     """
-    delta_abs: builtins.float
+    delta_abs: _builtins.float
     """Absolute difference between the prediction and the consensus.
     This is calculated as prediction - consensus.
     Only available for Visible Alpha KPIs for users with a subscription with export allowed.
     """
-    delta_rel: builtins.float
+    delta_rel: _builtins.float
     """Relative difference between the prediction and the consensus.
     This is calculated as (prediction / consensus) - 1.
     Only available for Visible Alpha KPIs for users with a subscription with export allowed.
     """
-    delta_by_error: builtins.float
+    delta_by_error: _builtins.float
     """The delta divided by the error.
     For ratio KPIs this is absolute delta / mae (using PiT mae if available).
     For non-ratio KPIs this is relative delta / mape (using PiT mape if available).
     Only available for Visible Alpha KPIs for users with a subscription with export allowed.
     """
-    model_quality: global___ModelQuality.ValueType
+    model_quality: Global___ModelQuality.ValueType
     """Model quality."""
-    mape: builtins.float
+    mape: _builtins.float
     """Mean absolute percentage error."""
-    mape_pit: builtins.float
+    mape_pit: _builtins.float
     """Point-in-time mean absolute percentage error."""
-    mae: builtins.float
+    mae: _builtins.float
     """Mean absolute error."""
-    mae_pit: builtins.float
+    mae_pit: _builtins.float
     """Point-in-time mean absolute error."""
-    error_count: builtins.int
+    error_count: _builtins.int
     """The number of data points used to calculate the MAPE and MAE metrics.
     Note that his may be different from the number of data points available, as we
     may choose to only use the most recent data points.
     """
-    hit_rate: builtins.float
+    hit_rate: _builtins.float
     """Hit rate."""
-    hit_rate_count: builtins.int
+    hit_rate_count: _builtins.int
     """The number of data points included in the hit rate calculation.
     If the difference between the consensus and prediction is below a certain threshold,
     a data point may not be included in the calculation.
     """
-    revision_1_week: builtins.float
+    revision_1_week: _builtins.float
     """Revision to the predicted value compared to the prediction from 1 week ago.
     If the KPI is a ratio, this is just the difference between the current prediction and the
     prediction from 1 week ago, otherwise this is the relative change.
     For Exabel Models and custom models, a backtest may be used to get the historical prediction.
     """
-    revision_1_month: builtins.float
+    revision_1_month: _builtins.float
     """Revision to the predicted value compared to the prediction from 1 month ago.
     If the KPI is a ratio, this is just the difference between the current prediction and the
     prediction from 1 month ago, otherwise this is the relative change.
     For Exabel Models and custom models, a backtest may be used to get the historical prediction.
     """
-    error: builtins.str
+    error: _builtins.str
     """An error message in case the model training or backtesting failed."""
-    @property
-    def date(self) -> exabel.api.time.date_pb2.Date:
+    @_builtins.property
+    @_deprecated("""This field has been marked as deprecated using proto field options.""")
+    def date(self) -> _date_pb2.Date:
         """The fiscal period end date for which the prediction has been made."""
 
     def __init__(
         self,
         *,
-        prediction: builtins.float | None = ...,
-        prediction_yoy_rel: builtins.float | None = ...,
-        prediction_yoy_abs: builtins.float | None = ...,
-        consensus: builtins.float | None = ...,
-        consensus_yoy_rel: builtins.float | None = ...,
-        consensus_yoy_abs: builtins.float | None = ...,
-        delta_abs: builtins.float | None = ...,
-        delta_rel: builtins.float | None = ...,
-        delta_by_error: builtins.float | None = ...,
-        model_quality: global___ModelQuality.ValueType | None = ...,
-        mape: builtins.float | None = ...,
-        mape_pit: builtins.float | None = ...,
-        mae: builtins.float | None = ...,
-        mae_pit: builtins.float | None = ...,
-        error_count: builtins.int | None = ...,
-        hit_rate: builtins.float | None = ...,
-        hit_rate_count: builtins.int | None = ...,
-        revision_1_week: builtins.float | None = ...,
-        revision_1_month: builtins.float | None = ...,
-        date: exabel.api.time.date_pb2.Date | None = ...,
-        error: builtins.str | None = ...,
+        prediction: _builtins.float | None = ...,
+        prediction_yoy_rel: _builtins.float | None = ...,
+        prediction_yoy_abs: _builtins.float | None = ...,
+        consensus: _builtins.float | None = ...,
+        consensus_yoy_rel: _builtins.float | None = ...,
+        consensus_yoy_abs: _builtins.float | None = ...,
+        delta_abs: _builtins.float | None = ...,
+        delta_rel: _builtins.float | None = ...,
+        delta_by_error: _builtins.float | None = ...,
+        model_quality: Global___ModelQuality.ValueType | None = ...,
+        mape: _builtins.float | None = ...,
+        mape_pit: _builtins.float | None = ...,
+        mae: _builtins.float | None = ...,
+        mae_pit: _builtins.float | None = ...,
+        error_count: _builtins.int | None = ...,
+        hit_rate: _builtins.float | None = ...,
+        hit_rate_count: _builtins.int | None = ...,
+        revision_1_week: _builtins.float | None = ...,
+        revision_1_month: _builtins.float | None = ...,
+        date: _date_pb2.Date | None = ...,
+        error: _builtins.str | None = ...,
     ) -> None: ...
-    def HasField(self, field_name: typing.Literal["_consensus", b"_consensus", "_consensus_yoy_abs", b"_consensus_yoy_abs", "_consensus_yoy_rel", b"_consensus_yoy_rel", "_delta_abs", b"_delta_abs", "_delta_by_error", b"_delta_by_error", "_delta_rel", b"_delta_rel", "_error_count", b"_error_count", "_hit_rate", b"_hit_rate", "_hit_rate_count", b"_hit_rate_count", "_mae", b"_mae", "_mae_pit", b"_mae_pit", "_mape", b"_mape", "_mape_pit", b"_mape_pit", "_prediction", b"_prediction", "_prediction_yoy_abs", b"_prediction_yoy_abs", "_prediction_yoy_rel", b"_prediction_yoy_rel", "_revision_1_month", b"_revision_1_month", "_revision_1_week", b"_revision_1_week", "consensus", b"consensus", "consensus_yoy_abs", b"consensus_yoy_abs", "consensus_yoy_rel", b"consensus_yoy_rel", "date", b"date", "delta_abs", b"delta_abs", "delta_by_error", b"delta_by_error", "delta_rel", b"delta_rel", "error_count", b"error_count", "hit_rate", b"hit_rate", "hit_rate_count", b"hit_rate_count", "mae", b"mae", "mae_pit", b"mae_pit", "mape", b"mape", "mape_pit", b"mape_pit", "prediction", b"prediction", "prediction_yoy_abs", b"prediction_yoy_abs", "prediction_yoy_rel", b"prediction_yoy_rel", "revision_1_month", b"revision_1_month", "revision_1_week", b"revision_1_week"]) -> builtins.bool: ...
-    def ClearField(self, field_name: typing.Literal["_consensus", b"_consensus", "_consensus_yoy_abs", b"_consensus_yoy_abs", "_consensus_yoy_rel", b"_consensus_yoy_rel", "_delta_abs", b"_delta_abs", "_delta_by_error", b"_delta_by_error", "_delta_rel", b"_delta_rel", "_error_count", b"_error_count", "_hit_rate", b"_hit_rate", "_hit_rate_count", b"_hit_rate_count", "_mae", b"_mae", "_mae_pit", b"_mae_pit", "_mape", b"_mape", "_mape_pit", b"_mape_pit", "_prediction", b"_prediction", "_prediction_yoy_abs", b"_prediction_yoy_abs", "_prediction_yoy_rel", b"_prediction_yoy_rel", "_revision_1_month", b"_revision_1_month", "_revision_1_week", b"_revision_1_week", "consensus", b"consensus", "consensus_yoy_abs", b"consensus_yoy_abs", "consensus_yoy_rel", b"consensus_yoy_rel", "date", b"date", "delta_abs", b"delta_abs", "delta_by_error", b"delta_by_error", "delta_rel", b"delta_rel", "error", b"error", "error_count", b"error_count", "hit_rate", b"hit_rate", "hit_rate_count", b"hit_rate_count", "mae", b"mae", "mae_pit", b"mae_pit", "mape", b"mape", "mape_pit", b"mape_pit", "model_quality", b"model_quality", "prediction", b"prediction", "prediction_yoy_abs", b"prediction_yoy_abs", "prediction_yoy_rel", b"prediction_yoy_rel", "revision_1_month", b"revision_1_month", "revision_1_week", b"revision_1_week"]) -> None: ...
-    @typing.overload
-    def WhichOneof(self, oneof_group: typing.Literal["_consensus", b"_consensus"]) -> typing.Literal["consensus"] | None: ...
-    @typing.overload
-    def WhichOneof(self, oneof_group: typing.Literal["_consensus_yoy_abs", b"_consensus_yoy_abs"]) -> typing.Literal["consensus_yoy_abs"] | None: ...
-    @typing.overload
-    def WhichOneof(self, oneof_group: typing.Literal["_consensus_yoy_rel", b"_consensus_yoy_rel"]) -> typing.Literal["consensus_yoy_rel"] | None: ...
-    @typing.overload
-    def WhichOneof(self, oneof_group: typing.Literal["_delta_abs", b"_delta_abs"]) -> typing.Literal["delta_abs"] | None: ...
-    @typing.overload
-    def WhichOneof(self, oneof_group: typing.Literal["_delta_by_error", b"_delta_by_error"]) -> typing.Literal["delta_by_error"] | None: ...
-    @typing.overload
-    def WhichOneof(self, oneof_group: typing.Literal["_delta_rel", b"_delta_rel"]) -> typing.Literal["delta_rel"] | None: ...
-    @typing.overload
-    def WhichOneof(self, oneof_group: typing.Literal["_error_count", b"_error_count"]) -> typing.Literal["error_count"] | None: ...
-    @typing.overload
-    def WhichOneof(self, oneof_group: typing.Literal["_hit_rate", b"_hit_rate"]) -> typing.Literal["hit_rate"] | None: ...
-    @typing.overload
-    def WhichOneof(self, oneof_group: typing.Literal["_hit_rate_count", b"_hit_rate_count"]) -> typing.Literal["hit_rate_count"] | None: ...
-    @typing.overload
-    def WhichOneof(self, oneof_group: typing.Literal["_mae", b"_mae"]) -> typing.Literal["mae"] | None: ...
-    @typing.overload
-    def WhichOneof(self, oneof_group: typing.Literal["_mae_pit", b"_mae_pit"]) -> typing.Literal["mae_pit"] | None: ...
-    @typing.overload
-    def WhichOneof(self, oneof_group: typing.Literal["_mape", b"_mape"]) -> typing.Literal["mape"] | None: ...
-    @typing.overload
-    def WhichOneof(self, oneof_group: typing.Literal["_mape_pit", b"_mape_pit"]) -> typing.Literal["mape_pit"] | None: ...
-    @typing.overload
-    def WhichOneof(self, oneof_group: typing.Literal["_prediction", b"_prediction"]) -> typing.Literal["prediction"] | None: ...
-    @typing.overload
-    def WhichOneof(self, oneof_group: typing.Literal["_prediction_yoy_abs", b"_prediction_yoy_abs"]) -> typing.Literal["prediction_yoy_abs"] | None: ...
-    @typing.overload
-    def WhichOneof(self, oneof_group: typing.Literal["_prediction_yoy_rel", b"_prediction_yoy_rel"]) -> typing.Literal["prediction_yoy_rel"] | None: ...
-    @typing.overload
-    def WhichOneof(self, oneof_group: typing.Literal["_revision_1_month", b"_revision_1_month"]) -> typing.Literal["revision_1_month"] | None: ...
-    @typing.overload
-    def WhichOneof(self, oneof_group: typing.Literal["_revision_1_week", b"_revision_1_week"]) -> typing.Literal["revision_1_week"] | None: ...
+    _HasFieldArgType: _TypeAlias = _typing.Literal["_consensus", b"_consensus", "_consensus_yoy_abs", b"_consensus_yoy_abs", "_consensus_yoy_rel", b"_consensus_yoy_rel", "_delta_abs", b"_delta_abs", "_delta_by_error", b"_delta_by_error", "_delta_rel", b"_delta_rel", "_error_count", b"_error_count", "_hit_rate", b"_hit_rate", "_hit_rate_count", b"_hit_rate_count", "_mae", b"_mae", "_mae_pit", b"_mae_pit", "_mape", b"_mape", "_mape_pit", b"_mape_pit", "_prediction", b"_prediction", "_prediction_yoy_abs", b"_prediction_yoy_abs", "_prediction_yoy_rel", b"_prediction_yoy_rel", "_revision_1_month", b"_revision_1_month", "_revision_1_week", b"_revision_1_week", "consensus", b"consensus", "consensus_yoy_abs", b"consensus_yoy_abs", "consensus_yoy_rel", b"consensus_yoy_rel", "date", b"date", "delta_abs", b"delta_abs", "delta_by_error", b"delta_by_error", "delta_rel", b"delta_rel", "error_count", b"error_count", "hit_rate", b"hit_rate", "hit_rate_count", b"hit_rate_count", "mae", b"mae", "mae_pit", b"mae_pit", "mape", b"mape", "mape_pit", b"mape_pit", "prediction", b"prediction", "prediction_yoy_abs", b"prediction_yoy_abs", "prediction_yoy_rel", b"prediction_yoy_rel", "revision_1_month", b"revision_1_month", "revision_1_week", b"revision_1_week"]  # noqa: Y015
+    def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["_consensus", b"_consensus", "_consensus_yoy_abs", b"_consensus_yoy_abs", "_consensus_yoy_rel", b"_consensus_yoy_rel", "_delta_abs", b"_delta_abs", "_delta_by_error", b"_delta_by_error", "_delta_rel", b"_delta_rel", "_error_count", b"_error_count", "_hit_rate", b"_hit_rate", "_hit_rate_count", b"_hit_rate_count", "_mae", b"_mae", "_mae_pit", b"_mae_pit", "_mape", b"_mape", "_mape_pit", b"_mape_pit", "_prediction", b"_prediction", "_prediction_yoy_abs", b"_prediction_yoy_abs", "_prediction_yoy_rel", b"_prediction_yoy_rel", "_revision_1_month", b"_revision_1_month", "_revision_1_week", b"_revision_1_week", "consensus", b"consensus", "consensus_yoy_abs", b"consensus_yoy_abs", "consensus_yoy_rel", b"consensus_yoy_rel", "date", b"date", "delta_abs", b"delta_abs", "delta_by_error", b"delta_by_error", "delta_rel", b"delta_rel", "error", b"error", "error_count", b"error_count", "hit_rate", b"hit_rate", "hit_rate_count", b"hit_rate_count", "mae", b"mae", "mae_pit", b"mae_pit", "mape", b"mape", "mape_pit", b"mape_pit", "model_quality", b"model_quality", "prediction", b"prediction", "prediction_yoy_abs", b"prediction_yoy_abs", "prediction_yoy_rel", b"prediction_yoy_rel", "revision_1_month", b"revision_1_month", "revision_1_week", b"revision_1_week"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
+    _WhichOneofReturnType__consensus: _TypeAlias = _typing.Literal["consensus"]  # noqa: Y015
+    _WhichOneofArgType__consensus: _TypeAlias = _typing.Literal["_consensus", b"_consensus"]  # noqa: Y015
+    _WhichOneofReturnType__consensus_yoy_abs: _TypeAlias = _typing.Literal["consensus_yoy_abs"]  # noqa: Y015
+    _WhichOneofArgType__consensus_yoy_abs: _TypeAlias = _typing.Literal["_consensus_yoy_abs", b"_consensus_yoy_abs"]  # noqa: Y015
+    _WhichOneofReturnType__consensus_yoy_rel: _TypeAlias = _typing.Literal["consensus_yoy_rel"]  # noqa: Y015
+    _WhichOneofArgType__consensus_yoy_rel: _TypeAlias = _typing.Literal["_consensus_yoy_rel", b"_consensus_yoy_rel"]  # noqa: Y015
+    _WhichOneofReturnType__delta_abs: _TypeAlias = _typing.Literal["delta_abs"]  # noqa: Y015
+    _WhichOneofArgType__delta_abs: _TypeAlias = _typing.Literal["_delta_abs", b"_delta_abs"]  # noqa: Y015
+    _WhichOneofReturnType__delta_by_error: _TypeAlias = _typing.Literal["delta_by_error"]  # noqa: Y015
+    _WhichOneofArgType__delta_by_error: _TypeAlias = _typing.Literal["_delta_by_error", b"_delta_by_error"]  # noqa: Y015
+    _WhichOneofReturnType__delta_rel: _TypeAlias = _typing.Literal["delta_rel"]  # noqa: Y015
+    _WhichOneofArgType__delta_rel: _TypeAlias = _typing.Literal["_delta_rel", b"_delta_rel"]  # noqa: Y015
+    _WhichOneofReturnType__error_count: _TypeAlias = _typing.Literal["error_count"]  # noqa: Y015
+    _WhichOneofArgType__error_count: _TypeAlias = _typing.Literal["_error_count", b"_error_count"]  # noqa: Y015
+    _WhichOneofReturnType__hit_rate: _TypeAlias = _typing.Literal["hit_rate"]  # noqa: Y015
+    _WhichOneofArgType__hit_rate: _TypeAlias = _typing.Literal["_hit_rate", b"_hit_rate"]  # noqa: Y015
+    _WhichOneofReturnType__hit_rate_count: _TypeAlias = _typing.Literal["hit_rate_count"]  # noqa: Y015
+    _WhichOneofArgType__hit_rate_count: _TypeAlias = _typing.Literal["_hit_rate_count", b"_hit_rate_count"]  # noqa: Y015
+    _WhichOneofReturnType__mae: _TypeAlias = _typing.Literal["mae"]  # noqa: Y015
+    _WhichOneofArgType__mae: _TypeAlias = _typing.Literal["_mae", b"_mae"]  # noqa: Y015
+    _WhichOneofReturnType__mae_pit: _TypeAlias = _typing.Literal["mae_pit"]  # noqa: Y015
+    _WhichOneofArgType__mae_pit: _TypeAlias = _typing.Literal["_mae_pit", b"_mae_pit"]  # noqa: Y015
+    _WhichOneofReturnType__mape: _TypeAlias = _typing.Literal["mape"]  # noqa: Y015
+    _WhichOneofArgType__mape: _TypeAlias = _typing.Literal["_mape", b"_mape"]  # noqa: Y015
+    _WhichOneofReturnType__mape_pit: _TypeAlias = _typing.Literal["mape_pit"]  # noqa: Y015
+    _WhichOneofArgType__mape_pit: _TypeAlias = _typing.Literal["_mape_pit", b"_mape_pit"]  # noqa: Y015
+    _WhichOneofReturnType__prediction: _TypeAlias = _typing.Literal["prediction"]  # noqa: Y015
+    _WhichOneofArgType__prediction: _TypeAlias = _typing.Literal["_prediction", b"_prediction"]  # noqa: Y015
+    _WhichOneofReturnType__prediction_yoy_abs: _TypeAlias = _typing.Literal["prediction_yoy_abs"]  # noqa: Y015
+    _WhichOneofArgType__prediction_yoy_abs: _TypeAlias = _typing.Literal["_prediction_yoy_abs", b"_prediction_yoy_abs"]  # noqa: Y015
+    _WhichOneofReturnType__prediction_yoy_rel: _TypeAlias = _typing.Literal["prediction_yoy_rel"]  # noqa: Y015
+    _WhichOneofArgType__prediction_yoy_rel: _TypeAlias = _typing.Literal["_prediction_yoy_rel", b"_prediction_yoy_rel"]  # noqa: Y015
+    _WhichOneofReturnType__revision_1_month: _TypeAlias = _typing.Literal["revision_1_month"]  # noqa: Y015
+    _WhichOneofArgType__revision_1_month: _TypeAlias = _typing.Literal["_revision_1_month", b"_revision_1_month"]  # noqa: Y015
+    _WhichOneofReturnType__revision_1_week: _TypeAlias = _typing.Literal["revision_1_week"]  # noqa: Y015
+    _WhichOneofArgType__revision_1_week: _TypeAlias = _typing.Literal["_revision_1_week", b"_revision_1_week"]  # noqa: Y015
+    @_typing.overload
+    def WhichOneof(self, oneof_group: _WhichOneofArgType__consensus) -> _WhichOneofReturnType__consensus | None: ...
+    @_typing.overload
+    def WhichOneof(self, oneof_group: _WhichOneofArgType__consensus_yoy_abs) -> _WhichOneofReturnType__consensus_yoy_abs | None: ...
+    @_typing.overload
+    def WhichOneof(self, oneof_group: _WhichOneofArgType__consensus_yoy_rel) -> _WhichOneofReturnType__consensus_yoy_rel | None: ...
+    @_typing.overload
+    def WhichOneof(self, oneof_group: _WhichOneofArgType__delta_abs) -> _WhichOneofReturnType__delta_abs | None: ...
+    @_typing.overload
+    def WhichOneof(self, oneof_group: _WhichOneofArgType__delta_by_error) -> _WhichOneofReturnType__delta_by_error | None: ...
+    @_typing.overload
+    def WhichOneof(self, oneof_group: _WhichOneofArgType__delta_rel) -> _WhichOneofReturnType__delta_rel | None: ...
+    @_typing.overload
+    def WhichOneof(self, oneof_group: _WhichOneofArgType__error_count) -> _WhichOneofReturnType__error_count | None: ...
+    @_typing.overload
+    def WhichOneof(self, oneof_group: _WhichOneofArgType__hit_rate) -> _WhichOneofReturnType__hit_rate | None: ...
+    @_typing.overload
+    def WhichOneof(self, oneof_group: _WhichOneofArgType__hit_rate_count) -> _WhichOneofReturnType__hit_rate_count | None: ...
+    @_typing.overload
+    def WhichOneof(self, oneof_group: _WhichOneofArgType__mae) -> _WhichOneofReturnType__mae | None: ...
+    @_typing.overload
+    def WhichOneof(self, oneof_group: _WhichOneofArgType__mae_pit) -> _WhichOneofReturnType__mae_pit | None: ...
+    @_typing.overload
+    def WhichOneof(self, oneof_group: _WhichOneofArgType__mape) -> _WhichOneofReturnType__mape | None: ...
+    @_typing.overload
+    def WhichOneof(self, oneof_group: _WhichOneofArgType__mape_pit) -> _WhichOneofReturnType__mape_pit | None: ...
+    @_typing.overload
+    def WhichOneof(self, oneof_group: _WhichOneofArgType__prediction) -> _WhichOneofReturnType__prediction | None: ...
+    @_typing.overload
+    def WhichOneof(self, oneof_group: _WhichOneofArgType__prediction_yoy_abs) -> _WhichOneofReturnType__prediction_yoy_abs | None: ...
+    @_typing.overload
+    def WhichOneof(self, oneof_group: _WhichOneofArgType__prediction_yoy_rel) -> _WhichOneofReturnType__prediction_yoy_rel | None: ...
+    @_typing.overload
+    def WhichOneof(self, oneof_group: _WhichOneofArgType__revision_1_month) -> _WhichOneofReturnType__revision_1_month | None: ...
+    @_typing.overload
+    def WhichOneof(self, oneof_group: _WhichOneofArgType__revision_1_week) -> _WhichOneofReturnType__revision_1_week | None: ...
 
-global___KpiModelData = KpiModelData
+Global___KpiModelData: _TypeAlias = KpiModelData  # noqa: Y015
 
-@typing.final
-class KpiModelWeightGroups(google.protobuf.message.Message):
+@_typing.final
+class KpiModelWeightGroups(_message.Message):
     """KPI model weight groups."""
 
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    DESCRIPTOR: _descriptor.Descriptor
 
-    WEIGHT_GROUPS_FIELD_NUMBER: builtins.int
-    IS_COEFFICIENTS_FIELD_NUMBER: builtins.int
-    is_coefficients: builtins.bool
+    WEIGHT_GROUPS_FIELD_NUMBER: _builtins.int
+    IS_COEFFICIENTS_FIELD_NUMBER: _builtins.int
+    is_coefficients: _builtins.bool
     """Whether the weights are coefficients that should be formatted as decimal numbers.
     If false, the weights are normalized weights that add up to 1.
     """
-    @property
-    def weight_groups(self) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[global___KpiModelWeightGroup]:
+    @_builtins.property
+    def weight_groups(self) -> _containers.RepeatedCompositeFieldContainer[Global___KpiModelWeightGroup]:
         """Weights for all predictors in the model."""
 
     def __init__(
         self,
         *,
-        weight_groups: collections.abc.Iterable[global___KpiModelWeightGroup] | None = ...,
-        is_coefficients: builtins.bool | None = ...,
+        weight_groups: _abc.Iterable[Global___KpiModelWeightGroup] | None = ...,
+        is_coefficients: _builtins.bool | None = ...,
     ) -> None: ...
-    def ClearField(self, field_name: typing.Literal["is_coefficients", b"is_coefficients", "weight_groups", b"weight_groups"]) -> None: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["is_coefficients", b"is_coefficients", "weight_groups", b"weight_groups"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
-global___KpiModelWeightGroups = KpiModelWeightGroups
+Global___KpiModelWeightGroups: _TypeAlias = KpiModelWeightGroups  # noqa: Y015
 
-@typing.final
-class KpiModelWeightGroup(google.protobuf.message.Message):
+@_typing.final
+class KpiModelWeightGroup(_message.Message):
     """Weight for a group of related KPI model input features."""
 
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    DESCRIPTOR: _descriptor.Descriptor
 
-    DISPLAY_NAME_FIELD_NUMBER: builtins.int
-    GROUP_FIELD_NUMBER: builtins.int
-    FEATURE_WEIGHTS_FIELD_NUMBER: builtins.int
-    display_name: builtins.str
+    DISPLAY_NAME_FIELD_NUMBER: _builtins.int
+    GROUP_FIELD_NUMBER: _builtins.int
+    FEATURE_WEIGHTS_FIELD_NUMBER: _builtins.int
+    display_name: _builtins.str
     """Display name of the model input feature/predictor.
     For ratio prediction models, this is either 'Baseline' (representing the predictor built by forecasting
     the KPI time series) or it is the display name of the KPI mapping group from which the predictor originates.
     For other model types, display names include 'Seasonality' and 'Reported KPI (lagged)'.
     """
-    @property
-    def group(self) -> global___KpiMappingGroupReference:
+    @_builtins.property
+    def group(self) -> Global___KpiMappingGroupReference:
         """The KPI mapping group from which the predictor originates.
         Only set when the predictor originates from a KPI mapping group.
         """
 
-    @property
-    def feature_weights(self) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[global___KpiModelFeatureWeight]:
+    @_builtins.property
+    def feature_weights(self) -> _containers.RepeatedCompositeFieldContainer[Global___KpiModelFeatureWeight]:
         """The individual feature weights."""
 
     def __init__(
         self,
         *,
-        display_name: builtins.str | None = ...,
-        group: global___KpiMappingGroupReference | None = ...,
-        feature_weights: collections.abc.Iterable[global___KpiModelFeatureWeight] | None = ...,
+        display_name: _builtins.str | None = ...,
+        group: Global___KpiMappingGroupReference | None = ...,
+        feature_weights: _abc.Iterable[Global___KpiModelFeatureWeight] | None = ...,
     ) -> None: ...
-    def HasField(self, field_name: typing.Literal["group", b"group"]) -> builtins.bool: ...
-    def ClearField(self, field_name: typing.Literal["display_name", b"display_name", "feature_weights", b"feature_weights", "group", b"group"]) -> None: ...
+    _HasFieldArgType: _TypeAlias = _typing.Literal["group", b"group"]  # noqa: Y015
+    def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["display_name", b"display_name", "feature_weights", b"feature_weights", "group", b"group"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
-global___KpiModelWeightGroup = KpiModelWeightGroup
+Global___KpiModelWeightGroup: _TypeAlias = KpiModelWeightGroup  # noqa: Y015
 
-@typing.final
-class KpiModelFeatureWeight(google.protobuf.message.Message):
+@_typing.final
+class KpiModelFeatureWeight(_message.Message):
     """Weight for a single KPI model input feature."""
 
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    DESCRIPTOR: _descriptor.Descriptor
 
-    WEIGHT_FIELD_NUMBER: builtins.int
-    DISPLAY_NAME_FIELD_NUMBER: builtins.int
-    weight: builtins.float
+    WEIGHT_FIELD_NUMBER: _builtins.int
+    DISPLAY_NAME_FIELD_NUMBER: _builtins.int
+    weight: _builtins.float
     """The weight of the input feature."""
-    display_name: builtins.str
+    display_name: _builtins.str
     """Display name of the feature.
     If there is only a single feature weight, this is identical to the `KpiModelWeightGroup.display_name`.
     If there are multiple feature weights, this is the display name of the feature. For example,
@@ -884,195 +983,214 @@ class KpiModelFeatureWeight(google.protobuf.message.Message):
     def __init__(
         self,
         *,
-        weight: builtins.float | None = ...,
-        display_name: builtins.str | None = ...,
+        weight: _builtins.float | None = ...,
+        display_name: _builtins.str | None = ...,
     ) -> None: ...
-    def HasField(self, field_name: typing.Literal["_weight", b"_weight", "weight", b"weight"]) -> builtins.bool: ...
-    def ClearField(self, field_name: typing.Literal["_weight", b"_weight", "display_name", b"display_name", "weight", b"weight"]) -> None: ...
-    def WhichOneof(self, oneof_group: typing.Literal["_weight", b"_weight"]) -> typing.Literal["weight"] | None: ...
+    _HasFieldArgType: _TypeAlias = _typing.Literal["_weight", b"_weight", "weight", b"weight"]  # noqa: Y015
+    def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["_weight", b"_weight", "display_name", b"display_name", "weight", b"weight"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
+    _WhichOneofReturnType__weight: _TypeAlias = _typing.Literal["weight"]  # noqa: Y015
+    _WhichOneofArgType__weight: _TypeAlias = _typing.Literal["_weight", b"_weight"]  # noqa: Y015
+    def WhichOneof(self, oneof_group: _WhichOneofArgType__weight) -> _WhichOneofReturnType__weight | None: ...
 
-global___KpiModelFeatureWeight = KpiModelFeatureWeight
+Global___KpiModelFeatureWeight: _TypeAlias = KpiModelFeatureWeight  # noqa: Y015
 
-@typing.final
-class FiscalPeriod(google.protobuf.message.Message):
+@_typing.final
+class FiscalPeriod(_message.Message):
     """Represents a fiscal period."""
 
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    DESCRIPTOR: _descriptor.Descriptor
 
-    END_DATE_FIELD_NUMBER: builtins.int
-    LABEL_FIELD_NUMBER: builtins.int
-    REPORT_DATE_FIELD_NUMBER: builtins.int
-    label: builtins.str
+    END_DATE_FIELD_NUMBER: _builtins.int
+    LABEL_FIELD_NUMBER: _builtins.int
+    REPORT_DATE_FIELD_NUMBER: _builtins.int
+    label: _builtins.str
     """The fiscal period label. Examples: 1Q-2003, 2H-1997, FY-2029."""
-    @property
-    def end_date(self) -> exabel.api.time.date_pb2.Date:
+    @_builtins.property
+    def end_date(self) -> _date_pb2.Date:
         """The last date of the fiscal period."""
 
-    @property
-    def report_date(self) -> exabel.api.time.date_pb2.Date:
+    @_builtins.property
+    def report_date(self) -> _date_pb2.Date:
         """The report date of the fiscal period."""
 
     def __init__(
         self,
         *,
-        end_date: exabel.api.time.date_pb2.Date | None = ...,
-        label: builtins.str | None = ...,
-        report_date: exabel.api.time.date_pb2.Date | None = ...,
+        end_date: _date_pb2.Date | None = ...,
+        label: _builtins.str | None = ...,
+        report_date: _date_pb2.Date | None = ...,
     ) -> None: ...
-    def HasField(self, field_name: typing.Literal["_label", b"_label", "end_date", b"end_date", "label", b"label", "report_date", b"report_date"]) -> builtins.bool: ...
-    def ClearField(self, field_name: typing.Literal["_label", b"_label", "end_date", b"end_date", "label", b"label", "report_date", b"report_date"]) -> None: ...
-    def WhichOneof(self, oneof_group: typing.Literal["_label", b"_label"]) -> typing.Literal["label"] | None: ...
+    _HasFieldArgType: _TypeAlias = _typing.Literal["_label", b"_label", "end_date", b"end_date", "label", b"label", "report_date", b"report_date"]  # noqa: Y015
+    def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["_label", b"_label", "end_date", b"end_date", "label", b"label", "report_date", b"report_date"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
+    _WhichOneofReturnType__label: _TypeAlias = _typing.Literal["label"]  # noqa: Y015
+    _WhichOneofArgType__label: _TypeAlias = _typing.Literal["_label", b"_label"]  # noqa: Y015
+    def WhichOneof(self, oneof_group: _WhichOneofArgType__label) -> _WhichOneofReturnType__label | None: ...
 
-global___FiscalPeriod = FiscalPeriod
+Global___FiscalPeriod: _TypeAlias = FiscalPeriod  # noqa: Y015
 
-@typing.final
-class FiscalPeriodSelector(google.protobuf.message.Message):
+@_typing.final
+class FiscalPeriodSelector(_message.Message):
     """Selector for a fiscal period."""
 
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    DESCRIPTOR: _descriptor.Descriptor
 
-    RELATIVE_SELECTOR_FIELD_NUMBER: builtins.int
-    PERIOD_END_FIELD_NUMBER: builtins.int
-    FREQ_FIELD_NUMBER: builtins.int
-    relative_selector: global___RelativeFiscalPeriodSelector.ValueType
+    RELATIVE_SELECTOR_FIELD_NUMBER: _builtins.int
+    PERIOD_END_FIELD_NUMBER: _builtins.int
+    FREQ_FIELD_NUMBER: _builtins.int
+    relative_selector: Global___RelativeFiscalPeriodSelector.ValueType
     """Relative fiscal period."""
-    freq: builtins.str
+    freq: _builtins.str
     """Fiscal period frequency.
     Allowed values are empty, "FQ", "FS" and "FY".
     Must be set to either "FQ", "FS" or "FY" if `period_end` is specified.
     If empty, frequency is determined based on KPI counts. The frequency
     with the most number of KPIs with mappings for the user is used.
     """
-    @property
-    def period_end(self) -> exabel.api.time.date_pb2.Date:
+    @_builtins.property
+    def period_end(self) -> _date_pb2.Date:
         """Specific fiscal period end."""
 
     def __init__(
         self,
         *,
-        relative_selector: global___RelativeFiscalPeriodSelector.ValueType | None = ...,
-        period_end: exabel.api.time.date_pb2.Date | None = ...,
-        freq: builtins.str | None = ...,
+        relative_selector: Global___RelativeFiscalPeriodSelector.ValueType | None = ...,
+        period_end: _date_pb2.Date | None = ...,
+        freq: _builtins.str | None = ...,
     ) -> None: ...
-    def HasField(self, field_name: typing.Literal["period_end", b"period_end"]) -> builtins.bool: ...
-    def ClearField(self, field_name: typing.Literal["freq", b"freq", "period_end", b"period_end", "relative_selector", b"relative_selector"]) -> None: ...
+    _HasFieldArgType: _TypeAlias = _typing.Literal["period_end", b"period_end"]  # noqa: Y015
+    def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["freq", b"freq", "period_end", b"period_end", "relative_selector", b"relative_selector"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
-global___FiscalPeriodSelector = FiscalPeriodSelector
+Global___FiscalPeriodSelector: _TypeAlias = FiscalPeriodSelector  # noqa: Y015
 
-@typing.final
-class KpiHierarchy(google.protobuf.message.Message):
+@_typing.final
+class KpiHierarchy(_message.Message):
     """Represents a hierarchy of KPIs for a specific company."""
 
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    DESCRIPTOR: _descriptor.Descriptor
 
-    NAME_FIELD_NUMBER: builtins.int
-    FREQ_FIELD_NUMBER: builtins.int
-    BREAKDOWN_FIELD_NUMBER: builtins.int
-    name: builtins.str
+    NAME_FIELD_NUMBER: _builtins.int
+    FREQ_FIELD_NUMBER: _builtins.int
+    BREAKDOWN_FIELD_NUMBER: _builtins.int
+    name: _builtins.str
     """The resource name of the KPI hierarchy, e.g., "kpiHierarchies/135"."""
-    freq: builtins.str
+    freq: _builtins.str
     """The frequency of the KPIs in this hierarchy."""
-    @property
-    def breakdown(self) -> global___KpiBreakdown:
+    @_builtins.property
+    def breakdown(self) -> Global___KpiBreakdown:
         """A breakdown of the KPIs."""
 
     def __init__(
         self,
         *,
-        name: builtins.str | None = ...,
-        freq: builtins.str | None = ...,
-        breakdown: global___KpiBreakdown | None = ...,
+        name: _builtins.str | None = ...,
+        freq: _builtins.str | None = ...,
+        breakdown: Global___KpiBreakdown | None = ...,
     ) -> None: ...
-    def HasField(self, field_name: typing.Literal["breakdown", b"breakdown"]) -> builtins.bool: ...
-    def ClearField(self, field_name: typing.Literal["breakdown", b"breakdown", "freq", b"freq", "name", b"name"]) -> None: ...
+    _HasFieldArgType: _TypeAlias = _typing.Literal["breakdown", b"breakdown"]  # noqa: Y015
+    def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["breakdown", b"breakdown", "freq", b"freq", "name", b"name"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
-global___KpiHierarchy = KpiHierarchy
+Global___KpiHierarchy: _TypeAlias = KpiHierarchy  # noqa: Y015
 
-@typing.final
-class KpiBreakdown(google.protobuf.message.Message):
+@_typing.final
+class KpiBreakdown(_message.Message):
     """A breakdown of the KPIs."""
 
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    DESCRIPTOR: _descriptor.Descriptor
 
-    KPIS_FIELD_NUMBER: builtins.int
-    @property
-    def kpis(self) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[global___KpiBreakdownNode]:
+    KPIS_FIELD_NUMBER: _builtins.int
+    @_builtins.property
+    def kpis(self) -> _containers.RepeatedCompositeFieldContainer[Global___KpiBreakdownNode]:
         """The top-level nodes in the breakdown, each of which represents a KPI."""
 
     def __init__(
         self,
         *,
-        kpis: collections.abc.Iterable[global___KpiBreakdownNode] | None = ...,
+        kpis: _abc.Iterable[Global___KpiBreakdownNode] | None = ...,
     ) -> None: ...
-    def ClearField(self, field_name: typing.Literal["kpis", b"kpis"]) -> None: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["kpis", b"kpis"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
-global___KpiBreakdown = KpiBreakdown
+Global___KpiBreakdown: _TypeAlias = KpiBreakdown  # noqa: Y015
 
-@typing.final
-class KpiBreakdownNode(google.protobuf.message.Message):
+@_typing.final
+class KpiBreakdownNode(_message.Message):
     """A node in the tree representing the breakdown of a KPI."""
 
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    DESCRIPTOR: _descriptor.Descriptor
 
-    KPI_FIELD_NUMBER: builtins.int
-    HEADER_FIELD_NUMBER: builtins.int
-    CHILDREN_FIELD_NUMBER: builtins.int
-    header: builtins.str
+    KPI_FIELD_NUMBER: _builtins.int
+    HEADER_FIELD_NUMBER: _builtins.int
+    CHILDREN_FIELD_NUMBER: _builtins.int
+    header: _builtins.str
     """The string representing this node, when the node represents a grouping of KPIs and not a
     single one.
     """
-    @property
-    def kpi(self) -> global___Kpi:
+    @_builtins.property
+    def kpi(self) -> Global___Kpi:
         """The KPI represented by this node.
         Only StructuredKpi is supported, and only the KPI type and the value should be set.
         """
 
-    @property
-    def children(self) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[global___KpiBreakdownNode]:
+    @_builtins.property
+    def children(self) -> _containers.RepeatedCompositeFieldContainer[Global___KpiBreakdownNode]:
         """The children of this node."""
 
     def __init__(
         self,
         *,
-        kpi: global___Kpi | None = ...,
-        header: builtins.str | None = ...,
-        children: collections.abc.Iterable[global___KpiBreakdownNode] | None = ...,
+        kpi: Global___Kpi | None = ...,
+        header: _builtins.str | None = ...,
+        children: _abc.Iterable[Global___KpiBreakdownNode] | None = ...,
     ) -> None: ...
-    def HasField(self, field_name: typing.Literal["content", b"content", "header", b"header", "kpi", b"kpi"]) -> builtins.bool: ...
-    def ClearField(self, field_name: typing.Literal["children", b"children", "content", b"content", "header", b"header", "kpi", b"kpi"]) -> None: ...
-    def WhichOneof(self, oneof_group: typing.Literal["content", b"content"]) -> typing.Literal["kpi", "header"] | None: ...
+    _HasFieldArgType: _TypeAlias = _typing.Literal["content", b"content", "header", b"header", "kpi", b"kpi"]  # noqa: Y015
+    def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["children", b"children", "content", b"content", "header", b"header", "kpi", b"kpi"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
+    _WhichOneofReturnType_content: _TypeAlias = _typing.Literal["kpi", "header"]  # noqa: Y015
+    _WhichOneofArgType_content: _TypeAlias = _typing.Literal["content", b"content"]  # noqa: Y015
+    def WhichOneof(self, oneof_group: _WhichOneofArgType_content) -> _WhichOneofReturnType_content | None: ...
 
-global___KpiBreakdownNode = KpiBreakdownNode
+Global___KpiBreakdownNode: _TypeAlias = KpiBreakdownNode  # noqa: Y015
 
-@typing.final
-class KpiScreenCompanyResult(google.protobuf.message.Message):
+@_typing.final
+class KpiScreenCompanyResult(_message.Message):
     """KPI screen results for a single company."""
 
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    DESCRIPTOR: _descriptor.Descriptor
 
-    COMPANY_FIELD_NUMBER: builtins.int
-    FISCAL_PERIOD_FIELD_NUMBER: builtins.int
-    RESULTS_FIELD_NUMBER: builtins.int
-    @property
-    def company(self) -> global___Company:
+    COMPANY_FIELD_NUMBER: _builtins.int
+    FISCAL_PERIOD_FIELD_NUMBER: _builtins.int
+    RESULTS_FIELD_NUMBER: _builtins.int
+    @_builtins.property
+    def company(self) -> Global___Company:
         """The company."""
 
-    @property
-    def fiscal_period(self) -> global___FiscalPeriod:
+    @_builtins.property
+    def fiscal_period(self) -> Global___FiscalPeriod:
         """The fiscal period for this result."""
 
-    @property
-    def results(self) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[global___CompanyKpiModelResult]:
+    @_builtins.property
+    def results(self) -> _containers.RepeatedCompositeFieldContainer[Global___CompanyKpiModelResult]:
         """KPI model results for this company."""
 
     def __init__(
         self,
         *,
-        company: global___Company | None = ...,
-        fiscal_period: global___FiscalPeriod | None = ...,
-        results: collections.abc.Iterable[global___CompanyKpiModelResult] | None = ...,
+        company: Global___Company | None = ...,
+        fiscal_period: Global___FiscalPeriod | None = ...,
+        results: _abc.Iterable[Global___CompanyKpiModelResult] | None = ...,
     ) -> None: ...
-    def HasField(self, field_name: typing.Literal["company", b"company", "fiscal_period", b"fiscal_period"]) -> builtins.bool: ...
-    def ClearField(self, field_name: typing.Literal["company", b"company", "fiscal_period", b"fiscal_period", "results", b"results"]) -> None: ...
+    _HasFieldArgType: _TypeAlias = _typing.Literal["company", b"company", "fiscal_period", b"fiscal_period"]  # noqa: Y015
+    def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["company", b"company", "fiscal_period", b"fiscal_period", "results", b"results"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
-global___KpiScreenCompanyResult = KpiScreenCompanyResult
+Global___KpiScreenCompanyResult: _TypeAlias = KpiScreenCompanyResult  # noqa: Y015

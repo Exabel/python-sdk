@@ -3,77 +3,84 @@
 isort:skip_file
 Copyright (c) 2022 Exabel AS. All rights reserved."""
 
-import builtins
-import collections.abc
-from . import user_messages_pb2
-import google.protobuf.descriptor
-import google.protobuf.internal.containers
-import google.protobuf.message
-import typing
-from ..... import exabel
+from collections import abc as _abc
+from . import user_messages_pb2 as _user_messages_pb2
+from google.protobuf import descriptor as _descriptor
+from google.protobuf import message as _message
+from google.protobuf.internal import containers as _containers
+import builtins as _builtins
+import sys
+import typing as _typing
 
-DESCRIPTOR: google.protobuf.descriptor.FileDescriptor
+if sys.version_info >= (3, 10):
+    from typing import TypeAlias as _TypeAlias
+else:
+    from typing_extensions import TypeAlias as _TypeAlias
 
-@typing.final
-class ListGroupsRequest(google.protobuf.message.Message):
+DESCRIPTOR: _descriptor.FileDescriptor
+
+@_typing.final
+class ListGroupsRequest(_message.Message):
     """Request to ListGroups."""
 
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    DESCRIPTOR: _descriptor.Descriptor
 
     def __init__(
         self,
     ) -> None: ...
 
-global___ListGroupsRequest = ListGroupsRequest
+Global___ListGroupsRequest: _TypeAlias = ListGroupsRequest  # noqa: Y015
 
-@typing.final
-class ListGroupsResponse(google.protobuf.message.Message):
+@_typing.final
+class ListGroupsResponse(_message.Message):
     """Response from ListGroups."""
 
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    DESCRIPTOR: _descriptor.Descriptor
 
-    GROUPS_FIELD_NUMBER: builtins.int
-    @property
-    def groups(self) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[exabel.api.management.v1.user_messages_pb2.Group]:
+    GROUPS_FIELD_NUMBER: _builtins.int
+    @_builtins.property
+    def groups(self) -> _containers.RepeatedCompositeFieldContainer[_user_messages_pb2.Group]:
         """List of user groups, including users in each user group."""
 
     def __init__(
         self,
         *,
-        groups: collections.abc.Iterable[exabel.api.management.v1.user_messages_pb2.Group] | None = ...,
+        groups: _abc.Iterable[_user_messages_pb2.Group] | None = ...,
     ) -> None: ...
-    def ClearField(self, field_name: typing.Literal["groups", b"groups"]) -> None: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["groups", b"groups"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
-global___ListGroupsResponse = ListGroupsResponse
+Global___ListGroupsResponse: _TypeAlias = ListGroupsResponse  # noqa: Y015
 
-@typing.final
-class ListUsersRequest(google.protobuf.message.Message):
+@_typing.final
+class ListUsersRequest(_message.Message):
     """Request to ListUsers."""
 
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    DESCRIPTOR: _descriptor.Descriptor
 
     def __init__(
         self,
     ) -> None: ...
 
-global___ListUsersRequest = ListUsersRequest
+Global___ListUsersRequest: _TypeAlias = ListUsersRequest  # noqa: Y015
 
-@typing.final
-class ListUsersResponse(google.protobuf.message.Message):
+@_typing.final
+class ListUsersResponse(_message.Message):
     """Response from ListUsers."""
 
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    DESCRIPTOR: _descriptor.Descriptor
 
-    USERS_FIELD_NUMBER: builtins.int
-    @property
-    def users(self) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[exabel.api.management.v1.user_messages_pb2.User]:
+    USERS_FIELD_NUMBER: _builtins.int
+    @_builtins.property
+    def users(self) -> _containers.RepeatedCompositeFieldContainer[_user_messages_pb2.User]:
         """List of users."""
 
     def __init__(
         self,
         *,
-        users: collections.abc.Iterable[exabel.api.management.v1.user_messages_pb2.User] | None = ...,
+        users: _abc.Iterable[_user_messages_pb2.User] | None = ...,
     ) -> None: ...
-    def ClearField(self, field_name: typing.Literal["users", b"users"]) -> None: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["users", b"users"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
-global___ListUsersResponse = ListUsersResponse
+Global___ListUsersResponse: _TypeAlias = ListUsersResponse  # noqa: Y015

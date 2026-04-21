@@ -3,58 +3,64 @@
 isort:skip_file
 Copyright (c) 2019-2022 Exabel AS. All rights reserved."""
 
-import builtins
-import collections.abc
-from . import entity_messages_pb2
-from . import search_messages_pb2
-import google.protobuf.descriptor
-import google.protobuf.field_mask_pb2
-import google.protobuf.internal.containers
-import google.protobuf.message
-import typing
-from ..... import exabel
+from collections import abc as _abc
+from . import entity_messages_pb2 as _entity_messages_pb2
+from . import search_messages_pb2 as _search_messages_pb2
+from google.protobuf import descriptor as _descriptor
+from google.protobuf import field_mask_pb2 as _field_mask_pb2
+from google.protobuf import message as _message
+from google.protobuf.internal import containers as _containers
+import builtins as _builtins
+import sys
+import typing as _typing
 
-DESCRIPTOR: google.protobuf.descriptor.FileDescriptor
+if sys.version_info >= (3, 10):
+    from typing import TypeAlias as _TypeAlias
+else:
+    from typing_extensions import TypeAlias as _TypeAlias
 
-@typing.final
-class ListEntityTypesRequest(google.protobuf.message.Message):
+DESCRIPTOR: _descriptor.FileDescriptor
+
+@_typing.final
+class ListEntityTypesRequest(_message.Message):
     """The request to list entity types."""
 
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    DESCRIPTOR: _descriptor.Descriptor
 
-    PAGE_SIZE_FIELD_NUMBER: builtins.int
-    PAGE_TOKEN_FIELD_NUMBER: builtins.int
-    page_size: builtins.int
+    PAGE_SIZE_FIELD_NUMBER: _builtins.int
+    PAGE_TOKEN_FIELD_NUMBER: _builtins.int
+    page_size: _builtins.int
     """Maximum number of results to return. Defaults to 1000, which is the maximum allowed value."""
-    page_token: builtins.str
+    page_token: _builtins.str
     """Token for a specific page of results, as returned from a previous list request with the same
     query parameters.
     """
     def __init__(
         self,
         *,
-        page_size: builtins.int | None = ...,
-        page_token: builtins.str | None = ...,
+        page_size: _builtins.int | None = ...,
+        page_token: _builtins.str | None = ...,
     ) -> None: ...
-    def ClearField(self, field_name: typing.Literal["page_size", b"page_size", "page_token", b"page_token"]) -> None: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["page_size", b"page_size", "page_token", b"page_token"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
-global___ListEntityTypesRequest = ListEntityTypesRequest
+Global___ListEntityTypesRequest: _TypeAlias = ListEntityTypesRequest  # noqa: Y015
 
-@typing.final
-class ListEntityTypesResponse(google.protobuf.message.Message):
+@_typing.final
+class ListEntityTypesResponse(_message.Message):
     """The response to list entity types. Returns all known entity types."""
 
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    DESCRIPTOR: _descriptor.Descriptor
 
-    ENTITY_TYPES_FIELD_NUMBER: builtins.int
-    NEXT_PAGE_TOKEN_FIELD_NUMBER: builtins.int
-    TOTAL_SIZE_FIELD_NUMBER: builtins.int
-    next_page_token: builtins.str
+    ENTITY_TYPES_FIELD_NUMBER: _builtins.int
+    NEXT_PAGE_TOKEN_FIELD_NUMBER: _builtins.int
+    TOTAL_SIZE_FIELD_NUMBER: _builtins.int
+    next_page_token: _builtins.str
     """Token for the next page of results, which can be sent to a subsequent query."""
-    total_size: builtins.int
+    total_size: _builtins.int
     """Total number of results, irrespective of paging."""
-    @property
-    def entity_types(self) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[exabel.api.data.v1.entity_messages_pb2.EntityType]:
+    @_builtins.property
+    def entity_types(self) -> _containers.RepeatedCompositeFieldContainer[_entity_messages_pb2.EntityType]:
         """List of entity types.
         The end of the list is reached when number of results is less than the page size
         (NOT when the token is empty).
@@ -63,72 +69,76 @@ class ListEntityTypesResponse(google.protobuf.message.Message):
     def __init__(
         self,
         *,
-        entity_types: collections.abc.Iterable[exabel.api.data.v1.entity_messages_pb2.EntityType] | None = ...,
-        next_page_token: builtins.str | None = ...,
-        total_size: builtins.int | None = ...,
+        entity_types: _abc.Iterable[_entity_messages_pb2.EntityType] | None = ...,
+        next_page_token: _builtins.str | None = ...,
+        total_size: _builtins.int | None = ...,
     ) -> None: ...
-    def ClearField(self, field_name: typing.Literal["entity_types", b"entity_types", "next_page_token", b"next_page_token", "total_size", b"total_size"]) -> None: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["entity_types", b"entity_types", "next_page_token", b"next_page_token", "total_size", b"total_size"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
-global___ListEntityTypesResponse = ListEntityTypesResponse
+Global___ListEntityTypesResponse: _TypeAlias = ListEntityTypesResponse  # noqa: Y015
 
-@typing.final
-class GetEntityTypeRequest(google.protobuf.message.Message):
+@_typing.final
+class GetEntityTypeRequest(_message.Message):
     """The request to get one entity type."""
 
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    DESCRIPTOR: _descriptor.Descriptor
 
-    NAME_FIELD_NUMBER: builtins.int
-    name: builtins.str
+    NAME_FIELD_NUMBER: _builtins.int
+    name: _builtins.str
     """The resource name of the requested entity type, for example `entityTypes/ns.type1`."""
     def __init__(
         self,
         *,
-        name: builtins.str | None = ...,
+        name: _builtins.str | None = ...,
     ) -> None: ...
-    def ClearField(self, field_name: typing.Literal["name", b"name"]) -> None: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["name", b"name"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
-global___GetEntityTypeRequest = GetEntityTypeRequest
+Global___GetEntityTypeRequest: _TypeAlias = GetEntityTypeRequest  # noqa: Y015
 
-@typing.final
-class CreateEntityTypeRequest(google.protobuf.message.Message):
+@_typing.final
+class CreateEntityTypeRequest(_message.Message):
     """The request to create one entity type."""
 
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    DESCRIPTOR: _descriptor.Descriptor
 
-    ENTITY_TYPE_FIELD_NUMBER: builtins.int
-    @property
-    def entity_type(self) -> exabel.api.data.v1.entity_messages_pb2.EntityType:
+    ENTITY_TYPE_FIELD_NUMBER: _builtins.int
+    @_builtins.property
+    def entity_type(self) -> _entity_messages_pb2.EntityType:
         """The entity type to create."""
 
     def __init__(
         self,
         *,
-        entity_type: exabel.api.data.v1.entity_messages_pb2.EntityType | None = ...,
+        entity_type: _entity_messages_pb2.EntityType | None = ...,
     ) -> None: ...
-    def HasField(self, field_name: typing.Literal["entity_type", b"entity_type"]) -> builtins.bool: ...
-    def ClearField(self, field_name: typing.Literal["entity_type", b"entity_type"]) -> None: ...
+    _HasFieldArgType: _TypeAlias = _typing.Literal["entity_type", b"entity_type"]  # noqa: Y015
+    def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["entity_type", b"entity_type"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
-global___CreateEntityTypeRequest = CreateEntityTypeRequest
+Global___CreateEntityTypeRequest: _TypeAlias = CreateEntityTypeRequest  # noqa: Y015
 
-@typing.final
-class UpdateEntityTypeRequest(google.protobuf.message.Message):
+@_typing.final
+class UpdateEntityTypeRequest(_message.Message):
     """The request to update one entity type."""
 
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    DESCRIPTOR: _descriptor.Descriptor
 
-    ENTITY_TYPE_FIELD_NUMBER: builtins.int
-    UPDATE_MASK_FIELD_NUMBER: builtins.int
-    ALLOW_MISSING_FIELD_NUMBER: builtins.int
-    allow_missing: builtins.bool
+    ENTITY_TYPE_FIELD_NUMBER: _builtins.int
+    UPDATE_MASK_FIELD_NUMBER: _builtins.int
+    ALLOW_MISSING_FIELD_NUMBER: _builtins.int
+    allow_missing: _builtins.bool
     """If set to `true`, a new entity type will be created if it did not exist, and `update_mask` is
     ignored.
     """
-    @property
-    def entity_type(self) -> exabel.api.data.v1.entity_messages_pb2.EntityType:
+    @_builtins.property
+    def entity_type(self) -> _entity_messages_pb2.EntityType:
         """The entity type to update."""
 
-    @property
-    def update_mask(self) -> google.protobuf.field_mask_pb2.FieldMask:
+    @_builtins.property
+    def update_mask(self) -> _field_mask_pb2.FieldMask:
         """Use this to update only selected fields. For example, specify `display_name` to update only the
         display name. If `allow_missing` is set, this field is ignored.
 
@@ -138,176 +148,185 @@ class UpdateEntityTypeRequest(google.protobuf.message.Message):
     def __init__(
         self,
         *,
-        entity_type: exabel.api.data.v1.entity_messages_pb2.EntityType | None = ...,
-        update_mask: google.protobuf.field_mask_pb2.FieldMask | None = ...,
-        allow_missing: builtins.bool | None = ...,
+        entity_type: _entity_messages_pb2.EntityType | None = ...,
+        update_mask: _field_mask_pb2.FieldMask | None = ...,
+        allow_missing: _builtins.bool | None = ...,
     ) -> None: ...
-    def HasField(self, field_name: typing.Literal["entity_type", b"entity_type", "update_mask", b"update_mask"]) -> builtins.bool: ...
-    def ClearField(self, field_name: typing.Literal["allow_missing", b"allow_missing", "entity_type", b"entity_type", "update_mask", b"update_mask"]) -> None: ...
+    _HasFieldArgType: _TypeAlias = _typing.Literal["entity_type", b"entity_type", "update_mask", b"update_mask"]  # noqa: Y015
+    def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["allow_missing", b"allow_missing", "entity_type", b"entity_type", "update_mask", b"update_mask"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
-global___UpdateEntityTypeRequest = UpdateEntityTypeRequest
+Global___UpdateEntityTypeRequest: _TypeAlias = UpdateEntityTypeRequest  # noqa: Y015
 
-@typing.final
-class DeleteEntityTypeRequest(google.protobuf.message.Message):
+@_typing.final
+class DeleteEntityTypeRequest(_message.Message):
     """The request to delete one entity type."""
 
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    DESCRIPTOR: _descriptor.Descriptor
 
-    NAME_FIELD_NUMBER: builtins.int
-    name: builtins.str
+    NAME_FIELD_NUMBER: _builtins.int
+    name: _builtins.str
     """The resource name of the entity type to delete, for example `entityTypes/ns.type1`."""
     def __init__(
         self,
         *,
-        name: builtins.str | None = ...,
+        name: _builtins.str | None = ...,
     ) -> None: ...
-    def ClearField(self, field_name: typing.Literal["name", b"name"]) -> None: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["name", b"name"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
-global___DeleteEntityTypeRequest = DeleteEntityTypeRequest
+Global___DeleteEntityTypeRequest: _TypeAlias = DeleteEntityTypeRequest  # noqa: Y015
 
-@typing.final
-class ListEntitiesRequest(google.protobuf.message.Message):
+@_typing.final
+class ListEntitiesRequest(_message.Message):
     """The request to list entities."""
 
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    DESCRIPTOR: _descriptor.Descriptor
 
-    PARENT_FIELD_NUMBER: builtins.int
-    PAGE_SIZE_FIELD_NUMBER: builtins.int
-    PAGE_TOKEN_FIELD_NUMBER: builtins.int
-    parent: builtins.str
+    PARENT_FIELD_NUMBER: _builtins.int
+    PAGE_SIZE_FIELD_NUMBER: _builtins.int
+    PAGE_TOKEN_FIELD_NUMBER: _builtins.int
+    parent: _builtins.str
     """The parent entity type of the entities to list, for example `entityTypes/ns.type1`."""
-    page_size: builtins.int
+    page_size: _builtins.int
     """Maximum number of results to return. Defaults to 1000, which is the maximum allowed value."""
-    page_token: builtins.str
+    page_token: _builtins.str
     """Token for a specific page of results, as returned from a previous list request with the
     same query parameters.
     """
     def __init__(
         self,
         *,
-        parent: builtins.str | None = ...,
-        page_size: builtins.int | None = ...,
-        page_token: builtins.str | None = ...,
+        parent: _builtins.str | None = ...,
+        page_size: _builtins.int | None = ...,
+        page_token: _builtins.str | None = ...,
     ) -> None: ...
-    def ClearField(self, field_name: typing.Literal["page_size", b"page_size", "page_token", b"page_token", "parent", b"parent"]) -> None: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["page_size", b"page_size", "page_token", b"page_token", "parent", b"parent"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
-global___ListEntitiesRequest = ListEntitiesRequest
+Global___ListEntitiesRequest: _TypeAlias = ListEntitiesRequest  # noqa: Y015
 
-@typing.final
-class ListEntitiesResponse(google.protobuf.message.Message):
+@_typing.final
+class ListEntitiesResponse(_message.Message):
     """The response to list entities. Returns all entities of a given entity type, with only name set."""
 
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    DESCRIPTOR: _descriptor.Descriptor
 
-    ENTITIES_FIELD_NUMBER: builtins.int
-    NEXT_PAGE_TOKEN_FIELD_NUMBER: builtins.int
-    TOTAL_SIZE_FIELD_NUMBER: builtins.int
-    next_page_token: builtins.str
+    ENTITIES_FIELD_NUMBER: _builtins.int
+    NEXT_PAGE_TOKEN_FIELD_NUMBER: _builtins.int
+    TOTAL_SIZE_FIELD_NUMBER: _builtins.int
+    next_page_token: _builtins.str
     """Token for the next page of results, which can be sent to a subsequent query.
     The end of the list is reached when the number of results is less than the page size
     (NOT when the token is empty).
     """
-    total_size: builtins.int
+    total_size: _builtins.int
     """Total number of results, irrespective of paging."""
-    @property
-    def entities(self) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[exabel.api.data.v1.entity_messages_pb2.Entity]:
+    @_builtins.property
+    def entities(self) -> _containers.RepeatedCompositeFieldContainer[_entity_messages_pb2.Entity]:
         """List of entities."""
 
     def __init__(
         self,
         *,
-        entities: collections.abc.Iterable[exabel.api.data.v1.entity_messages_pb2.Entity] | None = ...,
-        next_page_token: builtins.str | None = ...,
-        total_size: builtins.int | None = ...,
+        entities: _abc.Iterable[_entity_messages_pb2.Entity] | None = ...,
+        next_page_token: _builtins.str | None = ...,
+        total_size: _builtins.int | None = ...,
     ) -> None: ...
-    def ClearField(self, field_name: typing.Literal["entities", b"entities", "next_page_token", b"next_page_token", "total_size", b"total_size"]) -> None: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["entities", b"entities", "next_page_token", b"next_page_token", "total_size", b"total_size"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
-global___ListEntitiesResponse = ListEntitiesResponse
+Global___ListEntitiesResponse: _TypeAlias = ListEntitiesResponse  # noqa: Y015
 
-@typing.final
-class DeleteEntitiesRequest(google.protobuf.message.Message):
+@_typing.final
+class DeleteEntitiesRequest(_message.Message):
     """The request to delete all entities of a given entity type."""
 
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    DESCRIPTOR: _descriptor.Descriptor
 
-    PARENT_FIELD_NUMBER: builtins.int
-    CONFIRM_FIELD_NUMBER: builtins.int
-    parent: builtins.str
+    PARENT_FIELD_NUMBER: _builtins.int
+    CONFIRM_FIELD_NUMBER: _builtins.int
+    parent: _builtins.str
     """The parent entity type of the entities to delete, for example `entityTypes/ns.type1`."""
-    confirm: builtins.bool
+    confirm: _builtins.bool
     """Safeguard against accidental deletion. Must be set to `true` for deletion to take place."""
     def __init__(
         self,
         *,
-        parent: builtins.str | None = ...,
-        confirm: builtins.bool | None = ...,
+        parent: _builtins.str | None = ...,
+        confirm: _builtins.bool | None = ...,
     ) -> None: ...
-    def ClearField(self, field_name: typing.Literal["confirm", b"confirm", "parent", b"parent"]) -> None: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["confirm", b"confirm", "parent", b"parent"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
-global___DeleteEntitiesRequest = DeleteEntitiesRequest
+Global___DeleteEntitiesRequest: _TypeAlias = DeleteEntitiesRequest  # noqa: Y015
 
-@typing.final
-class GetEntityRequest(google.protobuf.message.Message):
+@_typing.final
+class GetEntityRequest(_message.Message):
     """The request to get one entity."""
 
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    DESCRIPTOR: _descriptor.Descriptor
 
-    NAME_FIELD_NUMBER: builtins.int
-    name: builtins.str
+    NAME_FIELD_NUMBER: _builtins.int
+    name: _builtins.str
     """The resource name of the requested entity, for example `entityTypes/ns.type1/entities/ns.entity1`."""
     def __init__(
         self,
         *,
-        name: builtins.str | None = ...,
+        name: _builtins.str | None = ...,
     ) -> None: ...
-    def ClearField(self, field_name: typing.Literal["name", b"name"]) -> None: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["name", b"name"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
-global___GetEntityRequest = GetEntityRequest
+Global___GetEntityRequest: _TypeAlias = GetEntityRequest  # noqa: Y015
 
-@typing.final
-class CreateEntityRequest(google.protobuf.message.Message):
+@_typing.final
+class CreateEntityRequest(_message.Message):
     """The response to create one entity."""
 
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    DESCRIPTOR: _descriptor.Descriptor
 
-    PARENT_FIELD_NUMBER: builtins.int
-    ENTITY_FIELD_NUMBER: builtins.int
-    parent: builtins.str
+    PARENT_FIELD_NUMBER: _builtins.int
+    ENTITY_FIELD_NUMBER: _builtins.int
+    parent: _builtins.str
     """The parent entity type of the created entity, for example `entityTypes/ns.type1`."""
-    @property
-    def entity(self) -> exabel.api.data.v1.entity_messages_pb2.Entity:
+    @_builtins.property
+    def entity(self) -> _entity_messages_pb2.Entity:
         """The entity to create."""
 
     def __init__(
         self,
         *,
-        parent: builtins.str | None = ...,
-        entity: exabel.api.data.v1.entity_messages_pb2.Entity | None = ...,
+        parent: _builtins.str | None = ...,
+        entity: _entity_messages_pb2.Entity | None = ...,
     ) -> None: ...
-    def HasField(self, field_name: typing.Literal["entity", b"entity"]) -> builtins.bool: ...
-    def ClearField(self, field_name: typing.Literal["entity", b"entity", "parent", b"parent"]) -> None: ...
+    _HasFieldArgType: _TypeAlias = _typing.Literal["entity", b"entity"]  # noqa: Y015
+    def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["entity", b"entity", "parent", b"parent"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
-global___CreateEntityRequest = CreateEntityRequest
+Global___CreateEntityRequest: _TypeAlias = CreateEntityRequest  # noqa: Y015
 
-@typing.final
-class UpdateEntityRequest(google.protobuf.message.Message):
+@_typing.final
+class UpdateEntityRequest(_message.Message):
     """The request to update one entity."""
 
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    DESCRIPTOR: _descriptor.Descriptor
 
-    ENTITY_FIELD_NUMBER: builtins.int
-    UPDATE_MASK_FIELD_NUMBER: builtins.int
-    ALLOW_MISSING_FIELD_NUMBER: builtins.int
-    allow_missing: builtins.bool
+    ENTITY_FIELD_NUMBER: _builtins.int
+    UPDATE_MASK_FIELD_NUMBER: _builtins.int
+    ALLOW_MISSING_FIELD_NUMBER: _builtins.int
+    allow_missing: _builtins.bool
     """If set to `true`, a new entity will be created if it did not exist, and `update_mask` is
     ignored.
     """
-    @property
-    def entity(self) -> exabel.api.data.v1.entity_messages_pb2.Entity:
+    @_builtins.property
+    def entity(self) -> _entity_messages_pb2.Entity:
         """The entity to update."""
 
-    @property
-    def update_mask(self) -> google.protobuf.field_mask_pb2.FieldMask:
+    @_builtins.property
+    def update_mask(self) -> _field_mask_pb2.FieldMask:
         """Use this to update only selected fields. For example, specify `display_name` to update only the
         display name. If `allow_missing` is set, this field is ignored.
 
@@ -317,60 +336,63 @@ class UpdateEntityRequest(google.protobuf.message.Message):
     def __init__(
         self,
         *,
-        entity: exabel.api.data.v1.entity_messages_pb2.Entity | None = ...,
-        update_mask: google.protobuf.field_mask_pb2.FieldMask | None = ...,
-        allow_missing: builtins.bool | None = ...,
+        entity: _entity_messages_pb2.Entity | None = ...,
+        update_mask: _field_mask_pb2.FieldMask | None = ...,
+        allow_missing: _builtins.bool | None = ...,
     ) -> None: ...
-    def HasField(self, field_name: typing.Literal["entity", b"entity", "update_mask", b"update_mask"]) -> builtins.bool: ...
-    def ClearField(self, field_name: typing.Literal["allow_missing", b"allow_missing", "entity", b"entity", "update_mask", b"update_mask"]) -> None: ...
+    _HasFieldArgType: _TypeAlias = _typing.Literal["entity", b"entity", "update_mask", b"update_mask"]  # noqa: Y015
+    def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["allow_missing", b"allow_missing", "entity", b"entity", "update_mask", b"update_mask"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
-global___UpdateEntityRequest = UpdateEntityRequest
+Global___UpdateEntityRequest: _TypeAlias = UpdateEntityRequest  # noqa: Y015
 
-@typing.final
-class DeleteEntityRequest(google.protobuf.message.Message):
+@_typing.final
+class DeleteEntityRequest(_message.Message):
     """The request to delete one entity."""
 
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    DESCRIPTOR: _descriptor.Descriptor
 
-    NAME_FIELD_NUMBER: builtins.int
-    name: builtins.str
+    NAME_FIELD_NUMBER: _builtins.int
+    name: _builtins.str
     """The resource name of the entity to delete, for example `entityTypes/ns.type1/entities/ns.entity1`."""
     def __init__(
         self,
         *,
-        name: builtins.str | None = ...,
+        name: _builtins.str | None = ...,
     ) -> None: ...
-    def ClearField(self, field_name: typing.Literal["name", b"name"]) -> None: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["name", b"name"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
-global___DeleteEntityRequest = DeleteEntityRequest
+Global___DeleteEntityRequest: _TypeAlias = DeleteEntityRequest  # noqa: Y015
 
-@typing.final
-class SearchEntitiesRequest(google.protobuf.message.Message):
+@_typing.final
+class SearchEntitiesRequest(_message.Message):
     """The request to search for one or more entities."""
 
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    DESCRIPTOR: _descriptor.Descriptor
 
-    PARENT_FIELD_NUMBER: builtins.int
-    TERMS_FIELD_NUMBER: builtins.int
-    OPTIONS_FIELD_NUMBER: builtins.int
-    PAGE_SIZE_FIELD_NUMBER: builtins.int
-    PAGE_TOKEN_FIELD_NUMBER: builtins.int
-    parent: builtins.str
+    PARENT_FIELD_NUMBER: _builtins.int
+    TERMS_FIELD_NUMBER: _builtins.int
+    OPTIONS_FIELD_NUMBER: _builtins.int
+    PAGE_SIZE_FIELD_NUMBER: _builtins.int
+    PAGE_TOKEN_FIELD_NUMBER: _builtins.int
+    parent: _builtins.str
     """The parent entity type of the entities to list, for example `entityTypes/ns.type1`."""
-    page_size: builtins.int
+    page_size: _builtins.int
     """The maximum number of results to return. Defaults to 1000, which is also the maximum value
     of this field. (Not implemented yet.)
     """
-    page_token: builtins.str
+    page_token: _builtins.str
     """The page token to resume the results from, as returned from a previous request to this method
     with the same query parameters. (Not implemented yet.)
     """
-    @property
-    def terms(self) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[exabel.api.data.v1.search_messages_pb2.SearchTerm]:
+    @_builtins.property
+    def terms(self) -> _containers.RepeatedCompositeFieldContainer[_search_messages_pb2.SearchTerm]:
         """Search terms."""
 
-    @property
-    def options(self) -> exabel.api.data.v1.search_messages_pb2.SearchOptions:
+    @_builtins.property
+    def options(self) -> _search_messages_pb2.SearchOptions:
         """Options on how the search should be performed. Currently only affects company search using
         field 'text'.
         """
@@ -378,63 +400,66 @@ class SearchEntitiesRequest(google.protobuf.message.Message):
     def __init__(
         self,
         *,
-        parent: builtins.str | None = ...,
-        terms: collections.abc.Iterable[exabel.api.data.v1.search_messages_pb2.SearchTerm] | None = ...,
-        options: exabel.api.data.v1.search_messages_pb2.SearchOptions | None = ...,
-        page_size: builtins.int | None = ...,
-        page_token: builtins.str | None = ...,
+        parent: _builtins.str | None = ...,
+        terms: _abc.Iterable[_search_messages_pb2.SearchTerm] | None = ...,
+        options: _search_messages_pb2.SearchOptions | None = ...,
+        page_size: _builtins.int | None = ...,
+        page_token: _builtins.str | None = ...,
     ) -> None: ...
-    def HasField(self, field_name: typing.Literal["options", b"options"]) -> builtins.bool: ...
-    def ClearField(self, field_name: typing.Literal["options", b"options", "page_size", b"page_size", "page_token", b"page_token", "parent", b"parent", "terms", b"terms"]) -> None: ...
+    _HasFieldArgType: _TypeAlias = _typing.Literal["options", b"options"]  # noqa: Y015
+    def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["options", b"options", "page_size", b"page_size", "page_token", b"page_token", "parent", b"parent", "terms", b"terms"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
-global___SearchEntitiesRequest = SearchEntitiesRequest
+Global___SearchEntitiesRequest: _TypeAlias = SearchEntitiesRequest  # noqa: Y015
 
-@typing.final
-class SearchEntitiesResponse(google.protobuf.message.Message):
+@_typing.final
+class SearchEntitiesResponse(_message.Message):
     """The response to searching for entities. Returns all entities matching the search parameters."""
 
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    DESCRIPTOR: _descriptor.Descriptor
 
-    @typing.final
-    class SearchResult(google.protobuf.message.Message):
+    @_typing.final
+    class SearchResult(_message.Message):
         """The result of one search."""
 
-        DESCRIPTOR: google.protobuf.descriptor.Descriptor
+        DESCRIPTOR: _descriptor.Descriptor
 
-        TERMS_FIELD_NUMBER: builtins.int
-        ENTITIES_FIELD_NUMBER: builtins.int
-        @property
-        def terms(self) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[exabel.api.data.v1.search_messages_pb2.SearchTerm]:
+        TERMS_FIELD_NUMBER: _builtins.int
+        ENTITIES_FIELD_NUMBER: _builtins.int
+        @_builtins.property
+        def terms(self) -> _containers.RepeatedCompositeFieldContainer[_search_messages_pb2.SearchTerm]:
             """The terms used for this search."""
 
-        @property
-        def entities(self) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[exabel.api.data.v1.entity_messages_pb2.Entity]:
+        @_builtins.property
+        def entities(self) -> _containers.RepeatedCompositeFieldContainer[_entity_messages_pb2.Entity]:
             """All entities matching one search, possibly empty if no entities matched this search."""
 
         def __init__(
             self,
             *,
-            terms: collections.abc.Iterable[exabel.api.data.v1.search_messages_pb2.SearchTerm] | None = ...,
-            entities: collections.abc.Iterable[exabel.api.data.v1.entity_messages_pb2.Entity] | None = ...,
+            terms: _abc.Iterable[_search_messages_pb2.SearchTerm] | None = ...,
+            entities: _abc.Iterable[_entity_messages_pb2.Entity] | None = ...,
         ) -> None: ...
-        def ClearField(self, field_name: typing.Literal["entities", b"entities", "terms", b"terms"]) -> None: ...
+        _ClearFieldArgType: _TypeAlias = _typing.Literal["entities", b"entities", "terms", b"terms"]  # noqa: Y015
+        def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
-    RESULTS_FIELD_NUMBER: builtins.int
-    NEXT_PAGE_TOKEN_FIELD_NUMBER: builtins.int
-    ENTITIES_FIELD_NUMBER: builtins.int
-    next_page_token: builtins.str
+    RESULTS_FIELD_NUMBER: _builtins.int
+    NEXT_PAGE_TOKEN_FIELD_NUMBER: _builtins.int
+    ENTITIES_FIELD_NUMBER: _builtins.int
+    next_page_token: _builtins.str
     """The page token where the search continues. Can be sent to a subsequent query. (Not implemented
     yet.)
     """
-    @property
-    def results(self) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[global___SearchEntitiesResponse.SearchResult]:
+    @_builtins.property
+    def results(self) -> _containers.RepeatedCompositeFieldContainer[Global___SearchEntitiesResponse.SearchResult]:
         """The results of each search, in the request order. Note that some consecutive terms are defined
         as belonging to one search query, and in these cases the number of results will be less than
         the number of search terms.
         """
 
-    @property
-    def entities(self) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[exabel.api.data.v1.entity_messages_pb2.Entity]:
+    @_builtins.property
+    def entities(self) -> _containers.RepeatedCompositeFieldContainer[_entity_messages_pb2.Entity]:
         """The resulting entities, concatenated from multiple search terms. (Kept for backwards
         compatibility.)
         """
@@ -442,10 +467,11 @@ class SearchEntitiesResponse(google.protobuf.message.Message):
     def __init__(
         self,
         *,
-        results: collections.abc.Iterable[global___SearchEntitiesResponse.SearchResult] | None = ...,
-        next_page_token: builtins.str | None = ...,
-        entities: collections.abc.Iterable[exabel.api.data.v1.entity_messages_pb2.Entity] | None = ...,
+        results: _abc.Iterable[Global___SearchEntitiesResponse.SearchResult] | None = ...,
+        next_page_token: _builtins.str | None = ...,
+        entities: _abc.Iterable[_entity_messages_pb2.Entity] | None = ...,
     ) -> None: ...
-    def ClearField(self, field_name: typing.Literal["entities", b"entities", "next_page_token", b"next_page_token", "results", b"results"]) -> None: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["entities", b"entities", "next_page_token", b"next_page_token", "results", b"results"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
-global___SearchEntitiesResponse = SearchEntitiesResponse
+Global___SearchEntitiesResponse: _TypeAlias = SearchEntitiesResponse  # noqa: Y015

@@ -645,7 +645,7 @@ class TimeSeriesApi(PageableResourceMixin):
         """
         if timestamp is None:
             return None
-        return timestamp_pb2.Timestamp(seconds=timestamp.value // 1000000000)
+        return timestamp_pb2.Timestamp(seconds=int(timestamp.timestamp()))
 
     @staticmethod
     def _handle_time_series_response(

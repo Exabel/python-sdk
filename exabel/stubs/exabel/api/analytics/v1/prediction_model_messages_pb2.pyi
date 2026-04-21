@@ -3,26 +3,26 @@
 isort:skip_file
 Copyright (c) 2022 Exabel AS. All rights reserved."""
 
-import builtins
-import google.protobuf.descriptor
-import google.protobuf.internal.enum_type_wrapper
-import google.protobuf.message
+from google.protobuf import descriptor as _descriptor
+from google.protobuf import message as _message
+from google.protobuf.internal import enum_type_wrapper as _enum_type_wrapper
+import builtins as _builtins
 import sys
-import typing
+import typing as _typing
 
 if sys.version_info >= (3, 10):
-    import typing as typing_extensions
+    from typing import TypeAlias as _TypeAlias
 else:
-    import typing_extensions
+    from typing_extensions import TypeAlias as _TypeAlias
 
-DESCRIPTOR: google.protobuf.descriptor.FileDescriptor
+DESCRIPTOR: _descriptor.FileDescriptor
 
 class _ModelConfiguration:
-    ValueType = typing.NewType("ValueType", builtins.int)
-    V: typing_extensions.TypeAlias = ValueType
+    ValueType = _typing.NewType("ValueType", _builtins.int)
+    V: _TypeAlias = ValueType  # noqa: Y015
 
-class _ModelConfigurationEnumTypeWrapper(google.protobuf.internal.enum_type_wrapper._EnumTypeWrapper[_ModelConfiguration.ValueType], builtins.type):
-    DESCRIPTOR: google.protobuf.descriptor.EnumDescriptor
+class _ModelConfigurationEnumTypeWrapper(_enum_type_wrapper._EnumTypeWrapper[_ModelConfiguration.ValueType], _builtins.type):
+    DESCRIPTOR: _descriptor.EnumDescriptor
     MODEL_CONFIGURATION_NOT_SPECIFIED: _ModelConfiguration.ValueType  # 0
     """Not specified - defaults to use the latest configuration."""
     LATEST: _ModelConfiguration.ValueType  # 1
@@ -45,48 +45,52 @@ ACTIVE: ModelConfiguration.ValueType  # 2
 """Configuration of the active run. A specific run may be activated from the prediction model user interface."""
 SPECIFIC_RUN: ModelConfiguration.ValueType  # 3
 """Configuration of a specific run. The run number must be specified as well."""
-global___ModelConfiguration = ModelConfiguration
+Global___ModelConfiguration: _TypeAlias = ModelConfiguration  # noqa: Y015
 
-@typing.final
-class PredictionModelRun(google.protobuf.message.Message):
+@_typing.final
+class PredictionModelRun(_message.Message):
     """A prediction model run."""
 
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    DESCRIPTOR: _descriptor.Descriptor
 
-    NAME_FIELD_NUMBER: builtins.int
-    DESCRIPTION_FIELD_NUMBER: builtins.int
-    CONFIGURATION_FIELD_NUMBER: builtins.int
-    CONFIGURATION_SOURCE_FIELD_NUMBER: builtins.int
-    AUTO_ACTIVATE_FIELD_NUMBER: builtins.int
-    name: builtins.str
+    NAME_FIELD_NUMBER: _builtins.int
+    DESCRIPTION_FIELD_NUMBER: _builtins.int
+    CONFIGURATION_FIELD_NUMBER: _builtins.int
+    CONFIGURATION_SOURCE_FIELD_NUMBER: _builtins.int
+    AUTO_ACTIVATE_FIELD_NUMBER: _builtins.int
+    name: _builtins.str
     """Unique resource name of the run, e.g. `predictionModels/123/runs/3`."""
-    description: builtins.str
+    description: _builtins.str
     """You may use this to record some notes about the run. This is shown in the prediction model
     interface when viewing all runs, and when viewing the results of a single run.
     """
-    configuration: global___ModelConfiguration.ValueType
+    configuration: Global___ModelConfiguration.ValueType
     """Which model configuration to use. If not specified, the latest model configuration is used.
     Note that the current signal library is always loaded.
     """
-    configuration_source: builtins.int
+    configuration_source: _builtins.int
     """Prediction model run number from which model configuration should be retrieved, e.g. `1`.
     Only relevant when `configuration` is set to `ModelConfiguration.SPECIFIC_RUN`.
     """
-    auto_activate: builtins.bool
+    auto_activate: _builtins.bool
     """Whether to automatically set this run as active once it completes.
     The run will not be activated if it fails for any of the entities in the model.
     """
     def __init__(
         self,
         *,
-        name: builtins.str | None = ...,
-        description: builtins.str | None = ...,
-        configuration: global___ModelConfiguration.ValueType | None = ...,
-        configuration_source: builtins.int | None = ...,
-        auto_activate: builtins.bool | None = ...,
+        name: _builtins.str | None = ...,
+        description: _builtins.str | None = ...,
+        configuration: Global___ModelConfiguration.ValueType | None = ...,
+        configuration_source: _builtins.int | None = ...,
+        auto_activate: _builtins.bool | None = ...,
     ) -> None: ...
-    def HasField(self, field_name: typing.Literal["_configuration_source", b"_configuration_source", "configuration_source", b"configuration_source"]) -> builtins.bool: ...
-    def ClearField(self, field_name: typing.Literal["_configuration_source", b"_configuration_source", "auto_activate", b"auto_activate", "configuration", b"configuration", "configuration_source", b"configuration_source", "description", b"description", "name", b"name"]) -> None: ...
-    def WhichOneof(self, oneof_group: typing.Literal["_configuration_source", b"_configuration_source"]) -> typing.Literal["configuration_source"] | None: ...
+    _HasFieldArgType: _TypeAlias = _typing.Literal["_configuration_source", b"_configuration_source", "configuration_source", b"configuration_source"]  # noqa: Y015
+    def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["_configuration_source", b"_configuration_source", "auto_activate", b"auto_activate", "configuration", b"configuration", "configuration_source", b"configuration_source", "description", b"description", "name", b"name"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
+    _WhichOneofReturnType__configuration_source: _TypeAlias = _typing.Literal["configuration_source"]  # noqa: Y015
+    _WhichOneofArgType__configuration_source: _TypeAlias = _typing.Literal["_configuration_source", b"_configuration_source"]  # noqa: Y015
+    def WhichOneof(self, oneof_group: _WhichOneofArgType__configuration_source) -> _WhichOneofReturnType__configuration_source | None: ...
 
-global___PredictionModelRun = PredictionModelRun
+Global___PredictionModelRun: _TypeAlias = PredictionModelRun  # noqa: Y015

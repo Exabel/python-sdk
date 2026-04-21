@@ -6,7 +6,7 @@ import warnings
 from . import prediction_model_messages_pb2 as exabel_dot_api_dot_analytics_dot_v1_dot_prediction__model__messages__pb2
 from . import prediction_model_service_pb2 as exabel_dot_api_dot_analytics_dot_v1_dot_prediction__model__service__pb2
 
-GRPC_GENERATED_VERSION = '1.76.0'
+GRPC_GENERATED_VERSION = '1.78.0'
 GRPC_VERSION = grpc.__version__
 _version_not_supported = False
 

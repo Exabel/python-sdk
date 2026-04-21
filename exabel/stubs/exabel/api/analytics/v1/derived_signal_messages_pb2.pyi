@@ -3,31 +3,30 @@
 isort:skip_file
 Copyright (c) 2022-2024 Exabel AS. All rights reserved."""
 
-import builtins
-from ...data.v1 import common_messages_pb2
-from ...math import aggregation_pb2
-from ...math import change_pb2
-import google.protobuf.descriptor
-import google.protobuf.internal.enum_type_wrapper
-import google.protobuf.message
-import google.protobuf.wrappers_pb2
+from ...data.v1 import common_messages_pb2 as _common_messages_pb2
+from ...math import aggregation_pb2 as _aggregation_pb2
+from ...math import change_pb2 as _change_pb2
+from google.protobuf import descriptor as _descriptor
+from google.protobuf import message as _message
+from google.protobuf import wrappers_pb2 as _wrappers_pb2
+from google.protobuf.internal import enum_type_wrapper as _enum_type_wrapper
+import builtins as _builtins
 import sys
-import typing
+import typing as _typing
 
 if sys.version_info >= (3, 10):
-    import typing as typing_extensions
+    from typing import TypeAlias as _TypeAlias
 else:
-    import typing_extensions
-from ..... import exabel
+    from typing_extensions import TypeAlias as _TypeAlias
 
-DESCRIPTOR: google.protobuf.descriptor.FileDescriptor
+DESCRIPTOR: _descriptor.FileDescriptor
 
 class _DerivedSignalUnit:
-    ValueType = typing.NewType("ValueType", builtins.int)
-    V: typing_extensions.TypeAlias = ValueType
+    ValueType = _typing.NewType("ValueType", _builtins.int)
+    V: _TypeAlias = ValueType  # noqa: Y015
 
-class _DerivedSignalUnitEnumTypeWrapper(google.protobuf.internal.enum_type_wrapper._EnumTypeWrapper[_DerivedSignalUnit.ValueType], builtins.type):
-    DESCRIPTOR: google.protobuf.descriptor.EnumDescriptor
+class _DerivedSignalUnitEnumTypeWrapper(_enum_type_wrapper._EnumTypeWrapper[_DerivedSignalUnit.ValueType], _builtins.type):
+    DESCRIPTOR: _descriptor.EnumDescriptor
     DERIVED_SIGNAL_UNIT_INVALID: _DerivedSignalUnit.ValueType  # 0
     """Signal unit was not specified."""
     NUMBER: _DerivedSignalUnit.ValueType  # 1
@@ -52,14 +51,14 @@ displayed as a percentage.
 """
 RATIO_DIFFERENCE: DerivedSignalUnit.ValueType  # 3
 """Signal represents a difference in a ratio. Values will be displayed as percentage points."""
-global___DerivedSignalUnit = DerivedSignalUnit
+Global___DerivedSignalUnit: _TypeAlias = DerivedSignalUnit  # noqa: Y015
 
 class _DerivedSignalType:
-    ValueType = typing.NewType("ValueType", builtins.int)
-    V: typing_extensions.TypeAlias = ValueType
+    ValueType = _typing.NewType("ValueType", _builtins.int)
+    V: _TypeAlias = ValueType  # noqa: Y015
 
-class _DerivedSignalTypeEnumTypeWrapper(google.protobuf.internal.enum_type_wrapper._EnumTypeWrapper[_DerivedSignalType.ValueType], builtins.type):
-    DESCRIPTOR: google.protobuf.descriptor.EnumDescriptor
+class _DerivedSignalTypeEnumTypeWrapper(_enum_type_wrapper._EnumTypeWrapper[_DerivedSignalType.ValueType], _builtins.type):
+    DESCRIPTOR: _descriptor.EnumDescriptor
     DERIVED_SIGNAL_TYPE_INVALID: _DerivedSignalType.ValueType  # 0
     """Signal type was not specified."""
     DERIVED_SIGNAL: _DerivedSignalType.ValueType  # 1
@@ -96,29 +95,29 @@ PERSISTED_SIGNAL: DerivedSignalType.ValueType  # 4
 """A persisted signal that is evaluated and cached daily.
 The expression refers to a raw signal and cannot be modified.
 """
-global___DerivedSignalType = DerivedSignalType
+Global___DerivedSignalType: _TypeAlias = DerivedSignalType  # noqa: Y015
 
-@typing.final
-class DerivedSignal(google.protobuf.message.Message):
+@_typing.final
+class DerivedSignal(_message.Message):
     """A derived signal.
 
     As opposed to raw signals which represents time series on entities, a derived signal
     represents a calculation through a DSL expression.
     """
 
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    DESCRIPTOR: _descriptor.Descriptor
 
-    NAME_FIELD_NUMBER: builtins.int
-    LABEL_FIELD_NUMBER: builtins.int
-    EXPRESSION_FIELD_NUMBER: builtins.int
-    DESCRIPTION_FIELD_NUMBER: builtins.int
-    DISPLAY_NAME_FIELD_NUMBER: builtins.int
-    METADATA_FIELD_NUMBER: builtins.int
-    name: builtins.str
+    NAME_FIELD_NUMBER: _builtins.int
+    LABEL_FIELD_NUMBER: _builtins.int
+    EXPRESSION_FIELD_NUMBER: _builtins.int
+    DESCRIPTION_FIELD_NUMBER: _builtins.int
+    DISPLAY_NAME_FIELD_NUMBER: _builtins.int
+    METADATA_FIELD_NUMBER: _builtins.int
+    name: _builtins.str
     """Unique resource name of the derived signal, e.g. `derivedSignals/123`. In the "Create derived
     signal" method, this is ignored and may be left empty.
     """
-    label: builtins.str
+    label: _builtins.str
     """Label of the derived signal. This appears in the Library when browsing for derived signals,
     and when a derived signal is used in any Exabel feature (e.g. chart, dashboard). It can also
     be used to reference this derived signal in a second derived signal.
@@ -126,35 +125,37 @@ class DerivedSignal(google.protobuf.message.Message):
     This is required when creating a derived signal. Must be a valid Python identifier between
     1-100 characters, match the regex `^[a-zA-Z_]\\w{0,99}$`, and cannot be a Python keyword.
     """
-    expression: builtins.str
+    expression: _builtins.str
     """A DSL expression describing the signal transformations to apply. For more information, see the
     DSL reference.
     """
-    description: builtins.str
+    description: _builtins.str
     """Appears in the Exabel Library, when browsing for derived signals."""
-    display_name: builtins.str
+    display_name: _builtins.str
     """The human readable name of the signal."""
-    @property
-    def metadata(self) -> global___DerivedSignalMetadata:
+    @_builtins.property
+    def metadata(self) -> Global___DerivedSignalMetadata:
         """Additional metadata to control formatting (decimals and units)."""
 
     def __init__(
         self,
         *,
-        name: builtins.str | None = ...,
-        label: builtins.str | None = ...,
-        expression: builtins.str | None = ...,
-        description: builtins.str | None = ...,
-        display_name: builtins.str | None = ...,
-        metadata: global___DerivedSignalMetadata | None = ...,
+        name: _builtins.str | None = ...,
+        label: _builtins.str | None = ...,
+        expression: _builtins.str | None = ...,
+        description: _builtins.str | None = ...,
+        display_name: _builtins.str | None = ...,
+        metadata: Global___DerivedSignalMetadata | None = ...,
     ) -> None: ...
-    def HasField(self, field_name: typing.Literal["metadata", b"metadata"]) -> builtins.bool: ...
-    def ClearField(self, field_name: typing.Literal["description", b"description", "display_name", b"display_name", "expression", b"expression", "label", b"label", "metadata", b"metadata", "name", b"name"]) -> None: ...
+    _HasFieldArgType: _TypeAlias = _typing.Literal["metadata", b"metadata"]  # noqa: Y015
+    def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["description", b"description", "display_name", b"display_name", "expression", b"expression", "label", b"label", "metadata", b"metadata", "name", b"name"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
-global___DerivedSignal = DerivedSignal
+Global___DerivedSignal: _TypeAlias = DerivedSignal  # noqa: Y015
 
-@typing.final
-class DerivedSignalMetadata(google.protobuf.message.Message):
+@_typing.final
+class DerivedSignalMetadata(_message.Message):
     """Additional metadata to control formatting (decimals and units).
 
     Note: this is only used today when a signal is added to a dashboard table. This will be phased
@@ -162,44 +163,46 @@ class DerivedSignalMetadata(google.protobuf.message.Message):
     where signals are used.
     """
 
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    DESCRIPTOR: _descriptor.Descriptor
 
-    DECIMALS_FIELD_NUMBER: builtins.int
-    UNIT_FIELD_NUMBER: builtins.int
-    TYPE_FIELD_NUMBER: builtins.int
-    DOWNSAMPLING_METHOD_FIELD_NUMBER: builtins.int
-    CHANGE_FIELD_NUMBER: builtins.int
-    ENTITY_SET_FIELD_NUMBER: builtins.int
-    unit: global___DerivedSignalUnit.ValueType
+    DECIMALS_FIELD_NUMBER: _builtins.int
+    UNIT_FIELD_NUMBER: _builtins.int
+    TYPE_FIELD_NUMBER: _builtins.int
+    DOWNSAMPLING_METHOD_FIELD_NUMBER: _builtins.int
+    CHANGE_FIELD_NUMBER: _builtins.int
+    ENTITY_SET_FIELD_NUMBER: _builtins.int
+    unit: Global___DerivedSignalUnit.ValueType
     """Unit of the signal."""
-    type: global___DerivedSignalType.ValueType
+    type: Global___DerivedSignalType.ValueType
     """Type of the signal. Not relevant for external use."""
-    downsampling_method: exabel.api.math.aggregation_pb2.Aggregation.ValueType
+    downsampling_method: _aggregation_pb2.Aggregation.ValueType
     """The default downsampling method to use when this signal is re-sampled into larger intervals.
     When two or more values in an interval needs to be aggregated into a single value, specifies
     how they are combined.
     """
-    change: exabel.api.math.change_pb2.Change.ValueType
+    change: _change_pb2.Change.ValueType
     """The method used to calculate changes in this signal."""
-    @property
-    def decimals(self) -> google.protobuf.wrappers_pb2.Int32Value:
+    @_builtins.property
+    def decimals(self) -> _wrappers_pb2.Int32Value:
         """Number of decimals to use when displaying numeric values."""
 
-    @property
-    def entity_set(self) -> exabel.api.data.v1.common_messages_pb2.EntitySet:
+    @_builtins.property
+    def entity_set(self) -> _common_messages_pb2.EntitySet:
         """The set of entities that this signal is valid for."""
 
     def __init__(
         self,
         *,
-        decimals: google.protobuf.wrappers_pb2.Int32Value | None = ...,
-        unit: global___DerivedSignalUnit.ValueType | None = ...,
-        type: global___DerivedSignalType.ValueType | None = ...,
-        downsampling_method: exabel.api.math.aggregation_pb2.Aggregation.ValueType | None = ...,
-        change: exabel.api.math.change_pb2.Change.ValueType | None = ...,
-        entity_set: exabel.api.data.v1.common_messages_pb2.EntitySet | None = ...,
+        decimals: _wrappers_pb2.Int32Value | None = ...,
+        unit: Global___DerivedSignalUnit.ValueType | None = ...,
+        type: Global___DerivedSignalType.ValueType | None = ...,
+        downsampling_method: _aggregation_pb2.Aggregation.ValueType | None = ...,
+        change: _change_pb2.Change.ValueType | None = ...,
+        entity_set: _common_messages_pb2.EntitySet | None = ...,
     ) -> None: ...
-    def HasField(self, field_name: typing.Literal["decimals", b"decimals", "entity_set", b"entity_set"]) -> builtins.bool: ...
-    def ClearField(self, field_name: typing.Literal["change", b"change", "decimals", b"decimals", "downsampling_method", b"downsampling_method", "entity_set", b"entity_set", "type", b"type", "unit", b"unit"]) -> None: ...
+    _HasFieldArgType: _TypeAlias = _typing.Literal["decimals", b"decimals", "entity_set", b"entity_set"]  # noqa: Y015
+    def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["change", b"change", "decimals", b"decimals", "downsampling_method", b"downsampling_method", "entity_set", b"entity_set", "type", b"type", "unit", b"unit"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
-global___DerivedSignalMetadata = DerivedSignalMetadata
+Global___DerivedSignalMetadata: _TypeAlias = DerivedSignalMetadata  # noqa: Y015

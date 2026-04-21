@@ -44,7 +44,7 @@ class TestTimeSeriesApi:
             series,
             TimeSeries._time_series_points_to_series(points),
         )
-        base_time = pd.Timestamp("2021-01-01").value // 1000000000
+        base_time = int(pd.Timestamp("2021-01-01", tz="UTC").timestamp())
         assert 1609459200 == base_time
         expected_points = [
             TimeSeriesPoint(

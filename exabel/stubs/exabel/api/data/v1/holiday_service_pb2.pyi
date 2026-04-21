@@ -3,92 +3,100 @@
 isort:skip_file
 Copyright (c) 2025 Exabel AS. All rights reserved."""
 
-import builtins
-import collections.abc
-from . import holiday_messages_pb2
-import google.protobuf.descriptor
-import google.protobuf.internal.containers
-import google.protobuf.message
-import typing
-from ..... import exabel
+from collections import abc as _abc
+from . import holiday_messages_pb2 as _holiday_messages_pb2
+from google.protobuf import descriptor as _descriptor
+from google.protobuf import message as _message
+from google.protobuf.internal import containers as _containers
+import builtins as _builtins
+import sys
+import typing as _typing
 
-DESCRIPTOR: google.protobuf.descriptor.FileDescriptor
+if sys.version_info >= (3, 10):
+    from typing import TypeAlias as _TypeAlias
+else:
+    from typing_extensions import TypeAlias as _TypeAlias
 
-@typing.final
-class ListHolidaySpecificationsRequest(google.protobuf.message.Message):
+DESCRIPTOR: _descriptor.FileDescriptor
+
+@_typing.final
+class ListHolidaySpecificationsRequest(_message.Message):
     """Request to list holiday specifications."""
 
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    DESCRIPTOR: _descriptor.Descriptor
 
-    PAGE_SIZE_FIELD_NUMBER: builtins.int
-    PAGE_TOKEN_FIELD_NUMBER: builtins.int
-    page_size: builtins.int
+    PAGE_SIZE_FIELD_NUMBER: _builtins.int
+    PAGE_TOKEN_FIELD_NUMBER: _builtins.int
+    page_size: _builtins.int
     """Maximum number of results to return. If not set, the server will pick an appropriate default."""
-    page_token: builtins.str
+    page_token: _builtins.str
     """Page token for pagination."""
     def __init__(
         self,
         *,
-        page_size: builtins.int | None = ...,
-        page_token: builtins.str | None = ...,
+        page_size: _builtins.int | None = ...,
+        page_token: _builtins.str | None = ...,
     ) -> None: ...
-    def ClearField(self, field_name: typing.Literal["page_size", b"page_size", "page_token", b"page_token"]) -> None: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["page_size", b"page_size", "page_token", b"page_token"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
-global___ListHolidaySpecificationsRequest = ListHolidaySpecificationsRequest
+Global___ListHolidaySpecificationsRequest: _TypeAlias = ListHolidaySpecificationsRequest  # noqa: Y015
 
-@typing.final
-class ListHolidaySpecificationsResponse(google.protobuf.message.Message):
+@_typing.final
+class ListHolidaySpecificationsResponse(_message.Message):
     """Response from listing holiday specifications."""
 
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    DESCRIPTOR: _descriptor.Descriptor
 
-    HOLIDAY_SPECIFICATIONS_FIELD_NUMBER: builtins.int
-    NEXT_PAGE_TOKEN_FIELD_NUMBER: builtins.int
-    next_page_token: builtins.str
+    HOLIDAY_SPECIFICATIONS_FIELD_NUMBER: _builtins.int
+    NEXT_PAGE_TOKEN_FIELD_NUMBER: _builtins.int
+    next_page_token: _builtins.str
     """Token to retrieve the next page of results, or empty if there are no more results."""
-    @property
-    def holiday_specifications(self) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[exabel.api.data.v1.holiday_messages_pb2.HolidaySpecification]:
+    @_builtins.property
+    def holiday_specifications(self) -> _containers.RepeatedCompositeFieldContainer[_holiday_messages_pb2.HolidaySpecification]:
         """List of holiday specifications."""
 
     def __init__(
         self,
         *,
-        holiday_specifications: collections.abc.Iterable[exabel.api.data.v1.holiday_messages_pb2.HolidaySpecification] | None = ...,
-        next_page_token: builtins.str | None = ...,
+        holiday_specifications: _abc.Iterable[_holiday_messages_pb2.HolidaySpecification] | None = ...,
+        next_page_token: _builtins.str | None = ...,
     ) -> None: ...
-    def ClearField(self, field_name: typing.Literal["holiday_specifications", b"holiday_specifications", "next_page_token", b"next_page_token"]) -> None: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["holiday_specifications", b"holiday_specifications", "next_page_token", b"next_page_token"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
-global___ListHolidaySpecificationsResponse = ListHolidaySpecificationsResponse
+Global___ListHolidaySpecificationsResponse: _TypeAlias = ListHolidaySpecificationsResponse  # noqa: Y015
 
-@typing.final
-class GetHolidaySpecificationRequest(google.protobuf.message.Message):
+@_typing.final
+class GetHolidaySpecificationRequest(_message.Message):
     """Request to get a holiday specification."""
 
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    DESCRIPTOR: _descriptor.Descriptor
 
-    NAME_FIELD_NUMBER: builtins.int
-    name: builtins.str
+    NAME_FIELD_NUMBER: _builtins.int
+    name: _builtins.str
     """Resource name of the holiday specification.
     Format: "holidaySpecifications/123"
     """
     def __init__(
         self,
         *,
-        name: builtins.str | None = ...,
+        name: _builtins.str | None = ...,
     ) -> None: ...
-    def ClearField(self, field_name: typing.Literal["name", b"name"]) -> None: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["name", b"name"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
-global___GetHolidaySpecificationRequest = GetHolidaySpecificationRequest
+Global___GetHolidaySpecificationRequest: _TypeAlias = GetHolidaySpecificationRequest  # noqa: Y015
 
-@typing.final
-class CreateHolidaySpecificationRequest(google.protobuf.message.Message):
+@_typing.final
+class CreateHolidaySpecificationRequest(_message.Message):
     """Request to create a holiday specification."""
 
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    DESCRIPTOR: _descriptor.Descriptor
 
-    HOLIDAY_SPECIFICATION_FIELD_NUMBER: builtins.int
-    @property
-    def holiday_specification(self) -> exabel.api.data.v1.holiday_messages_pb2.HolidaySpecification:
+    HOLIDAY_SPECIFICATION_FIELD_NUMBER: _builtins.int
+    @_builtins.property
+    def holiday_specification(self) -> _holiday_messages_pb2.HolidaySpecification:
         """The holiday specification to create.
         The name field will be ignored and a new resource name will be assigned.
         """
@@ -96,22 +104,24 @@ class CreateHolidaySpecificationRequest(google.protobuf.message.Message):
     def __init__(
         self,
         *,
-        holiday_specification: exabel.api.data.v1.holiday_messages_pb2.HolidaySpecification | None = ...,
+        holiday_specification: _holiday_messages_pb2.HolidaySpecification | None = ...,
     ) -> None: ...
-    def HasField(self, field_name: typing.Literal["holiday_specification", b"holiday_specification"]) -> builtins.bool: ...
-    def ClearField(self, field_name: typing.Literal["holiday_specification", b"holiday_specification"]) -> None: ...
+    _HasFieldArgType: _TypeAlias = _typing.Literal["holiday_specification", b"holiday_specification"]  # noqa: Y015
+    def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["holiday_specification", b"holiday_specification"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
-global___CreateHolidaySpecificationRequest = CreateHolidaySpecificationRequest
+Global___CreateHolidaySpecificationRequest: _TypeAlias = CreateHolidaySpecificationRequest  # noqa: Y015
 
-@typing.final
-class UpdateHolidaySpecificationRequest(google.protobuf.message.Message):
+@_typing.final
+class UpdateHolidaySpecificationRequest(_message.Message):
     """Request to update a holiday specification."""
 
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    DESCRIPTOR: _descriptor.Descriptor
 
-    HOLIDAY_SPECIFICATION_FIELD_NUMBER: builtins.int
-    @property
-    def holiday_specification(self) -> exabel.api.data.v1.holiday_messages_pb2.HolidaySpecification:
+    HOLIDAY_SPECIFICATION_FIELD_NUMBER: _builtins.int
+    @_builtins.property
+    def holiday_specification(self) -> _holiday_messages_pb2.HolidaySpecification:
         """The holiday specification to update.
         The name field must be set and must match an existing holiday specification.
         """
@@ -119,29 +129,32 @@ class UpdateHolidaySpecificationRequest(google.protobuf.message.Message):
     def __init__(
         self,
         *,
-        holiday_specification: exabel.api.data.v1.holiday_messages_pb2.HolidaySpecification | None = ...,
+        holiday_specification: _holiday_messages_pb2.HolidaySpecification | None = ...,
     ) -> None: ...
-    def HasField(self, field_name: typing.Literal["holiday_specification", b"holiday_specification"]) -> builtins.bool: ...
-    def ClearField(self, field_name: typing.Literal["holiday_specification", b"holiday_specification"]) -> None: ...
+    _HasFieldArgType: _TypeAlias = _typing.Literal["holiday_specification", b"holiday_specification"]  # noqa: Y015
+    def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["holiday_specification", b"holiday_specification"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
-global___UpdateHolidaySpecificationRequest = UpdateHolidaySpecificationRequest
+Global___UpdateHolidaySpecificationRequest: _TypeAlias = UpdateHolidaySpecificationRequest  # noqa: Y015
 
-@typing.final
-class DeleteHolidaySpecificationRequest(google.protobuf.message.Message):
+@_typing.final
+class DeleteHolidaySpecificationRequest(_message.Message):
     """Request to delete a holiday specification."""
 
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    DESCRIPTOR: _descriptor.Descriptor
 
-    NAME_FIELD_NUMBER: builtins.int
-    name: builtins.str
+    NAME_FIELD_NUMBER: _builtins.int
+    name: _builtins.str
     """Resource name of the holiday specification to delete.
     Format: "holidaySpecifications/123"
     """
     def __init__(
         self,
         *,
-        name: builtins.str | None = ...,
+        name: _builtins.str | None = ...,
     ) -> None: ...
-    def ClearField(self, field_name: typing.Literal["name", b"name"]) -> None: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["name", b"name"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
-global___DeleteHolidaySpecificationRequest = DeleteHolidaySpecificationRequest
+Global___DeleteHolidaySpecificationRequest: _TypeAlias = DeleteHolidaySpecificationRequest  # noqa: Y015

@@ -3,92 +3,112 @@
 isort:skip_file
 Copyright (c) 2025 Exabel AS. All rights reserved."""
 
-import builtins
-import collections.abc
-from . import kpi_messages_pb2
-import google.protobuf.descriptor
-import google.protobuf.internal.containers
-import google.protobuf.message
-import typing
-from ..... import exabel
+from collections import abc as _abc
+from . import kpi_messages_pb2 as _kpi_messages_pb2
+from google.protobuf import descriptor as _descriptor
+from google.protobuf import message as _message
+from google.protobuf.internal import containers as _containers
+import builtins as _builtins
+import sys
+import typing as _typing
 
-DESCRIPTOR: google.protobuf.descriptor.FileDescriptor
+if sys.version_info >= (3, 10):
+    from typing import TypeAlias as _TypeAlias
+else:
+    from typing_extensions import TypeAlias as _TypeAlias
 
-@typing.final
-class ListKpiMappingResultsRequest(google.protobuf.message.Message):
+if sys.version_info >= (3, 13):
+    from warnings import deprecated as _deprecated
+else:
+    from typing_extensions import deprecated as _deprecated
+
+DESCRIPTOR: _descriptor.FileDescriptor
+
+@_typing.final
+class ListKpiMappingResultsRequest(_message.Message):
     """Request to ListKpiMappingResults."""
 
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    DESCRIPTOR: _descriptor.Descriptor
 
-    PARENT_FIELD_NUMBER: builtins.int
-    PAGE_SIZE_FIELD_NUMBER: builtins.int
-    PAGE_TOKEN_FIELD_NUMBER: builtins.int
-    parent: builtins.str
+    PARENT_FIELD_NUMBER: _builtins.int
+    PAGE_SIZE_FIELD_NUMBER: _builtins.int
+    PAGE_TOKEN_FIELD_NUMBER: _builtins.int
+    parent: _builtins.str
     """Resource name of the KPI mapping to list results of.
     Example: `kpiMappings/123`.
     """
-    page_size: builtins.int
+    page_size: _builtins.int
     """Maximum number of companies to return. Defaults to 20, and the maximum allowed value is 100."""
-    page_token: builtins.str
+    page_token: _builtins.str
     """Token for a specific page of results, as returned from a previous list request with the same
     query parameters.
     """
     def __init__(
         self,
         *,
-        parent: builtins.str | None = ...,
-        page_size: builtins.int | None = ...,
-        page_token: builtins.str | None = ...,
+        parent: _builtins.str | None = ...,
+        page_size: _builtins.int | None = ...,
+        page_token: _builtins.str | None = ...,
     ) -> None: ...
-    def ClearField(self, field_name: typing.Literal["page_size", b"page_size", "page_token", b"page_token", "parent", b"parent"]) -> None: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["page_size", b"page_size", "page_token", b"page_token", "parent", b"parent"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
-global___ListKpiMappingResultsRequest = ListKpiMappingResultsRequest
+Global___ListKpiMappingResultsRequest: _TypeAlias = ListKpiMappingResultsRequest  # noqa: Y015
 
-@typing.final
-class ListKpiMappingResultsResponse(google.protobuf.message.Message):
+@_typing.final
+class ListKpiMappingResultsResponse(_message.Message):
     """Response from ListKpiMappingResults."""
 
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    DESCRIPTOR: _descriptor.Descriptor
 
-    RESULTS_FIELD_NUMBER: builtins.int
-    NEXT_PAGE_TOKEN_FIELD_NUMBER: builtins.int
-    TOTAL_SIZE_FIELD_NUMBER: builtins.int
-    next_page_token: builtins.str
+    RESULTS_FIELD_NUMBER: _builtins.int
+    NEXT_PAGE_TOKEN_FIELD_NUMBER: _builtins.int
+    TOTAL_SIZE_FIELD_NUMBER: _builtins.int
+    next_page_token: _builtins.str
     """Token for the next page of results, which can be sent to a subsequent list query.
     The end of the list is reached when the token is empty.
     """
-    total_size: builtins.int
+    total_size: _builtins.int
     """Total number of rows, irrespective of paging."""
-    @property
-    def results(self) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[exabel.api.analytics.v1.kpi_messages_pb2.CompanyKpiMappingResults]:
+    @_builtins.property
+    def results(self) -> _containers.RepeatedCompositeFieldContainer[_kpi_messages_pb2.CompanyKpiMappingResults]:
         """List of results, one for each company."""
 
     def __init__(
         self,
         *,
-        results: collections.abc.Iterable[exabel.api.analytics.v1.kpi_messages_pb2.CompanyKpiMappingResults] | None = ...,
-        next_page_token: builtins.str | None = ...,
-        total_size: builtins.int | None = ...,
+        results: _abc.Iterable[_kpi_messages_pb2.CompanyKpiMappingResults] | None = ...,
+        next_page_token: _builtins.str | None = ...,
+        total_size: _builtins.int | None = ...,
     ) -> None: ...
-    def ClearField(self, field_name: typing.Literal["next_page_token", b"next_page_token", "results", b"results", "total_size", b"total_size"]) -> None: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["next_page_token", b"next_page_token", "results", b"results", "total_size", b"total_size"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
-global___ListKpiMappingResultsResponse = ListKpiMappingResultsResponse
+Global___ListKpiMappingResultsResponse: _TypeAlias = ListKpiMappingResultsResponse  # noqa: Y015
 
-@typing.final
-class ListCompanyBaseModelResultsRequest(google.protobuf.message.Message):
+@_typing.final
+class ListCompanyBaseModelResultsRequest(_message.Message):
     """Request to ListCompanyBaseModelResults."""
 
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    DESCRIPTOR: _descriptor.Descriptor
 
-    PARENT_FIELD_NUMBER: builtins.int
-    PERIOD_FIELD_NUMBER: builtins.int
-    KPI_SOURCE_FIELD_NUMBER: builtins.int
-    parent: builtins.str
+    PARENT_FIELD_NUMBER: _builtins.int
+    PERIOD_FIELD_NUMBER: _builtins.int
+    KPI_SOURCE_FIELD_NUMBER: _builtins.int
+    parent: _builtins.str
     """Resource name of the company get results for."""
-    kpi_source: exabel.api.analytics.v1.kpi_messages_pb2.KpiSource.ValueType
-    """This field is no longer in use."""
-    @property
-    def period(self) -> exabel.api.analytics.v1.kpi_messages_pb2.FiscalPeriodSelector:
+    @_builtins.property
+    @_deprecated("""This field has been marked as deprecated using proto field options.""")
+    def kpi_source(self) -> _kpi_messages_pb2.KpiSource.ValueType:
+        """This field is no longer in use."""
+
+    @kpi_source.setter
+    @_deprecated("""This field has been marked as deprecated using proto field options.""")
+    def kpi_source(self, value: _kpi_messages_pb2.KpiSource.ValueType) -> None:
+        """This field is no longer in use."""
+
+    @_builtins.property
+    def period(self) -> _kpi_messages_pb2.FiscalPeriodSelector:
         """The fiscal period and frequency to get results for.
         If not specified, `RelativeFiscalPeriodSelector.CURRENT` is used and frequency is
         determined based on KPI counts. The frequency with the most number of KPIs with
@@ -98,57 +118,69 @@ class ListCompanyBaseModelResultsRequest(google.protobuf.message.Message):
     def __init__(
         self,
         *,
-        parent: builtins.str | None = ...,
-        period: exabel.api.analytics.v1.kpi_messages_pb2.FiscalPeriodSelector | None = ...,
-        kpi_source: exabel.api.analytics.v1.kpi_messages_pb2.KpiSource.ValueType | None = ...,
+        parent: _builtins.str | None = ...,
+        period: _kpi_messages_pb2.FiscalPeriodSelector | None = ...,
+        kpi_source: _kpi_messages_pb2.KpiSource.ValueType | None = ...,
     ) -> None: ...
-    def HasField(self, field_name: typing.Literal["period", b"period"]) -> builtins.bool: ...
-    def ClearField(self, field_name: typing.Literal["kpi_source", b"kpi_source", "parent", b"parent", "period", b"period"]) -> None: ...
+    _HasFieldArgType: _TypeAlias = _typing.Literal["period", b"period"]  # noqa: Y015
+    def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["kpi_source", b"kpi_source", "parent", b"parent", "period", b"period"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
-global___ListCompanyBaseModelResultsRequest = ListCompanyBaseModelResultsRequest
+Global___ListCompanyBaseModelResultsRequest: _TypeAlias = ListCompanyBaseModelResultsRequest  # noqa: Y015
 
-@typing.final
-class ListCompanyBaseModelResultsResponse(google.protobuf.message.Message):
+@_typing.final
+class ListCompanyBaseModelResultsResponse(_message.Message):
     """Response from ListCompanyBaseModelResults."""
 
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    DESCRIPTOR: _descriptor.Descriptor
 
-    RESULTS_FIELD_NUMBER: builtins.int
-    PERIOD_FIELD_NUMBER: builtins.int
-    @property
-    def results(self) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[exabel.api.analytics.v1.kpi_messages_pb2.CompanyKpiModelResult]:
+    RESULTS_FIELD_NUMBER: _builtins.int
+    PERIOD_FIELD_NUMBER: _builtins.int
+    @_builtins.property
+    def results(self) -> _containers.RepeatedCompositeFieldContainer[_kpi_messages_pb2.CompanyKpiModelResult]:
         """List of results."""
 
-    @property
-    def period(self) -> exabel.api.analytics.v1.kpi_messages_pb2.FiscalPeriod:
+    @_builtins.property
+    def period(self) -> _kpi_messages_pb2.FiscalPeriod:
         """Fiscal period representing the period the results are for."""
 
     def __init__(
         self,
         *,
-        results: collections.abc.Iterable[exabel.api.analytics.v1.kpi_messages_pb2.CompanyKpiModelResult] | None = ...,
-        period: exabel.api.analytics.v1.kpi_messages_pb2.FiscalPeriod | None = ...,
+        results: _abc.Iterable[_kpi_messages_pb2.CompanyKpiModelResult] | None = ...,
+        period: _kpi_messages_pb2.FiscalPeriod | None = ...,
     ) -> None: ...
-    def HasField(self, field_name: typing.Literal["period", b"period"]) -> builtins.bool: ...
-    def ClearField(self, field_name: typing.Literal["period", b"period", "results", b"results"]) -> None: ...
+    _HasFieldArgType: _TypeAlias = _typing.Literal["period", b"period"]  # noqa: Y015
+    def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["period", b"period", "results", b"results"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
-global___ListCompanyBaseModelResultsResponse = ListCompanyBaseModelResultsResponse
+Global___ListCompanyBaseModelResultsResponse: _TypeAlias = ListCompanyBaseModelResultsResponse  # noqa: Y015
 
-@typing.final
-class ListCompanyHierarchicalModelResultsRequest(google.protobuf.message.Message):
+@_typing.final
+class ListCompanyHierarchicalModelResultsRequest(_message.Message):
     """Request to ListCompanyHierarchicalModelResults."""
 
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    DESCRIPTOR: _descriptor.Descriptor
 
-    PARENT_FIELD_NUMBER: builtins.int
-    PERIOD_FIELD_NUMBER: builtins.int
-    KPI_SOURCE_FIELD_NUMBER: builtins.int
-    parent: builtins.str
+    PARENT_FIELD_NUMBER: _builtins.int
+    PERIOD_FIELD_NUMBER: _builtins.int
+    KPI_SOURCE_FIELD_NUMBER: _builtins.int
+    parent: _builtins.str
     """Resource name of the company get results for."""
-    kpi_source: exabel.api.analytics.v1.kpi_messages_pb2.KpiSource.ValueType
-    """This field is no longer in use."""
-    @property
-    def period(self) -> exabel.api.analytics.v1.kpi_messages_pb2.FiscalPeriodSelector:
+    @_builtins.property
+    @_deprecated("""This field has been marked as deprecated using proto field options.""")
+    def kpi_source(self) -> _kpi_messages_pb2.KpiSource.ValueType:
+        """This field is no longer in use."""
+
+    @kpi_source.setter
+    @_deprecated("""This field has been marked as deprecated using proto field options.""")
+    def kpi_source(self, value: _kpi_messages_pb2.KpiSource.ValueType) -> None:
+        """This field is no longer in use."""
+
+    @_builtins.property
+    def period(self) -> _kpi_messages_pb2.FiscalPeriodSelector:
         """The fiscal period and frequency to get results for.
         If not specified, `RelativeFiscalPeriodSelector.CURRENT` is used and frequency is
         determined based on KPI counts. The frequency with the most number of KPIs with
@@ -158,60 +190,64 @@ class ListCompanyHierarchicalModelResultsRequest(google.protobuf.message.Message
     def __init__(
         self,
         *,
-        parent: builtins.str | None = ...,
-        period: exabel.api.analytics.v1.kpi_messages_pb2.FiscalPeriodSelector | None = ...,
-        kpi_source: exabel.api.analytics.v1.kpi_messages_pb2.KpiSource.ValueType | None = ...,
+        parent: _builtins.str | None = ...,
+        period: _kpi_messages_pb2.FiscalPeriodSelector | None = ...,
+        kpi_source: _kpi_messages_pb2.KpiSource.ValueType | None = ...,
     ) -> None: ...
-    def HasField(self, field_name: typing.Literal["period", b"period"]) -> builtins.bool: ...
-    def ClearField(self, field_name: typing.Literal["kpi_source", b"kpi_source", "parent", b"parent", "period", b"period"]) -> None: ...
+    _HasFieldArgType: _TypeAlias = _typing.Literal["period", b"period"]  # noqa: Y015
+    def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["kpi_source", b"kpi_source", "parent", b"parent", "period", b"period"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
-global___ListCompanyHierarchicalModelResultsRequest = ListCompanyHierarchicalModelResultsRequest
+Global___ListCompanyHierarchicalModelResultsRequest: _TypeAlias = ListCompanyHierarchicalModelResultsRequest  # noqa: Y015
 
-@typing.final
-class ListCompanyHierarchicalModelResultsResponse(google.protobuf.message.Message):
+@_typing.final
+class ListCompanyHierarchicalModelResultsResponse(_message.Message):
     """Response from ListCompanyHierarchicalModelResults."""
 
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    DESCRIPTOR: _descriptor.Descriptor
 
-    RESULTS_FIELD_NUMBER: builtins.int
-    KPI_HIERARCHY_FIELD_NUMBER: builtins.int
-    PERIOD_FIELD_NUMBER: builtins.int
-    @property
-    def results(self) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[exabel.api.analytics.v1.kpi_messages_pb2.CompanyKpiModelResult]:
+    RESULTS_FIELD_NUMBER: _builtins.int
+    KPI_HIERARCHY_FIELD_NUMBER: _builtins.int
+    PERIOD_FIELD_NUMBER: _builtins.int
+    @_builtins.property
+    def results(self) -> _containers.RepeatedCompositeFieldContainer[_kpi_messages_pb2.CompanyKpiModelResult]:
         """List of results."""
 
-    @property
-    def kpi_hierarchy(self) -> exabel.api.analytics.v1.kpi_messages_pb2.KpiHierarchy:
+    @_builtins.property
+    def kpi_hierarchy(self) -> _kpi_messages_pb2.KpiHierarchy:
         """The KPI hierarchy for the company."""
 
-    @property
-    def period(self) -> exabel.api.analytics.v1.kpi_messages_pb2.FiscalPeriod:
+    @_builtins.property
+    def period(self) -> _kpi_messages_pb2.FiscalPeriod:
         """Fiscal period representing the period the results are for."""
 
     def __init__(
         self,
         *,
-        results: collections.abc.Iterable[exabel.api.analytics.v1.kpi_messages_pb2.CompanyKpiModelResult] | None = ...,
-        kpi_hierarchy: exabel.api.analytics.v1.kpi_messages_pb2.KpiHierarchy | None = ...,
-        period: exabel.api.analytics.v1.kpi_messages_pb2.FiscalPeriod | None = ...,
+        results: _abc.Iterable[_kpi_messages_pb2.CompanyKpiModelResult] | None = ...,
+        kpi_hierarchy: _kpi_messages_pb2.KpiHierarchy | None = ...,
+        period: _kpi_messages_pb2.FiscalPeriod | None = ...,
     ) -> None: ...
-    def HasField(self, field_name: typing.Literal["kpi_hierarchy", b"kpi_hierarchy", "period", b"period"]) -> builtins.bool: ...
-    def ClearField(self, field_name: typing.Literal["kpi_hierarchy", b"kpi_hierarchy", "period", b"period", "results", b"results"]) -> None: ...
+    _HasFieldArgType: _TypeAlias = _typing.Literal["kpi_hierarchy", b"kpi_hierarchy", "period", b"period"]  # noqa: Y015
+    def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["kpi_hierarchy", b"kpi_hierarchy", "period", b"period", "results", b"results"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
-global___ListCompanyHierarchicalModelResultsResponse = ListCompanyHierarchicalModelResultsResponse
+Global___ListCompanyHierarchicalModelResultsResponse: _TypeAlias = ListCompanyHierarchicalModelResultsResponse  # noqa: Y015
 
-@typing.final
-class ListCompanyKpiMappingResultsRequest(google.protobuf.message.Message):
+@_typing.final
+class ListCompanyKpiMappingResultsRequest(_message.Message):
     """Request to ListCompanyKpiMappingResults."""
 
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    DESCRIPTOR: _descriptor.Descriptor
 
-    PARENT_FIELD_NUMBER: builtins.int
-    KPI_FIELD_NUMBER: builtins.int
-    parent: builtins.str
+    PARENT_FIELD_NUMBER: _builtins.int
+    KPI_FIELD_NUMBER: _builtins.int
+    parent: _builtins.str
     """Resource name of the company to get KPI mapping results for."""
-    @property
-    def kpi(self) -> exabel.api.analytics.v1.kpi_messages_pb2.Kpi:
+    @_builtins.property
+    def kpi(self) -> _kpi_messages_pb2.Kpi:
         """KPI to get KPI mapping results for.
         The fields `type`, `value` and `freq` must be specified.
         """
@@ -219,46 +255,49 @@ class ListCompanyKpiMappingResultsRequest(google.protobuf.message.Message):
     def __init__(
         self,
         *,
-        parent: builtins.str | None = ...,
-        kpi: exabel.api.analytics.v1.kpi_messages_pb2.Kpi | None = ...,
+        parent: _builtins.str | None = ...,
+        kpi: _kpi_messages_pb2.Kpi | None = ...,
     ) -> None: ...
-    def HasField(self, field_name: typing.Literal["kpi", b"kpi"]) -> builtins.bool: ...
-    def ClearField(self, field_name: typing.Literal["kpi", b"kpi", "parent", b"parent"]) -> None: ...
+    _HasFieldArgType: _TypeAlias = _typing.Literal["kpi", b"kpi"]  # noqa: Y015
+    def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["kpi", b"kpi", "parent", b"parent"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
-global___ListCompanyKpiMappingResultsRequest = ListCompanyKpiMappingResultsRequest
+Global___ListCompanyKpiMappingResultsRequest: _TypeAlias = ListCompanyKpiMappingResultsRequest  # noqa: Y015
 
-@typing.final
-class ListCompanyKpiMappingResultsResponse(google.protobuf.message.Message):
+@_typing.final
+class ListCompanyKpiMappingResultsResponse(_message.Message):
     """Response from ListCompanyKpiMappingResults."""
 
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    DESCRIPTOR: _descriptor.Descriptor
 
-    RESULTS_FIELD_NUMBER: builtins.int
-    @property
-    def results(self) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[exabel.api.analytics.v1.kpi_messages_pb2.KpiMappingResultData]:
+    RESULTS_FIELD_NUMBER: _builtins.int
+    @_builtins.property
+    def results(self) -> _containers.RepeatedCompositeFieldContainer[_kpi_messages_pb2.KpiMappingResultData]:
         """KPI mapping results."""
 
     def __init__(
         self,
         *,
-        results: collections.abc.Iterable[exabel.api.analytics.v1.kpi_messages_pb2.KpiMappingResultData] | None = ...,
+        results: _abc.Iterable[_kpi_messages_pb2.KpiMappingResultData] | None = ...,
     ) -> None: ...
-    def ClearField(self, field_name: typing.Literal["results", b"results"]) -> None: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["results", b"results"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
-global___ListCompanyKpiMappingResultsResponse = ListCompanyKpiMappingResultsResponse
+Global___ListCompanyKpiMappingResultsResponse: _TypeAlias = ListCompanyKpiMappingResultsResponse  # noqa: Y015
 
-@typing.final
-class ListCompanyKpiModelResultsRequest(google.protobuf.message.Message):
+@_typing.final
+class ListCompanyKpiModelResultsRequest(_message.Message):
     """Request to ListCompanyKpiModelResults."""
 
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    DESCRIPTOR: _descriptor.Descriptor
 
-    PARENT_FIELD_NUMBER: builtins.int
-    KPI_FIELD_NUMBER: builtins.int
-    parent: builtins.str
+    PARENT_FIELD_NUMBER: _builtins.int
+    KPI_FIELD_NUMBER: _builtins.int
+    parent: _builtins.str
     """Resource name of the company to get model results for."""
-    @property
-    def kpi(self) -> exabel.api.analytics.v1.kpi_messages_pb2.Kpi:
+    @_builtins.property
+    def kpi(self) -> _kpi_messages_pb2.Kpi:
         """KPI to get model results for.
         The fields `type`, `value` and `freq` must be specified.
         """
@@ -266,107 +305,113 @@ class ListCompanyKpiModelResultsRequest(google.protobuf.message.Message):
     def __init__(
         self,
         *,
-        parent: builtins.str | None = ...,
-        kpi: exabel.api.analytics.v1.kpi_messages_pb2.Kpi | None = ...,
+        parent: _builtins.str | None = ...,
+        kpi: _kpi_messages_pb2.Kpi | None = ...,
     ) -> None: ...
-    def HasField(self, field_name: typing.Literal["kpi", b"kpi"]) -> builtins.bool: ...
-    def ClearField(self, field_name: typing.Literal["kpi", b"kpi", "parent", b"parent"]) -> None: ...
+    _HasFieldArgType: _TypeAlias = _typing.Literal["kpi", b"kpi"]  # noqa: Y015
+    def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["kpi", b"kpi", "parent", b"parent"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
-global___ListCompanyKpiModelResultsRequest = ListCompanyKpiModelResultsRequest
+Global___ListCompanyKpiModelResultsRequest: _TypeAlias = ListCompanyKpiModelResultsRequest  # noqa: Y015
 
-@typing.final
-class ListCompanyKpiModelResultsResponse(google.protobuf.message.Message):
+@_typing.final
+class ListCompanyKpiModelResultsResponse(_message.Message):
     """Response from ListCompanyKpiModelResults."""
 
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    DESCRIPTOR: _descriptor.Descriptor
 
-    EXABEL_MODEL_FIELD_NUMBER: builtins.int
-    HIERARCHICAL_MODEL_FIELD_NUMBER: builtins.int
-    CUSTOM_MODELS_FIELD_NUMBER: builtins.int
-    KPI_MAPPING_MODELS_FIELD_NUMBER: builtins.int
-    @property
-    def exabel_model(self) -> exabel.api.analytics.v1.kpi_messages_pb2.KpiModel:
+    EXABEL_MODEL_FIELD_NUMBER: _builtins.int
+    HIERARCHICAL_MODEL_FIELD_NUMBER: _builtins.int
+    CUSTOM_MODELS_FIELD_NUMBER: _builtins.int
+    KPI_MAPPING_MODELS_FIELD_NUMBER: _builtins.int
+    @_builtins.property
+    def exabel_model(self) -> _kpi_messages_pb2.KpiModel:
         """Exabel model."""
 
-    @property
-    def hierarchical_model(self) -> exabel.api.analytics.v1.kpi_messages_pb2.KpiModel:
+    @_builtins.property
+    def hierarchical_model(self) -> _kpi_messages_pb2.KpiModel:
         """Hierarchical model."""
 
-    @property
-    def custom_models(self) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[exabel.api.analytics.v1.kpi_messages_pb2.KpiModel]:
+    @_builtins.property
+    def custom_models(self) -> _containers.RepeatedCompositeFieldContainer[_kpi_messages_pb2.KpiModel]:
         """Custom models."""
 
-    @property
-    def kpi_mapping_models(self) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[exabel.api.analytics.v1.kpi_messages_pb2.KpiMappingModel]:
+    @_builtins.property
+    def kpi_mapping_models(self) -> _containers.RepeatedCompositeFieldContainer[_kpi_messages_pb2.KpiMappingModel]:
         """Single-predictor KPI mapping models."""
 
     def __init__(
         self,
         *,
-        exabel_model: exabel.api.analytics.v1.kpi_messages_pb2.KpiModel | None = ...,
-        hierarchical_model: exabel.api.analytics.v1.kpi_messages_pb2.KpiModel | None = ...,
-        custom_models: collections.abc.Iterable[exabel.api.analytics.v1.kpi_messages_pb2.KpiModel] | None = ...,
-        kpi_mapping_models: collections.abc.Iterable[exabel.api.analytics.v1.kpi_messages_pb2.KpiMappingModel] | None = ...,
+        exabel_model: _kpi_messages_pb2.KpiModel | None = ...,
+        hierarchical_model: _kpi_messages_pb2.KpiModel | None = ...,
+        custom_models: _abc.Iterable[_kpi_messages_pb2.KpiModel] | None = ...,
+        kpi_mapping_models: _abc.Iterable[_kpi_messages_pb2.KpiMappingModel] | None = ...,
     ) -> None: ...
-    def HasField(self, field_name: typing.Literal["exabel_model", b"exabel_model", "hierarchical_model", b"hierarchical_model"]) -> builtins.bool: ...
-    def ClearField(self, field_name: typing.Literal["custom_models", b"custom_models", "exabel_model", b"exabel_model", "hierarchical_model", b"hierarchical_model", "kpi_mapping_models", b"kpi_mapping_models"]) -> None: ...
+    _HasFieldArgType: _TypeAlias = _typing.Literal["exabel_model", b"exabel_model", "hierarchical_model", b"hierarchical_model"]  # noqa: Y015
+    def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["custom_models", b"custom_models", "exabel_model", b"exabel_model", "hierarchical_model", b"hierarchical_model", "kpi_mapping_models", b"kpi_mapping_models"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
-global___ListCompanyKpiModelResultsResponse = ListCompanyKpiModelResultsResponse
+Global___ListCompanyKpiModelResultsResponse: _TypeAlias = ListCompanyKpiModelResultsResponse  # noqa: Y015
 
-@typing.final
-class ListKpiScreenResultsRequest(google.protobuf.message.Message):
+@_typing.final
+class ListKpiScreenResultsRequest(_message.Message):
     """Request to ListKpiScreenResults."""
 
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    DESCRIPTOR: _descriptor.Descriptor
 
-    NAME_FIELD_NUMBER: builtins.int
-    PAGE_SIZE_FIELD_NUMBER: builtins.int
-    PAGE_TOKEN_FIELD_NUMBER: builtins.int
-    name: builtins.str
+    NAME_FIELD_NUMBER: _builtins.int
+    PAGE_SIZE_FIELD_NUMBER: _builtins.int
+    PAGE_TOKEN_FIELD_NUMBER: _builtins.int
+    name: _builtins.str
     """Resource name of the KPI screen, e.g. `kpiScreens/123`."""
-    page_size: builtins.int
+    page_size: _builtins.int
     """Maximum number of companies to return. Defaults to 20, and the maximum allowed value is 100."""
-    page_token: builtins.str
+    page_token: _builtins.str
     """Token for a specific page of results, as returned from a previous list request with the same
     query parameters.
     """
     def __init__(
         self,
         *,
-        name: builtins.str | None = ...,
-        page_size: builtins.int | None = ...,
-        page_token: builtins.str | None = ...,
+        name: _builtins.str | None = ...,
+        page_size: _builtins.int | None = ...,
+        page_token: _builtins.str | None = ...,
     ) -> None: ...
-    def ClearField(self, field_name: typing.Literal["name", b"name", "page_size", b"page_size", "page_token", b"page_token"]) -> None: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["name", b"name", "page_size", b"page_size", "page_token", b"page_token"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
-global___ListKpiScreenResultsRequest = ListKpiScreenResultsRequest
+Global___ListKpiScreenResultsRequest: _TypeAlias = ListKpiScreenResultsRequest  # noqa: Y015
 
-@typing.final
-class ListKpiScreenResultsResponse(google.protobuf.message.Message):
+@_typing.final
+class ListKpiScreenResultsResponse(_message.Message):
     """Response from ListKpiScreenResults."""
 
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    DESCRIPTOR: _descriptor.Descriptor
 
-    RESULTS_FIELD_NUMBER: builtins.int
-    NEXT_PAGE_TOKEN_FIELD_NUMBER: builtins.int
-    TOTAL_SIZE_FIELD_NUMBER: builtins.int
-    next_page_token: builtins.str
+    RESULTS_FIELD_NUMBER: _builtins.int
+    NEXT_PAGE_TOKEN_FIELD_NUMBER: _builtins.int
+    TOTAL_SIZE_FIELD_NUMBER: _builtins.int
+    next_page_token: _builtins.str
     """Token for the next page of results, which can be sent to a subsequent list query.
     The end of the list is reached when the token is empty.
     """
-    total_size: builtins.int
+    total_size: _builtins.int
     """Total number of rows, irrespective of paging."""
-    @property
-    def results(self) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[exabel.api.analytics.v1.kpi_messages_pb2.KpiScreenCompanyResult]:
+    @_builtins.property
+    def results(self) -> _containers.RepeatedCompositeFieldContainer[_kpi_messages_pb2.KpiScreenCompanyResult]:
         """List of results, one for each company."""
 
     def __init__(
         self,
         *,
-        results: collections.abc.Iterable[exabel.api.analytics.v1.kpi_messages_pb2.KpiScreenCompanyResult] | None = ...,
-        next_page_token: builtins.str | None = ...,
-        total_size: builtins.int | None = ...,
+        results: _abc.Iterable[_kpi_messages_pb2.KpiScreenCompanyResult] | None = ...,
+        next_page_token: _builtins.str | None = ...,
+        total_size: _builtins.int | None = ...,
     ) -> None: ...
-    def ClearField(self, field_name: typing.Literal["next_page_token", b"next_page_token", "results", b"results", "total_size", b"total_size"]) -> None: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["next_page_token", b"next_page_token", "results", b"results", "total_size", b"total_size"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
-global___ListKpiScreenResultsResponse = ListKpiScreenResultsResponse
+Global___ListKpiScreenResultsResponse: _TypeAlias = ListKpiScreenResultsResponse  # noqa: Y015

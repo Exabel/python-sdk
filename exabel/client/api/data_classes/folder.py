@@ -75,5 +75,5 @@ class Folder:
     def __repr__(self) -> str:
         return (
             f"Folder(name='{self.name}', display_name='{self.display_name}', "
-            f"write={self.write}, items={self.items}, description={repr(self.description)})"
+            f"write={self.write}, items={self.items}, description={self.description!r})"
         )

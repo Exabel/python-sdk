@@ -1,7 +1,7 @@
 [project]
 name = "exabel"
 description = "Python SDK for the Exabel Data API"
-version = "8.0.0"
+version = "8.1.0"
 license = "MIT"
 license-files = ["LICENSE"]
 readme = "README.md"
