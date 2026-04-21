@@ -357,7 +357,7 @@ requires-dist = [
     { name = "google-api-core", specifier = ">1.31.3" },
     { name = "google-cloud-bigquery", marker = "extra == 'bigquery'" },
     { name = "googleapis-common-protos", specifier = ">=1.56.0" },
-    { name = "grpcio" },
+    { name = "grpcio", specifier = ">=1.78.0" },
     { name = "openpyxl" },
     { name = "pandas" },
     { name = "protobuf", specifier = ">=6" },
