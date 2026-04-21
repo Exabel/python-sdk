@@ -17,7 +17,6 @@ classifiers = [
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
     "Programming Language :: Python :: 3.14",
-    "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
 ]
 dependencies = [
@@ -53,7 +52,7 @@ Source = "https://github.com/Exabel/python-sdk"
 Changelog = "https://github.com/Exabel/python-sdk/releases"
 
 [build-system]
-requires = ["uv_build>=0.9.28,<0.10.0"]
+requires = ["uv_build>=0.9.28"]
 build-backend = "uv_build"
 
 [tool.uv]
