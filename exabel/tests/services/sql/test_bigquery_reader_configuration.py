@@ -76,9 +76,7 @@ class TestBigQueryReaderConfiguration(unittest.TestCase):
             {},
         ) == config.get_connection_string_and_kwargs()
 
-    @mock.patch(
-        "exabel.services.sql.bigquery_reader_configuration.ServiceAccountCredentials"
-    )
+    @mock.patch("exabel.services.sql.bigquery_reader_configuration.ServiceAccountCredentials")
     @mock.patch("exabel.services.sql.bigquery_reader_configuration.BigQueryClient")
     def test_bigquery_reader_configuration_get_connection_string__with_credentials_string(
         self, mock_bq_client, mock_sa_credentials
@@ -102,9 +100,7 @@ class TestBigQueryReaderConfiguration(unittest.TestCase):
             project="project",
         )
 
-    @mock.patch(
-        "exabel.services.sql.bigquery_reader_configuration.ServiceAccountCredentials"
-    )
+    @mock.patch("exabel.services.sql.bigquery_reader_configuration.ServiceAccountCredentials")
     @mock.patch("exabel.services.sql.bigquery_reader_configuration.BigQueryClient")
     def test_bigquery_reader_configuration_get_connection_string__with_invalid_credentials_string(
         self, mock_bq_client, mock_sa_credentials

@@ -12,8 +12,7 @@ class TestCsvTimeSeriesLoader:
         client: ExabelClient = ExabelMockClient()
         with pytest.raises(FileLoadingException) as context:
             CsvTimeSeriesLoader(client).load_time_series(
-                filename="exabel/tests/resources/"
-                "data/time_series_with_non_numeric_values.csv",
+                filename="exabel/tests/resources/data/time_series_with_non_numeric_values.csv",
             )
         exception = context.value
         actual = str(exception)
@@ -31,6 +30,5 @@ class TestCsvTimeSeriesLoader:
         client: ExabelClient = ExabelMockClient()
         with pytest.raises(CsvLoadingException):
             CsvTimeSeriesLoader(client).load_time_series(
-                filename="exabel/tests/resources/"
-                "data/time_series_with_non_numeric_values.csv",
+                filename="exabel/tests/resources/data/time_series_with_non_numeric_values.csv",
             )

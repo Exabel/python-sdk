@@ -21,8 +21,7 @@ class TestFileTimeSeriesLoader:
         client: ExabelClient = ExabelMockClient()
         with pytest.raises(FileLoadingException) as context:
             FileTimeSeriesLoader(client).load_time_series(
-                filename="exabel/tests/resources/"
-                "data/time_series_with_non_numeric_values.csv",
+                filename="exabel/tests/resources/data/time_series_with_non_numeric_values.csv",
             )
         exception = context.value
         actual = str(exception)
@@ -278,8 +277,7 @@ class TestFileTimeSeriesLoaderExcelFiles:
         client: ExabelClient = ExabelMockClient()
         with pytest.raises(FileLoadingException) as context:
             FileTimeSeriesLoader(client).load_time_series(
-                filename="./exabel/tests/resources/data/"
-                "numbers_in_identifier_error_example.xlsx",
+                filename="./exabel/tests/resources/data/numbers_in_identifier_error_example.xlsx",
             )
         assert "Entity identifiers were not strings." in str(context.value)
 
