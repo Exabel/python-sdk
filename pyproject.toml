@@ -33,7 +33,7 @@ dependencies = [
 
 [dependency-groups]
 dev = [
-    "ruff==0.15.2",
+    "ruff",
     "mypy",
     "pytest",
     "types-protobuf",
