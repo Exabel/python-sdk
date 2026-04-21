@@ -3,38 +3,45 @@
 isort:skip_file
 Copyright (c) 2019-2022 Exabel AS. All rights reserved."""
 
-import builtins
-from . import prediction_model_messages_pb2
-import google.protobuf.descriptor
-import google.protobuf.message
-import typing
-from ..... import exabel
+from . import prediction_model_messages_pb2 as _prediction_model_messages_pb2
+from google.protobuf import descriptor as _descriptor
+from google.protobuf import message as _message
+import builtins as _builtins
+import sys
+import typing as _typing
 
-DESCRIPTOR: google.protobuf.descriptor.FileDescriptor
+if sys.version_info >= (3, 10):
+    from typing import TypeAlias as _TypeAlias
+else:
+    from typing_extensions import TypeAlias as _TypeAlias
 
-@typing.final
-class CreatePredictionModelRunRequest(google.protobuf.message.Message):
+DESCRIPTOR: _descriptor.FileDescriptor
+
+@_typing.final
+class CreatePredictionModelRunRequest(_message.Message):
     """Request to CreatePredictionModelRun."""
 
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    DESCRIPTOR: _descriptor.Descriptor
 
-    PARENT_FIELD_NUMBER: builtins.int
-    RUN_FIELD_NUMBER: builtins.int
-    parent: builtins.str
+    PARENT_FIELD_NUMBER: _builtins.int
+    RUN_FIELD_NUMBER: _builtins.int
+    parent: _builtins.str
     """Resource name of the prediction model for which the run should be created.
     Example: `predictionModels/123`.
     """
-    @property
-    def run(self) -> exabel.api.analytics.v1.prediction_model_messages_pb2.PredictionModelRun:
+    @_builtins.property
+    def run(self) -> _prediction_model_messages_pb2.PredictionModelRun:
         """The model run."""
 
     def __init__(
         self,
         *,
-        parent: builtins.str | None = ...,
-        run: exabel.api.analytics.v1.prediction_model_messages_pb2.PredictionModelRun | None = ...,
+        parent: _builtins.str | None = ...,
+        run: _prediction_model_messages_pb2.PredictionModelRun | None = ...,
     ) -> None: ...
-    def HasField(self, field_name: typing.Literal["run", b"run"]) -> builtins.bool: ...
-    def ClearField(self, field_name: typing.Literal["parent", b"parent", "run", b"run"]) -> None: ...
+    _HasFieldArgType: _TypeAlias = _typing.Literal["run", b"run"]  # noqa: Y015
+    def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["parent", b"parent", "run", b"run"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
-global___CreatePredictionModelRunRequest = CreatePredictionModelRunRequest
+Global___CreatePredictionModelRunRequest: _TypeAlias = CreatePredictionModelRunRequest  # noqa: Y015

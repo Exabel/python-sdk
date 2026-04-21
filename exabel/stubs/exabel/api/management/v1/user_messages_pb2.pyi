@@ -3,58 +3,65 @@
 isort:skip_file
 Copyright (c) 2022 Exabel AS. All rights reserved."""
 
-import builtins
-import collections.abc
-import google.protobuf.descriptor
-import google.protobuf.internal.containers
-import google.protobuf.message
-import typing
+from collections import abc as _abc
+from google.protobuf import descriptor as _descriptor
+from google.protobuf import message as _message
+from google.protobuf.internal import containers as _containers
+import builtins as _builtins
+import sys
+import typing as _typing
 
-DESCRIPTOR: google.protobuf.descriptor.FileDescriptor
+if sys.version_info >= (3, 10):
+    from typing import TypeAlias as _TypeAlias
+else:
+    from typing_extensions import TypeAlias as _TypeAlias
 
-@typing.final
-class User(google.protobuf.message.Message):
+DESCRIPTOR: _descriptor.FileDescriptor
+
+@_typing.final
+class User(_message.Message):
     """A user."""
 
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    DESCRIPTOR: _descriptor.Descriptor
 
-    NAME_FIELD_NUMBER: builtins.int
-    EMAIL_FIELD_NUMBER: builtins.int
-    BLOCKED_FIELD_NUMBER: builtins.int
-    name: builtins.str
+    NAME_FIELD_NUMBER: _builtins.int
+    EMAIL_FIELD_NUMBER: _builtins.int
+    BLOCKED_FIELD_NUMBER: _builtins.int
+    name: _builtins.str
     """Unique resource name of the user, e.g. `users/123`."""
-    email: builtins.str
+    email: _builtins.str
     """User's email."""
-    blocked: builtins.bool
+    blocked: _builtins.bool
     """Whether the user is blocked from accessing the system."""
     def __init__(
         self,
         *,
-        name: builtins.str | None = ...,
-        email: builtins.str | None = ...,
-        blocked: builtins.bool | None = ...,
+        name: _builtins.str | None = ...,
+        email: _builtins.str | None = ...,
+        blocked: _builtins.bool | None = ...,
     ) -> None: ...
-    def ClearField(self, field_name: typing.Literal["blocked", b"blocked", "email", b"email", "name", b"name"]) -> None: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["blocked", b"blocked", "email", b"email", "name", b"name"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
-global___User = User
+Global___User: _TypeAlias = User  # noqa: Y015
 
-@typing.final
-class Group(google.protobuf.message.Message):
+@_typing.final
+class Group(_message.Message):
     """A group."""
 
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    DESCRIPTOR: _descriptor.Descriptor
 
-    NAME_FIELD_NUMBER: builtins.int
-    DISPLAY_NAME_FIELD_NUMBER: builtins.int
-    USERS_FIELD_NUMBER: builtins.int
-    name: builtins.str
+    NAME_FIELD_NUMBER: _builtins.int
+    DISPLAY_NAME_FIELD_NUMBER: _builtins.int
+    USERS_FIELD_NUMBER: _builtins.int
+    name: _builtins.str
     """Unique resource name of the user group, e.g. `groups/123`."""
-    display_name: builtins.str
+    display_name: _builtins.str
     """Display name of the user group, shown in the Library when sharing a folder with any of the
     customer user groups.
     """
-    @property
-    def users(self) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[global___User]:
+    @_builtins.property
+    def users(self) -> _containers.RepeatedCompositeFieldContainer[Global___User]:
         """List of users in this user group. Only populated for some responses (refer to documentation for
         each method).
         """
@@ -62,10 +69,11 @@ class Group(google.protobuf.message.Message):
     def __init__(
         self,
         *,
-        name: builtins.str | None = ...,
-        display_name: builtins.str | None = ...,
-        users: collections.abc.Iterable[global___User] | None = ...,
+        name: _builtins.str | None = ...,
+        display_name: _builtins.str | None = ...,
+        users: _abc.Iterable[Global___User] | None = ...,
     ) -> None: ...
-    def ClearField(self, field_name: typing.Literal["display_name", b"display_name", "name", b"name", "users", b"users"]) -> None: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["display_name", b"display_name", "name", b"name", "users", b"users"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
-global___Group = Group
+Global___Group: _TypeAlias = Group  # noqa: Y015

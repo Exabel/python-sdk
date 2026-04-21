@@ -3,29 +3,29 @@
 isort:skip_file
 """
 
-import builtins
-import collections.abc
-import google.protobuf.descriptor
-import google.protobuf.internal.containers
-import google.protobuf.internal.enum_type_wrapper
-import google.protobuf.message
-import google.protobuf.struct_pb2
+from collections import abc as _abc
+from google.protobuf import descriptor as _descriptor
+from google.protobuf import message as _message
+from google.protobuf import struct_pb2 as _struct_pb2
+from google.protobuf.internal import containers as _containers
+from google.protobuf.internal import enum_type_wrapper as _enum_type_wrapper
+import builtins as _builtins
 import sys
-import typing
+import typing as _typing
 
 if sys.version_info >= (3, 10):
-    import typing as typing_extensions
+    from typing import TypeAlias as _TypeAlias
 else:
-    import typing_extensions
+    from typing_extensions import TypeAlias as _TypeAlias
 
-DESCRIPTOR: google.protobuf.descriptor.FileDescriptor
+DESCRIPTOR: _descriptor.FileDescriptor
 
 class _Scheme:
-    ValueType = typing.NewType("ValueType", builtins.int)
-    V: typing_extensions.TypeAlias = ValueType
+    ValueType = _typing.NewType("ValueType", _builtins.int)
+    V: _TypeAlias = ValueType  # noqa: Y015
 
-class _SchemeEnumTypeWrapper(google.protobuf.internal.enum_type_wrapper._EnumTypeWrapper[_Scheme.ValueType], builtins.type):
-    DESCRIPTOR: google.protobuf.descriptor.EnumDescriptor
+class _SchemeEnumTypeWrapper(_enum_type_wrapper._EnumTypeWrapper[_Scheme.ValueType], _builtins.type):
+    DESCRIPTOR: _descriptor.EnumDescriptor
     UNKNOWN: _Scheme.ValueType  # 0
     HTTP: _Scheme.ValueType  # 1
     HTTPS: _Scheme.ValueType  # 2
@@ -42,10 +42,10 @@ HTTP: Scheme.ValueType  # 1
 HTTPS: Scheme.ValueType  # 2
 WS: Scheme.ValueType  # 3
 WSS: Scheme.ValueType  # 4
-global___Scheme = Scheme
+Global___Scheme: _TypeAlias = Scheme  # noqa: Y015
 
-@typing.final
-class Swagger(google.protobuf.message.Message):
+@_typing.final
+class Swagger(_message.Message):
     """`Swagger` is a representation of OpenAPI v2 specification's Swagger object.
 
     See: https://github.com/OAI/OpenAPI-Specification/blob/3.0.0/versions/2.0.md#swaggerObject
@@ -73,68 +73,72 @@ class Swagger(google.protobuf.message.Message):
      };
     """
 
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    DESCRIPTOR: _descriptor.Descriptor
 
-    @typing.final
-    class ResponsesEntry(google.protobuf.message.Message):
-        DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    @_typing.final
+    class ResponsesEntry(_message.Message):
+        DESCRIPTOR: _descriptor.Descriptor
 
-        KEY_FIELD_NUMBER: builtins.int
-        VALUE_FIELD_NUMBER: builtins.int
-        key: builtins.str
-        @property
-        def value(self) -> global___Response: ...
+        KEY_FIELD_NUMBER: _builtins.int
+        VALUE_FIELD_NUMBER: _builtins.int
+        key: _builtins.str
+        @_builtins.property
+        def value(self) -> Global___Response: ...
         def __init__(
             self,
             *,
-            key: builtins.str | None = ...,
-            value: global___Response | None = ...,
+            key: _builtins.str | None = ...,
+            value: Global___Response | None = ...,
         ) -> None: ...
-        def HasField(self, field_name: typing.Literal["value", b"value"]) -> builtins.bool: ...
-        def ClearField(self, field_name: typing.Literal["key", b"key", "value", b"value"]) -> None: ...
+        _HasFieldArgType: _TypeAlias = _typing.Literal["value", b"value"]  # noqa: Y015
+        def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
+        _ClearFieldArgType: _TypeAlias = _typing.Literal["key", b"key", "value", b"value"]  # noqa: Y015
+        def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
-    @typing.final
-    class ExtensionsEntry(google.protobuf.message.Message):
-        DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    @_typing.final
+    class ExtensionsEntry(_message.Message):
+        DESCRIPTOR: _descriptor.Descriptor
 
-        KEY_FIELD_NUMBER: builtins.int
-        VALUE_FIELD_NUMBER: builtins.int
-        key: builtins.str
-        @property
-        def value(self) -> google.protobuf.struct_pb2.Value: ...
+        KEY_FIELD_NUMBER: _builtins.int
+        VALUE_FIELD_NUMBER: _builtins.int
+        key: _builtins.str
+        @_builtins.property
+        def value(self) -> _struct_pb2.Value: ...
         def __init__(
             self,
             *,
-            key: builtins.str | None = ...,
-            value: google.protobuf.struct_pb2.Value | None = ...,
+            key: _builtins.str | None = ...,
+            value: _struct_pb2.Value | None = ...,
         ) -> None: ...
-        def HasField(self, field_name: typing.Literal["value", b"value"]) -> builtins.bool: ...
-        def ClearField(self, field_name: typing.Literal["key", b"key", "value", b"value"]) -> None: ...
+        _HasFieldArgType: _TypeAlias = _typing.Literal["value", b"value"]  # noqa: Y015
+        def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
+        _ClearFieldArgType: _TypeAlias = _typing.Literal["key", b"key", "value", b"value"]  # noqa: Y015
+        def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
-    SWAGGER_FIELD_NUMBER: builtins.int
-    INFO_FIELD_NUMBER: builtins.int
-    HOST_FIELD_NUMBER: builtins.int
-    BASE_PATH_FIELD_NUMBER: builtins.int
-    SCHEMES_FIELD_NUMBER: builtins.int
-    CONSUMES_FIELD_NUMBER: builtins.int
-    PRODUCES_FIELD_NUMBER: builtins.int
-    RESPONSES_FIELD_NUMBER: builtins.int
-    SECURITY_DEFINITIONS_FIELD_NUMBER: builtins.int
-    SECURITY_FIELD_NUMBER: builtins.int
-    EXTERNAL_DOCS_FIELD_NUMBER: builtins.int
-    EXTENSIONS_FIELD_NUMBER: builtins.int
-    swagger: builtins.str
+    SWAGGER_FIELD_NUMBER: _builtins.int
+    INFO_FIELD_NUMBER: _builtins.int
+    HOST_FIELD_NUMBER: _builtins.int
+    BASE_PATH_FIELD_NUMBER: _builtins.int
+    SCHEMES_FIELD_NUMBER: _builtins.int
+    CONSUMES_FIELD_NUMBER: _builtins.int
+    PRODUCES_FIELD_NUMBER: _builtins.int
+    RESPONSES_FIELD_NUMBER: _builtins.int
+    SECURITY_DEFINITIONS_FIELD_NUMBER: _builtins.int
+    SECURITY_FIELD_NUMBER: _builtins.int
+    EXTERNAL_DOCS_FIELD_NUMBER: _builtins.int
+    EXTENSIONS_FIELD_NUMBER: _builtins.int
+    swagger: _builtins.str
     """Specifies the OpenAPI Specification version being used. It can be
     used by the OpenAPI UI and other clients to interpret the API listing. The
     value MUST be "2.0".
     """
-    host: builtins.str
+    host: _builtins.str
     """The host (name or ip) serving the API. This MUST be the host only and does
     not include the scheme nor sub-paths. It MAY include a port. If the host is
     not included, the host serving the documentation is to be used (including
     the port). The host does not support path templating.
     """
-    base_path: builtins.str
+    base_path: _builtins.str
     """The base path on which the API is served, which is relative to the host. If
     it is not included, the API is served directly under the host. The value
     MUST start with a leading slash (/). The basePath does not support path
@@ -145,80 +149,82 @@ class Swagger(google.protobuf.message.Message):
     manually removed from your `google.api.http` paths and your code changed to
     serve the API from the `base_path`.
     """
-    @property
-    def info(self) -> global___Info:
+    @_builtins.property
+    def info(self) -> Global___Info:
         """Provides metadata about the API. The metadata can be used by the
         clients if needed.
         """
 
-    @property
-    def schemes(self) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[global___Scheme.ValueType]:
+    @_builtins.property
+    def schemes(self) -> _containers.RepeatedScalarFieldContainer[Global___Scheme.ValueType]:
         """The transfer protocol of the API. Values MUST be from the list: "http",
         "https", "ws", "wss". If the schemes is not included, the default scheme to
         be used is the one used to access the OpenAPI definition itself.
         """
 
-    @property
-    def consumes(self) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[builtins.str]:
+    @_builtins.property
+    def consumes(self) -> _containers.RepeatedScalarFieldContainer[_builtins.str]:
         """A list of MIME types the APIs can consume. This is global to all APIs but
         can be overridden on specific API calls. Value MUST be as described under
         Mime Types.
         """
 
-    @property
-    def produces(self) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[builtins.str]:
+    @_builtins.property
+    def produces(self) -> _containers.RepeatedScalarFieldContainer[_builtins.str]:
         """A list of MIME types the APIs can produce. This is global to all APIs but
         can be overridden on specific API calls. Value MUST be as described under
         Mime Types.
         """
 
-    @property
-    def responses(self) -> google.protobuf.internal.containers.MessageMap[builtins.str, global___Response]:
+    @_builtins.property
+    def responses(self) -> _containers.MessageMap[_builtins.str, Global___Response]:
         """An object to hold responses that can be used across operations. This
         property does not define global responses for all operations.
         """
 
-    @property
-    def security_definitions(self) -> global___SecurityDefinitions:
+    @_builtins.property
+    def security_definitions(self) -> Global___SecurityDefinitions:
         """Security scheme definitions that can be used across the specification."""
 
-    @property
-    def security(self) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[global___SecurityRequirement]:
+    @_builtins.property
+    def security(self) -> _containers.RepeatedCompositeFieldContainer[Global___SecurityRequirement]:
         """A declaration of which security schemes are applied for the API as a whole.
         The list of values describes alternative security schemes that can be used
         (that is, there is a logical OR between the security requirements).
         Individual operations can override this definition.
         """
 
-    @property
-    def external_docs(self) -> global___ExternalDocumentation:
+    @_builtins.property
+    def external_docs(self) -> Global___ExternalDocumentation:
         """Additional external documentation."""
 
-    @property
-    def extensions(self) -> google.protobuf.internal.containers.MessageMap[builtins.str, google.protobuf.struct_pb2.Value]: ...
+    @_builtins.property
+    def extensions(self) -> _containers.MessageMap[_builtins.str, _struct_pb2.Value]: ...
     def __init__(
         self,
         *,
-        swagger: builtins.str | None = ...,
-        info: global___Info | None = ...,
-        host: builtins.str | None = ...,
-        base_path: builtins.str | None = ...,
-        schemes: collections.abc.Iterable[global___Scheme.ValueType] | None = ...,
-        consumes: collections.abc.Iterable[builtins.str] | None = ...,
-        produces: collections.abc.Iterable[builtins.str] | None = ...,
-        responses: collections.abc.Mapping[builtins.str, global___Response] | None = ...,
-        security_definitions: global___SecurityDefinitions | None = ...,
-        security: collections.abc.Iterable[global___SecurityRequirement] | None = ...,
-        external_docs: global___ExternalDocumentation | None = ...,
-        extensions: collections.abc.Mapping[builtins.str, google.protobuf.struct_pb2.Value] | None = ...,
+        swagger: _builtins.str | None = ...,
+        info: Global___Info | None = ...,
+        host: _builtins.str | None = ...,
+        base_path: _builtins.str | None = ...,
+        schemes: _abc.Iterable[Global___Scheme.ValueType] | None = ...,
+        consumes: _abc.Iterable[_builtins.str] | None = ...,
+        produces: _abc.Iterable[_builtins.str] | None = ...,
+        responses: _abc.Mapping[_builtins.str, Global___Response] | None = ...,
+        security_definitions: Global___SecurityDefinitions | None = ...,
+        security: _abc.Iterable[Global___SecurityRequirement] | None = ...,
+        external_docs: Global___ExternalDocumentation | None = ...,
+        extensions: _abc.Mapping[_builtins.str, _struct_pb2.Value] | None = ...,
     ) -> None: ...
-    def HasField(self, field_name: typing.Literal["external_docs", b"external_docs", "info", b"info", "security_definitions", b"security_definitions"]) -> builtins.bool: ...
-    def ClearField(self, field_name: typing.Literal["base_path", b"base_path", "consumes", b"consumes", "extensions", b"extensions", "external_docs", b"external_docs", "host", b"host", "info", b"info", "produces", b"produces", "responses", b"responses", "schemes", b"schemes", "security", b"security", "security_definitions", b"security_definitions", "swagger", b"swagger"]) -> None: ...
+    _HasFieldArgType: _TypeAlias = _typing.Literal["external_docs", b"external_docs", "info", b"info", "security_definitions", b"security_definitions"]  # noqa: Y015
+    def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["base_path", b"base_path", "consumes", b"consumes", "extensions", b"extensions", "external_docs", b"external_docs", "host", b"host", "info", b"info", "produces", b"produces", "responses", b"responses", "schemes", b"schemes", "security", b"security", "security_definitions", b"security_definitions", "swagger", b"swagger"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
-global___Swagger = Swagger
+Global___Swagger: _TypeAlias = Swagger  # noqa: Y015
 
-@typing.final
-class Operation(google.protobuf.message.Message):
+@_typing.final
+class Operation(_message.Message):
     """`Operation` is a representation of OpenAPI v2 specification's Operation object.
 
     See: https://github.com/OAI/OpenAPI-Specification/blob/3.0.0/versions/2.0.md#operationObject
@@ -246,113 +252,117 @@ class Operation(google.protobuf.message.Message):
      }
     """
 
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    DESCRIPTOR: _descriptor.Descriptor
 
-    @typing.final
-    class ResponsesEntry(google.protobuf.message.Message):
-        DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    @_typing.final
+    class ResponsesEntry(_message.Message):
+        DESCRIPTOR: _descriptor.Descriptor
 
-        KEY_FIELD_NUMBER: builtins.int
-        VALUE_FIELD_NUMBER: builtins.int
-        key: builtins.str
-        @property
-        def value(self) -> global___Response: ...
+        KEY_FIELD_NUMBER: _builtins.int
+        VALUE_FIELD_NUMBER: _builtins.int
+        key: _builtins.str
+        @_builtins.property
+        def value(self) -> Global___Response: ...
         def __init__(
             self,
             *,
-            key: builtins.str | None = ...,
-            value: global___Response | None = ...,
+            key: _builtins.str | None = ...,
+            value: Global___Response | None = ...,
         ) -> None: ...
-        def HasField(self, field_name: typing.Literal["value", b"value"]) -> builtins.bool: ...
-        def ClearField(self, field_name: typing.Literal["key", b"key", "value", b"value"]) -> None: ...
+        _HasFieldArgType: _TypeAlias = _typing.Literal["value", b"value"]  # noqa: Y015
+        def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
+        _ClearFieldArgType: _TypeAlias = _typing.Literal["key", b"key", "value", b"value"]  # noqa: Y015
+        def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
-    @typing.final
-    class ExtensionsEntry(google.protobuf.message.Message):
-        DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    @_typing.final
+    class ExtensionsEntry(_message.Message):
+        DESCRIPTOR: _descriptor.Descriptor
 
-        KEY_FIELD_NUMBER: builtins.int
-        VALUE_FIELD_NUMBER: builtins.int
-        key: builtins.str
-        @property
-        def value(self) -> google.protobuf.struct_pb2.Value: ...
+        KEY_FIELD_NUMBER: _builtins.int
+        VALUE_FIELD_NUMBER: _builtins.int
+        key: _builtins.str
+        @_builtins.property
+        def value(self) -> _struct_pb2.Value: ...
         def __init__(
             self,
             *,
-            key: builtins.str | None = ...,
-            value: google.protobuf.struct_pb2.Value | None = ...,
+            key: _builtins.str | None = ...,
+            value: _struct_pb2.Value | None = ...,
         ) -> None: ...
-        def HasField(self, field_name: typing.Literal["value", b"value"]) -> builtins.bool: ...
-        def ClearField(self, field_name: typing.Literal["key", b"key", "value", b"value"]) -> None: ...
+        _HasFieldArgType: _TypeAlias = _typing.Literal["value", b"value"]  # noqa: Y015
+        def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
+        _ClearFieldArgType: _TypeAlias = _typing.Literal["key", b"key", "value", b"value"]  # noqa: Y015
+        def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
-    TAGS_FIELD_NUMBER: builtins.int
-    SUMMARY_FIELD_NUMBER: builtins.int
-    DESCRIPTION_FIELD_NUMBER: builtins.int
-    EXTERNAL_DOCS_FIELD_NUMBER: builtins.int
-    OPERATION_ID_FIELD_NUMBER: builtins.int
-    CONSUMES_FIELD_NUMBER: builtins.int
-    PRODUCES_FIELD_NUMBER: builtins.int
-    RESPONSES_FIELD_NUMBER: builtins.int
-    SCHEMES_FIELD_NUMBER: builtins.int
-    DEPRECATED_FIELD_NUMBER: builtins.int
-    SECURITY_FIELD_NUMBER: builtins.int
-    EXTENSIONS_FIELD_NUMBER: builtins.int
-    summary: builtins.str
+    TAGS_FIELD_NUMBER: _builtins.int
+    SUMMARY_FIELD_NUMBER: _builtins.int
+    DESCRIPTION_FIELD_NUMBER: _builtins.int
+    EXTERNAL_DOCS_FIELD_NUMBER: _builtins.int
+    OPERATION_ID_FIELD_NUMBER: _builtins.int
+    CONSUMES_FIELD_NUMBER: _builtins.int
+    PRODUCES_FIELD_NUMBER: _builtins.int
+    RESPONSES_FIELD_NUMBER: _builtins.int
+    SCHEMES_FIELD_NUMBER: _builtins.int
+    DEPRECATED_FIELD_NUMBER: _builtins.int
+    SECURITY_FIELD_NUMBER: _builtins.int
+    EXTENSIONS_FIELD_NUMBER: _builtins.int
+    summary: _builtins.str
     """A short summary of what the operation does. For maximum readability in the
     swagger-ui, this field SHOULD be less than 120 characters.
     """
-    description: builtins.str
+    description: _builtins.str
     """A verbose explanation of the operation behavior. GFM syntax can be used for
     rich text representation.
     """
-    operation_id: builtins.str
+    operation_id: _builtins.str
     """Unique string used to identify the operation. The id MUST be unique among
     all operations described in the API. Tools and libraries MAY use the
     operationId to uniquely identify an operation, therefore, it is recommended
     to follow common programming naming conventions.
     """
-    deprecated: builtins.bool
+    deprecated: _builtins.bool
     """Declares this operation to be deprecated. Usage of the declared operation
     should be refrained. Default value is false.
     """
-    @property
-    def tags(self) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[builtins.str]:
+    @_builtins.property
+    def tags(self) -> _containers.RepeatedScalarFieldContainer[_builtins.str]:
         """A list of tags for API documentation control. Tags can be used for logical
         grouping of operations by resources or any other qualifier.
         """
 
-    @property
-    def external_docs(self) -> global___ExternalDocumentation:
+    @_builtins.property
+    def external_docs(self) -> Global___ExternalDocumentation:
         """Additional external documentation for this operation."""
 
-    @property
-    def consumes(self) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[builtins.str]:
+    @_builtins.property
+    def consumes(self) -> _containers.RepeatedScalarFieldContainer[_builtins.str]:
         """A list of MIME types the operation can consume. This overrides the consumes
         definition at the OpenAPI Object. An empty value MAY be used to clear the
         global definition. Value MUST be as described under Mime Types.
         """
 
-    @property
-    def produces(self) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[builtins.str]:
+    @_builtins.property
+    def produces(self) -> _containers.RepeatedScalarFieldContainer[_builtins.str]:
         """A list of MIME types the operation can produce. This overrides the produces
         definition at the OpenAPI Object. An empty value MAY be used to clear the
         global definition. Value MUST be as described under Mime Types.
         """
 
-    @property
-    def responses(self) -> google.protobuf.internal.containers.MessageMap[builtins.str, global___Response]:
+    @_builtins.property
+    def responses(self) -> _containers.MessageMap[_builtins.str, Global___Response]:
         """The list of possible responses as they are returned from executing this
         operation.
         """
 
-    @property
-    def schemes(self) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[global___Scheme.ValueType]:
+    @_builtins.property
+    def schemes(self) -> _containers.RepeatedScalarFieldContainer[Global___Scheme.ValueType]:
         """The transfer protocol for the operation. Values MUST be from the list:
         "http", "https", "ws", "wss". The value overrides the OpenAPI Object
         schemes definition.
         """
 
-    @property
-    def security(self) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[global___SecurityRequirement]:
+    @_builtins.property
+    def security(self) -> _containers.RepeatedCompositeFieldContainer[Global___SecurityRequirement]:
         """A declaration of which security schemes are applied for this operation. The
         list of values describes alternative security schemes that can be used
         (that is, there is a logical OR between the security requirements). This
@@ -360,176 +370,186 @@ class Operation(google.protobuf.message.Message):
         security declaration, an empty array can be used.
         """
 
-    @property
-    def extensions(self) -> google.protobuf.internal.containers.MessageMap[builtins.str, google.protobuf.struct_pb2.Value]: ...
+    @_builtins.property
+    def extensions(self) -> _containers.MessageMap[_builtins.str, _struct_pb2.Value]: ...
     def __init__(
         self,
         *,
-        tags: collections.abc.Iterable[builtins.str] | None = ...,
-        summary: builtins.str | None = ...,
-        description: builtins.str | None = ...,
-        external_docs: global___ExternalDocumentation | None = ...,
-        operation_id: builtins.str | None = ...,
-        consumes: collections.abc.Iterable[builtins.str] | None = ...,
-        produces: collections.abc.Iterable[builtins.str] | None = ...,
-        responses: collections.abc.Mapping[builtins.str, global___Response] | None = ...,
-        schemes: collections.abc.Iterable[global___Scheme.ValueType] | None = ...,
-        deprecated: builtins.bool | None = ...,
-        security: collections.abc.Iterable[global___SecurityRequirement] | None = ...,
-        extensions: collections.abc.Mapping[builtins.str, google.protobuf.struct_pb2.Value] | None = ...,
+        tags: _abc.Iterable[_builtins.str] | None = ...,
+        summary: _builtins.str | None = ...,
+        description: _builtins.str | None = ...,
+        external_docs: Global___ExternalDocumentation | None = ...,
+        operation_id: _builtins.str | None = ...,
+        consumes: _abc.Iterable[_builtins.str] | None = ...,
+        produces: _abc.Iterable[_builtins.str] | None = ...,
+        responses: _abc.Mapping[_builtins.str, Global___Response] | None = ...,
+        schemes: _abc.Iterable[Global___Scheme.ValueType] | None = ...,
+        deprecated: _builtins.bool | None = ...,
+        security: _abc.Iterable[Global___SecurityRequirement] | None = ...,
+        extensions: _abc.Mapping[_builtins.str, _struct_pb2.Value] | None = ...,
     ) -> None: ...
-    def HasField(self, field_name: typing.Literal["external_docs", b"external_docs"]) -> builtins.bool: ...
-    def ClearField(self, field_name: typing.Literal["consumes", b"consumes", "deprecated", b"deprecated", "description", b"description", "extensions", b"extensions", "external_docs", b"external_docs", "operation_id", b"operation_id", "produces", b"produces", "responses", b"responses", "schemes", b"schemes", "security", b"security", "summary", b"summary", "tags", b"tags"]) -> None: ...
+    _HasFieldArgType: _TypeAlias = _typing.Literal["external_docs", b"external_docs"]  # noqa: Y015
+    def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["consumes", b"consumes", "deprecated", b"deprecated", "description", b"description", "extensions", b"extensions", "external_docs", b"external_docs", "operation_id", b"operation_id", "produces", b"produces", "responses", b"responses", "schemes", b"schemes", "security", b"security", "summary", b"summary", "tags", b"tags"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
-global___Operation = Operation
+Global___Operation: _TypeAlias = Operation  # noqa: Y015
 
-@typing.final
-class Header(google.protobuf.message.Message):
+@_typing.final
+class Header(_message.Message):
     """`Header` is a representation of OpenAPI v2 specification's Header object.
 
     See: https://github.com/OAI/OpenAPI-Specification/blob/3.0.0/versions/2.0.md#headerObject
     """
 
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    DESCRIPTOR: _descriptor.Descriptor
 
-    DESCRIPTION_FIELD_NUMBER: builtins.int
-    TYPE_FIELD_NUMBER: builtins.int
-    FORMAT_FIELD_NUMBER: builtins.int
-    DEFAULT_FIELD_NUMBER: builtins.int
-    PATTERN_FIELD_NUMBER: builtins.int
-    description: builtins.str
+    DESCRIPTION_FIELD_NUMBER: _builtins.int
+    TYPE_FIELD_NUMBER: _builtins.int
+    FORMAT_FIELD_NUMBER: _builtins.int
+    DEFAULT_FIELD_NUMBER: _builtins.int
+    PATTERN_FIELD_NUMBER: _builtins.int
+    description: _builtins.str
     """`Description` is a short description of the header."""
-    type: builtins.str
+    type: _builtins.str
     """The type of the object. The value MUST be one of "string", "number", "integer", or "boolean". The "array" type is not supported."""
-    format: builtins.str
+    format: _builtins.str
     """`Format` The extending format for the previously mentioned type."""
-    default: builtins.str
+    default: _builtins.str
     """`Default` Declares the value of the header that the server will use if none is provided.
     See: https://tools.ietf.org/html/draft-fge-json-schema-validation-00#section-6.2.
     Unlike JSON Schema this value MUST conform to the defined type for the header.
     """
-    pattern: builtins.str
+    pattern: _builtins.str
     """'Pattern' See https://tools.ietf.org/html/draft-fge-json-schema-validation-00#section-5.2.3."""
     def __init__(
         self,
         *,
-        description: builtins.str | None = ...,
-        type: builtins.str | None = ...,
-        format: builtins.str | None = ...,
-        default: builtins.str | None = ...,
-        pattern: builtins.str | None = ...,
+        description: _builtins.str | None = ...,
+        type: _builtins.str | None = ...,
+        format: _builtins.str | None = ...,
+        default: _builtins.str | None = ...,
+        pattern: _builtins.str | None = ...,
     ) -> None: ...
-    def ClearField(self, field_name: typing.Literal["default", b"default", "description", b"description", "format", b"format", "pattern", b"pattern", "type", b"type"]) -> None: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["default", b"default", "description", b"description", "format", b"format", "pattern", b"pattern", "type", b"type"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
-global___Header = Header
+Global___Header: _TypeAlias = Header  # noqa: Y015
 
-@typing.final
-class Response(google.protobuf.message.Message):
+@_typing.final
+class Response(_message.Message):
     """`Response` is a representation of OpenAPI v2 specification's Response object.
 
     See: https://github.com/OAI/OpenAPI-Specification/blob/3.0.0/versions/2.0.md#responseObject
     """
 
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    DESCRIPTOR: _descriptor.Descriptor
 
-    @typing.final
-    class HeadersEntry(google.protobuf.message.Message):
-        DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    @_typing.final
+    class HeadersEntry(_message.Message):
+        DESCRIPTOR: _descriptor.Descriptor
 
-        KEY_FIELD_NUMBER: builtins.int
-        VALUE_FIELD_NUMBER: builtins.int
-        key: builtins.str
-        @property
-        def value(self) -> global___Header: ...
+        KEY_FIELD_NUMBER: _builtins.int
+        VALUE_FIELD_NUMBER: _builtins.int
+        key: _builtins.str
+        @_builtins.property
+        def value(self) -> Global___Header: ...
         def __init__(
             self,
             *,
-            key: builtins.str | None = ...,
-            value: global___Header | None = ...,
+            key: _builtins.str | None = ...,
+            value: Global___Header | None = ...,
         ) -> None: ...
-        def HasField(self, field_name: typing.Literal["value", b"value"]) -> builtins.bool: ...
-        def ClearField(self, field_name: typing.Literal["key", b"key", "value", b"value"]) -> None: ...
+        _HasFieldArgType: _TypeAlias = _typing.Literal["value", b"value"]  # noqa: Y015
+        def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
+        _ClearFieldArgType: _TypeAlias = _typing.Literal["key", b"key", "value", b"value"]  # noqa: Y015
+        def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
-    @typing.final
-    class ExamplesEntry(google.protobuf.message.Message):
-        DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    @_typing.final
+    class ExamplesEntry(_message.Message):
+        DESCRIPTOR: _descriptor.Descriptor
 
-        KEY_FIELD_NUMBER: builtins.int
-        VALUE_FIELD_NUMBER: builtins.int
-        key: builtins.str
-        value: builtins.str
+        KEY_FIELD_NUMBER: _builtins.int
+        VALUE_FIELD_NUMBER: _builtins.int
+        key: _builtins.str
+        value: _builtins.str
         def __init__(
             self,
             *,
-            key: builtins.str | None = ...,
-            value: builtins.str | None = ...,
+            key: _builtins.str | None = ...,
+            value: _builtins.str | None = ...,
         ) -> None: ...
-        def ClearField(self, field_name: typing.Literal["key", b"key", "value", b"value"]) -> None: ...
+        _ClearFieldArgType: _TypeAlias = _typing.Literal["key", b"key", "value", b"value"]  # noqa: Y015
+        def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
-    @typing.final
-    class ExtensionsEntry(google.protobuf.message.Message):
-        DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    @_typing.final
+    class ExtensionsEntry(_message.Message):
+        DESCRIPTOR: _descriptor.Descriptor
 
-        KEY_FIELD_NUMBER: builtins.int
-        VALUE_FIELD_NUMBER: builtins.int
-        key: builtins.str
-        @property
-        def value(self) -> google.protobuf.struct_pb2.Value: ...
+        KEY_FIELD_NUMBER: _builtins.int
+        VALUE_FIELD_NUMBER: _builtins.int
+        key: _builtins.str
+        @_builtins.property
+        def value(self) -> _struct_pb2.Value: ...
         def __init__(
             self,
             *,
-            key: builtins.str | None = ...,
-            value: google.protobuf.struct_pb2.Value | None = ...,
+            key: _builtins.str | None = ...,
+            value: _struct_pb2.Value | None = ...,
         ) -> None: ...
-        def HasField(self, field_name: typing.Literal["value", b"value"]) -> builtins.bool: ...
-        def ClearField(self, field_name: typing.Literal["key", b"key", "value", b"value"]) -> None: ...
+        _HasFieldArgType: _TypeAlias = _typing.Literal["value", b"value"]  # noqa: Y015
+        def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
+        _ClearFieldArgType: _TypeAlias = _typing.Literal["key", b"key", "value", b"value"]  # noqa: Y015
+        def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
-    DESCRIPTION_FIELD_NUMBER: builtins.int
-    SCHEMA_FIELD_NUMBER: builtins.int
-    HEADERS_FIELD_NUMBER: builtins.int
-    EXAMPLES_FIELD_NUMBER: builtins.int
-    EXTENSIONS_FIELD_NUMBER: builtins.int
-    description: builtins.str
+    DESCRIPTION_FIELD_NUMBER: _builtins.int
+    SCHEMA_FIELD_NUMBER: _builtins.int
+    HEADERS_FIELD_NUMBER: _builtins.int
+    EXAMPLES_FIELD_NUMBER: _builtins.int
+    EXTENSIONS_FIELD_NUMBER: _builtins.int
+    description: _builtins.str
     """`Description` is a short description of the response.
     GFM syntax can be used for rich text representation.
     """
-    @property
-    def schema(self) -> global___Schema:
+    @_builtins.property
+    def schema(self) -> Global___Schema:
         """`Schema` optionally defines the structure of the response.
         If `Schema` is not provided, it means there is no content to the response.
         """
 
-    @property
-    def headers(self) -> google.protobuf.internal.containers.MessageMap[builtins.str, global___Header]:
+    @_builtins.property
+    def headers(self) -> _containers.MessageMap[_builtins.str, Global___Header]:
         """`Headers` A list of headers that are sent with the response.
         `Header` name is expected to be a string in the canonical format of the MIME header key
         See: https://golang.org/pkg/net/textproto/#CanonicalMIMEHeaderKey
         """
 
-    @property
-    def examples(self) -> google.protobuf.internal.containers.ScalarMap[builtins.str, builtins.str]:
+    @_builtins.property
+    def examples(self) -> _containers.ScalarMap[_builtins.str, _builtins.str]:
         """`Examples` gives per-mimetype response examples.
         See: https://github.com/OAI/OpenAPI-Specification/blob/3.0.0/versions/2.0.md#example-object
         """
 
-    @property
-    def extensions(self) -> google.protobuf.internal.containers.MessageMap[builtins.str, google.protobuf.struct_pb2.Value]: ...
+    @_builtins.property
+    def extensions(self) -> _containers.MessageMap[_builtins.str, _struct_pb2.Value]: ...
     def __init__(
         self,
         *,
-        description: builtins.str | None = ...,
-        schema: global___Schema | None = ...,
-        headers: collections.abc.Mapping[builtins.str, global___Header] | None = ...,
-        examples: collections.abc.Mapping[builtins.str, builtins.str] | None = ...,
-        extensions: collections.abc.Mapping[builtins.str, google.protobuf.struct_pb2.Value] | None = ...,
+        description: _builtins.str | None = ...,
+        schema: Global___Schema | None = ...,
+        headers: _abc.Mapping[_builtins.str, Global___Header] | None = ...,
+        examples: _abc.Mapping[_builtins.str, _builtins.str] | None = ...,
+        extensions: _abc.Mapping[_builtins.str, _struct_pb2.Value] | None = ...,
     ) -> None: ...
-    def HasField(self, field_name: typing.Literal["schema", b"schema"]) -> builtins.bool: ...
-    def ClearField(self, field_name: typing.Literal["description", b"description", "examples", b"examples", "extensions", b"extensions", "headers", b"headers", "schema", b"schema"]) -> None: ...
+    _HasFieldArgType: _TypeAlias = _typing.Literal["schema", b"schema"]  # noqa: Y015
+    def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["description", b"description", "examples", b"examples", "extensions", b"extensions", "headers", b"headers", "schema", b"schema"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
-global___Response = Response
+Global___Response: _TypeAlias = Response  # noqa: Y015
 
-@typing.final
-class Info(google.protobuf.message.Message):
+@_typing.final
+class Info(_message.Message):
     """`Info` is a representation of OpenAPI v2 specification's Info object.
 
     See: https://github.com/OAI/OpenAPI-Specification/blob/3.0.0/versions/2.0.md#infoObject
@@ -555,73 +575,77 @@ class Info(google.protobuf.message.Message):
      };
     """
 
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    DESCRIPTOR: _descriptor.Descriptor
 
-    @typing.final
-    class ExtensionsEntry(google.protobuf.message.Message):
-        DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    @_typing.final
+    class ExtensionsEntry(_message.Message):
+        DESCRIPTOR: _descriptor.Descriptor
 
-        KEY_FIELD_NUMBER: builtins.int
-        VALUE_FIELD_NUMBER: builtins.int
-        key: builtins.str
-        @property
-        def value(self) -> google.protobuf.struct_pb2.Value: ...
+        KEY_FIELD_NUMBER: _builtins.int
+        VALUE_FIELD_NUMBER: _builtins.int
+        key: _builtins.str
+        @_builtins.property
+        def value(self) -> _struct_pb2.Value: ...
         def __init__(
             self,
             *,
-            key: builtins.str | None = ...,
-            value: google.protobuf.struct_pb2.Value | None = ...,
+            key: _builtins.str | None = ...,
+            value: _struct_pb2.Value | None = ...,
         ) -> None: ...
-        def HasField(self, field_name: typing.Literal["value", b"value"]) -> builtins.bool: ...
-        def ClearField(self, field_name: typing.Literal["key", b"key", "value", b"value"]) -> None: ...
+        _HasFieldArgType: _TypeAlias = _typing.Literal["value", b"value"]  # noqa: Y015
+        def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
+        _ClearFieldArgType: _TypeAlias = _typing.Literal["key", b"key", "value", b"value"]  # noqa: Y015
+        def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
-    TITLE_FIELD_NUMBER: builtins.int
-    DESCRIPTION_FIELD_NUMBER: builtins.int
-    TERMS_OF_SERVICE_FIELD_NUMBER: builtins.int
-    CONTACT_FIELD_NUMBER: builtins.int
-    LICENSE_FIELD_NUMBER: builtins.int
-    VERSION_FIELD_NUMBER: builtins.int
-    EXTENSIONS_FIELD_NUMBER: builtins.int
-    title: builtins.str
+    TITLE_FIELD_NUMBER: _builtins.int
+    DESCRIPTION_FIELD_NUMBER: _builtins.int
+    TERMS_OF_SERVICE_FIELD_NUMBER: _builtins.int
+    CONTACT_FIELD_NUMBER: _builtins.int
+    LICENSE_FIELD_NUMBER: _builtins.int
+    VERSION_FIELD_NUMBER: _builtins.int
+    EXTENSIONS_FIELD_NUMBER: _builtins.int
+    title: _builtins.str
     """The title of the application."""
-    description: builtins.str
+    description: _builtins.str
     """A short description of the application. GFM syntax can be used for rich
     text representation.
     """
-    terms_of_service: builtins.str
+    terms_of_service: _builtins.str
     """The Terms of Service for the API."""
-    version: builtins.str
+    version: _builtins.str
     """Provides the version of the application API (not to be confused
     with the specification version).
     """
-    @property
-    def contact(self) -> global___Contact:
+    @_builtins.property
+    def contact(self) -> Global___Contact:
         """The contact information for the exposed API."""
 
-    @property
-    def license(self) -> global___License:
+    @_builtins.property
+    def license(self) -> Global___License:
         """The license information for the exposed API."""
 
-    @property
-    def extensions(self) -> google.protobuf.internal.containers.MessageMap[builtins.str, google.protobuf.struct_pb2.Value]: ...
+    @_builtins.property
+    def extensions(self) -> _containers.MessageMap[_builtins.str, _struct_pb2.Value]: ...
     def __init__(
         self,
         *,
-        title: builtins.str | None = ...,
-        description: builtins.str | None = ...,
-        terms_of_service: builtins.str | None = ...,
-        contact: global___Contact | None = ...,
-        license: global___License | None = ...,
-        version: builtins.str | None = ...,
-        extensions: collections.abc.Mapping[builtins.str, google.protobuf.struct_pb2.Value] | None = ...,
+        title: _builtins.str | None = ...,
+        description: _builtins.str | None = ...,
+        terms_of_service: _builtins.str | None = ...,
+        contact: Global___Contact | None = ...,
+        license: Global___License | None = ...,
+        version: _builtins.str | None = ...,
+        extensions: _abc.Mapping[_builtins.str, _struct_pb2.Value] | None = ...,
     ) -> None: ...
-    def HasField(self, field_name: typing.Literal["contact", b"contact", "license", b"license"]) -> builtins.bool: ...
-    def ClearField(self, field_name: typing.Literal["contact", b"contact", "description", b"description", "extensions", b"extensions", "license", b"license", "terms_of_service", b"terms_of_service", "title", b"title", "version", b"version"]) -> None: ...
+    _HasFieldArgType: _TypeAlias = _typing.Literal["contact", b"contact", "license", b"license"]  # noqa: Y015
+    def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["contact", b"contact", "description", b"description", "extensions", b"extensions", "license", b"license", "terms_of_service", b"terms_of_service", "title", b"title", "version", b"version"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
-global___Info = Info
+Global___Info: _TypeAlias = Info  # noqa: Y015
 
-@typing.final
-class Contact(google.protobuf.message.Message):
+@_typing.final
+class Contact(_message.Message):
     """`Contact` is a representation of OpenAPI v2 specification's Contact object.
 
     See: https://github.com/OAI/OpenAPI-Specification/blob/3.0.0/versions/2.0.md#contactObject
@@ -642,34 +666,35 @@ class Contact(google.protobuf.message.Message):
      };
     """
 
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    DESCRIPTOR: _descriptor.Descriptor
 
-    NAME_FIELD_NUMBER: builtins.int
-    URL_FIELD_NUMBER: builtins.int
-    EMAIL_FIELD_NUMBER: builtins.int
-    name: builtins.str
+    NAME_FIELD_NUMBER: _builtins.int
+    URL_FIELD_NUMBER: _builtins.int
+    EMAIL_FIELD_NUMBER: _builtins.int
+    name: _builtins.str
     """The identifying name of the contact person/organization."""
-    url: builtins.str
+    url: _builtins.str
     """The URL pointing to the contact information. MUST be in the format of a
     URL.
     """
-    email: builtins.str
+    email: _builtins.str
     """The email address of the contact person/organization. MUST be in the format
     of an email address.
     """
     def __init__(
         self,
         *,
-        name: builtins.str | None = ...,
-        url: builtins.str | None = ...,
-        email: builtins.str | None = ...,
+        name: _builtins.str | None = ...,
+        url: _builtins.str | None = ...,
+        email: _builtins.str | None = ...,
     ) -> None: ...
-    def ClearField(self, field_name: typing.Literal["email", b"email", "name", b"name", "url", b"url"]) -> None: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["email", b"email", "name", b"name", "url", b"url"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
-global___Contact = Contact
+Global___Contact: _TypeAlias = Contact  # noqa: Y015
 
-@typing.final
-class License(google.protobuf.message.Message):
+@_typing.final
+class License(_message.Message):
     """`License` is a representation of OpenAPI v2 specification's License object.
 
     See: https://github.com/OAI/OpenAPI-Specification/blob/3.0.0/versions/2.0.md#licenseObject
@@ -689,26 +714,27 @@ class License(google.protobuf.message.Message):
      };
     """
 
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    DESCRIPTOR: _descriptor.Descriptor
 
-    NAME_FIELD_NUMBER: builtins.int
-    URL_FIELD_NUMBER: builtins.int
-    name: builtins.str
+    NAME_FIELD_NUMBER: _builtins.int
+    URL_FIELD_NUMBER: _builtins.int
+    name: _builtins.str
     """The license name used for the API."""
-    url: builtins.str
+    url: _builtins.str
     """A URL to the license used for the API. MUST be in the format of a URL."""
     def __init__(
         self,
         *,
-        name: builtins.str | None = ...,
-        url: builtins.str | None = ...,
+        name: _builtins.str | None = ...,
+        url: _builtins.str | None = ...,
     ) -> None: ...
-    def ClearField(self, field_name: typing.Literal["name", b"name", "url", b"url"]) -> None: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["name", b"name", "url", b"url"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
-global___License = License
+Global___License: _TypeAlias = License  # noqa: Y015
 
-@typing.final
-class ExternalDocumentation(google.protobuf.message.Message):
+@_typing.final
+class ExternalDocumentation(_message.Message):
     """`ExternalDocumentation` is a representation of OpenAPI v2 specification's
     ExternalDocumentation object.
 
@@ -726,82 +752,85 @@ class ExternalDocumentation(google.protobuf.message.Message):
      };
     """
 
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    DESCRIPTOR: _descriptor.Descriptor
 
-    DESCRIPTION_FIELD_NUMBER: builtins.int
-    URL_FIELD_NUMBER: builtins.int
-    description: builtins.str
+    DESCRIPTION_FIELD_NUMBER: _builtins.int
+    URL_FIELD_NUMBER: _builtins.int
+    description: _builtins.str
     """A short description of the target documentation. GFM syntax can be used for
     rich text representation.
     """
-    url: builtins.str
+    url: _builtins.str
     """The URL for the target documentation. Value MUST be in the format
     of a URL.
     """
     def __init__(
         self,
         *,
-        description: builtins.str | None = ...,
-        url: builtins.str | None = ...,
+        description: _builtins.str | None = ...,
+        url: _builtins.str | None = ...,
     ) -> None: ...
-    def ClearField(self, field_name: typing.Literal["description", b"description", "url", b"url"]) -> None: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["description", b"description", "url", b"url"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
-global___ExternalDocumentation = ExternalDocumentation
+Global___ExternalDocumentation: _TypeAlias = ExternalDocumentation  # noqa: Y015
 
-@typing.final
-class Schema(google.protobuf.message.Message):
+@_typing.final
+class Schema(_message.Message):
     """`Schema` is a representation of OpenAPI v2 specification's Schema object.
 
     See: https://github.com/OAI/OpenAPI-Specification/blob/3.0.0/versions/2.0.md#schemaObject
     """
 
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    DESCRIPTOR: _descriptor.Descriptor
 
-    JSON_SCHEMA_FIELD_NUMBER: builtins.int
-    DISCRIMINATOR_FIELD_NUMBER: builtins.int
-    READ_ONLY_FIELD_NUMBER: builtins.int
-    EXTERNAL_DOCS_FIELD_NUMBER: builtins.int
-    EXAMPLE_FIELD_NUMBER: builtins.int
-    discriminator: builtins.str
+    JSON_SCHEMA_FIELD_NUMBER: _builtins.int
+    DISCRIMINATOR_FIELD_NUMBER: _builtins.int
+    READ_ONLY_FIELD_NUMBER: _builtins.int
+    EXTERNAL_DOCS_FIELD_NUMBER: _builtins.int
+    EXAMPLE_FIELD_NUMBER: _builtins.int
+    discriminator: _builtins.str
     """Adds support for polymorphism. The discriminator is the schema property
     name that is used to differentiate between other schema that inherit this
     schema. The property name used MUST be defined at this schema and it MUST
     be in the required property list. When used, the value MUST be the name of
     this schema or any schema that inherits it.
     """
-    read_only: builtins.bool
+    read_only: _builtins.bool
     """Relevant only for Schema "properties" definitions. Declares the property as
     "read only". This means that it MAY be sent as part of a response but MUST
     NOT be sent as part of the request. Properties marked as readOnly being
     true SHOULD NOT be in the required list of the defined schema. Default
     value is false.
     """
-    example: builtins.str
+    example: _builtins.str
     """A free-form property to include an example of an instance for this schema in JSON.
     This is copied verbatim to the output.
     """
-    @property
-    def json_schema(self) -> global___JSONSchema: ...
-    @property
-    def external_docs(self) -> global___ExternalDocumentation:
+    @_builtins.property
+    def json_schema(self) -> Global___JSONSchema: ...
+    @_builtins.property
+    def external_docs(self) -> Global___ExternalDocumentation:
         """Additional external documentation for this schema."""
 
     def __init__(
         self,
         *,
-        json_schema: global___JSONSchema | None = ...,
-        discriminator: builtins.str | None = ...,
-        read_only: builtins.bool | None = ...,
-        external_docs: global___ExternalDocumentation | None = ...,
-        example: builtins.str | None = ...,
+        json_schema: Global___JSONSchema | None = ...,
+        discriminator: _builtins.str | None = ...,
+        read_only: _builtins.bool | None = ...,
+        external_docs: Global___ExternalDocumentation | None = ...,
+        example: _builtins.str | None = ...,
     ) -> None: ...
-    def HasField(self, field_name: typing.Literal["external_docs", b"external_docs", "json_schema", b"json_schema"]) -> builtins.bool: ...
-    def ClearField(self, field_name: typing.Literal["discriminator", b"discriminator", "example", b"example", "external_docs", b"external_docs", "json_schema", b"json_schema", "read_only", b"read_only"]) -> None: ...
+    _HasFieldArgType: _TypeAlias = _typing.Literal["external_docs", b"external_docs", "json_schema", b"json_schema"]  # noqa: Y015
+    def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["discriminator", b"discriminator", "example", b"example", "external_docs", b"external_docs", "json_schema", b"json_schema", "read_only", b"read_only"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
-global___Schema = Schema
+Global___Schema: _TypeAlias = Schema  # noqa: Y015
 
-@typing.final
-class JSONSchema(google.protobuf.message.Message):
+@_typing.final
+class JSONSchema(_message.Message):
     """`JSONSchema` represents properties from JSON Schema taken, and as used, in
     the OpenAPI v2 spec.
 
@@ -831,14 +860,14 @@ class JSONSchema(google.protobuf.message.Message):
      }
     """
 
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    DESCRIPTOR: _descriptor.Descriptor
 
     class _JSONSchemaSimpleTypes:
-        ValueType = typing.NewType("ValueType", builtins.int)
-        V: typing_extensions.TypeAlias = ValueType
+        ValueType = _typing.NewType("ValueType", _builtins.int)
+        V: _TypeAlias = ValueType  # noqa: Y015
 
-    class _JSONSchemaSimpleTypesEnumTypeWrapper(google.protobuf.internal.enum_type_wrapper._EnumTypeWrapper[JSONSchema._JSONSchemaSimpleTypes.ValueType], builtins.type):
-        DESCRIPTOR: google.protobuf.descriptor.EnumDescriptor
+    class _JSONSchemaSimpleTypesEnumTypeWrapper(_enum_type_wrapper._EnumTypeWrapper[JSONSchema._JSONSchemaSimpleTypes.ValueType], _builtins.type):
+        DESCRIPTOR: _descriptor.EnumDescriptor
         UNKNOWN: JSONSchema._JSONSchemaSimpleTypes.ValueType  # 0
         ARRAY: JSONSchema._JSONSchemaSimpleTypes.ValueType  # 1
         BOOLEAN: JSONSchema._JSONSchemaSimpleTypes.ValueType  # 2
@@ -858,16 +887,16 @@ class JSONSchema(google.protobuf.message.Message):
     OBJECT: JSONSchema.JSONSchemaSimpleTypes.ValueType  # 6
     STRING: JSONSchema.JSONSchemaSimpleTypes.ValueType  # 7
 
-    @typing.final
-    class FieldConfiguration(google.protobuf.message.Message):
+    @_typing.final
+    class FieldConfiguration(_message.Message):
         """'FieldConfiguration' provides additional field level properties used when generating the OpenAPI v2 file.
         These properties are not defined by OpenAPIv2, but they are used to control the generation.
         """
 
-        DESCRIPTOR: google.protobuf.descriptor.Descriptor
+        DESCRIPTOR: _descriptor.Descriptor
 
-        PATH_PARAM_NAME_FIELD_NUMBER: builtins.int
-        path_param_name: builtins.str
+        PATH_PARAM_NAME_FIELD_NUMBER: _builtins.int
+        path_param_name: _builtins.str
         """Alternative parameter name when used as path parameter. If set, this will
         be used as the complete parameter name when this field is used as a path
         parameter. Use this to avoid having auto generated path parameter names
@@ -876,36 +905,37 @@ class JSONSchema(google.protobuf.message.Message):
         def __init__(
             self,
             *,
-            path_param_name: builtins.str | None = ...,
+            path_param_name: _builtins.str | None = ...,
         ) -> None: ...
-        def ClearField(self, field_name: typing.Literal["path_param_name", b"path_param_name"]) -> None: ...
+        _ClearFieldArgType: _TypeAlias = _typing.Literal["path_param_name", b"path_param_name"]  # noqa: Y015
+        def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
-    REF_FIELD_NUMBER: builtins.int
-    TITLE_FIELD_NUMBER: builtins.int
-    DESCRIPTION_FIELD_NUMBER: builtins.int
-    DEFAULT_FIELD_NUMBER: builtins.int
-    READ_ONLY_FIELD_NUMBER: builtins.int
-    EXAMPLE_FIELD_NUMBER: builtins.int
-    MULTIPLE_OF_FIELD_NUMBER: builtins.int
-    MAXIMUM_FIELD_NUMBER: builtins.int
-    EXCLUSIVE_MAXIMUM_FIELD_NUMBER: builtins.int
-    MINIMUM_FIELD_NUMBER: builtins.int
-    EXCLUSIVE_MINIMUM_FIELD_NUMBER: builtins.int
-    MAX_LENGTH_FIELD_NUMBER: builtins.int
-    MIN_LENGTH_FIELD_NUMBER: builtins.int
-    PATTERN_FIELD_NUMBER: builtins.int
-    MAX_ITEMS_FIELD_NUMBER: builtins.int
-    MIN_ITEMS_FIELD_NUMBER: builtins.int
-    UNIQUE_ITEMS_FIELD_NUMBER: builtins.int
-    MAX_PROPERTIES_FIELD_NUMBER: builtins.int
-    MIN_PROPERTIES_FIELD_NUMBER: builtins.int
-    REQUIRED_FIELD_NUMBER: builtins.int
-    ARRAY_FIELD_NUMBER: builtins.int
-    TYPE_FIELD_NUMBER: builtins.int
-    FORMAT_FIELD_NUMBER: builtins.int
-    ENUM_FIELD_NUMBER: builtins.int
-    FIELD_CONFIGURATION_FIELD_NUMBER: builtins.int
-    ref: builtins.str
+    REF_FIELD_NUMBER: _builtins.int
+    TITLE_FIELD_NUMBER: _builtins.int
+    DESCRIPTION_FIELD_NUMBER: _builtins.int
+    DEFAULT_FIELD_NUMBER: _builtins.int
+    READ_ONLY_FIELD_NUMBER: _builtins.int
+    EXAMPLE_FIELD_NUMBER: _builtins.int
+    MULTIPLE_OF_FIELD_NUMBER: _builtins.int
+    MAXIMUM_FIELD_NUMBER: _builtins.int
+    EXCLUSIVE_MAXIMUM_FIELD_NUMBER: _builtins.int
+    MINIMUM_FIELD_NUMBER: _builtins.int
+    EXCLUSIVE_MINIMUM_FIELD_NUMBER: _builtins.int
+    MAX_LENGTH_FIELD_NUMBER: _builtins.int
+    MIN_LENGTH_FIELD_NUMBER: _builtins.int
+    PATTERN_FIELD_NUMBER: _builtins.int
+    MAX_ITEMS_FIELD_NUMBER: _builtins.int
+    MIN_ITEMS_FIELD_NUMBER: _builtins.int
+    UNIQUE_ITEMS_FIELD_NUMBER: _builtins.int
+    MAX_PROPERTIES_FIELD_NUMBER: _builtins.int
+    MIN_PROPERTIES_FIELD_NUMBER: _builtins.int
+    REQUIRED_FIELD_NUMBER: _builtins.int
+    ARRAY_FIELD_NUMBER: _builtins.int
+    TYPE_FIELD_NUMBER: _builtins.int
+    FORMAT_FIELD_NUMBER: _builtins.int
+    ENUM_FIELD_NUMBER: _builtins.int
+    FIELD_CONFIGURATION_FIELD_NUMBER: _builtins.int
+    ref: _builtins.str
     """Ref is used to define an external reference to include in the message.
     This could be a fully qualified proto message reference, and that type must
     be imported into the protofile. If no message is identified, the Ref will
@@ -913,120 +943,124 @@ class JSONSchema(google.protobuf.message.Message):
     For example:
      `ref: ".google.protobuf.Timestamp"`.
     """
-    title: builtins.str
+    title: _builtins.str
     """The title of the schema."""
-    description: builtins.str
+    description: _builtins.str
     """A short description of the schema."""
-    default: builtins.str
-    read_only: builtins.bool
-    example: builtins.str
+    default: _builtins.str
+    read_only: _builtins.bool
+    example: _builtins.str
     """A free-form property to include a JSON example of this field. This is copied
     verbatim to the output swagger.json. Quotes must be escaped.
     This property is the same for 2.0 and 3.0.0 https://github.com/OAI/OpenAPI-Specification/blob/3.0.0/versions/3.0.0.md#schemaObject  https://github.com/OAI/OpenAPI-Specification/blob/3.0.0/versions/2.0.md#schemaObject
     """
-    multiple_of: builtins.float
-    maximum: builtins.float
+    multiple_of: _builtins.float
+    maximum: _builtins.float
     """Maximum represents an inclusive upper limit for a numeric instance. The
     value of MUST be a number,
     """
-    exclusive_maximum: builtins.bool
-    minimum: builtins.float
+    exclusive_maximum: _builtins.bool
+    minimum: _builtins.float
     """minimum represents an inclusive lower limit for a numeric instance. The
     value of MUST be a number,
     """
-    exclusive_minimum: builtins.bool
-    max_length: builtins.int
-    min_length: builtins.int
-    pattern: builtins.str
-    max_items: builtins.int
-    min_items: builtins.int
-    unique_items: builtins.bool
-    max_properties: builtins.int
-    min_properties: builtins.int
-    format: builtins.str
+    exclusive_minimum: _builtins.bool
+    max_length: _builtins.int
+    min_length: _builtins.int
+    pattern: _builtins.str
+    max_items: _builtins.int
+    min_items: _builtins.int
+    unique_items: _builtins.bool
+    max_properties: _builtins.int
+    min_properties: _builtins.int
+    format: _builtins.str
     """`Format`"""
-    @property
-    def required(self) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[builtins.str]: ...
-    @property
-    def array(self) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[builtins.str]:
+    @_builtins.property
+    def required(self) -> _containers.RepeatedScalarFieldContainer[_builtins.str]: ...
+    @_builtins.property
+    def array(self) -> _containers.RepeatedScalarFieldContainer[_builtins.str]:
         """Items in 'array' must be unique."""
 
-    @property
-    def type(self) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[global___JSONSchema.JSONSchemaSimpleTypes.ValueType]: ...
-    @property
-    def enum(self) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[builtins.str]:
+    @_builtins.property
+    def type(self) -> _containers.RepeatedScalarFieldContainer[Global___JSONSchema.JSONSchemaSimpleTypes.ValueType]: ...
+    @_builtins.property
+    def enum(self) -> _containers.RepeatedScalarFieldContainer[_builtins.str]:
         """Items in `enum` must be unique https://tools.ietf.org/html/draft-fge-json-schema-validation-00#section-5.5.1"""
 
-    @property
-    def field_configuration(self) -> global___JSONSchema.FieldConfiguration:
+    @_builtins.property
+    def field_configuration(self) -> Global___JSONSchema.FieldConfiguration:
         """Additional field level properties used when generating the OpenAPI v2 file."""
 
     def __init__(
         self,
         *,
-        ref: builtins.str | None = ...,
-        title: builtins.str | None = ...,
-        description: builtins.str | None = ...,
-        default: builtins.str | None = ...,
-        read_only: builtins.bool | None = ...,
-        example: builtins.str | None = ...,
-        multiple_of: builtins.float | None = ...,
-        maximum: builtins.float | None = ...,
-        exclusive_maximum: builtins.bool | None = ...,
-        minimum: builtins.float | None = ...,
-        exclusive_minimum: builtins.bool | None = ...,
-        max_length: builtins.int | None = ...,
-        min_length: builtins.int | None = ...,
-        pattern: builtins.str | None = ...,
-        max_items: builtins.int | None = ...,
-        min_items: builtins.int | None = ...,
-        unique_items: builtins.bool | None = ...,
-        max_properties: builtins.int | None = ...,
-        min_properties: builtins.int | None = ...,
-        required: collections.abc.Iterable[builtins.str] | None = ...,
-        array: collections.abc.Iterable[builtins.str] | None = ...,
-        type: collections.abc.Iterable[global___JSONSchema.JSONSchemaSimpleTypes.ValueType] | None = ...,
-        format: builtins.str | None = ...,
-        enum: collections.abc.Iterable[builtins.str] | None = ...,
-        field_configuration: global___JSONSchema.FieldConfiguration | None = ...,
+        ref: _builtins.str | None = ...,
+        title: _builtins.str | None = ...,
+        description: _builtins.str | None = ...,
+        default: _builtins.str | None = ...,
+        read_only: _builtins.bool | None = ...,
+        example: _builtins.str | None = ...,
+        multiple_of: _builtins.float | None = ...,
+        maximum: _builtins.float | None = ...,
+        exclusive_maximum: _builtins.bool | None = ...,
+        minimum: _builtins.float | None = ...,
+        exclusive_minimum: _builtins.bool | None = ...,
+        max_length: _builtins.int | None = ...,
+        min_length: _builtins.int | None = ...,
+        pattern: _builtins.str | None = ...,
+        max_items: _builtins.int | None = ...,
+        min_items: _builtins.int | None = ...,
+        unique_items: _builtins.bool | None = ...,
+        max_properties: _builtins.int | None = ...,
+        min_properties: _builtins.int | None = ...,
+        required: _abc.Iterable[_builtins.str] | None = ...,
+        array: _abc.Iterable[_builtins.str] | None = ...,
+        type: _abc.Iterable[Global___JSONSchema.JSONSchemaSimpleTypes.ValueType] | None = ...,
+        format: _builtins.str | None = ...,
+        enum: _abc.Iterable[_builtins.str] | None = ...,
+        field_configuration: Global___JSONSchema.FieldConfiguration | None = ...,
     ) -> None: ...
-    def HasField(self, field_name: typing.Literal["field_configuration", b"field_configuration"]) -> builtins.bool: ...
-    def ClearField(self, field_name: typing.Literal["array", b"array", "default", b"default", "description", b"description", "enum", b"enum", "example", b"example", "exclusive_maximum", b"exclusive_maximum", "exclusive_minimum", b"exclusive_minimum", "field_configuration", b"field_configuration", "format", b"format", "max_items", b"max_items", "max_length", b"max_length", "max_properties", b"max_properties", "maximum", b"maximum", "min_items", b"min_items", "min_length", b"min_length", "min_properties", b"min_properties", "minimum", b"minimum", "multiple_of", b"multiple_of", "pattern", b"pattern", "read_only", b"read_only", "ref", b"ref", "required", b"required", "title", b"title", "type", b"type", "unique_items", b"unique_items"]) -> None: ...
+    _HasFieldArgType: _TypeAlias = _typing.Literal["field_configuration", b"field_configuration"]  # noqa: Y015
+    def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["array", b"array", "default", b"default", "description", b"description", "enum", b"enum", "example", b"example", "exclusive_maximum", b"exclusive_maximum", "exclusive_minimum", b"exclusive_minimum", "field_configuration", b"field_configuration", "format", b"format", "max_items", b"max_items", "max_length", b"max_length", "max_properties", b"max_properties", "maximum", b"maximum", "min_items", b"min_items", "min_length", b"min_length", "min_properties", b"min_properties", "minimum", b"minimum", "multiple_of", b"multiple_of", "pattern", b"pattern", "read_only", b"read_only", "ref", b"ref", "required", b"required", "title", b"title", "type", b"type", "unique_items", b"unique_items"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
-global___JSONSchema = JSONSchema
+Global___JSONSchema: _TypeAlias = JSONSchema  # noqa: Y015
 
-@typing.final
-class Tag(google.protobuf.message.Message):
+@_typing.final
+class Tag(_message.Message):
     """`Tag` is a representation of OpenAPI v2 specification's Tag object.
 
     See: https://github.com/OAI/OpenAPI-Specification/blob/3.0.0/versions/2.0.md#tagObject
     """
 
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    DESCRIPTOR: _descriptor.Descriptor
 
-    DESCRIPTION_FIELD_NUMBER: builtins.int
-    EXTERNAL_DOCS_FIELD_NUMBER: builtins.int
-    description: builtins.str
+    DESCRIPTION_FIELD_NUMBER: _builtins.int
+    EXTERNAL_DOCS_FIELD_NUMBER: _builtins.int
+    description: _builtins.str
     """A short description for the tag. GFM syntax can be used for rich text
     representation.
     """
-    @property
-    def external_docs(self) -> global___ExternalDocumentation:
+    @_builtins.property
+    def external_docs(self) -> Global___ExternalDocumentation:
         """Additional external documentation for this tag."""
 
     def __init__(
         self,
         *,
-        description: builtins.str | None = ...,
-        external_docs: global___ExternalDocumentation | None = ...,
+        description: _builtins.str | None = ...,
+        external_docs: Global___ExternalDocumentation | None = ...,
     ) -> None: ...
-    def HasField(self, field_name: typing.Literal["external_docs", b"external_docs"]) -> builtins.bool: ...
-    def ClearField(self, field_name: typing.Literal["description", b"description", "external_docs", b"external_docs"]) -> None: ...
+    _HasFieldArgType: _TypeAlias = _typing.Literal["external_docs", b"external_docs"]  # noqa: Y015
+    def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["description", b"description", "external_docs", b"external_docs"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
-global___Tag = Tag
+Global___Tag: _TypeAlias = Tag  # noqa: Y015
 
-@typing.final
-class SecurityDefinitions(google.protobuf.message.Message):
+@_typing.final
+class SecurityDefinitions(_message.Message):
     """`SecurityDefinitions` is a representation of OpenAPI v2 specification's
     Security Definitions object.
 
@@ -1037,29 +1071,31 @@ class SecurityDefinitions(google.protobuf.message.Message):
     and only serves to provide the relevant details for each scheme.
     """
 
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    DESCRIPTOR: _descriptor.Descriptor
 
-    @typing.final
-    class SecurityEntry(google.protobuf.message.Message):
-        DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    @_typing.final
+    class SecurityEntry(_message.Message):
+        DESCRIPTOR: _descriptor.Descriptor
 
-        KEY_FIELD_NUMBER: builtins.int
-        VALUE_FIELD_NUMBER: builtins.int
-        key: builtins.str
-        @property
-        def value(self) -> global___SecurityScheme: ...
+        KEY_FIELD_NUMBER: _builtins.int
+        VALUE_FIELD_NUMBER: _builtins.int
+        key: _builtins.str
+        @_builtins.property
+        def value(self) -> Global___SecurityScheme: ...
         def __init__(
             self,
             *,
-            key: builtins.str | None = ...,
-            value: global___SecurityScheme | None = ...,
+            key: _builtins.str | None = ...,
+            value: Global___SecurityScheme | None = ...,
         ) -> None: ...
-        def HasField(self, field_name: typing.Literal["value", b"value"]) -> builtins.bool: ...
-        def ClearField(self, field_name: typing.Literal["key", b"key", "value", b"value"]) -> None: ...
+        _HasFieldArgType: _TypeAlias = _typing.Literal["value", b"value"]  # noqa: Y015
+        def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
+        _ClearFieldArgType: _TypeAlias = _typing.Literal["key", b"key", "value", b"value"]  # noqa: Y015
+        def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
-    SECURITY_FIELD_NUMBER: builtins.int
-    @property
-    def security(self) -> google.protobuf.internal.containers.MessageMap[builtins.str, global___SecurityScheme]:
+    SECURITY_FIELD_NUMBER: _builtins.int
+    @_builtins.property
+    def security(self) -> _containers.MessageMap[_builtins.str, Global___SecurityScheme]:
         """A single security scheme definition, mapping a "name" to the scheme it
         defines.
         """
@@ -1067,14 +1103,15 @@ class SecurityDefinitions(google.protobuf.message.Message):
     def __init__(
         self,
         *,
-        security: collections.abc.Mapping[builtins.str, global___SecurityScheme] | None = ...,
+        security: _abc.Mapping[_builtins.str, Global___SecurityScheme] | None = ...,
     ) -> None: ...
-    def ClearField(self, field_name: typing.Literal["security", b"security"]) -> None: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["security", b"security"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
-global___SecurityDefinitions = SecurityDefinitions
+Global___SecurityDefinitions: _TypeAlias = SecurityDefinitions  # noqa: Y015
 
-@typing.final
-class SecurityScheme(google.protobuf.message.Message):
+@_typing.final
+class SecurityScheme(_message.Message):
     """`SecurityScheme` is a representation of OpenAPI v2 specification's
     Security Scheme object.
 
@@ -1086,14 +1123,14 @@ class SecurityScheme(google.protobuf.message.Message):
     password, application and access code).
     """
 
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    DESCRIPTOR: _descriptor.Descriptor
 
     class _Type:
-        ValueType = typing.NewType("ValueType", builtins.int)
-        V: typing_extensions.TypeAlias = ValueType
+        ValueType = _typing.NewType("ValueType", _builtins.int)
+        V: _TypeAlias = ValueType  # noqa: Y015
 
-    class _TypeEnumTypeWrapper(google.protobuf.internal.enum_type_wrapper._EnumTypeWrapper[SecurityScheme._Type.ValueType], builtins.type):
-        DESCRIPTOR: google.protobuf.descriptor.EnumDescriptor
+    class _TypeEnumTypeWrapper(_enum_type_wrapper._EnumTypeWrapper[SecurityScheme._Type.ValueType], _builtins.type):
+        DESCRIPTOR: _descriptor.EnumDescriptor
         TYPE_INVALID: SecurityScheme._Type.ValueType  # 0
         TYPE_BASIC: SecurityScheme._Type.ValueType  # 1
         TYPE_API_KEY: SecurityScheme._Type.ValueType  # 2
@@ -1110,11 +1147,11 @@ class SecurityScheme(google.protobuf.message.Message):
     TYPE_OAUTH2: SecurityScheme.Type.ValueType  # 3
 
     class _In:
-        ValueType = typing.NewType("ValueType", builtins.int)
-        V: typing_extensions.TypeAlias = ValueType
+        ValueType = _typing.NewType("ValueType", _builtins.int)
+        V: _TypeAlias = ValueType  # noqa: Y015
 
-    class _InEnumTypeWrapper(google.protobuf.internal.enum_type_wrapper._EnumTypeWrapper[SecurityScheme._In.ValueType], builtins.type):
-        DESCRIPTOR: google.protobuf.descriptor.EnumDescriptor
+    class _InEnumTypeWrapper(_enum_type_wrapper._EnumTypeWrapper[SecurityScheme._In.ValueType], _builtins.type):
+        DESCRIPTOR: _descriptor.EnumDescriptor
         IN_INVALID: SecurityScheme._In.ValueType  # 0
         IN_QUERY: SecurityScheme._In.ValueType  # 1
         IN_HEADER: SecurityScheme._In.ValueType  # 2
@@ -1127,11 +1164,11 @@ class SecurityScheme(google.protobuf.message.Message):
     IN_HEADER: SecurityScheme.In.ValueType  # 2
 
     class _Flow:
-        ValueType = typing.NewType("ValueType", builtins.int)
-        V: typing_extensions.TypeAlias = ValueType
+        ValueType = _typing.NewType("ValueType", _builtins.int)
+        V: _TypeAlias = ValueType  # noqa: Y015
 
-    class _FlowEnumTypeWrapper(google.protobuf.internal.enum_type_wrapper._EnumTypeWrapper[SecurityScheme._Flow.ValueType], builtins.type):
-        DESCRIPTOR: google.protobuf.descriptor.EnumDescriptor
+    class _FlowEnumTypeWrapper(_enum_type_wrapper._EnumTypeWrapper[SecurityScheme._Flow.ValueType], _builtins.type):
+        DESCRIPTOR: _descriptor.EnumDescriptor
         FLOW_INVALID: SecurityScheme._Flow.ValueType  # 0
         FLOW_IMPLICIT: SecurityScheme._Flow.ValueType  # 1
         FLOW_PASSWORD: SecurityScheme._Flow.ValueType  # 2
@@ -1149,85 +1186,89 @@ class SecurityScheme(google.protobuf.message.Message):
     FLOW_APPLICATION: SecurityScheme.Flow.ValueType  # 3
     FLOW_ACCESS_CODE: SecurityScheme.Flow.ValueType  # 4
 
-    @typing.final
-    class ExtensionsEntry(google.protobuf.message.Message):
-        DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    @_typing.final
+    class ExtensionsEntry(_message.Message):
+        DESCRIPTOR: _descriptor.Descriptor
 
-        KEY_FIELD_NUMBER: builtins.int
-        VALUE_FIELD_NUMBER: builtins.int
-        key: builtins.str
-        @property
-        def value(self) -> google.protobuf.struct_pb2.Value: ...
+        KEY_FIELD_NUMBER: _builtins.int
+        VALUE_FIELD_NUMBER: _builtins.int
+        key: _builtins.str
+        @_builtins.property
+        def value(self) -> _struct_pb2.Value: ...
         def __init__(
             self,
             *,
-            key: builtins.str | None = ...,
-            value: google.protobuf.struct_pb2.Value | None = ...,
+            key: _builtins.str | None = ...,
+            value: _struct_pb2.Value | None = ...,
         ) -> None: ...
-        def HasField(self, field_name: typing.Literal["value", b"value"]) -> builtins.bool: ...
-        def ClearField(self, field_name: typing.Literal["key", b"key", "value", b"value"]) -> None: ...
+        _HasFieldArgType: _TypeAlias = _typing.Literal["value", b"value"]  # noqa: Y015
+        def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
+        _ClearFieldArgType: _TypeAlias = _typing.Literal["key", b"key", "value", b"value"]  # noqa: Y015
+        def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
-    TYPE_FIELD_NUMBER: builtins.int
-    DESCRIPTION_FIELD_NUMBER: builtins.int
-    NAME_FIELD_NUMBER: builtins.int
-    IN_FIELD_NUMBER: builtins.int
-    FLOW_FIELD_NUMBER: builtins.int
-    AUTHORIZATION_URL_FIELD_NUMBER: builtins.int
-    TOKEN_URL_FIELD_NUMBER: builtins.int
-    SCOPES_FIELD_NUMBER: builtins.int
-    EXTENSIONS_FIELD_NUMBER: builtins.int
-    type: global___SecurityScheme.Type.ValueType
+    TYPE_FIELD_NUMBER: _builtins.int
+    DESCRIPTION_FIELD_NUMBER: _builtins.int
+    NAME_FIELD_NUMBER: _builtins.int
+    IN_FIELD_NUMBER: _builtins.int
+    FLOW_FIELD_NUMBER: _builtins.int
+    AUTHORIZATION_URL_FIELD_NUMBER: _builtins.int
+    TOKEN_URL_FIELD_NUMBER: _builtins.int
+    SCOPES_FIELD_NUMBER: _builtins.int
+    EXTENSIONS_FIELD_NUMBER: _builtins.int
+    type: Global___SecurityScheme.Type.ValueType
     """The type of the security scheme. Valid values are "basic",
     "apiKey" or "oauth2".
     """
-    description: builtins.str
+    description: _builtins.str
     """A short description for security scheme."""
-    name: builtins.str
+    name: _builtins.str
     """The name of the header or query parameter to be used.
     Valid for apiKey.
     """
-    flow: global___SecurityScheme.Flow.ValueType
+    flow: Global___SecurityScheme.Flow.ValueType
     """The flow used by the OAuth2 security scheme. Valid values are
     "implicit", "password", "application" or "accessCode".
     Valid for oauth2.
     """
-    authorization_url: builtins.str
+    authorization_url: _builtins.str
     """The authorization URL to be used for this flow. This SHOULD be in
     the form of a URL.
     Valid for oauth2/implicit and oauth2/accessCode.
     """
-    token_url: builtins.str
+    token_url: _builtins.str
     """The token URL to be used for this flow. This SHOULD be in the
     form of a URL.
     Valid for oauth2/password, oauth2/application and oauth2/accessCode.
     """
-    @property
-    def scopes(self) -> global___Scopes:
+    @_builtins.property
+    def scopes(self) -> Global___Scopes:
         """The available scopes for the OAuth2 security scheme.
         Valid for oauth2.
         """
 
-    @property
-    def extensions(self) -> google.protobuf.internal.containers.MessageMap[builtins.str, google.protobuf.struct_pb2.Value]: ...
+    @_builtins.property
+    def extensions(self) -> _containers.MessageMap[_builtins.str, _struct_pb2.Value]: ...
     def __init__(
         self,
         *,
-        type: global___SecurityScheme.Type.ValueType | None = ...,
-        description: builtins.str | None = ...,
-        name: builtins.str | None = ...,
-        flow: global___SecurityScheme.Flow.ValueType | None = ...,
-        authorization_url: builtins.str | None = ...,
-        token_url: builtins.str | None = ...,
-        scopes: global___Scopes | None = ...,
-        extensions: collections.abc.Mapping[builtins.str, google.protobuf.struct_pb2.Value] | None = ...,
+        type: Global___SecurityScheme.Type.ValueType | None = ...,
+        description: _builtins.str | None = ...,
+        name: _builtins.str | None = ...,
+        flow: Global___SecurityScheme.Flow.ValueType | None = ...,
+        authorization_url: _builtins.str | None = ...,
+        token_url: _builtins.str | None = ...,
+        scopes: Global___Scopes | None = ...,
+        extensions: _abc.Mapping[_builtins.str, _struct_pb2.Value] | None = ...,
     ) -> None: ...
-    def HasField(self, field_name: typing.Literal["scopes", b"scopes"]) -> builtins.bool: ...
-    def ClearField(self, field_name: typing.Literal["authorization_url", b"authorization_url", "description", b"description", "extensions", b"extensions", "flow", b"flow", "in", b"in", "name", b"name", "scopes", b"scopes", "token_url", b"token_url", "type", b"type"]) -> None: ...
+    _HasFieldArgType: _TypeAlias = _typing.Literal["scopes", b"scopes"]  # noqa: Y015
+    def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["authorization_url", b"authorization_url", "description", b"description", "extensions", b"extensions", "flow", b"flow", "in", b"in", "name", b"name", "scopes", b"scopes", "token_url", b"token_url", "type", b"type"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
-global___SecurityScheme = SecurityScheme
+Global___SecurityScheme: _TypeAlias = SecurityScheme  # noqa: Y015
 
-@typing.final
-class SecurityRequirement(google.protobuf.message.Message):
+@_typing.final
+class SecurityRequirement(_message.Message):
     """`SecurityRequirement` is a representation of OpenAPI v2 specification's
     Security Requirement object.
 
@@ -1241,48 +1282,51 @@ class SecurityRequirement(google.protobuf.message.Message):
     declared in the Security Definitions.
     """
 
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    DESCRIPTOR: _descriptor.Descriptor
 
-    @typing.final
-    class SecurityRequirementValue(google.protobuf.message.Message):
+    @_typing.final
+    class SecurityRequirementValue(_message.Message):
         """If the security scheme is of type "oauth2", then the value is a list of
         scope names required for the execution. For other security scheme types,
         the array MUST be empty.
         """
 
-        DESCRIPTOR: google.protobuf.descriptor.Descriptor
+        DESCRIPTOR: _descriptor.Descriptor
 
-        SCOPE_FIELD_NUMBER: builtins.int
-        @property
-        def scope(self) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[builtins.str]: ...
+        SCOPE_FIELD_NUMBER: _builtins.int
+        @_builtins.property
+        def scope(self) -> _containers.RepeatedScalarFieldContainer[_builtins.str]: ...
         def __init__(
             self,
             *,
-            scope: collections.abc.Iterable[builtins.str] | None = ...,
+            scope: _abc.Iterable[_builtins.str] | None = ...,
         ) -> None: ...
-        def ClearField(self, field_name: typing.Literal["scope", b"scope"]) -> None: ...
+        _ClearFieldArgType: _TypeAlias = _typing.Literal["scope", b"scope"]  # noqa: Y015
+        def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
-    @typing.final
-    class SecurityRequirementEntry(google.protobuf.message.Message):
-        DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    @_typing.final
+    class SecurityRequirementEntry(_message.Message):
+        DESCRIPTOR: _descriptor.Descriptor
 
-        KEY_FIELD_NUMBER: builtins.int
-        VALUE_FIELD_NUMBER: builtins.int
-        key: builtins.str
-        @property
-        def value(self) -> global___SecurityRequirement.SecurityRequirementValue: ...
+        KEY_FIELD_NUMBER: _builtins.int
+        VALUE_FIELD_NUMBER: _builtins.int
+        key: _builtins.str
+        @_builtins.property
+        def value(self) -> Global___SecurityRequirement.SecurityRequirementValue: ...
         def __init__(
             self,
             *,
-            key: builtins.str | None = ...,
-            value: global___SecurityRequirement.SecurityRequirementValue | None = ...,
+            key: _builtins.str | None = ...,
+            value: Global___SecurityRequirement.SecurityRequirementValue | None = ...,
         ) -> None: ...
-        def HasField(self, field_name: typing.Literal["value", b"value"]) -> builtins.bool: ...
-        def ClearField(self, field_name: typing.Literal["key", b"key", "value", b"value"]) -> None: ...
+        _HasFieldArgType: _TypeAlias = _typing.Literal["value", b"value"]  # noqa: Y015
+        def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
+        _ClearFieldArgType: _TypeAlias = _typing.Literal["key", b"key", "value", b"value"]  # noqa: Y015
+        def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
-    SECURITY_REQUIREMENT_FIELD_NUMBER: builtins.int
-    @property
-    def security_requirement(self) -> google.protobuf.internal.containers.MessageMap[builtins.str, global___SecurityRequirement.SecurityRequirementValue]:
+    SECURITY_REQUIREMENT_FIELD_NUMBER: _builtins.int
+    @_builtins.property
+    def security_requirement(self) -> _containers.MessageMap[_builtins.str, Global___SecurityRequirement.SecurityRequirementValue]:
         """Each name must correspond to a security scheme which is declared in
         the Security Definitions. If the security scheme is of type "oauth2",
         then the value is a list of scope names required for the execution.
@@ -1292,14 +1336,15 @@ class SecurityRequirement(google.protobuf.message.Message):
     def __init__(
         self,
         *,
-        security_requirement: collections.abc.Mapping[builtins.str, global___SecurityRequirement.SecurityRequirementValue] | None = ...,
+        security_requirement: _abc.Mapping[_builtins.str, Global___SecurityRequirement.SecurityRequirementValue] | None = ...,
     ) -> None: ...
-    def ClearField(self, field_name: typing.Literal["security_requirement", b"security_requirement"]) -> None: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["security_requirement", b"security_requirement"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
-global___SecurityRequirement = SecurityRequirement
+Global___SecurityRequirement: _TypeAlias = SecurityRequirement  # noqa: Y015
 
-@typing.final
-class Scopes(google.protobuf.message.Message):
+@_typing.final
+class Scopes(_message.Message):
     """`Scopes` is a representation of OpenAPI v2 specification's Scopes object.
 
     See: https://github.com/OAI/OpenAPI-Specification/blob/3.0.0/versions/2.0.md#scopesObject
@@ -1307,27 +1352,28 @@ class Scopes(google.protobuf.message.Message):
     Lists the available scopes for an OAuth2 security scheme.
     """
 
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    DESCRIPTOR: _descriptor.Descriptor
 
-    @typing.final
-    class ScopeEntry(google.protobuf.message.Message):
-        DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    @_typing.final
+    class ScopeEntry(_message.Message):
+        DESCRIPTOR: _descriptor.Descriptor
 
-        KEY_FIELD_NUMBER: builtins.int
-        VALUE_FIELD_NUMBER: builtins.int
-        key: builtins.str
-        value: builtins.str
+        KEY_FIELD_NUMBER: _builtins.int
+        VALUE_FIELD_NUMBER: _builtins.int
+        key: _builtins.str
+        value: _builtins.str
         def __init__(
             self,
             *,
-            key: builtins.str | None = ...,
-            value: builtins.str | None = ...,
+            key: _builtins.str | None = ...,
+            value: _builtins.str | None = ...,
         ) -> None: ...
-        def ClearField(self, field_name: typing.Literal["key", b"key", "value", b"value"]) -> None: ...
+        _ClearFieldArgType: _TypeAlias = _typing.Literal["key", b"key", "value", b"value"]  # noqa: Y015
+        def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
-    SCOPE_FIELD_NUMBER: builtins.int
-    @property
-    def scope(self) -> google.protobuf.internal.containers.ScalarMap[builtins.str, builtins.str]:
+    SCOPE_FIELD_NUMBER: _builtins.int
+    @_builtins.property
+    def scope(self) -> _containers.ScalarMap[_builtins.str, _builtins.str]:
         """Maps between a name of a scope to a short description of it (as the value
         of the property).
         """
@@ -1335,8 +1381,9 @@ class Scopes(google.protobuf.message.Message):
     def __init__(
         self,
         *,
-        scope: collections.abc.Mapping[builtins.str, builtins.str] | None = ...,
+        scope: _abc.Mapping[_builtins.str, _builtins.str] | None = ...,
     ) -> None: ...
-    def ClearField(self, field_name: typing.Literal["scope", b"scope"]) -> None: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["scope", b"scope"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
-global___Scopes = Scopes
+Global___Scopes: _TypeAlias = Scopes  # noqa: Y015

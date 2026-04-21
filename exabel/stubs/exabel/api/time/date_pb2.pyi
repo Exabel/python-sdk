@@ -3,37 +3,44 @@
 isort:skip_file
 Copyright (c) 2025 Exabel AS. All rights reserved."""
 
-import builtins
-import google.protobuf.descriptor
-import google.protobuf.message
-import typing
+from google.protobuf import descriptor as _descriptor
+from google.protobuf import message as _message
+import builtins as _builtins
+import sys
+import typing as _typing
 
-DESCRIPTOR: google.protobuf.descriptor.FileDescriptor
+if sys.version_info >= (3, 10):
+    from typing import TypeAlias as _TypeAlias
+else:
+    from typing_extensions import TypeAlias as _TypeAlias
 
-@typing.final
-class Date(google.protobuf.message.Message):
+DESCRIPTOR: _descriptor.FileDescriptor
+
+@_typing.final
+class Date(_message.Message):
     """Represents a calendar date."""
 
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    DESCRIPTOR: _descriptor.Descriptor
 
-    YEAR_FIELD_NUMBER: builtins.int
-    MONTH_FIELD_NUMBER: builtins.int
-    DAY_FIELD_NUMBER: builtins.int
-    year: builtins.int
+    YEAR_FIELD_NUMBER: _builtins.int
+    MONTH_FIELD_NUMBER: _builtins.int
+    DAY_FIELD_NUMBER: _builtins.int
+    year: _builtins.int
     """The date's year."""
-    month: builtins.int
+    month: _builtins.int
     """The month of the year; must be between 1 and 12 inclusive."""
-    day: builtins.int
+    day: _builtins.int
     """The day of the month, starting at 1; the day, month and year combined must
     define a valid calendar date.
     """
     def __init__(
         self,
         *,
-        year: builtins.int | None = ...,
-        month: builtins.int | None = ...,
-        day: builtins.int | None = ...,
+        year: _builtins.int | None = ...,
+        month: _builtins.int | None = ...,
+        day: _builtins.int | None = ...,
     ) -> None: ...
-    def ClearField(self, field_name: typing.Literal["day", b"day", "month", b"month", "year", b"year"]) -> None: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["day", b"day", "month", b"month", "year", b"year"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
-global___Date = Date
+Global___Date: _TypeAlias = Date  # noqa: Y015

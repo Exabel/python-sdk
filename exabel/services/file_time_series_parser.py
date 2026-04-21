@@ -463,11 +463,11 @@ class DateParsingMixin:
         if "known_time" in data.columns:
             known_time_index = cls._try_parsing_date_column(data, "known_time")
             known_time_index.name = None
-            data.set_index([date_index, known_time_index], inplace=True)
-            data.drop(columns=["date", "known_time"], inplace=True)
+            data = data.set_index([date_index, known_time_index])
+            data = data.drop(columns=["date", "known_time"])
         else:
-            data.set_index(date_index, inplace=True)
-            data.drop(columns="date", inplace=True)
+            data = data.set_index(date_index)
+            data = data.drop(columns="date")
         return data
 
     @classmethod
@@ -518,9 +518,7 @@ class SignalNamesInRows(DateParsingMixin, ParsedTimeSeriesFile):
                 entity_column = column
                 continue
             return False
-        if _has_duplicate_columns(data.columns):
-            return False
-        return True
+        return not _has_duplicate_columns(data.columns)
 
     @classmethod
     def _entity_column(cls, data: pd.DataFrame) -> str:
@@ -623,9 +621,7 @@ class SignalNamesInColumns(DateParsingMixin, ParsedTimeSeriesFile):
             _is_valid_signal_name(column, cls.RESERVED_COLUMNS) for column in data.columns[1:]
         ):
             return False
-        if _has_duplicate_columns(data.columns):
-            return False
-        return True
+        return not _has_duplicate_columns(data.columns)
 
     def get_signals(self) -> Sequence[str]:
         columns = set(self._data.columns)
@@ -653,7 +649,7 @@ class SignalNamesInColumns(DateParsingMixin, ParsedTimeSeriesFile):
         for entity, entity_group in self._data.groupby("entity"):
             for signal in self.get_signals():
                 ts = entity_group[signal]
-                ts.dropna(inplace=True)
+                ts = ts.dropna()
                 if ts.empty and not replace_existing_time_series:
                     continue
 
@@ -722,9 +718,7 @@ class SignalNamesInColumnsGlobalEntity(SignalNamesInColumns):
         # Check that there is at least one possible signal column:
         if not any(_is_valid_signal_name(column, cls.RESERVED_COLUMNS) for column in data.columns):
             return False
-        if _has_duplicate_columns(data.columns):
-            return False
-        return True
+        return not _has_duplicate_columns(data.columns)
 
     @classmethod
     def _map_entities(

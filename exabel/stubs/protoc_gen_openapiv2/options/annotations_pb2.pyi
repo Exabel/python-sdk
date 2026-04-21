@@ -3,45 +3,44 @@
 isort:skip_file
 """
 
-import builtins
-import google.protobuf.descriptor
-import google.protobuf.descriptor_pb2
-import google.protobuf.internal.extension_dict
-from . import openapiv2_pb2
-from ... import protoc_gen_openapiv2
+from google.protobuf import descriptor as _descriptor
+from google.protobuf import descriptor_pb2 as _descriptor_pb2
+from google.protobuf.internal import extension_dict as _extension_dict
+from . import openapiv2_pb2 as _openapiv2_pb2
+import builtins as _builtins
 
-DESCRIPTOR: google.protobuf.descriptor.FileDescriptor
+DESCRIPTOR: _descriptor.FileDescriptor
 
-OPENAPIV2_SWAGGER_FIELD_NUMBER: builtins.int
-OPENAPIV2_OPERATION_FIELD_NUMBER: builtins.int
-OPENAPIV2_SCHEMA_FIELD_NUMBER: builtins.int
-OPENAPIV2_TAG_FIELD_NUMBER: builtins.int
-OPENAPIV2_FIELD_FIELD_NUMBER: builtins.int
-openapiv2_swagger: google.protobuf.internal.extension_dict._ExtensionFieldDescriptor[google.protobuf.descriptor_pb2.FileOptions, protoc_gen_openapiv2.options.openapiv2_pb2.Swagger]
+OPENAPIV2_SWAGGER_FIELD_NUMBER: _builtins.int
+OPENAPIV2_OPERATION_FIELD_NUMBER: _builtins.int
+OPENAPIV2_SCHEMA_FIELD_NUMBER: _builtins.int
+OPENAPIV2_TAG_FIELD_NUMBER: _builtins.int
+OPENAPIV2_FIELD_FIELD_NUMBER: _builtins.int
+openapiv2_swagger: _extension_dict._ExtensionFieldDescriptor[_descriptor_pb2.FileOptions, _openapiv2_pb2.Swagger]
 """ID assigned by protobuf-global-extension-registry@google.com for gRPC-Gateway project.
 
 All IDs are the same, as assigned. It is okay that they are the same, as they extend
 different descriptor messages.
 """
-openapiv2_operation: google.protobuf.internal.extension_dict._ExtensionFieldDescriptor[google.protobuf.descriptor_pb2.MethodOptions, protoc_gen_openapiv2.options.openapiv2_pb2.Operation]
+openapiv2_operation: _extension_dict._ExtensionFieldDescriptor[_descriptor_pb2.MethodOptions, _openapiv2_pb2.Operation]
 """ID assigned by protobuf-global-extension-registry@google.com for gRPC-Gateway project.
 
 All IDs are the same, as assigned. It is okay that they are the same, as they extend
 different descriptor messages.
 """
-openapiv2_schema: google.protobuf.internal.extension_dict._ExtensionFieldDescriptor[google.protobuf.descriptor_pb2.MessageOptions, protoc_gen_openapiv2.options.openapiv2_pb2.Schema]
+openapiv2_schema: _extension_dict._ExtensionFieldDescriptor[_descriptor_pb2.MessageOptions, _openapiv2_pb2.Schema]
 """ID assigned by protobuf-global-extension-registry@google.com for gRPC-Gateway project.
 
 All IDs are the same, as assigned. It is okay that they are the same, as they extend
 different descriptor messages.
 """
-openapiv2_tag: google.protobuf.internal.extension_dict._ExtensionFieldDescriptor[google.protobuf.descriptor_pb2.ServiceOptions, protoc_gen_openapiv2.options.openapiv2_pb2.Tag]
+openapiv2_tag: _extension_dict._ExtensionFieldDescriptor[_descriptor_pb2.ServiceOptions, _openapiv2_pb2.Tag]
 """ID assigned by protobuf-global-extension-registry@google.com for gRPC-Gateway project.
 
 All IDs are the same, as assigned. It is okay that they are the same, as they extend
 different descriptor messages.
 """
-openapiv2_field: google.protobuf.internal.extension_dict._ExtensionFieldDescriptor[google.protobuf.descriptor_pb2.FieldOptions, protoc_gen_openapiv2.options.openapiv2_pb2.JSONSchema]
+openapiv2_field: _extension_dict._ExtensionFieldDescriptor[_descriptor_pb2.FieldOptions, _openapiv2_pb2.JSONSchema]
 """ID assigned by protobuf-global-extension-registry@google.com for gRPC-Gateway project.
 
 All IDs are the same, as assigned. It is okay that they are the same, as they extend

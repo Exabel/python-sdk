@@ -57,4 +57,4 @@ class TestFeatherReader:
                 df_batch = df.iloc[: len(batch)]
                 pd.testing.assert_frame_equal(df_batch, batch)
                 df = df.iloc[len(batch) :]
-                df.reset_index(drop=True, inplace=True)
+                df = df.reset_index(drop=True)

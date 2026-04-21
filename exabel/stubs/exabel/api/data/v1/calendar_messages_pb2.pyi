@@ -3,28 +3,27 @@
 isort:skip_file
 Copyright (c) 2019-2025 Exabel AS. All rights reserved."""
 
-import builtins
-from ...time import date_pb2
-import google.protobuf.descriptor
-import google.protobuf.internal.enum_type_wrapper
-import google.protobuf.message
+from ...time import date_pb2 as _date_pb2
+from google.protobuf import descriptor as _descriptor
+from google.protobuf import message as _message
+from google.protobuf.internal import enum_type_wrapper as _enum_type_wrapper
+import builtins as _builtins
 import sys
-import typing
+import typing as _typing
 
 if sys.version_info >= (3, 10):
-    import typing as typing_extensions
+    from typing import TypeAlias as _TypeAlias
 else:
-    import typing_extensions
-from ..... import exabel
+    from typing_extensions import TypeAlias as _TypeAlias
 
-DESCRIPTOR: google.protobuf.descriptor.FileDescriptor
+DESCRIPTOR: _descriptor.FileDescriptor
 
 class _Frequency:
-    ValueType = typing.NewType("ValueType", builtins.int)
-    V: typing_extensions.TypeAlias = ValueType
+    ValueType = _typing.NewType("ValueType", _builtins.int)
+    V: _TypeAlias = ValueType  # noqa: Y015
 
-class _FrequencyEnumTypeWrapper(google.protobuf.internal.enum_type_wrapper._EnumTypeWrapper[_Frequency.ValueType], builtins.type):
-    DESCRIPTOR: google.protobuf.descriptor.EnumDescriptor
+class _FrequencyEnumTypeWrapper(_enum_type_wrapper._EnumTypeWrapper[_Frequency.ValueType], _builtins.type):
+    DESCRIPTOR: _descriptor.EnumDescriptor
     FREQUENCY_UNSPECIFIED: _Frequency.ValueType  # 0
     """The frequency of the fiscal period is unspecified."""
     QUARTERLY: _Frequency.ValueType  # 1
@@ -45,43 +44,45 @@ SEMIANNUAL: Frequency.ValueType  # 2
 """The fiscal period is semi-annual."""
 ANNUAL: Frequency.ValueType  # 3
 """The fiscal periods is annual."""
-global___Frequency = Frequency
+Global___Frequency: _TypeAlias = Frequency  # noqa: Y015
 
-@typing.final
-class FiscalPeriod(google.protobuf.message.Message):
+@_typing.final
+class FiscalPeriod(_message.Message):
     """A fiscal period of a company."""
 
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    DESCRIPTOR: _descriptor.Descriptor
 
-    FREQUENCY_FIELD_NUMBER: builtins.int
-    START_DATE_FIELD_NUMBER: builtins.int
-    END_DATE_FIELD_NUMBER: builtins.int
-    LABEL_FIELD_NUMBER: builtins.int
-    IS_REPORTED_FIELD_NUMBER: builtins.int
-    frequency: global___Frequency.ValueType
+    FREQUENCY_FIELD_NUMBER: _builtins.int
+    START_DATE_FIELD_NUMBER: _builtins.int
+    END_DATE_FIELD_NUMBER: _builtins.int
+    LABEL_FIELD_NUMBER: _builtins.int
+    IS_REPORTED_FIELD_NUMBER: _builtins.int
+    frequency: Global___Frequency.ValueType
     """The frequency of the fiscal period."""
-    label: builtins.str
+    label: _builtins.str
     """The period label (e.g., "4Q-2025", "2H-2025", "FY-2025")."""
-    is_reported: builtins.bool
+    is_reported: _builtins.bool
     """Whether the period has been reported (earnings released)."""
-    @property
-    def start_date(self) -> exabel.api.time.date_pb2.Date:
+    @_builtins.property
+    def start_date(self) -> _date_pb2.Date:
         """The first date of the fiscal period."""
 
-    @property
-    def end_date(self) -> exabel.api.time.date_pb2.Date:
+    @_builtins.property
+    def end_date(self) -> _date_pb2.Date:
         """The last date in the fiscal period."""
 
     def __init__(
         self,
         *,
-        frequency: global___Frequency.ValueType | None = ...,
-        start_date: exabel.api.time.date_pb2.Date | None = ...,
-        end_date: exabel.api.time.date_pb2.Date | None = ...,
-        label: builtins.str | None = ...,
-        is_reported: builtins.bool | None = ...,
+        frequency: Global___Frequency.ValueType | None = ...,
+        start_date: _date_pb2.Date | None = ...,
+        end_date: _date_pb2.Date | None = ...,
+        label: _builtins.str | None = ...,
+        is_reported: _builtins.bool | None = ...,
     ) -> None: ...
-    def HasField(self, field_name: typing.Literal["end_date", b"end_date", "start_date", b"start_date"]) -> builtins.bool: ...
-    def ClearField(self, field_name: typing.Literal["end_date", b"end_date", "frequency", b"frequency", "is_reported", b"is_reported", "label", b"label", "start_date", b"start_date"]) -> None: ...
+    _HasFieldArgType: _TypeAlias = _typing.Literal["end_date", b"end_date", "start_date", b"start_date"]  # noqa: Y015
+    def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["end_date", b"end_date", "frequency", b"frequency", "is_reported", b"is_reported", "label", b"label", "start_date", b"start_date"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
-global___FiscalPeriod = FiscalPeriod
+Global___FiscalPeriod: _TypeAlias = FiscalPeriod  # noqa: Y015

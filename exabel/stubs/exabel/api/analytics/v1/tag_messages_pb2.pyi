@@ -3,54 +3,61 @@
 isort:skip_file
 """
 
-import builtins
-from . import item_messages_pb2
-import google.protobuf.descriptor
-import google.protobuf.message
-import typing
-from ..... import exabel
+from . import item_messages_pb2 as _item_messages_pb2
+from google.protobuf import descriptor as _descriptor
+from google.protobuf import message as _message
+import builtins as _builtins
+import sys
+import typing as _typing
 
-DESCRIPTOR: google.protobuf.descriptor.FileDescriptor
+if sys.version_info >= (3, 10):
+    from typing import TypeAlias as _TypeAlias
+else:
+    from typing_extensions import TypeAlias as _TypeAlias
 
-@typing.final
-class Tag(google.protobuf.message.Message):
+DESCRIPTOR: _descriptor.FileDescriptor
+
+@_typing.final
+class Tag(_message.Message):
     """Represents a tag."""
 
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    DESCRIPTOR: _descriptor.Descriptor
 
-    NAME_FIELD_NUMBER: builtins.int
-    DISPLAY_NAME_FIELD_NUMBER: builtins.int
-    DESCRIPTION_FIELD_NUMBER: builtins.int
-    ENTITY_TYPE_FIELD_NUMBER: builtins.int
-    METADATA_FIELD_NUMBER: builtins.int
-    name: builtins.str
+    NAME_FIELD_NUMBER: _builtins.int
+    DISPLAY_NAME_FIELD_NUMBER: _builtins.int
+    DESCRIPTION_FIELD_NUMBER: _builtins.int
+    ENTITY_TYPE_FIELD_NUMBER: _builtins.int
+    METADATA_FIELD_NUMBER: _builtins.int
+    name: _builtins.str
     """Unique resource name of the tag, e.g. `tags/user:806f697b-e9fa-4443-9f92-ba46e5b60930`."""
-    display_name: builtins.str
+    display_name: _builtins.str
     """Display name of the tag. This is shown wherever the tag is used in the Exabel app."""
-    description: builtins.str
+    description: _builtins.str
     """You may use this to provide more information about the tag. This is shown in the Library when
     browsing for tags.
     """
-    entity_type: builtins.str
+    entity_type: _builtins.str
     """Resource name of the tag's entity type.
 
     Tags can only contain entities of one entity type. For new tags, this is set once the first
     entity is added.
     """
-    @property
-    def metadata(self) -> exabel.api.analytics.v1.item_messages_pb2.ItemMetadata:
+    @_builtins.property
+    def metadata(self) -> _item_messages_pb2.ItemMetadata:
         """Metadata about the tag."""
 
     def __init__(
         self,
         *,
-        name: builtins.str | None = ...,
-        display_name: builtins.str | None = ...,
-        description: builtins.str | None = ...,
-        entity_type: builtins.str | None = ...,
-        metadata: exabel.api.analytics.v1.item_messages_pb2.ItemMetadata | None = ...,
+        name: _builtins.str | None = ...,
+        display_name: _builtins.str | None = ...,
+        description: _builtins.str | None = ...,
+        entity_type: _builtins.str | None = ...,
+        metadata: _item_messages_pb2.ItemMetadata | None = ...,
     ) -> None: ...
-    def HasField(self, field_name: typing.Literal["metadata", b"metadata"]) -> builtins.bool: ...
-    def ClearField(self, field_name: typing.Literal["description", b"description", "display_name", b"display_name", "entity_type", b"entity_type", "metadata", b"metadata", "name", b"name"]) -> None: ...
+    _HasFieldArgType: _TypeAlias = _typing.Literal["metadata", b"metadata"]  # noqa: Y015
+    def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["description", b"description", "display_name", b"display_name", "entity_type", b"entity_type", "metadata", b"metadata", "name", b"name"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
-global___Tag = Tag
+Global___Tag: _TypeAlias = Tag  # noqa: Y015

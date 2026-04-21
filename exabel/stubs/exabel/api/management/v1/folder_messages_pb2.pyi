@@ -3,31 +3,30 @@
 isort:skip_file
 Copyright (c) 2022 Exabel AS. All rights reserved."""
 
-import builtins
-import collections.abc
-from . import user_messages_pb2
-import google.protobuf.descriptor
-import google.protobuf.internal.containers
-import google.protobuf.internal.enum_type_wrapper
-import google.protobuf.message
-import google.protobuf.timestamp_pb2
+from collections import abc as _abc
+from . import user_messages_pb2 as _user_messages_pb2
+from google.protobuf import descriptor as _descriptor
+from google.protobuf import message as _message
+from google.protobuf import timestamp_pb2 as _timestamp_pb2
+from google.protobuf.internal import containers as _containers
+from google.protobuf.internal import enum_type_wrapper as _enum_type_wrapper
+import builtins as _builtins
 import sys
-import typing
+import typing as _typing
 
 if sys.version_info >= (3, 10):
-    import typing as typing_extensions
+    from typing import TypeAlias as _TypeAlias
 else:
-    import typing_extensions
-from ..... import exabel
+    from typing_extensions import TypeAlias as _TypeAlias
 
-DESCRIPTOR: google.protobuf.descriptor.FileDescriptor
+DESCRIPTOR: _descriptor.FileDescriptor
 
 class _FolderItemType:
-    ValueType = typing.NewType("ValueType", builtins.int)
-    V: typing_extensions.TypeAlias = ValueType
+    ValueType = _typing.NewType("ValueType", _builtins.int)
+    V: _TypeAlias = ValueType  # noqa: Y015
 
-class _FolderItemTypeEnumTypeWrapper(google.protobuf.internal.enum_type_wrapper._EnumTypeWrapper[_FolderItemType.ValueType], builtins.type):
-    DESCRIPTOR: google.protobuf.descriptor.EnumDescriptor
+class _FolderItemTypeEnumTypeWrapper(_enum_type_wrapper._EnumTypeWrapper[_FolderItemType.ValueType], _builtins.type):
+    DESCRIPTOR: _descriptor.EnumDescriptor
     FOLDER_ITEM_TYPE_INVALID: _FolderItemType.ValueType  # 0
     """Invalid item type."""
     DERIVED_SIGNAL: _FolderItemType.ValueType  # 1
@@ -80,143 +79,150 @@ KPI_MAPPING: FolderItemType.ValueType  # 10
 """KPI mapping."""
 ALERT: FolderItemType.ValueType  # 11
 """Alert."""
-global___FolderItemType = FolderItemType
+Global___FolderItemType: _TypeAlias = FolderItemType  # noqa: Y015
 
-@typing.final
-class Folder(google.protobuf.message.Message):
+@_typing.final
+class Folder(_message.Message):
     """A folder."""
 
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    DESCRIPTOR: _descriptor.Descriptor
 
-    NAME_FIELD_NUMBER: builtins.int
-    DISPLAY_NAME_FIELD_NUMBER: builtins.int
-    DESCRIPTION_FIELD_NUMBER: builtins.int
-    WRITE_FIELD_NUMBER: builtins.int
-    ITEMS_FIELD_NUMBER: builtins.int
-    name: builtins.str
+    NAME_FIELD_NUMBER: _builtins.int
+    DISPLAY_NAME_FIELD_NUMBER: _builtins.int
+    DESCRIPTION_FIELD_NUMBER: _builtins.int
+    WRITE_FIELD_NUMBER: _builtins.int
+    ITEMS_FIELD_NUMBER: _builtins.int
+    name: _builtins.str
     """Unique resource name of the folder, e.g. `folders/123`. In the "Create folder" method, this is
     ignored and may be left empty.
     """
-    display_name: builtins.str
+    display_name: _builtins.str
     """Appears in the Exabel Library in the list of folders."""
-    description: builtins.str
+    description: _builtins.str
     """The description of the folder."""
-    write: builtins.bool
+    write: _builtins.bool
     """Whether the API caller has write access to the folder."""
-    @property
-    def items(self) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[global___FolderItem]:
+    @_builtins.property
+    def items(self) -> _containers.RepeatedCompositeFieldContainer[Global___FolderItem]:
         """List of items in the folder. To add or remove folder items, use the "Move folder items" method."""
 
     def __init__(
         self,
         *,
-        name: builtins.str | None = ...,
-        display_name: builtins.str | None = ...,
-        description: builtins.str | None = ...,
-        write: builtins.bool | None = ...,
-        items: collections.abc.Iterable[global___FolderItem] | None = ...,
+        name: _builtins.str | None = ...,
+        display_name: _builtins.str | None = ...,
+        description: _builtins.str | None = ...,
+        write: _builtins.bool | None = ...,
+        items: _abc.Iterable[Global___FolderItem] | None = ...,
     ) -> None: ...
-    def ClearField(self, field_name: typing.Literal["description", b"description", "display_name", b"display_name", "items", b"items", "name", b"name", "write", b"write"]) -> None: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["description", b"description", "display_name", b"display_name", "items", b"items", "name", b"name", "write", b"write"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
-global___Folder = Folder
+Global___Folder: _TypeAlias = Folder  # noqa: Y015
 
-@typing.final
-class FolderItem(google.protobuf.message.Message):
+@_typing.final
+class FolderItem(_message.Message):
     """An item in a folder."""
 
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    DESCRIPTOR: _descriptor.Descriptor
 
-    PARENT_FIELD_NUMBER: builtins.int
-    NAME_FIELD_NUMBER: builtins.int
-    DISPLAY_NAME_FIELD_NUMBER: builtins.int
-    DESCRIPTION_FIELD_NUMBER: builtins.int
-    ITEM_TYPE_FIELD_NUMBER: builtins.int
-    CREATE_TIME_FIELD_NUMBER: builtins.int
-    UPDATE_TIME_FIELD_NUMBER: builtins.int
-    CREATED_BY_FIELD_NUMBER: builtins.int
-    UPDATED_BY_FIELD_NUMBER: builtins.int
-    parent: builtins.str
+    PARENT_FIELD_NUMBER: _builtins.int
+    NAME_FIELD_NUMBER: _builtins.int
+    DISPLAY_NAME_FIELD_NUMBER: _builtins.int
+    DESCRIPTION_FIELD_NUMBER: _builtins.int
+    ITEM_TYPE_FIELD_NUMBER: _builtins.int
+    CREATE_TIME_FIELD_NUMBER: _builtins.int
+    UPDATE_TIME_FIELD_NUMBER: _builtins.int
+    CREATED_BY_FIELD_NUMBER: _builtins.int
+    UPDATED_BY_FIELD_NUMBER: _builtins.int
+    parent: _builtins.str
     """Resource name of the parent folder, e.g. `folders/123`."""
-    name: builtins.str
+    name: _builtins.str
     """Resource name of the item, e.g. `derivedSignals/123` or `models/987`."""
-    display_name: builtins.str
+    display_name: _builtins.str
     """Appears in the Exabel Library when viewing items in a folder, and also when the item is opened."""
-    description: builtins.str
+    description: _builtins.str
     """Appears in the Exabel Library under each item, and when the item is opened."""
-    item_type: global___FolderItemType.ValueType
+    item_type: Global___FolderItemType.ValueType
     """Item type."""
-    created_by: builtins.str
+    created_by: _builtins.str
     """Resource name of the user who created the item."""
-    updated_by: builtins.str
+    updated_by: _builtins.str
     """Resource name of the user who last updated the item."""
-    @property
-    def create_time(self) -> google.protobuf.timestamp_pb2.Timestamp:
+    @_builtins.property
+    def create_time(self) -> _timestamp_pb2.Timestamp:
         """When the item was created."""
 
-    @property
-    def update_time(self) -> google.protobuf.timestamp_pb2.Timestamp:
+    @_builtins.property
+    def update_time(self) -> _timestamp_pb2.Timestamp:
         """When the item was last updated."""
 
     def __init__(
         self,
         *,
-        parent: builtins.str | None = ...,
-        name: builtins.str | None = ...,
-        display_name: builtins.str | None = ...,
-        description: builtins.str | None = ...,
-        item_type: global___FolderItemType.ValueType | None = ...,
-        create_time: google.protobuf.timestamp_pb2.Timestamp | None = ...,
-        update_time: google.protobuf.timestamp_pb2.Timestamp | None = ...,
-        created_by: builtins.str | None = ...,
-        updated_by: builtins.str | None = ...,
+        parent: _builtins.str | None = ...,
+        name: _builtins.str | None = ...,
+        display_name: _builtins.str | None = ...,
+        description: _builtins.str | None = ...,
+        item_type: Global___FolderItemType.ValueType | None = ...,
+        create_time: _timestamp_pb2.Timestamp | None = ...,
+        update_time: _timestamp_pb2.Timestamp | None = ...,
+        created_by: _builtins.str | None = ...,
+        updated_by: _builtins.str | None = ...,
     ) -> None: ...
-    def HasField(self, field_name: typing.Literal["create_time", b"create_time", "update_time", b"update_time"]) -> builtins.bool: ...
-    def ClearField(self, field_name: typing.Literal["create_time", b"create_time", "created_by", b"created_by", "description", b"description", "display_name", b"display_name", "item_type", b"item_type", "name", b"name", "parent", b"parent", "update_time", b"update_time", "updated_by", b"updated_by"]) -> None: ...
+    _HasFieldArgType: _TypeAlias = _typing.Literal["create_time", b"create_time", "update_time", b"update_time"]  # noqa: Y015
+    def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["create_time", b"create_time", "created_by", b"created_by", "description", b"description", "display_name", b"display_name", "item_type", b"item_type", "name", b"name", "parent", b"parent", "update_time", b"update_time", "updated_by", b"updated_by"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
-global___FolderItem = FolderItem
+Global___FolderItem: _TypeAlias = FolderItem  # noqa: Y015
 
-@typing.final
-class FolderAccessor(google.protobuf.message.Message):
+@_typing.final
+class FolderAccessor(_message.Message):
     """An accessor of a folder."""
 
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    DESCRIPTOR: _descriptor.Descriptor
 
-    GROUP_FIELD_NUMBER: builtins.int
-    WRITE_FIELD_NUMBER: builtins.int
-    write: builtins.bool
+    GROUP_FIELD_NUMBER: _builtins.int
+    WRITE_FIELD_NUMBER: _builtins.int
+    write: _builtins.bool
     """Whether the user group has write access. Read access is implied."""
-    @property
-    def group(self) -> exabel.api.management.v1.user_messages_pb2.Group:
+    @_builtins.property
+    def group(self) -> _user_messages_pb2.Group:
         """User group that has access to the folder."""
 
     def __init__(
         self,
         *,
-        group: exabel.api.management.v1.user_messages_pb2.Group | None = ...,
-        write: builtins.bool | None = ...,
+        group: _user_messages_pb2.Group | None = ...,
+        write: _builtins.bool | None = ...,
     ) -> None: ...
-    def HasField(self, field_name: typing.Literal["group", b"group"]) -> builtins.bool: ...
-    def ClearField(self, field_name: typing.Literal["group", b"group", "write", b"write"]) -> None: ...
+    _HasFieldArgType: _TypeAlias = _typing.Literal["group", b"group"]  # noqa: Y015
+    def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["group", b"group", "write", b"write"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
-global___FolderAccessor = FolderAccessor
+Global___FolderAccessor: _TypeAlias = FolderAccessor  # noqa: Y015
 
-@typing.final
-class SearchResult(google.protobuf.message.Message):
+@_typing.final
+class SearchResult(_message.Message):
     """A search result."""
 
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    DESCRIPTOR: _descriptor.Descriptor
 
-    ITEM_FIELD_NUMBER: builtins.int
-    @property
-    def item(self) -> global___FolderItem:
+    ITEM_FIELD_NUMBER: _builtins.int
+    @_builtins.property
+    def item(self) -> Global___FolderItem:
         """The folder item."""
 
     def __init__(
         self,
         *,
-        item: global___FolderItem | None = ...,
+        item: Global___FolderItem | None = ...,
     ) -> None: ...
-    def HasField(self, field_name: typing.Literal["item", b"item"]) -> builtins.bool: ...
-    def ClearField(self, field_name: typing.Literal["item", b"item"]) -> None: ...
+    _HasFieldArgType: _TypeAlias = _typing.Literal["item", b"item"]  # noqa: Y015
+    def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["item", b"item"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
-global___SearchResult = SearchResult
+Global___SearchResult: _TypeAlias = SearchResult  # noqa: Y015

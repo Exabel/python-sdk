@@ -1,7 +1,7 @@
 [project]
 name = "exabel"
 description = "Python SDK for the Exabel Data API"
-version = "8.0.0"
+version = "8.1.0"
 license = "MIT"
 license-files = ["LICENSE"]
 readme = "README.md"
@@ -17,13 +17,12 @@ classifiers = [
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
     "Programming Language :: Python :: 3.14",
-    "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
 ]
 dependencies = [
     "google-api-core>1.31.3",
     "googleapis-common-protos>=1.56.0",
-    "grpcio",
+    "grpcio>=1.78.0",
     "openpyxl",
     "pandas",
     "protobuf>=6",
@@ -53,7 +52,7 @@ Source = "https://github.com/Exabel/python-sdk"
 Changelog = "https://github.com/Exabel/python-sdk/releases"
 
 [build-system]
-requires = ["uv_build>=0.9.28,<0.10.0"]
+requires = ["uv_build>=0.9.28"]
 build-backend = "uv_build"
 
 [tool.uv]
@@ -163,6 +162,7 @@ ignore = [
     "PLC2801",  # unnecessary-dunder-call
     "PLR5501",  # collapsible-else-if
     "PLC2401",  # non-ascii-name
+    "PLC0207",  # missing-maxsplit-arg
 
     # Pylint optional checkers (not enabled by default in pylint)
     "PLC2701",  # import-private-name

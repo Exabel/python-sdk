@@ -3,38 +3,43 @@
 isort:skip_file
 Copyright (c) 2019-2022 Exabel AS. All rights reserved."""
 
-import builtins
-import collections.abc
-from . import namespaces_messages_pb2
-import google.protobuf.descriptor
-import google.protobuf.internal.containers
-import google.protobuf.message
-import typing
-from ..... import exabel
+from collections import abc as _abc
+from . import namespaces_messages_pb2 as _namespaces_messages_pb2
+from google.protobuf import descriptor as _descriptor
+from google.protobuf import message as _message
+from google.protobuf.internal import containers as _containers
+import builtins as _builtins
+import sys
+import typing as _typing
 
-DESCRIPTOR: google.protobuf.descriptor.FileDescriptor
+if sys.version_info >= (3, 10):
+    from typing import TypeAlias as _TypeAlias
+else:
+    from typing_extensions import TypeAlias as _TypeAlias
 
-@typing.final
-class ListNamespacesRequest(google.protobuf.message.Message):
+DESCRIPTOR: _descriptor.FileDescriptor
+
+@_typing.final
+class ListNamespacesRequest(_message.Message):
     """The request to list namespaces."""
 
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    DESCRIPTOR: _descriptor.Descriptor
 
     def __init__(
         self,
     ) -> None: ...
 
-global___ListNamespacesRequest = ListNamespacesRequest
+Global___ListNamespacesRequest: _TypeAlias = ListNamespacesRequest  # noqa: Y015
 
-@typing.final
-class ListNamespacesResponse(google.protobuf.message.Message):
+@_typing.final
+class ListNamespacesResponse(_message.Message):
     """The response to list namespaces."""
 
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    DESCRIPTOR: _descriptor.Descriptor
 
-    NAMESPACES_FIELD_NUMBER: builtins.int
-    @property
-    def namespaces(self) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[exabel.api.data.v1.namespaces_messages_pb2.Namespace]:
+    NAMESPACES_FIELD_NUMBER: _builtins.int
+    @_builtins.property
+    def namespaces(self) -> _containers.RepeatedCompositeFieldContainer[_namespaces_messages_pb2.Namespace]:
         """List of namespaces accessible to your customer. In addition, all customers have read access to
         the global namespace; this will not be listed in the response.
         """
@@ -42,8 +47,9 @@ class ListNamespacesResponse(google.protobuf.message.Message):
     def __init__(
         self,
         *,
-        namespaces: collections.abc.Iterable[exabel.api.data.v1.namespaces_messages_pb2.Namespace] | None = ...,
+        namespaces: _abc.Iterable[_namespaces_messages_pb2.Namespace] | None = ...,
     ) -> None: ...
-    def ClearField(self, field_name: typing.Literal["namespaces", b"namespaces"]) -> None: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["namespaces", b"namespaces"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
-global___ListNamespacesResponse = ListNamespacesResponse
+Global___ListNamespacesResponse: _TypeAlias = ListNamespacesResponse  # noqa: Y015

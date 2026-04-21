@@ -175,7 +175,6 @@ class TimeSeries:
         """Convert a pandas Series to a sequence of TimeSeriesPoint."""
         points = []
         for index, value in series.items():
-            # Logic from _pandas_timestamp_to_proto has been inlined here for performance.
             point = TimeSeriesPoint()
             if isinstance(index, tuple):
                 # (timestamp, known_time)
@@ -185,12 +184,12 @@ class TimeSeries:
                         f"two elements: (timestamp, known_time), but got {index}"
                     )
                 timestamp = index[0]
-                point.known_time.seconds = index[1].value // 1_000_000_000
+                point.known_time.seconds = int(index[1].timestamp())
             else:
                 timestamp = index
             if timestamp is pd.NaT:
                 raise ValueError("Timestamp must be set")
-            point.time.seconds = timestamp.value // 1_000_000_000
+            point.time.seconds = int(timestamp.timestamp())
             point.value.value = value
             points.append(point)
         return points

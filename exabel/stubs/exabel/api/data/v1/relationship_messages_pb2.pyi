@@ -3,41 +3,47 @@
 isort:skip_file
 Copyright (c) 2019-2022 Exabel AS. All rights reserved."""
 
-import builtins
-import google.protobuf.descriptor
-import google.protobuf.message
-import google.protobuf.struct_pb2
-import typing
+from google.protobuf import descriptor as _descriptor
+from google.protobuf import message as _message
+from google.protobuf import struct_pb2 as _struct_pb2
+import builtins as _builtins
+import sys
+import typing as _typing
 
-DESCRIPTOR: google.protobuf.descriptor.FileDescriptor
+if sys.version_info >= (3, 10):
+    from typing import TypeAlias as _TypeAlias
+else:
+    from typing_extensions import TypeAlias as _TypeAlias
 
-@typing.final
-class RelationshipType(google.protobuf.message.Message):
+DESCRIPTOR: _descriptor.FileDescriptor
+
+@_typing.final
+class RelationshipType(_message.Message):
     """A relationship type resource in the Data API."""
 
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    DESCRIPTOR: _descriptor.Descriptor
 
-    NAME_FIELD_NUMBER: builtins.int
-    DESCRIPTION_FIELD_NUMBER: builtins.int
-    READ_ONLY_FIELD_NUMBER: builtins.int
-    IS_OWNERSHIP_FIELD_NUMBER: builtins.int
-    PROPERTIES_FIELD_NUMBER: builtins.int
-    name: builtins.str
+    NAME_FIELD_NUMBER: _builtins.int
+    DESCRIPTION_FIELD_NUMBER: _builtins.int
+    READ_ONLY_FIELD_NUMBER: _builtins.int
+    IS_OWNERSHIP_FIELD_NUMBER: _builtins.int
+    PROPERTIES_FIELD_NUMBER: _builtins.int
+    name: _builtins.str
     """Unique resource name of the relationship type, e.g.
     `relationshipTypes/namespace.relationshipTypeIdentifier`.
     The namespace must be empty (being global) or a namespace accessible to the customer.
     The relationship type identifier must match the regex `[A-Z][A-Z0-9_]{0,63}`.
     """
-    description: builtins.str
+    description: _builtins.str
     """This is currently not used in the Exabel app, but may be in future."""
-    read_only: builtins.bool
+    read_only: _builtins.bool
     """Global relationship types and those from data sets that you subscribe to will be read-only."""
-    is_ownership: builtins.bool
+    is_ownership: _builtins.bool
     """Whether this relationship type specifies an `ownership` in the data set model. Ownership
     relationships must go *from* the owner *to* the child entity.
     """
-    @property
-    def properties(self) -> google.protobuf.struct_pb2.Struct:
+    @_builtins.property
+    def properties(self) -> _struct_pb2.Struct:
         """Additional properties of this relationship type. This is currently not used in the Exabel app,
         but may be in future.
         """
@@ -45,19 +51,21 @@ class RelationshipType(google.protobuf.message.Message):
     def __init__(
         self,
         *,
-        name: builtins.str | None = ...,
-        description: builtins.str | None = ...,
-        read_only: builtins.bool | None = ...,
-        is_ownership: builtins.bool | None = ...,
-        properties: google.protobuf.struct_pb2.Struct | None = ...,
+        name: _builtins.str | None = ...,
+        description: _builtins.str | None = ...,
+        read_only: _builtins.bool | None = ...,
+        is_ownership: _builtins.bool | None = ...,
+        properties: _struct_pb2.Struct | None = ...,
     ) -> None: ...
-    def HasField(self, field_name: typing.Literal["properties", b"properties"]) -> builtins.bool: ...
-    def ClearField(self, field_name: typing.Literal["description", b"description", "is_ownership", b"is_ownership", "name", b"name", "properties", b"properties", "read_only", b"read_only"]) -> None: ...
+    _HasFieldArgType: _TypeAlias = _typing.Literal["properties", b"properties"]  # noqa: Y015
+    def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["description", b"description", "is_ownership", b"is_ownership", "name", b"name", "properties", b"properties", "read_only", b"read_only"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
-global___RelationshipType = RelationshipType
+Global___RelationshipType: _TypeAlias = RelationshipType  # noqa: Y015
 
-@typing.final
-class Relationship(google.protobuf.message.Message):
+@_typing.final
+class Relationship(_message.Message):
     """A relationship resource in the Data API. All relationships have one relationship type as its
     parent. Relationships do not have resource names, but are identified by their (type, from, to)
     triple. There can only be one relationship of one type between two entities (as viewed by a
@@ -65,30 +73,30 @@ class Relationship(google.protobuf.message.Message):
     predetermined namespaces the customer has access to.
     """
 
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    DESCRIPTOR: _descriptor.Descriptor
 
-    PARENT_FIELD_NUMBER: builtins.int
-    FROM_ENTITY_FIELD_NUMBER: builtins.int
-    TO_ENTITY_FIELD_NUMBER: builtins.int
-    DESCRIPTION_FIELD_NUMBER: builtins.int
-    READ_ONLY_FIELD_NUMBER: builtins.int
-    PROPERTIES_FIELD_NUMBER: builtins.int
-    parent: builtins.str
+    PARENT_FIELD_NUMBER: _builtins.int
+    FROM_ENTITY_FIELD_NUMBER: _builtins.int
+    TO_ENTITY_FIELD_NUMBER: _builtins.int
+    DESCRIPTION_FIELD_NUMBER: _builtins.int
+    READ_ONLY_FIELD_NUMBER: _builtins.int
+    PROPERTIES_FIELD_NUMBER: _builtins.int
+    parent: _builtins.str
     """Parent relationship type, e.g. `relationshipTypes/ns.type1`."""
-    from_entity: builtins.str
+    from_entity: _builtins.str
     """Resource name of entity the relationship starts from, e.g.
     `entityTypes/ns.type1/entities/ns.entity1`.
     """
-    to_entity: builtins.str
+    to_entity: _builtins.str
     """Resource name of entity the relationship goes to, e.g.
     `entityTypes/ns.type2/entities/ns.entity2`.
     """
-    description: builtins.str
+    description: _builtins.str
     """This is currently not used in the Exabel app, but may be in future."""
-    read_only: builtins.bool
+    read_only: _builtins.bool
     """Global relationships and those from data sets that you subscribe to will be read-only."""
-    @property
-    def properties(self) -> google.protobuf.struct_pb2.Struct:
+    @_builtins.property
+    def properties(self) -> _struct_pb2.Struct:
         """Additional properties of this relationship. This is currently not used in the Exabel app, but
         may be in future.
         """
@@ -96,14 +104,16 @@ class Relationship(google.protobuf.message.Message):
     def __init__(
         self,
         *,
-        parent: builtins.str | None = ...,
-        from_entity: builtins.str | None = ...,
-        to_entity: builtins.str | None = ...,
-        description: builtins.str | None = ...,
-        read_only: builtins.bool | None = ...,
-        properties: google.protobuf.struct_pb2.Struct | None = ...,
+        parent: _builtins.str | None = ...,
+        from_entity: _builtins.str | None = ...,
+        to_entity: _builtins.str | None = ...,
+        description: _builtins.str | None = ...,
+        read_only: _builtins.bool | None = ...,
+        properties: _struct_pb2.Struct | None = ...,
     ) -> None: ...
-    def HasField(self, field_name: typing.Literal["properties", b"properties"]) -> builtins.bool: ...
-    def ClearField(self, field_name: typing.Literal["description", b"description", "from_entity", b"from_entity", "parent", b"parent", "properties", b"properties", "read_only", b"read_only", "to_entity", b"to_entity"]) -> None: ...
+    _HasFieldArgType: _TypeAlias = _typing.Literal["properties", b"properties"]  # noqa: Y015
+    def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["description", b"description", "from_entity", b"from_entity", "parent", b"parent", "properties", b"properties", "read_only", b"read_only", "to_entity", b"to_entity"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
-global___Relationship = Relationship
+Global___Relationship: _TypeAlias = Relationship  # noqa: Y015

@@ -3,31 +3,30 @@
 isort:skip_file
 Copyright (c) 2025 Exabel AS. All rights reserved."""
 
-import builtins
-from . import common_messages_pb2
-from . import derived_signal_messages_pb2
-from . import kpi_messages_pb2
-import google.protobuf.descriptor
-import google.protobuf.internal.enum_type_wrapper
-import google.protobuf.message
-import google.protobuf.struct_pb2
+from . import common_messages_pb2 as _common_messages_pb2
+from . import derived_signal_messages_pb2 as _derived_signal_messages_pb2
+from . import kpi_messages_pb2 as _kpi_messages_pb2
+from google.protobuf import descriptor as _descriptor
+from google.protobuf import message as _message
+from google.protobuf import struct_pb2 as _struct_pb2
+from google.protobuf.internal import enum_type_wrapper as _enum_type_wrapper
+import builtins as _builtins
 import sys
-import typing
+import typing as _typing
 
 if sys.version_info >= (3, 10):
-    import typing as typing_extensions
+    from typing import TypeAlias as _TypeAlias
 else:
-    import typing_extensions
-from ..... import exabel
+    from typing_extensions import TypeAlias as _TypeAlias
 
-DESCRIPTOR: google.protobuf.descriptor.FileDescriptor
+DESCRIPTOR: _descriptor.FileDescriptor
 
 class _KpiMappingGroupType:
-    ValueType = typing.NewType("ValueType", builtins.int)
-    V: typing_extensions.TypeAlias = ValueType
+    ValueType = _typing.NewType("ValueType", _builtins.int)
+    V: _TypeAlias = ValueType  # noqa: Y015
 
-class _KpiMappingGroupTypeEnumTypeWrapper(google.protobuf.internal.enum_type_wrapper._EnumTypeWrapper[_KpiMappingGroupType.ValueType], builtins.type):
-    DESCRIPTOR: google.protobuf.descriptor.EnumDescriptor
+class _KpiMappingGroupTypeEnumTypeWrapper(_enum_type_wrapper._EnumTypeWrapper[_KpiMappingGroupType.ValueType], _builtins.type):
+    DESCRIPTOR: _descriptor.EnumDescriptor
     KPI_MAPPING_GROUP_TYPE_UNSPECIFIED: _KpiMappingGroupType.ValueType  # 0
     """Unspecified."""
     BULK: _KpiMappingGroupType.ValueType  # 1
@@ -44,14 +43,14 @@ BULK: KpiMappingGroupType.ValueType  # 1
 """Bulk mapping groups."""
 COMPANY_SPECIFIC: KpiMappingGroupType.ValueType  # 2
 """Company specific mapping groups."""
-global___KpiMappingGroupType = KpiMappingGroupType
+Global___KpiMappingGroupType: _TypeAlias = KpiMappingGroupType  # noqa: Y015
 
 class _ResampleMethod:
-    ValueType = typing.NewType("ValueType", builtins.int)
-    V: typing_extensions.TypeAlias = ValueType
+    ValueType = _typing.NewType("ValueType", _builtins.int)
+    V: _TypeAlias = ValueType  # noqa: Y015
 
-class _ResampleMethodEnumTypeWrapper(google.protobuf.internal.enum_type_wrapper._EnumTypeWrapper[_ResampleMethod.ValueType], builtins.type):
-    DESCRIPTOR: google.protobuf.descriptor.EnumDescriptor
+class _ResampleMethodEnumTypeWrapper(_enum_type_wrapper._EnumTypeWrapper[_ResampleMethod.ValueType], _builtins.type):
+    DESCRIPTOR: _descriptor.EnumDescriptor
     RESAMPLE_METHOD_UNSPECIFIED: _ResampleMethod.ValueType  # 0
     """Unspecified."""
     NO_RESAMPLE: _ResampleMethod.ValueType  # 1
@@ -84,82 +83,84 @@ RESAMPLE_MEAN_TIMES_DAYS: ResampleMethod.ValueType  # 5
 """Mean times days."""
 RESAMPLE_LAST: ResampleMethod.ValueType  # 6
 """Last."""
-global___ResampleMethod = ResampleMethod
+Global___ResampleMethod: _TypeAlias = ResampleMethod  # noqa: Y015
 
-@typing.final
-class KpiMappingGroup(google.protobuf.message.Message):
+@_typing.final
+class KpiMappingGroup(_message.Message):
     """A KPI mapping group."""
 
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    DESCRIPTOR: _descriptor.Descriptor
 
-    NAME_FIELD_NUMBER: builtins.int
-    DISPLAY_NAME_FIELD_NUMBER: builtins.int
-    KPI_FIELD_NUMBER: builtins.int
-    PROXY_SIGNAL_FIELD_NUMBER: builtins.int
-    TYPE_FIELD_NUMBER: builtins.int
-    ENTITY_SET_FIELD_NUMBER: builtins.int
-    PROXY_RESAMPLE_METHOD_FIELD_NUMBER: builtins.int
-    FORECASTING_OPTIONS_FIELD_NUMBER: builtins.int
-    MODEL_OPTIONS_FIELD_NUMBER: builtins.int
-    name: builtins.str
+    NAME_FIELD_NUMBER: _builtins.int
+    DISPLAY_NAME_FIELD_NUMBER: _builtins.int
+    KPI_FIELD_NUMBER: _builtins.int
+    PROXY_SIGNAL_FIELD_NUMBER: _builtins.int
+    TYPE_FIELD_NUMBER: _builtins.int
+    ENTITY_SET_FIELD_NUMBER: _builtins.int
+    PROXY_RESAMPLE_METHOD_FIELD_NUMBER: _builtins.int
+    FORECASTING_OPTIONS_FIELD_NUMBER: _builtins.int
+    MODEL_OPTIONS_FIELD_NUMBER: _builtins.int
+    name: _builtins.str
     """Resource name. E.g "kpiMappings/123/groups/4"."""
-    display_name: builtins.str
+    display_name: _builtins.str
     """Display name."""
-    type: global___KpiMappingGroupType.ValueType
+    type: Global___KpiMappingGroupType.ValueType
     """Type of KPI mapping group."""
-    proxy_resample_method: global___ResampleMethod.ValueType
+    proxy_resample_method: Global___ResampleMethod.ValueType
     """Specifies how to resample the proxy signal."""
-    @property
-    def kpi(self) -> exabel.api.analytics.v1.kpi_messages_pb2.Kpi:
+    @_builtins.property
+    def kpi(self) -> _kpi_messages_pb2.Kpi:
         """The KPI for the group."""
 
-    @property
-    def proxy_signal(self) -> exabel.api.analytics.v1.derived_signal_messages_pb2.DerivedSignal:
+    @_builtins.property
+    def proxy_signal(self) -> _derived_signal_messages_pb2.DerivedSignal:
         """Proxy signal."""
 
-    @property
-    def entity_set(self) -> exabel.api.analytics.v1.common_messages_pb2.EntitySet:
+    @_builtins.property
+    def entity_set(self) -> _common_messages_pb2.EntitySet:
         """The entities for which this group defines KPI mappings.
         All the entities must be companies.
         """
 
-    @property
-    def forecasting_options(self) -> global___ForecastingOptions:
+    @_builtins.property
+    def forecasting_options(self) -> Global___ForecastingOptions:
         """Specifies how proxy signal forecasting should be performed."""
 
-    @property
-    def model_options(self) -> global___ModelOptions:
+    @_builtins.property
+    def model_options(self) -> Global___ModelOptions:
         """Configuration for the single-predictor models that are built for this group."""
 
     def __init__(
         self,
         *,
-        name: builtins.str | None = ...,
-        display_name: builtins.str | None = ...,
-        kpi: exabel.api.analytics.v1.kpi_messages_pb2.Kpi | None = ...,
-        proxy_signal: exabel.api.analytics.v1.derived_signal_messages_pb2.DerivedSignal | None = ...,
-        type: global___KpiMappingGroupType.ValueType | None = ...,
-        entity_set: exabel.api.analytics.v1.common_messages_pb2.EntitySet | None = ...,
-        proxy_resample_method: global___ResampleMethod.ValueType | None = ...,
-        forecasting_options: global___ForecastingOptions | None = ...,
-        model_options: global___ModelOptions | None = ...,
+        name: _builtins.str | None = ...,
+        display_name: _builtins.str | None = ...,
+        kpi: _kpi_messages_pb2.Kpi | None = ...,
+        proxy_signal: _derived_signal_messages_pb2.DerivedSignal | None = ...,
+        type: Global___KpiMappingGroupType.ValueType | None = ...,
+        entity_set: _common_messages_pb2.EntitySet | None = ...,
+        proxy_resample_method: Global___ResampleMethod.ValueType | None = ...,
+        forecasting_options: Global___ForecastingOptions | None = ...,
+        model_options: Global___ModelOptions | None = ...,
     ) -> None: ...
-    def HasField(self, field_name: typing.Literal["entity_set", b"entity_set", "forecasting_options", b"forecasting_options", "kpi", b"kpi", "model_options", b"model_options", "proxy_signal", b"proxy_signal"]) -> builtins.bool: ...
-    def ClearField(self, field_name: typing.Literal["display_name", b"display_name", "entity_set", b"entity_set", "forecasting_options", b"forecasting_options", "kpi", b"kpi", "model_options", b"model_options", "name", b"name", "proxy_resample_method", b"proxy_resample_method", "proxy_signal", b"proxy_signal", "type", b"type"]) -> None: ...
+    _HasFieldArgType: _TypeAlias = _typing.Literal["entity_set", b"entity_set", "forecasting_options", b"forecasting_options", "kpi", b"kpi", "model_options", b"model_options", "proxy_signal", b"proxy_signal"]  # noqa: Y015
+    def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["display_name", b"display_name", "entity_set", b"entity_set", "forecasting_options", b"forecasting_options", "kpi", b"kpi", "model_options", b"model_options", "name", b"name", "proxy_resample_method", b"proxy_resample_method", "proxy_signal", b"proxy_signal", "type", b"type"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
-global___KpiMappingGroup = KpiMappingGroup
+Global___KpiMappingGroup: _TypeAlias = KpiMappingGroup  # noqa: Y015
 
-@typing.final
-class ForecastingOptions(google.protobuf.message.Message):
+@_typing.final
+class ForecastingOptions(_message.Message):
     """Forecasting options for Prophet and other forecasting models."""
 
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    DESCRIPTOR: _descriptor.Descriptor
 
-    MODEL_TYPE_FIELD_NUMBER: builtins.int
-    PARAMETERS_FIELD_NUMBER: builtins.int
-    COUNTRY_HOLIDAYS_FIELD_NUMBER: builtins.int
-    HOLIDAYS_FIELD_NUMBER: builtins.int
-    model_type: builtins.str
+    MODEL_TYPE_FIELD_NUMBER: _builtins.int
+    PARAMETERS_FIELD_NUMBER: _builtins.int
+    COUNTRY_HOLIDAYS_FIELD_NUMBER: _builtins.int
+    HOLIDAYS_FIELD_NUMBER: _builtins.int
+    model_type: _builtins.str
     """Forecasting model type.
 
     Supported values: `auto`, `prophet`, `sarima`, `theta`, `unobserved_components`, `holt_winters`.
@@ -168,42 +169,44 @@ class ForecastingOptions(google.protobuf.message.Message):
 
     For information about forecasting, see https://doc.exabel.com/dsl/modelling/forecasting.html
     """
-    country_holidays: builtins.str
+    country_holidays: _builtins.str
     """Country code for standard country holidays (e.g., 'US', 'UK').
     Only used when model_type='prophet'.
     """
-    holidays: builtins.str
+    holidays: _builtins.str
     """Resource name of the holiday specification to use for Prophet forecasting.
     Only used when model_type='prophet'.
     Example: "holidaySpecifications/123"
     """
-    @property
-    def parameters(self) -> google.protobuf.struct_pb2.Struct:
+    @_builtins.property
+    def parameters(self) -> _struct_pb2.Struct:
         """Model-specific parameters passed to the forecasting function."""
 
     def __init__(
         self,
         *,
-        model_type: builtins.str | None = ...,
-        parameters: google.protobuf.struct_pb2.Struct | None = ...,
-        country_holidays: builtins.str | None = ...,
-        holidays: builtins.str | None = ...,
+        model_type: _builtins.str | None = ...,
+        parameters: _struct_pb2.Struct | None = ...,
+        country_holidays: _builtins.str | None = ...,
+        holidays: _builtins.str | None = ...,
     ) -> None: ...
-    def HasField(self, field_name: typing.Literal["parameters", b"parameters"]) -> builtins.bool: ...
-    def ClearField(self, field_name: typing.Literal["country_holidays", b"country_holidays", "holidays", b"holidays", "model_type", b"model_type", "parameters", b"parameters"]) -> None: ...
+    _HasFieldArgType: _TypeAlias = _typing.Literal["parameters", b"parameters"]  # noqa: Y015
+    def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["country_holidays", b"country_holidays", "holidays", b"holidays", "model_type", b"model_type", "parameters", b"parameters"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
-global___ForecastingOptions = ForecastingOptions
+Global___ForecastingOptions: _TypeAlias = ForecastingOptions  # noqa: Y015
 
-@typing.final
-class ModelOptions(google.protobuf.message.Message):
+@_typing.final
+class ModelOptions(_message.Message):
     """Options for the KPI prediction models."""
 
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    DESCRIPTOR: _descriptor.Descriptor
 
-    MODEL_TYPE_FIELD_NUMBER: builtins.int
-    PARAMETERS_FIELD_NUMBER: builtins.int
-    YEAR_OVER_YEAR_FIELD_NUMBER: builtins.int
-    model_type: builtins.str
+    MODEL_TYPE_FIELD_NUMBER: _builtins.int
+    PARAMETERS_FIELD_NUMBER: _builtins.int
+    YEAR_OVER_YEAR_FIELD_NUMBER: _builtins.int
+    model_type: _builtins.str
     """The type of the model.
 
     Supported values: `ard_regression`, `elastic_net`, `elastic_net_cv`, `huber_regression`,
@@ -214,23 +217,25 @@ class ModelOptions(google.protobuf.message.Message):
 
     For information about model types, see https://doc.exabel.com/dsl/modelling/models.html
     """
-    year_over_year: builtins.bool
+    year_over_year: _builtins.bool
     """Whether to apply year-over-year transformation.
     When enabled, both predictors and targets are transformed to year-over-year changes during training,
     and predictions are transformed back to absolute values during inference.
     """
-    @property
-    def parameters(self) -> google.protobuf.struct_pb2.Struct:
+    @_builtins.property
+    def parameters(self) -> _struct_pb2.Struct:
         """Model-specific parameters. Only takes effect if `model_type` is set."""
 
     def __init__(
         self,
         *,
-        model_type: builtins.str | None = ...,
-        parameters: google.protobuf.struct_pb2.Struct | None = ...,
-        year_over_year: builtins.bool | None = ...,
+        model_type: _builtins.str | None = ...,
+        parameters: _struct_pb2.Struct | None = ...,
+        year_over_year: _builtins.bool | None = ...,
     ) -> None: ...
-    def HasField(self, field_name: typing.Literal["parameters", b"parameters"]) -> builtins.bool: ...
-    def ClearField(self, field_name: typing.Literal["model_type", b"model_type", "parameters", b"parameters", "year_over_year", b"year_over_year"]) -> None: ...
+    _HasFieldArgType: _TypeAlias = _typing.Literal["parameters", b"parameters"]  # noqa: Y015
+    def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["model_type", b"model_type", "parameters", b"parameters", "year_over_year", b"year_over_year"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
-global___ModelOptions = ModelOptions
+Global___ModelOptions: _TypeAlias = ModelOptions  # noqa: Y015

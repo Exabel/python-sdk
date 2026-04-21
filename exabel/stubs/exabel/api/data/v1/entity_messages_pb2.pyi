@@ -3,38 +3,44 @@
 isort:skip_file
 Copyright (c) 2019-2022 Exabel AS. All rights reserved."""
 
-import builtins
-import google.protobuf.descriptor
-import google.protobuf.message
-import google.protobuf.struct_pb2
-import typing
+from google.protobuf import descriptor as _descriptor
+from google.protobuf import message as _message
+from google.protobuf import struct_pb2 as _struct_pb2
+import builtins as _builtins
+import sys
+import typing as _typing
 
-DESCRIPTOR: google.protobuf.descriptor.FileDescriptor
+if sys.version_info >= (3, 10):
+    from typing import TypeAlias as _TypeAlias
+else:
+    from typing_extensions import TypeAlias as _TypeAlias
 
-@typing.final
-class EntityType(google.protobuf.message.Message):
+DESCRIPTOR: _descriptor.FileDescriptor
+
+@_typing.final
+class EntityType(_message.Message):
     """An entity type resource in the Data API."""
 
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    DESCRIPTOR: _descriptor.Descriptor
 
-    NAME_FIELD_NUMBER: builtins.int
-    DISPLAY_NAME_FIELD_NUMBER: builtins.int
-    DESCRIPTION_FIELD_NUMBER: builtins.int
-    READ_ONLY_FIELD_NUMBER: builtins.int
-    IS_ASSOCIATIVE_FIELD_NUMBER: builtins.int
-    name: builtins.str
+    NAME_FIELD_NUMBER: _builtins.int
+    DISPLAY_NAME_FIELD_NUMBER: _builtins.int
+    DESCRIPTION_FIELD_NUMBER: _builtins.int
+    READ_ONLY_FIELD_NUMBER: _builtins.int
+    IS_ASSOCIATIVE_FIELD_NUMBER: _builtins.int
+    name: _builtins.str
     """Unique resource name of the entity type, e.g. `entityTypes/entityTypeIdentifier` or
     `entityTypes/namespace.entityTypeIdentifier`. The namespace must be empty (being global) or
     a namespace accessible to the customer.
     The entity type identifier must match the regex `\\w[\\w-]{0,63}`.
     """
-    display_name: builtins.str
+    display_name: _builtins.str
     """Used when showing the entity type in the Exabel app. Required when creating an entity type."""
-    description: builtins.str
+    description: _builtins.str
     """Used when showing the entity type in the Exabel app."""
-    read_only: builtins.bool
+    read_only: _builtins.bool
     """Global entity types and those from data sets that you subscribe to will be read-only."""
-    is_associative: builtins.bool
+    is_associative: _builtins.bool
     """Associative entity types connect multiple entity types - e.g. `company_occupation` to connect
     `company` and `occupation` entity types. These are typically used to hold time series data
     that is defined by the combination of 2 or more entities.
@@ -42,28 +48,29 @@ class EntityType(google.protobuf.message.Message):
     def __init__(
         self,
         *,
-        name: builtins.str | None = ...,
-        display_name: builtins.str | None = ...,
-        description: builtins.str | None = ...,
-        read_only: builtins.bool | None = ...,
-        is_associative: builtins.bool | None = ...,
+        name: _builtins.str | None = ...,
+        display_name: _builtins.str | None = ...,
+        description: _builtins.str | None = ...,
+        read_only: _builtins.bool | None = ...,
+        is_associative: _builtins.bool | None = ...,
     ) -> None: ...
-    def ClearField(self, field_name: typing.Literal["description", b"description", "display_name", b"display_name", "is_associative", b"is_associative", "name", b"name", "read_only", b"read_only"]) -> None: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["description", b"description", "display_name", b"display_name", "is_associative", b"is_associative", "name", b"name", "read_only", b"read_only"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
-global___EntityType = EntityType
+Global___EntityType: _TypeAlias = EntityType  # noqa: Y015
 
-@typing.final
-class Entity(google.protobuf.message.Message):
+@_typing.final
+class Entity(_message.Message):
     """An entity resource in the Data API. All entities have one entity type as its parent."""
 
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    DESCRIPTOR: _descriptor.Descriptor
 
-    NAME_FIELD_NUMBER: builtins.int
-    DISPLAY_NAME_FIELD_NUMBER: builtins.int
-    DESCRIPTION_FIELD_NUMBER: builtins.int
-    READ_ONLY_FIELD_NUMBER: builtins.int
-    PROPERTIES_FIELD_NUMBER: builtins.int
-    name: builtins.str
+    NAME_FIELD_NUMBER: _builtins.int
+    DISPLAY_NAME_FIELD_NUMBER: _builtins.int
+    DESCRIPTION_FIELD_NUMBER: _builtins.int
+    READ_ONLY_FIELD_NUMBER: _builtins.int
+    PROPERTIES_FIELD_NUMBER: _builtins.int
+    name: _builtins.str
     """Unique resource name of the entity,
     e.g. `entityTypes/entityTypeIdentifier/entities/entityIdentifier` or
     `entityTypes/namespace1.entityTypeIdentifier/entities/namespace2.entityIdentifier`.
@@ -71,14 +78,14 @@ class Entity(google.protobuf.message.Message):
     has access to. If `namespace1` is not empty, it must be equal to `namespace2`.
     The entity identifier must match the regex `\\w[\\w-]{0,63}`.
     """
-    display_name: builtins.str
+    display_name: _builtins.str
     """Used when showing the entity in the Exabel app. Required when creating an entity."""
-    description: builtins.str
+    description: _builtins.str
     """Used when showing the entity in the Exabel app."""
-    read_only: builtins.bool
+    read_only: _builtins.bool
     """Global entities and those from data sets that you subscribe to will be read-only."""
-    @property
-    def properties(self) -> google.protobuf.struct_pb2.Struct:
+    @_builtins.property
+    def properties(self) -> _struct_pb2.Struct:
         """Additional properties of this entity. This is currently not used in the Exabel app, but may be
         in future.
         """
@@ -86,13 +93,15 @@ class Entity(google.protobuf.message.Message):
     def __init__(
         self,
         *,
-        name: builtins.str | None = ...,
-        display_name: builtins.str | None = ...,
-        description: builtins.str | None = ...,
-        read_only: builtins.bool | None = ...,
-        properties: google.protobuf.struct_pb2.Struct | None = ...,
+        name: _builtins.str | None = ...,
+        display_name: _builtins.str | None = ...,
+        description: _builtins.str | None = ...,
+        read_only: _builtins.bool | None = ...,
+        properties: _struct_pb2.Struct | None = ...,
     ) -> None: ...
-    def HasField(self, field_name: typing.Literal["properties", b"properties"]) -> builtins.bool: ...
-    def ClearField(self, field_name: typing.Literal["description", b"description", "display_name", b"display_name", "name", b"name", "properties", b"properties", "read_only", b"read_only"]) -> None: ...
+    _HasFieldArgType: _TypeAlias = _typing.Literal["properties", b"properties"]  # noqa: Y015
+    def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["description", b"description", "display_name", b"display_name", "name", b"name", "properties", b"properties", "read_only", b"read_only"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
-global___Entity = Entity
+Global___Entity: _TypeAlias = Entity  # noqa: Y015

@@ -3,26 +3,26 @@
 isort:skip_file
 Copyright (c) 2019-2022 Exabel AS. All rights reserved."""
 
-import builtins
-import google.protobuf.descriptor
-import google.protobuf.internal.enum_type_wrapper
-import google.protobuf.message
+from google.protobuf import descriptor as _descriptor
+from google.protobuf import message as _message
+from google.protobuf.internal import enum_type_wrapper as _enum_type_wrapper
+import builtins as _builtins
 import sys
-import typing
+import typing as _typing
 
 if sys.version_info >= (3, 10):
-    import typing as typing_extensions
+    from typing import TypeAlias as _TypeAlias
 else:
-    import typing_extensions
+    from typing_extensions import TypeAlias as _TypeAlias
 
-DESCRIPTOR: google.protobuf.descriptor.FileDescriptor
+DESCRIPTOR: _descriptor.FileDescriptor
 
 class _SearchUniverse:
-    ValueType = typing.NewType("ValueType", builtins.int)
-    V: typing_extensions.TypeAlias = ValueType
+    ValueType = _typing.NewType("ValueType", _builtins.int)
+    V: _TypeAlias = ValueType  # noqa: Y015
 
-class _SearchUniverseEnumTypeWrapper(google.protobuf.internal.enum_type_wrapper._EnumTypeWrapper[_SearchUniverse.ValueType], builtins.type):
-    DESCRIPTOR: google.protobuf.descriptor.EnumDescriptor
+class _SearchUniverseEnumTypeWrapper(_enum_type_wrapper._EnumTypeWrapper[_SearchUniverse.ValueType], _builtins.type):
+    DESCRIPTOR: _descriptor.EnumDescriptor
     SEARCH_UNIVERSE_UNSPECIFIED: _SearchUniverse.ValueType  # 0
     """No search universe specified. This is the default behaviour.
     For text search for entityTypes/company, this searches the Exabel company universe.
@@ -53,46 +53,48 @@ ALL_COMPANIES: SearchUniverse.ValueType  # 2
 """Search all companies, including companies not in the Exabel company universe. This includes all
 FactSet companies of type 'SUB' and 'PVT'. Only supported for text search for entityTypes/company.
 """
-global___SearchUniverse = SearchUniverse
+Global___SearchUniverse: _TypeAlias = SearchUniverse  # noqa: Y015
 
-@typing.final
-class SearchTerm(google.protobuf.message.Message):
+@_typing.final
+class SearchTerm(_message.Message):
     """A single search term in a search request."""
 
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    DESCRIPTOR: _descriptor.Descriptor
 
-    FIELD_FIELD_NUMBER: builtins.int
-    QUERY_FIELD_NUMBER: builtins.int
-    field: builtins.str
+    FIELD_FIELD_NUMBER: _builtins.int
+    QUERY_FIELD_NUMBER: _builtins.int
+    field: _builtins.str
     """The name of the field that should be matched. Field names are
     case-insensitive.
     """
-    query: builtins.str
+    query: _builtins.str
     """The query against which the field is matched."""
     def __init__(
         self,
         *,
-        field: builtins.str | None = ...,
-        query: builtins.str | None = ...,
+        field: _builtins.str | None = ...,
+        query: _builtins.str | None = ...,
     ) -> None: ...
-    def ClearField(self, field_name: typing.Literal["field", b"field", "query", b"query"]) -> None: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["field", b"field", "query", b"query"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
-global___SearchTerm = SearchTerm
+Global___SearchTerm: _TypeAlias = SearchTerm  # noqa: Y015
 
-@typing.final
-class SearchOptions(google.protobuf.message.Message):
+@_typing.final
+class SearchOptions(_message.Message):
     """Options on how the search should be performed."""
 
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    DESCRIPTOR: _descriptor.Descriptor
 
-    UNIVERSE_FIELD_NUMBER: builtins.int
-    universe: global___SearchUniverse.ValueType
+    UNIVERSE_FIELD_NUMBER: _builtins.int
+    universe: Global___SearchUniverse.ValueType
     """The entity universe to search. Currently only supported for 'text' search for entityType/company."""
     def __init__(
         self,
         *,
-        universe: global___SearchUniverse.ValueType | None = ...,
+        universe: Global___SearchUniverse.ValueType | None = ...,
     ) -> None: ...
-    def ClearField(self, field_name: typing.Literal["universe", b"universe"]) -> None: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["universe", b"universe"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
-global___SearchOptions = SearchOptions
+Global___SearchOptions: _TypeAlias = SearchOptions  # noqa: Y015

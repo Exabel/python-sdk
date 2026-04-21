@@ -7,7 +7,7 @@ from . import folder_messages_pb2 as exabel_dot_api_dot_management_dot_v1_dot_fo
 from . import library_service_pb2 as exabel_dot_api_dot_management_dot_v1_dot_library__service__pb2
 from google.protobuf import empty_pb2 as google_dot_protobuf_dot_empty__pb2
 
-GRPC_GENERATED_VERSION = '1.76.0'
+GRPC_GENERATED_VERSION = '1.78.0'
 GRPC_VERSION = grpc.__version__
 _version_not_supported = False
 

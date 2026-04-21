@@ -3,47 +3,55 @@
 isort:skip_file
 Copyright (c) 2019-2022 Exabel AS. All rights reserved."""
 
-import builtins
-import google.protobuf.descriptor
-import google.protobuf.message
-import google.protobuf.timestamp_pb2
-import typing
+from google.protobuf import descriptor as _descriptor
+from google.protobuf import message as _message
+from google.protobuf import timestamp_pb2 as _timestamp_pb2
+import builtins as _builtins
+import sys
+import typing as _typing
 
-DESCRIPTOR: google.protobuf.descriptor.FileDescriptor
+if sys.version_info >= (3, 10):
+    from typing import TypeAlias as _TypeAlias
+else:
+    from typing_extensions import TypeAlias as _TypeAlias
 
-@typing.final
-class TimeRange(google.protobuf.message.Message):
+DESCRIPTOR: _descriptor.FileDescriptor
+
+@_typing.final
+class TimeRange(_message.Message):
     """A time range represented by two google.protobuf.Timestamps. The default time range includes the
     start point and excludes the end point.
     """
 
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    DESCRIPTOR: _descriptor.Descriptor
 
-    FROM_TIME_FIELD_NUMBER: builtins.int
-    EXCLUDE_FROM_FIELD_NUMBER: builtins.int
-    TO_TIME_FIELD_NUMBER: builtins.int
-    INCLUDE_TO_FIELD_NUMBER: builtins.int
-    exclude_from: builtins.bool
+    FROM_TIME_FIELD_NUMBER: _builtins.int
+    EXCLUDE_FROM_FIELD_NUMBER: _builtins.int
+    TO_TIME_FIELD_NUMBER: _builtins.int
+    INCLUDE_TO_FIELD_NUMBER: _builtins.int
+    exclude_from: _builtins.bool
     """Set to `true` to exclude the start point from the range."""
-    include_to: builtins.bool
+    include_to: _builtins.bool
     """Set to `true` to include the end point in the range."""
-    @property
-    def from_time(self) -> google.protobuf.timestamp_pb2.Timestamp:
+    @_builtins.property
+    def from_time(self) -> _timestamp_pb2.Timestamp:
         """Start of the time range, *included* in the range by default."""
 
-    @property
-    def to_time(self) -> google.protobuf.timestamp_pb2.Timestamp:
+    @_builtins.property
+    def to_time(self) -> _timestamp_pb2.Timestamp:
         """End of the time range, *excluded* from the range by default."""
 
     def __init__(
         self,
         *,
-        from_time: google.protobuf.timestamp_pb2.Timestamp | None = ...,
-        exclude_from: builtins.bool | None = ...,
-        to_time: google.protobuf.timestamp_pb2.Timestamp | None = ...,
-        include_to: builtins.bool | None = ...,
+        from_time: _timestamp_pb2.Timestamp | None = ...,
+        exclude_from: _builtins.bool | None = ...,
+        to_time: _timestamp_pb2.Timestamp | None = ...,
+        include_to: _builtins.bool | None = ...,
     ) -> None: ...
-    def HasField(self, field_name: typing.Literal["from_time", b"from_time", "to_time", b"to_time"]) -> builtins.bool: ...
-    def ClearField(self, field_name: typing.Literal["exclude_from", b"exclude_from", "from_time", b"from_time", "include_to", b"include_to", "to_time", b"to_time"]) -> None: ...
+    _HasFieldArgType: _TypeAlias = _typing.Literal["from_time", b"from_time", "to_time", b"to_time"]  # noqa: Y015
+    def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["exclude_from", b"exclude_from", "from_time", b"from_time", "include_to", b"include_to", "to_time", b"to_time"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
-global___TimeRange = TimeRange
+Global___TimeRange: _TypeAlias = TimeRange  # noqa: Y015

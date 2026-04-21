@@ -3,52 +3,62 @@
 isort:skip_file
 """
 
-import builtins
-import google.protobuf.descriptor
-import google.protobuf.message
-import google.protobuf.timestamp_pb2
-import typing
+from google.protobuf import descriptor as _descriptor
+from google.protobuf import message as _message
+from google.protobuf import timestamp_pb2 as _timestamp_pb2
+import builtins as _builtins
+import sys
+import typing as _typing
 
-DESCRIPTOR: google.protobuf.descriptor.FileDescriptor
+if sys.version_info >= (3, 10):
+    from typing import TypeAlias as _TypeAlias
+else:
+    from typing_extensions import TypeAlias as _TypeAlias
 
-@typing.final
-class ItemMetadata(google.protobuf.message.Message):
+DESCRIPTOR: _descriptor.FileDescriptor
+
+@_typing.final
+class ItemMetadata(_message.Message):
     """Metadata about an item."""
 
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    DESCRIPTOR: _descriptor.Descriptor
 
-    CREATE_TIME_FIELD_NUMBER: builtins.int
-    UPDATE_TIME_FIELD_NUMBER: builtins.int
-    CREATED_BY_FIELD_NUMBER: builtins.int
-    UPDATED_BY_FIELD_NUMBER: builtins.int
-    WRITE_ACCESS_FIELD_NUMBER: builtins.int
-    created_by: builtins.str
+    CREATE_TIME_FIELD_NUMBER: _builtins.int
+    UPDATE_TIME_FIELD_NUMBER: _builtins.int
+    CREATED_BY_FIELD_NUMBER: _builtins.int
+    UPDATED_BY_FIELD_NUMBER: _builtins.int
+    WRITE_ACCESS_FIELD_NUMBER: _builtins.int
+    created_by: _builtins.str
     """Resource name of the user who created the item."""
-    updated_by: builtins.str
+    updated_by: _builtins.str
     """Resource name of the user who last updated the item."""
-    write_access: builtins.bool
+    write_access: _builtins.bool
     """Whether the API caller has write access to the item.
     May not always be populated.
     """
-    @property
-    def create_time(self) -> google.protobuf.timestamp_pb2.Timestamp:
+    @_builtins.property
+    def create_time(self) -> _timestamp_pb2.Timestamp:
         """When the item was created."""
 
-    @property
-    def update_time(self) -> google.protobuf.timestamp_pb2.Timestamp:
+    @_builtins.property
+    def update_time(self) -> _timestamp_pb2.Timestamp:
         """When the item was last updated."""
 
     def __init__(
         self,
         *,
-        create_time: google.protobuf.timestamp_pb2.Timestamp | None = ...,
-        update_time: google.protobuf.timestamp_pb2.Timestamp | None = ...,
-        created_by: builtins.str | None = ...,
-        updated_by: builtins.str | None = ...,
-        write_access: builtins.bool | None = ...,
+        create_time: _timestamp_pb2.Timestamp | None = ...,
+        update_time: _timestamp_pb2.Timestamp | None = ...,
+        created_by: _builtins.str | None = ...,
+        updated_by: _builtins.str | None = ...,
+        write_access: _builtins.bool | None = ...,
     ) -> None: ...
-    def HasField(self, field_name: typing.Literal["_write_access", b"_write_access", "create_time", b"create_time", "update_time", b"update_time", "write_access", b"write_access"]) -> builtins.bool: ...
-    def ClearField(self, field_name: typing.Literal["_write_access", b"_write_access", "create_time", b"create_time", "created_by", b"created_by", "update_time", b"update_time", "updated_by", b"updated_by", "write_access", b"write_access"]) -> None: ...
-    def WhichOneof(self, oneof_group: typing.Literal["_write_access", b"_write_access"]) -> typing.Literal["write_access"] | None: ...
+    _HasFieldArgType: _TypeAlias = _typing.Literal["_write_access", b"_write_access", "create_time", b"create_time", "update_time", b"update_time", "write_access", b"write_access"]  # noqa: Y015
+    def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["_write_access", b"_write_access", "create_time", b"create_time", "created_by", b"created_by", "update_time", b"update_time", "updated_by", b"updated_by", "write_access", b"write_access"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
+    _WhichOneofReturnType__write_access: _TypeAlias = _typing.Literal["write_access"]  # noqa: Y015
+    _WhichOneofArgType__write_access: _TypeAlias = _typing.Literal["_write_access", b"_write_access"]  # noqa: Y015
+    def WhichOneof(self, oneof_group: _WhichOneofArgType__write_access) -> _WhichOneofReturnType__write_access | None: ...
 
-global___ItemMetadata = ItemMetadata
+Global___ItemMetadata: _TypeAlias = ItemMetadata  # noqa: Y015

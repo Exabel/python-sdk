@@ -3,33 +3,40 @@
 isort:skip_file
 Copyright (c) 2019-2022 Exabel AS. All rights reserved."""
 
-import builtins
-import google.protobuf.descriptor
-import google.protobuf.message
-import typing
+from google.protobuf import descriptor as _descriptor
+from google.protobuf import message as _message
+import builtins as _builtins
+import sys
+import typing as _typing
 
-DESCRIPTOR: google.protobuf.descriptor.FileDescriptor
+if sys.version_info >= (3, 10):
+    from typing import TypeAlias as _TypeAlias
+else:
+    from typing_extensions import TypeAlias as _TypeAlias
 
-@typing.final
-class Namespace(google.protobuf.message.Message):
+DESCRIPTOR: _descriptor.FileDescriptor
+
+@_typing.final
+class Namespace(_message.Message):
     """A namespace resource in the Data API."""
 
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    DESCRIPTOR: _descriptor.Descriptor
 
-    NAME_FIELD_NUMBER: builtins.int
-    WRITEABLE_FIELD_NUMBER: builtins.int
-    name: builtins.str
+    NAME_FIELD_NUMBER: _builtins.int
+    WRITEABLE_FIELD_NUMBER: _builtins.int
+    name: _builtins.str
     """Unique resource name of the namespace, e.g. `namespaces/namespaceIdentifier`."""
-    writeable: builtins.bool
+    writeable: _builtins.bool
     """Whether your customer has write access to the namespace. Your own customer namespace will
     always be writeable.
     """
     def __init__(
         self,
         *,
-        name: builtins.str | None = ...,
-        writeable: builtins.bool | None = ...,
+        name: _builtins.str | None = ...,
+        writeable: _builtins.bool | None = ...,
     ) -> None: ...
-    def ClearField(self, field_name: typing.Literal["name", b"name", "writeable", b"writeable"]) -> None: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["name", b"name", "writeable", b"writeable"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
-global___Namespace = Namespace
+Global___Namespace: _TypeAlias = Namespace  # noqa: Y015

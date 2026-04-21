@@ -3,88 +3,96 @@
 isort:skip_file
 Copyright (c) 2025 Exabel AS. All rights reserved."""
 
-import builtins
-import collections.abc
-from . import kpi_mapping_messages_pb2
-import google.protobuf.descriptor
-import google.protobuf.field_mask_pb2
-import google.protobuf.internal.containers
-import google.protobuf.message
-import typing
-from ..... import exabel
+from collections import abc as _abc
+from . import kpi_mapping_messages_pb2 as _kpi_mapping_messages_pb2
+from google.protobuf import descriptor as _descriptor
+from google.protobuf import field_mask_pb2 as _field_mask_pb2
+from google.protobuf import message as _message
+from google.protobuf.internal import containers as _containers
+import builtins as _builtins
+import sys
+import typing as _typing
 
-DESCRIPTOR: google.protobuf.descriptor.FileDescriptor
+if sys.version_info >= (3, 10):
+    from typing import TypeAlias as _TypeAlias
+else:
+    from typing_extensions import TypeAlias as _TypeAlias
 
-@typing.final
-class CreateKpiMappingGroupRequest(google.protobuf.message.Message):
+DESCRIPTOR: _descriptor.FileDescriptor
+
+@_typing.final
+class CreateKpiMappingGroupRequest(_message.Message):
     """Request message to CreateKpiMappingGroup."""
 
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    DESCRIPTOR: _descriptor.Descriptor
 
-    PARENT_FIELD_NUMBER: builtins.int
-    KPI_MAPPING_GROUP_FIELD_NUMBER: builtins.int
-    parent: builtins.str
+    PARENT_FIELD_NUMBER: _builtins.int
+    KPI_MAPPING_GROUP_FIELD_NUMBER: _builtins.int
+    parent: _builtins.str
     """Resource name of the Kpi mapping which the group should be added to."""
-    @property
-    def kpi_mapping_group(self) -> exabel.api.analytics.v1.kpi_mapping_messages_pb2.KpiMappingGroup:
+    @_builtins.property
+    def kpi_mapping_group(self) -> _kpi_mapping_messages_pb2.KpiMappingGroup:
         """KpiMappingGroup to create. The name field in the Kpi mapping group is ignored and may be left empty."""
 
     def __init__(
         self,
         *,
-        parent: builtins.str | None = ...,
-        kpi_mapping_group: exabel.api.analytics.v1.kpi_mapping_messages_pb2.KpiMappingGroup | None = ...,
+        parent: _builtins.str | None = ...,
+        kpi_mapping_group: _kpi_mapping_messages_pb2.KpiMappingGroup | None = ...,
     ) -> None: ...
-    def HasField(self, field_name: typing.Literal["kpi_mapping_group", b"kpi_mapping_group"]) -> builtins.bool: ...
-    def ClearField(self, field_name: typing.Literal["kpi_mapping_group", b"kpi_mapping_group", "parent", b"parent"]) -> None: ...
+    _HasFieldArgType: _TypeAlias = _typing.Literal["kpi_mapping_group", b"kpi_mapping_group"]  # noqa: Y015
+    def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["kpi_mapping_group", b"kpi_mapping_group", "parent", b"parent"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
-global___CreateKpiMappingGroupRequest = CreateKpiMappingGroupRequest
+Global___CreateKpiMappingGroupRequest: _TypeAlias = CreateKpiMappingGroupRequest  # noqa: Y015
 
-@typing.final
-class GetKpiMappingGroupRequest(google.protobuf.message.Message):
+@_typing.final
+class GetKpiMappingGroupRequest(_message.Message):
     """Request message to GetKpiMappingGroup."""
 
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    DESCRIPTOR: _descriptor.Descriptor
 
-    NAME_FIELD_NUMBER: builtins.int
-    name: builtins.str
+    NAME_FIELD_NUMBER: _builtins.int
+    name: _builtins.str
     """Resource name of Kpi mapping group to retrieve."""
     def __init__(
         self,
         *,
-        name: builtins.str | None = ...,
+        name: _builtins.str | None = ...,
     ) -> None: ...
-    def ClearField(self, field_name: typing.Literal["name", b"name"]) -> None: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["name", b"name"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
-global___GetKpiMappingGroupRequest = GetKpiMappingGroupRequest
+Global___GetKpiMappingGroupRequest: _TypeAlias = GetKpiMappingGroupRequest  # noqa: Y015
 
-@typing.final
-class ListKpiMappingGroupsRequest(google.protobuf.message.Message):
+@_typing.final
+class ListKpiMappingGroupsRequest(_message.Message):
     """Request message to ListKpiMappingGroups."""
 
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    DESCRIPTOR: _descriptor.Descriptor
 
-    PARENT_FIELD_NUMBER: builtins.int
-    TYPE_FIELD_NUMBER: builtins.int
-    COMPANIES_FIELD_NUMBER: builtins.int
-    PAGE_SIZE_FIELD_NUMBER: builtins.int
-    PAGE_TOKEN_FIELD_NUMBER: builtins.int
-    SKIP_FIELD_NUMBER: builtins.int
-    parent: builtins.str
+    PARENT_FIELD_NUMBER: _builtins.int
+    TYPE_FIELD_NUMBER: _builtins.int
+    COMPANIES_FIELD_NUMBER: _builtins.int
+    PAGE_SIZE_FIELD_NUMBER: _builtins.int
+    PAGE_TOKEN_FIELD_NUMBER: _builtins.int
+    SKIP_FIELD_NUMBER: _builtins.int
+    parent: _builtins.str
     """Resource name of Kpi mapping to list groups for."""
-    type: exabel.api.analytics.v1.kpi_mapping_messages_pb2.KpiMappingGroupType.ValueType
+    type: _kpi_mapping_messages_pb2.KpiMappingGroupType.ValueType
     """KPI mapping group types to list."""
-    page_size: builtins.int
+    page_size: _builtins.int
     """The page size. Default is 100 and max is 1000."""
-    page_token: builtins.str
+    page_token: _builtins.str
     """A page token, received from the previous call to list Kpi mapping groups."""
-    skip: builtins.int
+    skip: _builtins.int
     """Number of KPI mapping groups to skip relative to page_token. Negative value is allowed.
     Skipping past end of list will return no groups.
     Skipping past start of list will return groups from start of list.
     """
-    @property
-    def companies(self) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[builtins.str]:
+    @_builtins.property
+    def companies(self) -> _containers.RepeatedScalarFieldContainer[_builtins.str]:
         """Companies to retrieve groups for. If no companies are specified, results for all companies are
         returned. Only supported for type=COMPANY_SPECIFIC.
         Example: `"entityTypes/company/entities/F_67890-E"`.
@@ -93,61 +101,63 @@ class ListKpiMappingGroupsRequest(google.protobuf.message.Message):
     def __init__(
         self,
         *,
-        parent: builtins.str | None = ...,
-        type: exabel.api.analytics.v1.kpi_mapping_messages_pb2.KpiMappingGroupType.ValueType | None = ...,
-        companies: collections.abc.Iterable[builtins.str] | None = ...,
-        page_size: builtins.int | None = ...,
-        page_token: builtins.str | None = ...,
-        skip: builtins.int | None = ...,
+        parent: _builtins.str | None = ...,
+        type: _kpi_mapping_messages_pb2.KpiMappingGroupType.ValueType | None = ...,
+        companies: _abc.Iterable[_builtins.str] | None = ...,
+        page_size: _builtins.int | None = ...,
+        page_token: _builtins.str | None = ...,
+        skip: _builtins.int | None = ...,
     ) -> None: ...
-    def ClearField(self, field_name: typing.Literal["companies", b"companies", "page_size", b"page_size", "page_token", b"page_token", "parent", b"parent", "skip", b"skip", "type", b"type"]) -> None: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["companies", b"companies", "page_size", b"page_size", "page_token", b"page_token", "parent", b"parent", "skip", b"skip", "type", b"type"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
-global___ListKpiMappingGroupsRequest = ListKpiMappingGroupsRequest
+Global___ListKpiMappingGroupsRequest: _TypeAlias = ListKpiMappingGroupsRequest  # noqa: Y015
 
-@typing.final
-class ListKpiMappingGroupsResponse(google.protobuf.message.Message):
+@_typing.final
+class ListKpiMappingGroupsResponse(_message.Message):
     """Response message to ListKpiMappingGroups."""
 
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    DESCRIPTOR: _descriptor.Descriptor
 
-    GROUPS_FIELD_NUMBER: builtins.int
-    NEXT_PAGE_TOKEN_FIELD_NUMBER: builtins.int
-    TOTAL_SIZE_FIELD_NUMBER: builtins.int
-    next_page_token: builtins.str
+    GROUPS_FIELD_NUMBER: _builtins.int
+    NEXT_PAGE_TOKEN_FIELD_NUMBER: _builtins.int
+    TOTAL_SIZE_FIELD_NUMBER: _builtins.int
+    next_page_token: _builtins.str
     """Token for the next page of results, which can be sent to a subsequent query.
     The end of the list is reached when the token is empty.
     """
-    total_size: builtins.int
+    total_size: _builtins.int
     """Total number of KPI mapping groups for this request."""
-    @property
-    def groups(self) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[exabel.api.analytics.v1.kpi_mapping_messages_pb2.KpiMappingGroup]:
+    @_builtins.property
+    def groups(self) -> _containers.RepeatedCompositeFieldContainer[_kpi_mapping_messages_pb2.KpiMappingGroup]:
         """List of KPI mappings groups."""
 
     def __init__(
         self,
         *,
-        groups: collections.abc.Iterable[exabel.api.analytics.v1.kpi_mapping_messages_pb2.KpiMappingGroup] | None = ...,
-        next_page_token: builtins.str | None = ...,
-        total_size: builtins.int | None = ...,
+        groups: _abc.Iterable[_kpi_mapping_messages_pb2.KpiMappingGroup] | None = ...,
+        next_page_token: _builtins.str | None = ...,
+        total_size: _builtins.int | None = ...,
     ) -> None: ...
-    def ClearField(self, field_name: typing.Literal["groups", b"groups", "next_page_token", b"next_page_token", "total_size", b"total_size"]) -> None: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["groups", b"groups", "next_page_token", b"next_page_token", "total_size", b"total_size"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
-global___ListKpiMappingGroupsResponse = ListKpiMappingGroupsResponse
+Global___ListKpiMappingGroupsResponse: _TypeAlias = ListKpiMappingGroupsResponse  # noqa: Y015
 
-@typing.final
-class UpdateKpiMappingGroupRequest(google.protobuf.message.Message):
+@_typing.final
+class UpdateKpiMappingGroupRequest(_message.Message):
     """Request message to UpdateKpiMappingGroup."""
 
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    DESCRIPTOR: _descriptor.Descriptor
 
-    KPI_MAPPING_GROUP_FIELD_NUMBER: builtins.int
-    UPDATE_MASK_FIELD_NUMBER: builtins.int
-    @property
-    def kpi_mapping_group(self) -> exabel.api.analytics.v1.kpi_mapping_messages_pb2.KpiMappingGroup:
+    KPI_MAPPING_GROUP_FIELD_NUMBER: _builtins.int
+    UPDATE_MASK_FIELD_NUMBER: _builtins.int
+    @_builtins.property
+    def kpi_mapping_group(self) -> _kpi_mapping_messages_pb2.KpiMappingGroup:
         """KpiMappingGroup to update."""
 
-    @property
-    def update_mask(self) -> google.protobuf.field_mask_pb2.FieldMask:
+    @_builtins.property
+    def update_mask(self) -> _field_mask_pb2.FieldMask:
         """Use this to update only selected fields. For example, specify `display_name` to update only
         the display name.
 
@@ -157,10 +167,12 @@ class UpdateKpiMappingGroupRequest(google.protobuf.message.Message):
     def __init__(
         self,
         *,
-        kpi_mapping_group: exabel.api.analytics.v1.kpi_mapping_messages_pb2.KpiMappingGroup | None = ...,
-        update_mask: google.protobuf.field_mask_pb2.FieldMask | None = ...,
+        kpi_mapping_group: _kpi_mapping_messages_pb2.KpiMappingGroup | None = ...,
+        update_mask: _field_mask_pb2.FieldMask | None = ...,
     ) -> None: ...
-    def HasField(self, field_name: typing.Literal["kpi_mapping_group", b"kpi_mapping_group", "update_mask", b"update_mask"]) -> builtins.bool: ...
-    def ClearField(self, field_name: typing.Literal["kpi_mapping_group", b"kpi_mapping_group", "update_mask", b"update_mask"]) -> None: ...
+    _HasFieldArgType: _TypeAlias = _typing.Literal["kpi_mapping_group", b"kpi_mapping_group", "update_mask", b"update_mask"]  # noqa: Y015
+    def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["kpi_mapping_group", b"kpi_mapping_group", "update_mask", b"update_mask"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
-global___UpdateKpiMappingGroupRequest = UpdateKpiMappingGroupRequest
+Global___UpdateKpiMappingGroupRequest: _TypeAlias = UpdateKpiMappingGroupRequest  # noqa: Y015

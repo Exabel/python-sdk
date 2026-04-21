@@ -3,55 +3,73 @@
 isort:skip_file
 Copyright (c) 2019-2024 Exabel AS. All rights reserved."""
 
-import builtins
-import collections.abc
-from . import common_messages_pb2
-from ...math import aggregation_pb2
-from ...math import change_pb2
-import google.protobuf.descriptor
-import google.protobuf.internal.containers
-import google.protobuf.message
-import typing
-from ..... import exabel
+from collections import abc as _abc
+from . import common_messages_pb2 as _common_messages_pb2
+from ...math import aggregation_pb2 as _aggregation_pb2
+from ...math import change_pb2 as _change_pb2
+from google.protobuf import descriptor as _descriptor
+from google.protobuf import message as _message
+from google.protobuf.internal import containers as _containers
+import builtins as _builtins
+import sys
+import typing as _typing
 
-DESCRIPTOR: google.protobuf.descriptor.FileDescriptor
+if sys.version_info >= (3, 10):
+    from typing import TypeAlias as _TypeAlias
+else:
+    from typing_extensions import TypeAlias as _TypeAlias
 
-@typing.final
-class Signal(google.protobuf.message.Message):
+if sys.version_info >= (3, 13):
+    from warnings import deprecated as _deprecated
+else:
+    from typing_extensions import deprecated as _deprecated
+
+DESCRIPTOR: _descriptor.FileDescriptor
+
+@_typing.final
+class Signal(_message.Message):
     """A signal resource in the Data API. Signals are normally associated with a set of entity types,
     but may apply to any entities.
     """
 
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    DESCRIPTOR: _descriptor.Descriptor
 
-    NAME_FIELD_NUMBER: builtins.int
-    ENTITY_TYPE_FIELD_NUMBER: builtins.int
-    DISPLAY_NAME_FIELD_NUMBER: builtins.int
-    DESCRIPTION_FIELD_NUMBER: builtins.int
-    DOWNSAMPLING_METHOD_FIELD_NUMBER: builtins.int
-    READ_ONLY_FIELD_NUMBER: builtins.int
-    ENTITY_TYPES_FIELD_NUMBER: builtins.int
-    name: builtins.str
+    NAME_FIELD_NUMBER: _builtins.int
+    ENTITY_TYPE_FIELD_NUMBER: _builtins.int
+    DISPLAY_NAME_FIELD_NUMBER: _builtins.int
+    DESCRIPTION_FIELD_NUMBER: _builtins.int
+    DOWNSAMPLING_METHOD_FIELD_NUMBER: _builtins.int
+    READ_ONLY_FIELD_NUMBER: _builtins.int
+    ENTITY_TYPES_FIELD_NUMBER: _builtins.int
+    name: _builtins.str
     """Unique resource name of the raw data signal, e.g. `signals/signalIdentifier` or
     `signals/namespace.signalIdentifier`. The namespace must be empty (being global) or a
     namespace accessible to the customer.
     The signal identifier must match the regex `[a-zA-Z]\\w{0,127}`.
     """
-    entity_type: builtins.str
-    """No longer in use."""
-    display_name: builtins.str
+    @_builtins.property
+    @_deprecated("""This field has been marked as deprecated using proto field options.""")
+    def entity_type(self) -> _builtins.str:
+        """No longer in use."""
+
+    @entity_type.setter
+    @_deprecated("""This field has been marked as deprecated using proto field options.""")
+    def entity_type(self, value: _builtins.str) -> None:
+        """No longer in use."""
+
+    display_name: _builtins.str
     """Used when showing the signal in the Exabel app. Required when creating a signal."""
-    description: builtins.str
+    description: _builtins.str
     """Used when showing the signal in the Exabel app."""
-    downsampling_method: exabel.api.math.aggregation_pb2.Aggregation.ValueType
+    downsampling_method: _aggregation_pb2.Aggregation.ValueType
     """The default downsampling method to use when this signal is re-sampled into larger intervals.
     When two or more values in an interval needs to be aggregated into a single value, specifies
     how they are combined.
     """
-    read_only: builtins.bool
+    read_only: _builtins.bool
     """Global signals and those from data sets that you subscribe to will be read-only."""
-    @property
-    def entity_types(self) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[builtins.str]:
+    @_builtins.property
+    def entity_types(self) -> _containers.RepeatedScalarFieldContainer[_builtins.str]:
         """List of entity types that this signal has time series for, e.g.
         `entityTypes/ns.type1`, `entityTypes/ns.type2`.
         """
@@ -59,101 +77,105 @@ class Signal(google.protobuf.message.Message):
     def __init__(
         self,
         *,
-        name: builtins.str | None = ...,
-        entity_type: builtins.str | None = ...,
-        display_name: builtins.str | None = ...,
-        description: builtins.str | None = ...,
-        downsampling_method: exabel.api.math.aggregation_pb2.Aggregation.ValueType | None = ...,
-        read_only: builtins.bool | None = ...,
-        entity_types: collections.abc.Iterable[builtins.str] | None = ...,
+        name: _builtins.str | None = ...,
+        entity_type: _builtins.str | None = ...,
+        display_name: _builtins.str | None = ...,
+        description: _builtins.str | None = ...,
+        downsampling_method: _aggregation_pb2.Aggregation.ValueType | None = ...,
+        read_only: _builtins.bool | None = ...,
+        entity_types: _abc.Iterable[_builtins.str] | None = ...,
     ) -> None: ...
-    def ClearField(self, field_name: typing.Literal["description", b"description", "display_name", b"display_name", "downsampling_method", b"downsampling_method", "entity_type", b"entity_type", "entity_types", b"entity_types", "name", b"name", "read_only", b"read_only"]) -> None: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["description", b"description", "display_name", b"display_name", "downsampling_method", b"downsampling_method", "entity_type", b"entity_type", "entity_types", b"entity_types", "name", b"name", "read_only", b"read_only"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
-global___Signal = Signal
+Global___Signal: _TypeAlias = Signal  # noqa: Y015
 
-@typing.final
-class DerivedSignal(google.protobuf.message.Message):
+@_typing.final
+class DerivedSignal(_message.Message):
     """A derived signal resource in the Data API. A derived signal is part of one data set and can be
     added or removed using the `derived_signals` field of `UpdateDataSet`. It cannot be edited
     through the Data API; it must be edited in the library.
     """
 
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    DESCRIPTOR: _descriptor.Descriptor
 
-    NAME_FIELD_NUMBER: builtins.int
-    DATA_SETS_FIELD_NUMBER: builtins.int
-    DISPLAY_NAME_FIELD_NUMBER: builtins.int
-    LABEL_FIELD_NUMBER: builtins.int
-    DESCRIPTION_FIELD_NUMBER: builtins.int
-    EXPRESSION_FIELD_NUMBER: builtins.int
-    DOWNSAMPLING_METHOD_FIELD_NUMBER: builtins.int
-    CHANGE_FIELD_NUMBER: builtins.int
-    ENTITY_SET_FIELD_NUMBER: builtins.int
-    HIGHLIGHTED_FIELD_NUMBER: builtins.int
-    name: builtins.str
+    NAME_FIELD_NUMBER: _builtins.int
+    DATA_SETS_FIELD_NUMBER: _builtins.int
+    DISPLAY_NAME_FIELD_NUMBER: _builtins.int
+    LABEL_FIELD_NUMBER: _builtins.int
+    DESCRIPTION_FIELD_NUMBER: _builtins.int
+    EXPRESSION_FIELD_NUMBER: _builtins.int
+    DOWNSAMPLING_METHOD_FIELD_NUMBER: _builtins.int
+    CHANGE_FIELD_NUMBER: _builtins.int
+    ENTITY_SET_FIELD_NUMBER: _builtins.int
+    HIGHLIGHTED_FIELD_NUMBER: _builtins.int
+    name: _builtins.str
     """Unique resource name of the derived signal, e.g. `derivedSignals/signalIdentifier`. Derived
     signals don't have namespaces in their resource names. The signal identifier must be numeric.
     """
-    display_name: builtins.str
+    display_name: _builtins.str
     """The display name of the signal."""
-    label: builtins.str
+    label: _builtins.str
     """The label of the signal."""
-    description: builtins.str
+    description: _builtins.str
     """The description of the signal."""
-    expression: builtins.str
+    expression: _builtins.str
     """The signal expression."""
-    downsampling_method: exabel.api.math.aggregation_pb2.Aggregation.ValueType
+    downsampling_method: _aggregation_pb2.Aggregation.ValueType
     """The default downsampling method to use when this signal is re-sampled into larger intervals.
     When two or more values in an interval needs to be aggregated into a single value, specifies
     how they are combined.
     """
-    change: exabel.api.math.change_pb2.Change.ValueType
+    change: _change_pb2.Change.ValueType
     """The method used to calculate changes in this signal."""
-    highlighted: builtins.bool
+    highlighted: _builtins.bool
     """Whether this derived signal is highlighted (inside a specific data set)."""
-    @property
-    def data_sets(self) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[builtins.str]:
+    @_builtins.property
+    def data_sets(self) -> _containers.RepeatedScalarFieldContainer[_builtins.str]:
         """The data set(s) this derived signal belongs to."""
 
-    @property
-    def entity_set(self) -> exabel.api.data.v1.common_messages_pb2.EntitySet:
+    @_builtins.property
+    def entity_set(self) -> _common_messages_pb2.EntitySet:
         """The set of entities that this derived signal is valid for."""
 
     def __init__(
         self,
         *,
-        name: builtins.str | None = ...,
-        data_sets: collections.abc.Iterable[builtins.str] | None = ...,
-        display_name: builtins.str | None = ...,
-        label: builtins.str | None = ...,
-        description: builtins.str | None = ...,
-        expression: builtins.str | None = ...,
-        downsampling_method: exabel.api.math.aggregation_pb2.Aggregation.ValueType | None = ...,
-        change: exabel.api.math.change_pb2.Change.ValueType | None = ...,
-        entity_set: exabel.api.data.v1.common_messages_pb2.EntitySet | None = ...,
-        highlighted: builtins.bool | None = ...,
+        name: _builtins.str | None = ...,
+        data_sets: _abc.Iterable[_builtins.str] | None = ...,
+        display_name: _builtins.str | None = ...,
+        label: _builtins.str | None = ...,
+        description: _builtins.str | None = ...,
+        expression: _builtins.str | None = ...,
+        downsampling_method: _aggregation_pb2.Aggregation.ValueType | None = ...,
+        change: _change_pb2.Change.ValueType | None = ...,
+        entity_set: _common_messages_pb2.EntitySet | None = ...,
+        highlighted: _builtins.bool | None = ...,
     ) -> None: ...
-    def HasField(self, field_name: typing.Literal["entity_set", b"entity_set"]) -> builtins.bool: ...
-    def ClearField(self, field_name: typing.Literal["change", b"change", "data_sets", b"data_sets", "description", b"description", "display_name", b"display_name", "downsampling_method", b"downsampling_method", "entity_set", b"entity_set", "expression", b"expression", "highlighted", b"highlighted", "label", b"label", "name", b"name"]) -> None: ...
+    _HasFieldArgType: _TypeAlias = _typing.Literal["entity_set", b"entity_set"]  # noqa: Y015
+    def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["change", b"change", "data_sets", b"data_sets", "description", b"description", "display_name", b"display_name", "downsampling_method", b"downsampling_method", "entity_set", b"entity_set", "expression", b"expression", "highlighted", b"highlighted", "label", b"label", "name", b"name"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
-global___DerivedSignal = DerivedSignal
+Global___DerivedSignal: _TypeAlias = DerivedSignal  # noqa: Y015
 
-@typing.final
-class DerivedSignals(google.protobuf.message.Message):
+@_typing.final
+class DerivedSignals(_message.Message):
     """A list of signals."""
 
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    DESCRIPTOR: _descriptor.Descriptor
 
-    DERIVED_SIGNALS_FIELD_NUMBER: builtins.int
-    @property
-    def derived_signals(self) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[global___DerivedSignal]:
+    DERIVED_SIGNALS_FIELD_NUMBER: _builtins.int
+    @_builtins.property
+    def derived_signals(self) -> _containers.RepeatedCompositeFieldContainer[Global___DerivedSignal]:
         """The list of signals."""
 
     def __init__(
         self,
         *,
-        derived_signals: collections.abc.Iterable[global___DerivedSignal] | None = ...,
+        derived_signals: _abc.Iterable[Global___DerivedSignal] | None = ...,
     ) -> None: ...
-    def ClearField(self, field_name: typing.Literal["derived_signals", b"derived_signals"]) -> None: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["derived_signals", b"derived_signals"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
-global___DerivedSignals = DerivedSignals
+Global___DerivedSignals: _TypeAlias = DerivedSignals  # noqa: Y015

@@ -3,37 +3,44 @@
 isort:skip_file
 Copyright (c) 2025 Exabel AS. All rights reserved."""
 
-import builtins
-import collections.abc
-import google.protobuf.descriptor
-import google.protobuf.internal.containers
-import google.protobuf.message
-import typing
+from collections import abc as _abc
+from google.protobuf import descriptor as _descriptor
+from google.protobuf import message as _message
+from google.protobuf.internal import containers as _containers
+import builtins as _builtins
+import sys
+import typing as _typing
 
-DESCRIPTOR: google.protobuf.descriptor.FileDescriptor
+if sys.version_info >= (3, 10):
+    from typing import TypeAlias as _TypeAlias
+else:
+    from typing_extensions import TypeAlias as _TypeAlias
 
-@typing.final
-class EntitySet(google.protobuf.message.Message):
+DESCRIPTOR: _descriptor.FileDescriptor
+
+@_typing.final
+class EntitySet(_message.Message):
     """Defines a set of entities by a combination of individual entities and/or tags."""
 
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    DESCRIPTOR: _descriptor.Descriptor
 
-    ENTITIES_FIELD_NUMBER: builtins.int
-    TAGS_FIELD_NUMBER: builtins.int
-    @property
-    def entities(self) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[builtins.str]:
+    ENTITIES_FIELD_NUMBER: _builtins.int
+    TAGS_FIELD_NUMBER: _builtins.int
+    @_builtins.property
+    def entities(self) -> _containers.RepeatedScalarFieldContainer[_builtins.str]:
         """Individual entity resource names (e.g., "entityTypes/company/entities/F_000C7F-E")."""
 
-    @property
-    def tags(self) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[builtins.str]:
+    @_builtins.property
+    def tags(self) -> _containers.RepeatedScalarFieldContainer[_builtins.str]:
         """Tag resource names (e.g., "tags/123")."""
 
     def __init__(
         self,
         *,
-        entities: collections.abc.Iterable[builtins.str] | None = ...,
-        tags: collections.abc.Iterable[builtins.str] | None = ...,
+        entities: _abc.Iterable[_builtins.str] | None = ...,
+        tags: _abc.Iterable[_builtins.str] | None = ...,
     ) -> None: ...
-    def ClearField(self, field_name: typing.Literal["entities", b"entities", "tags", b"tags"]) -> None: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["entities", b"entities", "tags", b"tags"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
-global___EntitySet = EntitySet
+Global___EntitySet: _TypeAlias = EntitySet  # noqa: Y015

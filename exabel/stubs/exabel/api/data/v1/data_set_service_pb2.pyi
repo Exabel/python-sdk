@@ -3,108 +3,117 @@
 isort:skip_file
 Copyright (c) 2019-2022 Exabel AS. All rights reserved."""
 
-import builtins
-import collections.abc
-from . import data_set_messages_pb2
-import google.protobuf.descriptor
-import google.protobuf.field_mask_pb2
-import google.protobuf.internal.containers
-import google.protobuf.message
-import typing
-from ..... import exabel
+from collections import abc as _abc
+from . import data_set_messages_pb2 as _data_set_messages_pb2
+from google.protobuf import descriptor as _descriptor
+from google.protobuf import field_mask_pb2 as _field_mask_pb2
+from google.protobuf import message as _message
+from google.protobuf.internal import containers as _containers
+import builtins as _builtins
+import sys
+import typing as _typing
 
-DESCRIPTOR: google.protobuf.descriptor.FileDescriptor
+if sys.version_info >= (3, 10):
+    from typing import TypeAlias as _TypeAlias
+else:
+    from typing_extensions import TypeAlias as _TypeAlias
 
-@typing.final
-class ListDataSetsRequest(google.protobuf.message.Message):
+DESCRIPTOR: _descriptor.FileDescriptor
+
+@_typing.final
+class ListDataSetsRequest(_message.Message):
     """The request to list data sets."""
 
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    DESCRIPTOR: _descriptor.Descriptor
 
     def __init__(
         self,
     ) -> None: ...
 
-global___ListDataSetsRequest = ListDataSetsRequest
+Global___ListDataSetsRequest: _TypeAlias = ListDataSetsRequest  # noqa: Y015
 
-@typing.final
-class ListDataSetsResponse(google.protobuf.message.Message):
+@_typing.final
+class ListDataSetsResponse(_message.Message):
     """The response to list data sets. Returns all known data sets."""
 
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    DESCRIPTOR: _descriptor.Descriptor
 
-    DATA_SETS_FIELD_NUMBER: builtins.int
-    @property
-    def data_sets(self) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[exabel.api.data.v1.data_set_messages_pb2.DataSet]:
+    DATA_SETS_FIELD_NUMBER: _builtins.int
+    @_builtins.property
+    def data_sets(self) -> _containers.RepeatedCompositeFieldContainer[_data_set_messages_pb2.DataSet]:
         """List of data sets."""
 
     def __init__(
         self,
         *,
-        data_sets: collections.abc.Iterable[exabel.api.data.v1.data_set_messages_pb2.DataSet] | None = ...,
+        data_sets: _abc.Iterable[_data_set_messages_pb2.DataSet] | None = ...,
     ) -> None: ...
-    def ClearField(self, field_name: typing.Literal["data_sets", b"data_sets"]) -> None: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["data_sets", b"data_sets"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
-global___ListDataSetsResponse = ListDataSetsResponse
+Global___ListDataSetsResponse: _TypeAlias = ListDataSetsResponse  # noqa: Y015
 
-@typing.final
-class GetDataSetRequest(google.protobuf.message.Message):
+@_typing.final
+class GetDataSetRequest(_message.Message):
     """The request to get one data set."""
 
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    DESCRIPTOR: _descriptor.Descriptor
 
-    NAME_FIELD_NUMBER: builtins.int
-    name: builtins.str
+    NAME_FIELD_NUMBER: _builtins.int
+    name: _builtins.str
     """The resource name of the requested data set, for example `dataSets/ns.set1`."""
     def __init__(
         self,
         *,
-        name: builtins.str | None = ...,
+        name: _builtins.str | None = ...,
     ) -> None: ...
-    def ClearField(self, field_name: typing.Literal["name", b"name"]) -> None: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["name", b"name"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
-global___GetDataSetRequest = GetDataSetRequest
+Global___GetDataSetRequest: _TypeAlias = GetDataSetRequest  # noqa: Y015
 
-@typing.final
-class CreateDataSetRequest(google.protobuf.message.Message):
+@_typing.final
+class CreateDataSetRequest(_message.Message):
     """The response to create one data set."""
 
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    DESCRIPTOR: _descriptor.Descriptor
 
-    DATA_SET_FIELD_NUMBER: builtins.int
-    @property
-    def data_set(self) -> exabel.api.data.v1.data_set_messages_pb2.DataSet:
+    DATA_SET_FIELD_NUMBER: _builtins.int
+    @_builtins.property
+    def data_set(self) -> _data_set_messages_pb2.DataSet:
         """The data set to create."""
 
     def __init__(
         self,
         *,
-        data_set: exabel.api.data.v1.data_set_messages_pb2.DataSet | None = ...,
+        data_set: _data_set_messages_pb2.DataSet | None = ...,
     ) -> None: ...
-    def HasField(self, field_name: typing.Literal["data_set", b"data_set"]) -> builtins.bool: ...
-    def ClearField(self, field_name: typing.Literal["data_set", b"data_set"]) -> None: ...
+    _HasFieldArgType: _TypeAlias = _typing.Literal["data_set", b"data_set"]  # noqa: Y015
+    def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["data_set", b"data_set"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
-global___CreateDataSetRequest = CreateDataSetRequest
+Global___CreateDataSetRequest: _TypeAlias = CreateDataSetRequest  # noqa: Y015
 
-@typing.final
-class UpdateDataSetRequest(google.protobuf.message.Message):
+@_typing.final
+class UpdateDataSetRequest(_message.Message):
     """The request to update one data set."""
 
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    DESCRIPTOR: _descriptor.Descriptor
 
-    DATA_SET_FIELD_NUMBER: builtins.int
-    UPDATE_MASK_FIELD_NUMBER: builtins.int
-    ALLOW_MISSING_FIELD_NUMBER: builtins.int
-    allow_missing: builtins.bool
+    DATA_SET_FIELD_NUMBER: _builtins.int
+    UPDATE_MASK_FIELD_NUMBER: _builtins.int
+    ALLOW_MISSING_FIELD_NUMBER: _builtins.int
+    allow_missing: _builtins.bool
     """If set to `true`, a new data set will be created if it did not exist, and `update_mask` is
     ignored.
     """
-    @property
-    def data_set(self) -> exabel.api.data.v1.data_set_messages_pb2.DataSet:
+    @_builtins.property
+    def data_set(self) -> _data_set_messages_pb2.DataSet:
         """The data set to update."""
 
-    @property
-    def update_mask(self) -> google.protobuf.field_mask_pb2.FieldMask:
+    @_builtins.property
+    def update_mask(self) -> _field_mask_pb2.FieldMask:
         """Use this to update only selected fields. For example, specify `display_name` to update only
         the display name. If the `signals` field is updated, the new list will replace the existing
         list. If `allow_missing` is set, this field is ignored.
@@ -115,31 +124,34 @@ class UpdateDataSetRequest(google.protobuf.message.Message):
     def __init__(
         self,
         *,
-        data_set: exabel.api.data.v1.data_set_messages_pb2.DataSet | None = ...,
-        update_mask: google.protobuf.field_mask_pb2.FieldMask | None = ...,
-        allow_missing: builtins.bool | None = ...,
+        data_set: _data_set_messages_pb2.DataSet | None = ...,
+        update_mask: _field_mask_pb2.FieldMask | None = ...,
+        allow_missing: _builtins.bool | None = ...,
     ) -> None: ...
-    def HasField(self, field_name: typing.Literal["data_set", b"data_set", "update_mask", b"update_mask"]) -> builtins.bool: ...
-    def ClearField(self, field_name: typing.Literal["allow_missing", b"allow_missing", "data_set", b"data_set", "update_mask", b"update_mask"]) -> None: ...
+    _HasFieldArgType: _TypeAlias = _typing.Literal["data_set", b"data_set", "update_mask", b"update_mask"]  # noqa: Y015
+    def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["allow_missing", b"allow_missing", "data_set", b"data_set", "update_mask", b"update_mask"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
-global___UpdateDataSetRequest = UpdateDataSetRequest
+Global___UpdateDataSetRequest: _TypeAlias = UpdateDataSetRequest  # noqa: Y015
 
-@typing.final
-class DeleteDataSetRequest(google.protobuf.message.Message):
+@_typing.final
+class DeleteDataSetRequest(_message.Message):
     """The request to delete one data set.
     A data set cannot be deleted if it is enabled for subscriptions.
     """
 
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    DESCRIPTOR: _descriptor.Descriptor
 
-    NAME_FIELD_NUMBER: builtins.int
-    name: builtins.str
+    NAME_FIELD_NUMBER: _builtins.int
+    name: _builtins.str
     """The resource name of the data set to delete, for example `dataSets/ns.set1`."""
     def __init__(
         self,
         *,
-        name: builtins.str | None = ...,
+        name: _builtins.str | None = ...,
     ) -> None: ...
-    def ClearField(self, field_name: typing.Literal["name", b"name"]) -> None: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["name", b"name"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
-global___DeleteDataSetRequest = DeleteDataSetRequest
+Global___DeleteDataSetRequest: _TypeAlias = DeleteDataSetRequest  # noqa: Y015

@@ -3,25 +3,25 @@
 isort:skip_file
 Copyright (c) 2019-2024 Exabel AS. All rights reserved."""
 
-import builtins
-import google.protobuf.descriptor
-import google.protobuf.internal.enum_type_wrapper
+from google.protobuf import descriptor as _descriptor
+from google.protobuf.internal import enum_type_wrapper as _enum_type_wrapper
+import builtins as _builtins
 import sys
-import typing
+import typing as _typing
 
 if sys.version_info >= (3, 10):
-    import typing as typing_extensions
+    from typing import TypeAlias as _TypeAlias
 else:
-    import typing_extensions
+    from typing_extensions import TypeAlias as _TypeAlias
 
-DESCRIPTOR: google.protobuf.descriptor.FileDescriptor
+DESCRIPTOR: _descriptor.FileDescriptor
 
 class _Aggregation:
-    ValueType = typing.NewType("ValueType", builtins.int)
-    V: typing_extensions.TypeAlias = ValueType
+    ValueType = _typing.NewType("ValueType", _builtins.int)
+    V: _TypeAlias = ValueType  # noqa: Y015
 
-class _AggregationEnumTypeWrapper(google.protobuf.internal.enum_type_wrapper._EnumTypeWrapper[_Aggregation.ValueType], builtins.type):
-    DESCRIPTOR: google.protobuf.descriptor.EnumDescriptor
+class _AggregationEnumTypeWrapper(_enum_type_wrapper._EnumTypeWrapper[_Aggregation.ValueType], _builtins.type):
+    DESCRIPTOR: _descriptor.EnumDescriptor
     AGGREGATION_INVALID: _Aggregation.ValueType  # 0
     """Aggregation is unspecified and invalid. Aggregation must be set."""
     MEAN: _Aggregation.ValueType  # 1
@@ -58,4 +58,4 @@ MAX: Aggregation.ValueType  # 6
 """Selects the maximum value. Example: 2, 1, 3, 5, 4 -> 5."""
 MEDIAN: Aggregation.ValueType  # 7
 """Selects the median value. Example: 2, 1, 3, 5, 1000 -> 3."""
-global___Aggregation = Aggregation
+Global___Aggregation: _TypeAlias = Aggregation  # noqa: Y015

@@ -3,129 +3,151 @@
 isort:skip_file
 Copyright (c) 2019-2022 Exabel AS. All rights reserved."""
 
-import builtins
-import collections.abc
-from . import time_series_messages_pb2
-import google.protobuf.descriptor
-import google.protobuf.internal.containers
-import google.protobuf.message
-import google.rpc.status_pb2
-import typing
-from ..... import exabel
+from collections import abc as _abc
+from . import time_series_messages_pb2 as _time_series_messages_pb2
+from google.protobuf import descriptor as _descriptor
+from google.protobuf import message as _message
+from google.protobuf.internal import containers as _containers
+from google.rpc import status_pb2 as _status_pb2
+import builtins as _builtins
+import sys
+import typing as _typing
 
-DESCRIPTOR: google.protobuf.descriptor.FileDescriptor
+if sys.version_info >= (3, 10):
+    from typing import TypeAlias as _TypeAlias
+else:
+    from typing_extensions import TypeAlias as _TypeAlias
 
-@typing.final
-class ListTimeSeriesRequest(google.protobuf.message.Message):
+if sys.version_info >= (3, 13):
+    from warnings import deprecated as _deprecated
+else:
+    from typing_extensions import deprecated as _deprecated
+
+DESCRIPTOR: _descriptor.FileDescriptor
+
+@_typing.final
+class ListTimeSeriesRequest(_message.Message):
     """The request to list time series. This request has an implicit empty `TimeSeriesView` parameter,
     so only the canonical names are returned.
     """
 
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    DESCRIPTOR: _descriptor.Descriptor
 
-    PARENT_FIELD_NUMBER: builtins.int
-    PAGE_SIZE_FIELD_NUMBER: builtins.int
-    PAGE_TOKEN_FIELD_NUMBER: builtins.int
-    parent: builtins.str
+    PARENT_FIELD_NUMBER: _builtins.int
+    PAGE_SIZE_FIELD_NUMBER: _builtins.int
+    PAGE_TOKEN_FIELD_NUMBER: _builtins.int
+    parent: _builtins.str
     """The parent entity or signal of time series to list, for example `entityTypes/ns.type1/entities/ns.entity1`
     or `signal/ns.signal1`.
     """
-    page_size: builtins.int
+    page_size: _builtins.int
     """Maximum number of results to return. Defaults to 1000, which is the maximum allowed value."""
-    page_token: builtins.str
+    page_token: _builtins.str
     """Token for a specific page of results, as returned from a previous list request with the same
     query parameters.
     """
     def __init__(
         self,
         *,
-        parent: builtins.str | None = ...,
-        page_size: builtins.int | None = ...,
-        page_token: builtins.str | None = ...,
+        parent: _builtins.str | None = ...,
+        page_size: _builtins.int | None = ...,
+        page_token: _builtins.str | None = ...,
     ) -> None: ...
-    def ClearField(self, field_name: typing.Literal["page_size", b"page_size", "page_token", b"page_token", "parent", b"parent"]) -> None: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["page_size", b"page_size", "page_token", b"page_token", "parent", b"parent"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
-global___ListTimeSeriesRequest = ListTimeSeriesRequest
+Global___ListTimeSeriesRequest: _TypeAlias = ListTimeSeriesRequest  # noqa: Y015
 
-@typing.final
-class ListTimeSeriesResponse(google.protobuf.message.Message):
+@_typing.final
+class ListTimeSeriesResponse(_message.Message):
     """The response to list time series. Returns all matching time series."""
 
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    DESCRIPTOR: _descriptor.Descriptor
 
-    TIME_SERIES_FIELD_NUMBER: builtins.int
-    NEXT_PAGE_TOKEN_FIELD_NUMBER: builtins.int
-    TOTAL_SIZE_FIELD_NUMBER: builtins.int
-    next_page_token: builtins.str
+    TIME_SERIES_FIELD_NUMBER: _builtins.int
+    NEXT_PAGE_TOKEN_FIELD_NUMBER: _builtins.int
+    TOTAL_SIZE_FIELD_NUMBER: _builtins.int
+    next_page_token: _builtins.str
     """Token for the next page of results, which can be sent to a subsequent query.
     The end of the list is reached when the number of results is less than the page size
     (NOT when the token is empty).
     """
-    total_size: builtins.int
+    total_size: _builtins.int
     """Total number of results, irrespective of paging."""
-    @property
-    def time_series(self) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[exabel.api.data.v1.time_series_messages_pb2.TimeSeries]:
+    @_builtins.property
+    def time_series(self) -> _containers.RepeatedCompositeFieldContainer[_time_series_messages_pb2.TimeSeries]:
         """List of time series. Only the resource `name` field is returned."""
 
     def __init__(
         self,
         *,
-        time_series: collections.abc.Iterable[exabel.api.data.v1.time_series_messages_pb2.TimeSeries] | None = ...,
-        next_page_token: builtins.str | None = ...,
-        total_size: builtins.int | None = ...,
+        time_series: _abc.Iterable[_time_series_messages_pb2.TimeSeries] | None = ...,
+        next_page_token: _builtins.str | None = ...,
+        total_size: _builtins.int | None = ...,
     ) -> None: ...
-    def ClearField(self, field_name: typing.Literal["next_page_token", b"next_page_token", "time_series", b"time_series", "total_size", b"total_size"]) -> None: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["next_page_token", b"next_page_token", "time_series", b"time_series", "total_size", b"total_size"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
-global___ListTimeSeriesResponse = ListTimeSeriesResponse
+Global___ListTimeSeriesResponse: _TypeAlias = ListTimeSeriesResponse  # noqa: Y015
 
-@typing.final
-class GetTimeSeriesRequest(google.protobuf.message.Message):
+@_typing.final
+class GetTimeSeriesRequest(_message.Message):
     """The request to get one time series. The returned time series will contain its canonical name.
     Not all time series are capable of returning data.
     """
 
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    DESCRIPTOR: _descriptor.Descriptor
 
-    NAME_FIELD_NUMBER: builtins.int
-    VIEW_FIELD_NUMBER: builtins.int
-    name: builtins.str
+    NAME_FIELD_NUMBER: _builtins.int
+    VIEW_FIELD_NUMBER: _builtins.int
+    name: _builtins.str
     """The resource name of the requested time series, for example
     `entityTypes/ns.type1/entities/ns.entity1/signals/ns.signal1`
     or `signals/ns.signal1/entityTypes/ns.type1/entities/ns.entity1`. The returned time series will
     always contain its canonical name `entityTypes/ns.type1/entities/ns.entity1/signals/ns.signal1`.
     """
-    @property
-    def view(self) -> exabel.api.data.v1.time_series_messages_pb2.TimeSeriesView:
+    @_builtins.property
+    def view(self) -> _time_series_messages_pb2.TimeSeriesView:
         """Specifies which parts of the time series should be returned in the request."""
 
     def __init__(
         self,
         *,
-        name: builtins.str | None = ...,
-        view: exabel.api.data.v1.time_series_messages_pb2.TimeSeriesView | None = ...,
+        name: _builtins.str | None = ...,
+        view: _time_series_messages_pb2.TimeSeriesView | None = ...,
     ) -> None: ...
-    def HasField(self, field_name: typing.Literal["view", b"view"]) -> builtins.bool: ...
-    def ClearField(self, field_name: typing.Literal["name", b"name", "view", b"view"]) -> None: ...
+    _HasFieldArgType: _TypeAlias = _typing.Literal["view", b"view"]  # noqa: Y015
+    def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["name", b"name", "view", b"view"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
-global___GetTimeSeriesRequest = GetTimeSeriesRequest
+Global___GetTimeSeriesRequest: _TypeAlias = GetTimeSeriesRequest  # noqa: Y015
 
-@typing.final
-class InsertOptions(google.protobuf.message.Message):
+@_typing.final
+class InsertOptions(_message.Message):
     """Common options when insert time series values."""
 
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    DESCRIPTOR: _descriptor.Descriptor
 
-    DEFAULT_KNOWN_TIME_FIELD_NUMBER: builtins.int
-    CREATE_TAG_FIELD_NUMBER: builtins.int
-    SHOULD_OPTIMISE_FIELD_NUMBER: builtins.int
-    create_tag: builtins.bool
-    """This field is not in use anymore."""
-    should_optimise: builtins.bool
+    DEFAULT_KNOWN_TIME_FIELD_NUMBER: _builtins.int
+    CREATE_TAG_FIELD_NUMBER: _builtins.int
+    SHOULD_OPTIMISE_FIELD_NUMBER: _builtins.int
+    @_builtins.property
+    @_deprecated("""This field has been marked as deprecated using proto field options.""")
+    def create_tag(self) -> _builtins.bool:
+        """This field is not in use anymore."""
+
+    @create_tag.setter
+    @_deprecated("""This field has been marked as deprecated using proto field options.""")
+    def create_tag(self, value: _builtins.bool) -> None:
+        """This field is not in use anymore."""
+
+    should_optimise: _builtins.bool
     """Whether time series storage optimisation should be enabled or not. If not set, optimisation is
     at the discretion of the server.
     """
-    @property
-    def default_known_time(self) -> exabel.api.data.v1.time_series_messages_pb2.DefaultKnownTime:
+    @_builtins.property
+    def default_known_time(self) -> _time_series_messages_pb2.DefaultKnownTime:
         """The specification of the default known time to use for points that don't explicitly have a
         known time set. If not set, the time of insertion is used as the default known time
         (`current_time = true`).
@@ -134,36 +156,40 @@ class InsertOptions(google.protobuf.message.Message):
     def __init__(
         self,
         *,
-        default_known_time: exabel.api.data.v1.time_series_messages_pb2.DefaultKnownTime | None = ...,
-        create_tag: builtins.bool | None = ...,
-        should_optimise: builtins.bool | None = ...,
+        default_known_time: _time_series_messages_pb2.DefaultKnownTime | None = ...,
+        create_tag: _builtins.bool | None = ...,
+        should_optimise: _builtins.bool | None = ...,
     ) -> None: ...
-    def HasField(self, field_name: typing.Literal["_should_optimise", b"_should_optimise", "default_known_time", b"default_known_time", "should_optimise", b"should_optimise"]) -> builtins.bool: ...
-    def ClearField(self, field_name: typing.Literal["_should_optimise", b"_should_optimise", "create_tag", b"create_tag", "default_known_time", b"default_known_time", "should_optimise", b"should_optimise"]) -> None: ...
-    def WhichOneof(self, oneof_group: typing.Literal["_should_optimise", b"_should_optimise"]) -> typing.Literal["should_optimise"] | None: ...
+    _HasFieldArgType: _TypeAlias = _typing.Literal["_should_optimise", b"_should_optimise", "default_known_time", b"default_known_time", "should_optimise", b"should_optimise"]  # noqa: Y015
+    def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["_should_optimise", b"_should_optimise", "create_tag", b"create_tag", "default_known_time", b"default_known_time", "should_optimise", b"should_optimise"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
+    _WhichOneofReturnType__should_optimise: _TypeAlias = _typing.Literal["should_optimise"]  # noqa: Y015
+    _WhichOneofArgType__should_optimise: _TypeAlias = _typing.Literal["_should_optimise", b"_should_optimise"]  # noqa: Y015
+    def WhichOneof(self, oneof_group: _WhichOneofArgType__should_optimise) -> _WhichOneofReturnType__should_optimise | None: ...
 
-global___InsertOptions = InsertOptions
+Global___InsertOptions: _TypeAlias = InsertOptions  # noqa: Y015
 
-@typing.final
-class UpdateOptions(google.protobuf.message.Message):
+@_typing.final
+class UpdateOptions(_message.Message):
     """Common options when updating one or more time series."""
 
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    DESCRIPTOR: _descriptor.Descriptor
 
-    ALLOW_MISSING_FIELD_NUMBER: builtins.int
-    REPLACE_EXISTING_TIME_SERIES_FIELD_NUMBER: builtins.int
-    REPLACE_KNOWN_TIME_FIELD_NUMBER: builtins.int
-    REPLACE_EXISTING_DATA_POINTS_FIELD_NUMBER: builtins.int
-    allow_missing: builtins.bool
+    ALLOW_MISSING_FIELD_NUMBER: _builtins.int
+    REPLACE_EXISTING_TIME_SERIES_FIELD_NUMBER: _builtins.int
+    REPLACE_KNOWN_TIME_FIELD_NUMBER: _builtins.int
+    REPLACE_EXISTING_DATA_POINTS_FIELD_NUMBER: _builtins.int
+    allow_missing: _builtins.bool
     """If set to `true`, new time series will be created if they did not exist."""
-    replace_existing_time_series: builtins.bool
+    replace_existing_time_series: _builtins.bool
     """Set to `true` to first delete all data from existing time series, including units. This means
     that all historical, point-in-time and units data for the time series will be destroyed and
     replaced with the data in this call.
     Use with care! For instance: If this flag is set, and an import job splits one time series
     over multiple calls, only the data in the last call will be kept.
     """
-    replace_known_time: builtins.bool
+    replace_known_time: _builtins.bool
     """Specifies that the known times of _all_ inserted points are a fixed timestamp specified in
     `insert_options.default_known_time`, and additionally that all existing values of the
     time series should be unset at this timestamp. If this is set, either
@@ -173,232 +199,339 @@ class UpdateOptions(google.protobuf.message.Message):
     Use with care! For instance: If this flag is set, and an import job splits one time series
     over multiple calls, only the data in the last call will be kept.
     """
-    replace_existing_data_points: builtins.bool
+    replace_existing_data_points: _builtins.bool
     """Whether to remove existing data points for other known times of the inserted time series
     points. Data points for times not present in the request will be left untouched.
     """
     def __init__(
         self,
         *,
-        allow_missing: builtins.bool | None = ...,
-        replace_existing_time_series: builtins.bool | None = ...,
-        replace_known_time: builtins.bool | None = ...,
-        replace_existing_data_points: builtins.bool | None = ...,
+        allow_missing: _builtins.bool | None = ...,
+        replace_existing_time_series: _builtins.bool | None = ...,
+        replace_known_time: _builtins.bool | None = ...,
+        replace_existing_data_points: _builtins.bool | None = ...,
     ) -> None: ...
-    def HasField(self, field_name: typing.Literal["replace_existing_data_points", b"replace_existing_data_points", "replace_existing_time_series", b"replace_existing_time_series", "replace_known_time", b"replace_known_time", "replace_options", b"replace_options"]) -> builtins.bool: ...
-    def ClearField(self, field_name: typing.Literal["allow_missing", b"allow_missing", "replace_existing_data_points", b"replace_existing_data_points", "replace_existing_time_series", b"replace_existing_time_series", "replace_known_time", b"replace_known_time", "replace_options", b"replace_options"]) -> None: ...
-    def WhichOneof(self, oneof_group: typing.Literal["replace_options", b"replace_options"]) -> typing.Literal["replace_existing_time_series", "replace_known_time", "replace_existing_data_points"] | None: ...
+    _HasFieldArgType: _TypeAlias = _typing.Literal["replace_existing_data_points", b"replace_existing_data_points", "replace_existing_time_series", b"replace_existing_time_series", "replace_known_time", b"replace_known_time", "replace_options", b"replace_options"]  # noqa: Y015
+    def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["allow_missing", b"allow_missing", "replace_existing_data_points", b"replace_existing_data_points", "replace_existing_time_series", b"replace_existing_time_series", "replace_known_time", b"replace_known_time", "replace_options", b"replace_options"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
+    _WhichOneofReturnType_replace_options: _TypeAlias = _typing.Literal["replace_existing_time_series", "replace_known_time", "replace_existing_data_points"]  # noqa: Y015
+    _WhichOneofArgType_replace_options: _TypeAlias = _typing.Literal["replace_options", b"replace_options"]  # noqa: Y015
+    def WhichOneof(self, oneof_group: _WhichOneofArgType_replace_options) -> _WhichOneofReturnType_replace_options | None: ...
 
-global___UpdateOptions = UpdateOptions
+Global___UpdateOptions: _TypeAlias = UpdateOptions  # noqa: Y015
 
-@typing.final
-class CreateTimeSeriesRequest(google.protobuf.message.Message):
+@_typing.final
+class CreateTimeSeriesRequest(_message.Message):
     """The request to create one time series. The parents of the time series will be inferred from
     `time_series.name`. The returned time series will contain its canonical name.
     """
 
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    DESCRIPTOR: _descriptor.Descriptor
 
-    TIME_SERIES_FIELD_NUMBER: builtins.int
-    VIEW_FIELD_NUMBER: builtins.int
-    INSERT_OPTIONS_FIELD_NUMBER: builtins.int
-    DEFAULT_KNOWN_TIME_FIELD_NUMBER: builtins.int
-    CREATE_TAG_FIELD_NUMBER: builtins.int
-    SHOULD_OPTIMISE_FIELD_NUMBER: builtins.int
-    create_tag: builtins.bool
-    """This field is not in use anymore."""
-    should_optimise: builtins.bool
-    """This field is deprecated and replaced with insert_options.should_optimise."""
-    @property
-    def time_series(self) -> exabel.api.data.v1.time_series_messages_pb2.TimeSeries:
+    TIME_SERIES_FIELD_NUMBER: _builtins.int
+    VIEW_FIELD_NUMBER: _builtins.int
+    INSERT_OPTIONS_FIELD_NUMBER: _builtins.int
+    DEFAULT_KNOWN_TIME_FIELD_NUMBER: _builtins.int
+    CREATE_TAG_FIELD_NUMBER: _builtins.int
+    SHOULD_OPTIMISE_FIELD_NUMBER: _builtins.int
+    @_builtins.property
+    @_deprecated("""This field has been marked as deprecated using proto field options.""")
+    def create_tag(self) -> _builtins.bool:
+        """This field is not in use anymore."""
+
+    @create_tag.setter
+    @_deprecated("""This field has been marked as deprecated using proto field options.""")
+    def create_tag(self, value: _builtins.bool) -> None:
+        """This field is not in use anymore."""
+
+    @_builtins.property
+    @_deprecated("""This field has been marked as deprecated using proto field options.""")
+    def should_optimise(self) -> _builtins.bool:
+        """This field is deprecated and replaced with insert_options.should_optimise."""
+
+    @should_optimise.setter
+    @_deprecated("""This field has been marked as deprecated using proto field options.""")
+    def should_optimise(self, value: _builtins.bool) -> None:
+        """This field is deprecated and replaced with insert_options.should_optimise."""
+
+    @_builtins.property
+    def time_series(self) -> _time_series_messages_pb2.TimeSeries:
         """The time series to create."""
 
-    @property
-    def view(self) -> exabel.api.data.v1.time_series_messages_pb2.TimeSeriesView:
+    @_builtins.property
+    def view(self) -> _time_series_messages_pb2.TimeSeriesView:
         """Specifies which parts of the time series should be returned in the request."""
 
-    @property
-    def insert_options(self) -> global___InsertOptions:
+    @_builtins.property
+    def insert_options(self) -> Global___InsertOptions:
         """Insert options for this request."""
 
-    @property
-    def default_known_time(self) -> exabel.api.data.v1.time_series_messages_pb2.DefaultKnownTime:
+    @_builtins.property
+    @_deprecated("""This field has been marked as deprecated using proto field options.""")
+    def default_known_time(self) -> _time_series_messages_pb2.DefaultKnownTime:
         """This field is deprecated and replaced with insert_options.default_known_time."""
 
     def __init__(
         self,
         *,
-        time_series: exabel.api.data.v1.time_series_messages_pb2.TimeSeries | None = ...,
-        view: exabel.api.data.v1.time_series_messages_pb2.TimeSeriesView | None = ...,
-        insert_options: global___InsertOptions | None = ...,
-        default_known_time: exabel.api.data.v1.time_series_messages_pb2.DefaultKnownTime | None = ...,
-        create_tag: builtins.bool | None = ...,
-        should_optimise: builtins.bool | None = ...,
+        time_series: _time_series_messages_pb2.TimeSeries | None = ...,
+        view: _time_series_messages_pb2.TimeSeriesView | None = ...,
+        insert_options: Global___InsertOptions | None = ...,
+        default_known_time: _time_series_messages_pb2.DefaultKnownTime | None = ...,
+        create_tag: _builtins.bool | None = ...,
+        should_optimise: _builtins.bool | None = ...,
     ) -> None: ...
-    def HasField(self, field_name: typing.Literal["_should_optimise", b"_should_optimise", "default_known_time", b"default_known_time", "insert_options", b"insert_options", "should_optimise", b"should_optimise", "time_series", b"time_series", "view", b"view"]) -> builtins.bool: ...
-    def ClearField(self, field_name: typing.Literal["_should_optimise", b"_should_optimise", "create_tag", b"create_tag", "default_known_time", b"default_known_time", "insert_options", b"insert_options", "should_optimise", b"should_optimise", "time_series", b"time_series", "view", b"view"]) -> None: ...
-    def WhichOneof(self, oneof_group: typing.Literal["_should_optimise", b"_should_optimise"]) -> typing.Literal["should_optimise"] | None: ...
+    _HasFieldArgType: _TypeAlias = _typing.Literal["_should_optimise", b"_should_optimise", "default_known_time", b"default_known_time", "insert_options", b"insert_options", "should_optimise", b"should_optimise", "time_series", b"time_series", "view", b"view"]  # noqa: Y015
+    def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["_should_optimise", b"_should_optimise", "create_tag", b"create_tag", "default_known_time", b"default_known_time", "insert_options", b"insert_options", "should_optimise", b"should_optimise", "time_series", b"time_series", "view", b"view"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
+    _WhichOneofReturnType__should_optimise: _TypeAlias = _typing.Literal["should_optimise"]  # noqa: Y015
+    _WhichOneofArgType__should_optimise: _TypeAlias = _typing.Literal["_should_optimise", b"_should_optimise"]  # noqa: Y015
+    def WhichOneof(self, oneof_group: _WhichOneofArgType__should_optimise) -> _WhichOneofReturnType__should_optimise | None: ...
 
-global___CreateTimeSeriesRequest = CreateTimeSeriesRequest
+Global___CreateTimeSeriesRequest: _TypeAlias = CreateTimeSeriesRequest  # noqa: Y015
 
-@typing.final
-class UpdateTimeSeriesRequest(google.protobuf.message.Message):
+@_typing.final
+class UpdateTimeSeriesRequest(_message.Message):
     """The request to update one time series. The returned time series will contain its canonical name."""
 
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    DESCRIPTOR: _descriptor.Descriptor
 
-    TIME_SERIES_FIELD_NUMBER: builtins.int
-    VIEW_FIELD_NUMBER: builtins.int
-    INSERT_OPTIONS_FIELD_NUMBER: builtins.int
-    UPDATE_OPTIONS_FIELD_NUMBER: builtins.int
-    DEFAULT_KNOWN_TIME_FIELD_NUMBER: builtins.int
-    ALLOW_MISSING_FIELD_NUMBER: builtins.int
-    CREATE_TAG_FIELD_NUMBER: builtins.int
-    SHOULD_OPTIMISE_FIELD_NUMBER: builtins.int
-    REPLACE_KNOWN_TIME_FIELD_NUMBER: builtins.int
-    allow_missing: builtins.bool
-    """This field is deprecated and replaced with update_options.allow_missing."""
-    create_tag: builtins.bool
-    """This field is not in use anymore."""
-    should_optimise: builtins.bool
-    """This field is deprecated and replaced with insert_options.should_optimise."""
-    replace_known_time: builtins.bool
-    """This field is deprecated and replaced with update_options.replace_known_time."""
-    @property
-    def time_series(self) -> exabel.api.data.v1.time_series_messages_pb2.TimeSeries:
+    TIME_SERIES_FIELD_NUMBER: _builtins.int
+    VIEW_FIELD_NUMBER: _builtins.int
+    INSERT_OPTIONS_FIELD_NUMBER: _builtins.int
+    UPDATE_OPTIONS_FIELD_NUMBER: _builtins.int
+    DEFAULT_KNOWN_TIME_FIELD_NUMBER: _builtins.int
+    ALLOW_MISSING_FIELD_NUMBER: _builtins.int
+    CREATE_TAG_FIELD_NUMBER: _builtins.int
+    SHOULD_OPTIMISE_FIELD_NUMBER: _builtins.int
+    REPLACE_KNOWN_TIME_FIELD_NUMBER: _builtins.int
+    @_builtins.property
+    @_deprecated("""This field has been marked as deprecated using proto field options.""")
+    def allow_missing(self) -> _builtins.bool:
+        """This field is deprecated and replaced with update_options.allow_missing."""
+
+    @allow_missing.setter
+    @_deprecated("""This field has been marked as deprecated using proto field options.""")
+    def allow_missing(self, value: _builtins.bool) -> None:
+        """This field is deprecated and replaced with update_options.allow_missing."""
+
+    @_builtins.property
+    @_deprecated("""This field has been marked as deprecated using proto field options.""")
+    def create_tag(self) -> _builtins.bool:
+        """This field is not in use anymore."""
+
+    @create_tag.setter
+    @_deprecated("""This field has been marked as deprecated using proto field options.""")
+    def create_tag(self, value: _builtins.bool) -> None:
+        """This field is not in use anymore."""
+
+    @_builtins.property
+    @_deprecated("""This field has been marked as deprecated using proto field options.""")
+    def should_optimise(self) -> _builtins.bool:
+        """This field is deprecated and replaced with insert_options.should_optimise."""
+
+    @should_optimise.setter
+    @_deprecated("""This field has been marked as deprecated using proto field options.""")
+    def should_optimise(self, value: _builtins.bool) -> None:
+        """This field is deprecated and replaced with insert_options.should_optimise."""
+
+    @_builtins.property
+    @_deprecated("""This field has been marked as deprecated using proto field options.""")
+    def replace_known_time(self) -> _builtins.bool:
+        """This field is deprecated and replaced with update_options.replace_known_time."""
+
+    @replace_known_time.setter
+    @_deprecated("""This field has been marked as deprecated using proto field options.""")
+    def replace_known_time(self, value: _builtins.bool) -> None:
+        """This field is deprecated and replaced with update_options.replace_known_time."""
+
+    @_builtins.property
+    def time_series(self) -> _time_series_messages_pb2.TimeSeries:
         """The time series to update. The data in this request and the existing data are merged together:
         All points in the request will overwrite the existing points with the same key, unless
         the new value is empty, in which case the point will be deleted.
         """
 
-    @property
-    def view(self) -> exabel.api.data.v1.time_series_messages_pb2.TimeSeriesView:
+    @_builtins.property
+    def view(self) -> _time_series_messages_pb2.TimeSeriesView:
         """Specifies which parts of the time series should be returned in the request."""
 
-    @property
-    def insert_options(self) -> global___InsertOptions:
+    @_builtins.property
+    def insert_options(self) -> Global___InsertOptions:
         """Insert options for this request."""
 
-    @property
-    def update_options(self) -> global___UpdateOptions:
+    @_builtins.property
+    def update_options(self) -> Global___UpdateOptions:
         """Update options for this request."""
 
-    @property
-    def default_known_time(self) -> exabel.api.data.v1.time_series_messages_pb2.DefaultKnownTime:
+    @_builtins.property
+    @_deprecated("""This field has been marked as deprecated using proto field options.""")
+    def default_known_time(self) -> _time_series_messages_pb2.DefaultKnownTime:
         """This field is deprecated and replaced with insert_options.default_known_time."""
 
     def __init__(
         self,
         *,
-        time_series: exabel.api.data.v1.time_series_messages_pb2.TimeSeries | None = ...,
-        view: exabel.api.data.v1.time_series_messages_pb2.TimeSeriesView | None = ...,
-        insert_options: global___InsertOptions | None = ...,
-        update_options: global___UpdateOptions | None = ...,
-        default_known_time: exabel.api.data.v1.time_series_messages_pb2.DefaultKnownTime | None = ...,
-        allow_missing: builtins.bool | None = ...,
-        create_tag: builtins.bool | None = ...,
-        should_optimise: builtins.bool | None = ...,
-        replace_known_time: builtins.bool | None = ...,
+        time_series: _time_series_messages_pb2.TimeSeries | None = ...,
+        view: _time_series_messages_pb2.TimeSeriesView | None = ...,
+        insert_options: Global___InsertOptions | None = ...,
+        update_options: Global___UpdateOptions | None = ...,
+        default_known_time: _time_series_messages_pb2.DefaultKnownTime | None = ...,
+        allow_missing: _builtins.bool | None = ...,
+        create_tag: _builtins.bool | None = ...,
+        should_optimise: _builtins.bool | None = ...,
+        replace_known_time: _builtins.bool | None = ...,
     ) -> None: ...
-    def HasField(self, field_name: typing.Literal["_should_optimise", b"_should_optimise", "default_known_time", b"default_known_time", "insert_options", b"insert_options", "should_optimise", b"should_optimise", "time_series", b"time_series", "update_options", b"update_options", "view", b"view"]) -> builtins.bool: ...
-    def ClearField(self, field_name: typing.Literal["_should_optimise", b"_should_optimise", "allow_missing", b"allow_missing", "create_tag", b"create_tag", "default_known_time", b"default_known_time", "insert_options", b"insert_options", "replace_known_time", b"replace_known_time", "should_optimise", b"should_optimise", "time_series", b"time_series", "update_options", b"update_options", "view", b"view"]) -> None: ...
-    def WhichOneof(self, oneof_group: typing.Literal["_should_optimise", b"_should_optimise"]) -> typing.Literal["should_optimise"] | None: ...
+    _HasFieldArgType: _TypeAlias = _typing.Literal["_should_optimise", b"_should_optimise", "default_known_time", b"default_known_time", "insert_options", b"insert_options", "should_optimise", b"should_optimise", "time_series", b"time_series", "update_options", b"update_options", "view", b"view"]  # noqa: Y015
+    def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["_should_optimise", b"_should_optimise", "allow_missing", b"allow_missing", "create_tag", b"create_tag", "default_known_time", b"default_known_time", "insert_options", b"insert_options", "replace_known_time", b"replace_known_time", "should_optimise", b"should_optimise", "time_series", b"time_series", "update_options", b"update_options", "view", b"view"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
+    _WhichOneofReturnType__should_optimise: _TypeAlias = _typing.Literal["should_optimise"]  # noqa: Y015
+    _WhichOneofArgType__should_optimise: _TypeAlias = _typing.Literal["_should_optimise", b"_should_optimise"]  # noqa: Y015
+    def WhichOneof(self, oneof_group: _WhichOneofArgType__should_optimise) -> _WhichOneofReturnType__should_optimise | None: ...
 
-global___UpdateTimeSeriesRequest = UpdateTimeSeriesRequest
+Global___UpdateTimeSeriesRequest: _TypeAlias = UpdateTimeSeriesRequest  # noqa: Y015
 
-@typing.final
-class ImportTimeSeriesRequest(google.protobuf.message.Message):
+@_typing.final
+class ImportTimeSeriesRequest(_message.Message):
     """The request to import multiple time series. The parents of the time series will be inferred from
     `time_series.name`.
     """
 
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    DESCRIPTOR: _descriptor.Descriptor
 
-    PARENT_FIELD_NUMBER: builtins.int
-    TIME_SERIES_FIELD_NUMBER: builtins.int
-    STATUS_IN_RESPONSE_FIELD_NUMBER: builtins.int
-    INSERT_OPTIONS_FIELD_NUMBER: builtins.int
-    UPDATE_OPTIONS_FIELD_NUMBER: builtins.int
-    DEFAULT_KNOWN_TIME_FIELD_NUMBER: builtins.int
-    ALLOW_MISSING_FIELD_NUMBER: builtins.int
-    CREATE_TAG_FIELD_NUMBER: builtins.int
-    REPLACE_EXISTING_TIME_SERIES_FIELD_NUMBER: builtins.int
-    SHOULD_OPTIMISE_FIELD_NUMBER: builtins.int
-    REPLACE_KNOWN_TIME_FIELD_NUMBER: builtins.int
-    parent: builtins.str
+    PARENT_FIELD_NUMBER: _builtins.int
+    TIME_SERIES_FIELD_NUMBER: _builtins.int
+    STATUS_IN_RESPONSE_FIELD_NUMBER: _builtins.int
+    INSERT_OPTIONS_FIELD_NUMBER: _builtins.int
+    UPDATE_OPTIONS_FIELD_NUMBER: _builtins.int
+    DEFAULT_KNOWN_TIME_FIELD_NUMBER: _builtins.int
+    ALLOW_MISSING_FIELD_NUMBER: _builtins.int
+    CREATE_TAG_FIELD_NUMBER: _builtins.int
+    REPLACE_EXISTING_TIME_SERIES_FIELD_NUMBER: _builtins.int
+    SHOULD_OPTIMISE_FIELD_NUMBER: _builtins.int
+    REPLACE_KNOWN_TIME_FIELD_NUMBER: _builtins.int
+    parent: _builtins.str
     """The common parent of all time series to import. May include `-` as a wild card."""
-    status_in_response: builtins.bool
+    status_in_response: _builtins.bool
     """Set to `true` to report the status of each time series in the response. If `false`, a failure
     for one time series will fail the entire request, and a sample of the failures will be
     reported in the trailers.
     """
-    allow_missing: builtins.bool
-    """This field is deprecated and replaced with update_options.allow_missing."""
-    create_tag: builtins.bool
-    """This field is not in use anymore."""
-    replace_existing_time_series: builtins.bool
-    """This field is deprecated and replaced with update_options.replace_existing_time_series."""
-    should_optimise: builtins.bool
-    """This field is deprecated and replaced with insert_options.should_optimise."""
-    replace_known_time: builtins.bool
-    """This field is deprecated and replaced with update_options.replace_known_time."""
-    @property
-    def time_series(self) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[exabel.api.data.v1.time_series_messages_pb2.TimeSeries]:
+    @_builtins.property
+    @_deprecated("""This field has been marked as deprecated using proto field options.""")
+    def allow_missing(self) -> _builtins.bool:
+        """This field is deprecated and replaced with update_options.allow_missing."""
+
+    @allow_missing.setter
+    @_deprecated("""This field has been marked as deprecated using proto field options.""")
+    def allow_missing(self, value: _builtins.bool) -> None:
+        """This field is deprecated and replaced with update_options.allow_missing."""
+
+    @_builtins.property
+    @_deprecated("""This field has been marked as deprecated using proto field options.""")
+    def create_tag(self) -> _builtins.bool:
+        """This field is not in use anymore."""
+
+    @create_tag.setter
+    @_deprecated("""This field has been marked as deprecated using proto field options.""")
+    def create_tag(self, value: _builtins.bool) -> None:
+        """This field is not in use anymore."""
+
+    @_builtins.property
+    @_deprecated("""This field has been marked as deprecated using proto field options.""")
+    def replace_existing_time_series(self) -> _builtins.bool:
+        """This field is deprecated and replaced with update_options.replace_existing_time_series."""
+
+    @replace_existing_time_series.setter
+    @_deprecated("""This field has been marked as deprecated using proto field options.""")
+    def replace_existing_time_series(self, value: _builtins.bool) -> None:
+        """This field is deprecated and replaced with update_options.replace_existing_time_series."""
+
+    @_builtins.property
+    @_deprecated("""This field has been marked as deprecated using proto field options.""")
+    def should_optimise(self) -> _builtins.bool:
+        """This field is deprecated and replaced with insert_options.should_optimise."""
+
+    @should_optimise.setter
+    @_deprecated("""This field has been marked as deprecated using proto field options.""")
+    def should_optimise(self, value: _builtins.bool) -> None:
+        """This field is deprecated and replaced with insert_options.should_optimise."""
+
+    @_builtins.property
+    @_deprecated("""This field has been marked as deprecated using proto field options.""")
+    def replace_known_time(self) -> _builtins.bool:
+        """This field is deprecated and replaced with update_options.replace_known_time."""
+
+    @replace_known_time.setter
+    @_deprecated("""This field has been marked as deprecated using proto field options.""")
+    def replace_known_time(self, value: _builtins.bool) -> None:
+        """This field is deprecated and replaced with update_options.replace_known_time."""
+
+    @_builtins.property
+    def time_series(self) -> _containers.RepeatedCompositeFieldContainer[_time_series_messages_pb2.TimeSeries]:
         """One or more time series to import."""
 
-    @property
-    def insert_options(self) -> global___InsertOptions:
+    @_builtins.property
+    def insert_options(self) -> Global___InsertOptions:
         """Insert options for this request."""
 
-    @property
-    def update_options(self) -> global___UpdateOptions:
+    @_builtins.property
+    def update_options(self) -> Global___UpdateOptions:
         """Update options for this request."""
 
-    @property
-    def default_known_time(self) -> exabel.api.data.v1.time_series_messages_pb2.DefaultKnownTime:
+    @_builtins.property
+    @_deprecated("""This field has been marked as deprecated using proto field options.""")
+    def default_known_time(self) -> _time_series_messages_pb2.DefaultKnownTime:
         """This field is deprecated and replaced with insert_options.default_known_time."""
 
     def __init__(
         self,
         *,
-        parent: builtins.str | None = ...,
-        time_series: collections.abc.Iterable[exabel.api.data.v1.time_series_messages_pb2.TimeSeries] | None = ...,
-        status_in_response: builtins.bool | None = ...,
-        insert_options: global___InsertOptions | None = ...,
-        update_options: global___UpdateOptions | None = ...,
-        default_known_time: exabel.api.data.v1.time_series_messages_pb2.DefaultKnownTime | None = ...,
-        allow_missing: builtins.bool | None = ...,
-        create_tag: builtins.bool | None = ...,
-        replace_existing_time_series: builtins.bool | None = ...,
-        should_optimise: builtins.bool | None = ...,
-        replace_known_time: builtins.bool | None = ...,
+        parent: _builtins.str | None = ...,
+        time_series: _abc.Iterable[_time_series_messages_pb2.TimeSeries] | None = ...,
+        status_in_response: _builtins.bool | None = ...,
+        insert_options: Global___InsertOptions | None = ...,
+        update_options: Global___UpdateOptions | None = ...,
+        default_known_time: _time_series_messages_pb2.DefaultKnownTime | None = ...,
+        allow_missing: _builtins.bool | None = ...,
+        create_tag: _builtins.bool | None = ...,
+        replace_existing_time_series: _builtins.bool | None = ...,
+        should_optimise: _builtins.bool | None = ...,
+        replace_known_time: _builtins.bool | None = ...,
     ) -> None: ...
-    def HasField(self, field_name: typing.Literal["_should_optimise", b"_should_optimise", "default_known_time", b"default_known_time", "insert_options", b"insert_options", "should_optimise", b"should_optimise", "update_options", b"update_options"]) -> builtins.bool: ...
-    def ClearField(self, field_name: typing.Literal["_should_optimise", b"_should_optimise", "allow_missing", b"allow_missing", "create_tag", b"create_tag", "default_known_time", b"default_known_time", "insert_options", b"insert_options", "parent", b"parent", "replace_existing_time_series", b"replace_existing_time_series", "replace_known_time", b"replace_known_time", "should_optimise", b"should_optimise", "status_in_response", b"status_in_response", "time_series", b"time_series", "update_options", b"update_options"]) -> None: ...
-    def WhichOneof(self, oneof_group: typing.Literal["_should_optimise", b"_should_optimise"]) -> typing.Literal["should_optimise"] | None: ...
+    _HasFieldArgType: _TypeAlias = _typing.Literal["_should_optimise", b"_should_optimise", "default_known_time", b"default_known_time", "insert_options", b"insert_options", "should_optimise", b"should_optimise", "update_options", b"update_options"]  # noqa: Y015
+    def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["_should_optimise", b"_should_optimise", "allow_missing", b"allow_missing", "create_tag", b"create_tag", "default_known_time", b"default_known_time", "insert_options", b"insert_options", "parent", b"parent", "replace_existing_time_series", b"replace_existing_time_series", "replace_known_time", b"replace_known_time", "should_optimise", b"should_optimise", "status_in_response", b"status_in_response", "time_series", b"time_series", "update_options", b"update_options"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
+    _WhichOneofReturnType__should_optimise: _TypeAlias = _typing.Literal["should_optimise"]  # noqa: Y015
+    _WhichOneofArgType__should_optimise: _TypeAlias = _typing.Literal["_should_optimise", b"_should_optimise"]  # noqa: Y015
+    def WhichOneof(self, oneof_group: _WhichOneofArgType__should_optimise) -> _WhichOneofReturnType__should_optimise | None: ...
 
-global___ImportTimeSeriesRequest = ImportTimeSeriesRequest
+Global___ImportTimeSeriesRequest: _TypeAlias = ImportTimeSeriesRequest  # noqa: Y015
 
-@typing.final
-class ImportTimeSeriesResponse(google.protobuf.message.Message):
+@_typing.final
+class ImportTimeSeriesResponse(_message.Message):
     """The response to import multiple time series."""
 
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    DESCRIPTOR: _descriptor.Descriptor
 
-    @typing.final
-    class SingleTimeSeriesResponse(google.protobuf.message.Message):
+    @_typing.final
+    class SingleTimeSeriesResponse(_message.Message):
         """The status for one time series."""
 
-        DESCRIPTOR: google.protobuf.descriptor.Descriptor
+        DESCRIPTOR: _descriptor.Descriptor
 
-        TIME_SERIES_NAME_FIELD_NUMBER: builtins.int
-        STATUS_FIELD_NUMBER: builtins.int
-        time_series_name: builtins.str
+        TIME_SERIES_NAME_FIELD_NUMBER: _builtins.int
+        STATUS_FIELD_NUMBER: _builtins.int
+        time_series_name: _builtins.str
         """The resource name of the time series, for example
         `entityTypes/store/entities/ns.apple_store_fifth_avenue/signals/ns.visitors`.
         """
-        @property
-        def status(self) -> google.rpc.status_pb2.Status:
+        @_builtins.property
+        def status(self) -> _status_pb2.Status:
             """The status for this time series. A `status.code = OK` indicates that the time series
             was imported successfully.
             """
@@ -406,15 +539,17 @@ class ImportTimeSeriesResponse(google.protobuf.message.Message):
         def __init__(
             self,
             *,
-            time_series_name: builtins.str | None = ...,
-            status: google.rpc.status_pb2.Status | None = ...,
+            time_series_name: _builtins.str | None = ...,
+            status: _status_pb2.Status | None = ...,
         ) -> None: ...
-        def HasField(self, field_name: typing.Literal["status", b"status"]) -> builtins.bool: ...
-        def ClearField(self, field_name: typing.Literal["status", b"status", "time_series_name", b"time_series_name"]) -> None: ...
+        _HasFieldArgType: _TypeAlias = _typing.Literal["status", b"status"]  # noqa: Y015
+        def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
+        _ClearFieldArgType: _TypeAlias = _typing.Literal["status", b"status", "time_series_name", b"time_series_name"]  # noqa: Y015
+        def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
-    RESPONSES_FIELD_NUMBER: builtins.int
-    @property
-    def responses(self) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[global___ImportTimeSeriesResponse.SingleTimeSeriesResponse]:
+    RESPONSES_FIELD_NUMBER: _builtins.int
+    @_builtins.property
+    def responses(self) -> _containers.RepeatedCompositeFieldContainer[Global___ImportTimeSeriesResponse.SingleTimeSeriesResponse]:
         """One response for each time series, in order. This list is populated if and only if
         `status_in_response` was set to `true` in the request.
         """
@@ -422,20 +557,21 @@ class ImportTimeSeriesResponse(google.protobuf.message.Message):
     def __init__(
         self,
         *,
-        responses: collections.abc.Iterable[global___ImportTimeSeriesResponse.SingleTimeSeriesResponse] | None = ...,
+        responses: _abc.Iterable[Global___ImportTimeSeriesResponse.SingleTimeSeriesResponse] | None = ...,
     ) -> None: ...
-    def ClearField(self, field_name: typing.Literal["responses", b"responses"]) -> None: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["responses", b"responses"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
-global___ImportTimeSeriesResponse = ImportTimeSeriesResponse
+Global___ImportTimeSeriesResponse: _TypeAlias = ImportTimeSeriesResponse  # noqa: Y015
 
-@typing.final
-class DeleteTimeSeriesRequest(google.protobuf.message.Message):
+@_typing.final
+class DeleteTimeSeriesRequest(_message.Message):
     """The request to delete one time series."""
 
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    DESCRIPTOR: _descriptor.Descriptor
 
-    NAME_FIELD_NUMBER: builtins.int
-    name: builtins.str
+    NAME_FIELD_NUMBER: _builtins.int
+    name: _builtins.str
     """The resource name of the time series to be deleted, for example
     `entityTypes/ns.type1/entities/ns.entity1/signals/ns.signal1` or
     `signals/ns.signal1/entityTypes/ns.type1/entities/ns.entity1`.
@@ -443,34 +579,35 @@ class DeleteTimeSeriesRequest(google.protobuf.message.Message):
     def __init__(
         self,
         *,
-        name: builtins.str | None = ...,
+        name: _builtins.str | None = ...,
     ) -> None: ...
-    def ClearField(self, field_name: typing.Literal["name", b"name"]) -> None: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["name", b"name"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
-global___DeleteTimeSeriesRequest = DeleteTimeSeriesRequest
+Global___DeleteTimeSeriesRequest: _TypeAlias = DeleteTimeSeriesRequest  # noqa: Y015
 
-@typing.final
-class BatchDeleteTimeSeriesPointsRequest(google.protobuf.message.Message):
+@_typing.final
+class BatchDeleteTimeSeriesPointsRequest(_message.Message):
     """The request to batch delete specific points of one or more time series."""
 
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    DESCRIPTOR: _descriptor.Descriptor
 
-    PARENT_FIELD_NUMBER: builtins.int
-    TIME_SERIES_FIELD_NUMBER: builtins.int
-    STATUS_IN_RESPONSE_FIELD_NUMBER: builtins.int
-    parent: builtins.str
+    PARENT_FIELD_NUMBER: _builtins.int
+    TIME_SERIES_FIELD_NUMBER: _builtins.int
+    STATUS_IN_RESPONSE_FIELD_NUMBER: _builtins.int
+    parent: _builtins.str
     """The common parent of all time series to delete points from, for example
     `entityTypes/ns.type1/entities/ns.entity1/signals/ns.signal1` or
     `signals/ns.signal1/entityTypes/ns.type1/entities/ns.entity1`.
     May include `-` as a wild card.
     """
-    status_in_response: builtins.bool
+    status_in_response: _builtins.bool
     """Set to `true` to report the status of each time series in the response. If `false`, a failure
     for one time series will fail the entire request, and a sample of the failures will be
     reported in the trailers.
     """
-    @property
-    def time_series(self) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[exabel.api.data.v1.time_series_messages_pb2.TimeSeries]:
+    @_builtins.property
+    def time_series(self) -> _containers.RepeatedCompositeFieldContainer[_time_series_messages_pb2.TimeSeries]:
         """The list of time series points to delete. If a `known_time` is empty, _all_ data for the time
         series at that time is deleted. For all points, `value` is ignored. Trying to delete points
         from a non-existing time series will result in an error, but trying to delete a non-existing
@@ -480,34 +617,35 @@ class BatchDeleteTimeSeriesPointsRequest(google.protobuf.message.Message):
     def __init__(
         self,
         *,
-        parent: builtins.str | None = ...,
-        time_series: collections.abc.Iterable[exabel.api.data.v1.time_series_messages_pb2.TimeSeries] | None = ...,
-        status_in_response: builtins.bool | None = ...,
+        parent: _builtins.str | None = ...,
+        time_series: _abc.Iterable[_time_series_messages_pb2.TimeSeries] | None = ...,
+        status_in_response: _builtins.bool | None = ...,
     ) -> None: ...
-    def ClearField(self, field_name: typing.Literal["parent", b"parent", "status_in_response", b"status_in_response", "time_series", b"time_series"]) -> None: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["parent", b"parent", "status_in_response", b"status_in_response", "time_series", b"time_series"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
-global___BatchDeleteTimeSeriesPointsRequest = BatchDeleteTimeSeriesPointsRequest
+Global___BatchDeleteTimeSeriesPointsRequest: _TypeAlias = BatchDeleteTimeSeriesPointsRequest  # noqa: Y015
 
-@typing.final
-class BatchDeleteTimeSeriesPointsResponse(google.protobuf.message.Message):
+@_typing.final
+class BatchDeleteTimeSeriesPointsResponse(_message.Message):
     """The response to batch delete multiple time series points."""
 
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+    DESCRIPTOR: _descriptor.Descriptor
 
-    @typing.final
-    class BatchDeleteTimeSeriesResponse(google.protobuf.message.Message):
+    @_typing.final
+    class BatchDeleteTimeSeriesResponse(_message.Message):
         """The status for one time series."""
 
-        DESCRIPTOR: google.protobuf.descriptor.Descriptor
+        DESCRIPTOR: _descriptor.Descriptor
 
-        TIME_SERIES_NAME_FIELD_NUMBER: builtins.int
-        STATUS_FIELD_NUMBER: builtins.int
-        time_series_name: builtins.str
+        TIME_SERIES_NAME_FIELD_NUMBER: _builtins.int
+        STATUS_FIELD_NUMBER: _builtins.int
+        time_series_name: _builtins.str
         """The resource name of the time series, for example
         `entityTypes/store/entities/ns.apple_store_fifth_avenue/signals/ns.visitors`.
         """
-        @property
-        def status(self) -> google.rpc.status_pb2.Status:
+        @_builtins.property
+        def status(self) -> _status_pb2.Status:
             """The status for this time series. A `status.code = OK` indicates that all time series points
             was deleted successfully.
             """
@@ -515,15 +653,17 @@ class BatchDeleteTimeSeriesPointsResponse(google.protobuf.message.Message):
         def __init__(
             self,
             *,
-            time_series_name: builtins.str | None = ...,
-            status: google.rpc.status_pb2.Status | None = ...,
+            time_series_name: _builtins.str | None = ...,
+            status: _status_pb2.Status | None = ...,
         ) -> None: ...
-        def HasField(self, field_name: typing.Literal["status", b"status"]) -> builtins.bool: ...
-        def ClearField(self, field_name: typing.Literal["status", b"status", "time_series_name", b"time_series_name"]) -> None: ...
+        _HasFieldArgType: _TypeAlias = _typing.Literal["status", b"status"]  # noqa: Y015
+        def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
+        _ClearFieldArgType: _TypeAlias = _typing.Literal["status", b"status", "time_series_name", b"time_series_name"]  # noqa: Y015
+        def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
-    RESPONSES_FIELD_NUMBER: builtins.int
-    @property
-    def responses(self) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[global___BatchDeleteTimeSeriesPointsResponse.BatchDeleteTimeSeriesResponse]:
+    RESPONSES_FIELD_NUMBER: _builtins.int
+    @_builtins.property
+    def responses(self) -> _containers.RepeatedCompositeFieldContainer[Global___BatchDeleteTimeSeriesPointsResponse.BatchDeleteTimeSeriesResponse]:
         """One response for each time series, in order. This list is populated if and only if
         `status_in_response` was set to `true` in the request.
         """
@@ -531,8 +671,9 @@ class BatchDeleteTimeSeriesPointsResponse(google.protobuf.message.Message):
     def __init__(
         self,
         *,
-        responses: collections.abc.Iterable[global___BatchDeleteTimeSeriesPointsResponse.BatchDeleteTimeSeriesResponse] | None = ...,
+        responses: _abc.Iterable[Global___BatchDeleteTimeSeriesPointsResponse.BatchDeleteTimeSeriesResponse] | None = ...,
     ) -> None: ...
-    def ClearField(self, field_name: typing.Literal["responses", b"responses"]) -> None: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["responses", b"responses"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
-global___BatchDeleteTimeSeriesPointsResponse = BatchDeleteTimeSeriesPointsResponse
+Global___BatchDeleteTimeSeriesPointsResponse: _TypeAlias = BatchDeleteTimeSeriesPointsResponse  # noqa: Y015
