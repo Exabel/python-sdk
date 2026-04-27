@@ -348,6 +348,7 @@ snowflake = [
 [package.dev-dependencies]
 dev = [
     { name = "mypy" },
+    { name = "pyarrow" },
     { name = "pytest" },
     { name = "ruff" },
     { name = "types-protobuf" },
@@ -379,6 +380,7 @@ provides-extras = ["snowflake", "bigquery", "athena", "export"]
 [package.metadata.requires-dev]
 dev = [
     { name = "mypy" },
+    { name = "pyarrow" },
     { name = "pytest" },
     { name = "ruff" },
     { name = "types-protobuf" },

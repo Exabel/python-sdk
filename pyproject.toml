@@ -35,6 +35,7 @@ dev = [
     "ruff",
     "mypy",
     "pytest",
+    "pyarrow",
     "types-protobuf",
     "types-python-dateutil",
     "types-requests",
