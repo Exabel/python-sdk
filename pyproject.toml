@@ -1,7 +1,7 @@
 [project]
 name = "exabel"
 description = "Python SDK for the Exabel Data API"
-version = "8.1.0"
+version = "8.2.0"
 license = "MIT"
 license-files = ["LICENSE"]
 readme = "README.md"
@@ -35,6 +35,7 @@ dev = [
     "ruff",
     "mypy",
     "pytest",
+    "pyarrow",
     "types-protobuf",
     "types-python-dateutil",
     "types-requests",
@@ -44,6 +45,7 @@ dev = [
 snowflake = ["snowflake-connector-python[pandas]", "snowflake-sqlalchemy"]
 bigquery = ["google-cloud-bigquery", "sqlalchemy-bigquery"]
 athena = ["pyathena", "pyarrow", "sqlalchemy"]
+export = ["pyarrow"]
 
 [project.urls]
 Homepage = "https://github.com/Exabel/python-sdk"
@@ -124,7 +126,15 @@ select = [
     "B006",    # mutable-argument-default
     "B018",    # useless-expression
     "B023",    # function-uses-loop-variable
-    "S307",    # suspicious-eval-usage
+    "S",       # flake8-bandit (security)
+
+    "TRY002",  # raise-vanilla-class
+    "RUF",     # ruff-specific rules
+    "PIE",     # flake8-pie (misc. lints)
+    "PERF",    # perflint (performance)
+    "RET",     # flake8-return
+    "ASYNC",   # flake8-async
+    "SIM",     # flake8-simplify
 
     # pydocstyle
     "D101",    # undocumented-public-class
@@ -138,6 +148,10 @@ select = [
     "UP032",    # f-string
     "UP037",    # do not need quotes for type annotations
     "UP045",    # use X | None instead of Optional[X]
+
+    # disabled for now
+    # "B",      # flake8-bugbear
+    # "PT009",  # pytest-unittest-assertion
 ]
 
 ignore = [
@@ -146,7 +160,7 @@ ignore = [
     "E721",  # type-comparison
     "E741",  # ambiguous-variable-name
 
-    # Matches pylint disabled rules in [tool.pylint.messages_control]
+    # pylint disabled rules
     "PLC0415",  # import-outside-toplevel
     "PLR0904",  # too-many-public-methods
     "PLR0911",  # too-many-return-statements
@@ -186,6 +200,46 @@ ignore = [
 
     "G010",  # logging-warn
     "G201",  # logging-exc-info - use .exception() instead of .error() with exc_info=true
+
+    # bandit rules that are too noisy or not applicable in this codebase
+    "S101",   # assert - legitimate use for invariants outside tests
+    "S104",   # hardcoded-bind-all-interfaces - intentional in server code
+    "S105",   # hardcoded-password-string - false positives on GCloud secret ID names
+    "S108",   # hardcoded-temp-file - used in mock/test utilities
+    "S110",   # try-except-pass - established pattern in the codebase
+    "S112",   # try-except-continue - established pattern in the codebase
+    "S301",   # suspicious-pickle-usage - used intentionally for serialization
+    "S311",   # suspicious-non-cryptographic-random-usage - acceptable for ML/sampling
+    "S324",   # hashlib-insecure-hash-function - used for checksums, not crypto
+    "S603",   # subprocess-without-shell-equals-true - many legitimate uses
+    "S607",   # start-process-with-partial-path - noisy on internal scripts
+    "S608",   # hardcoded-sql-expression - internal query construction, not user input
+
+    # ruff-specific rules
+    "RUF001",  # ambiguous-unicode-character-string
+    "RUF002",  # ambiguous-unicode-character-docstring
+    "RUF003",  # ambiguous-unicode-character-comment
+    "RUF005",  # collection-literal-concatenation - [*a, *b] vs a + b is a style choice
+    "RUF009",  # function-call-in-dataclass-default-argument - intentional pattern
+    "RUF012",  # mutable-class-default - intentional in many classes
+
+    # flake8-simplify
+    "SIM102",  # collapsible-if - often clearer as separate ifs
+    "SIM105",  # suppressible-exception - contextlib.suppress not always clearer
+    "SIM108",  # if-else-block-instead-of-if-exp - ternary not always more readable
+    "SIM117",  # multiple-with-statements - combining withs can reduce readability
+    "SIM300",  # yoda-conditions - established style in the codebase
+
+    # flake8-return
+    "RET504",  # unnecessary-assign - named returns improve readability
+
+    # perflint
+    "PERF102",  # incorrect-dict-iterator - unsafe for pandas DataFrame/Series (.values is a property)
+    "PERF203",  # try-except-in-loop - auto-suppressed in monorepo (py311 target, zero-cost exceptions); SDK targets py310
+    "PERF401",  # manual-list-comprehension - too many existing violations, fix incrementally
+
+    # flake8-async
+    "ASYNC109",  # async-function-with-timeout - false positives on internal timeout patterns
 ]
 
 [tool.ruff.lint.per-file-ignores]
@@ -195,7 +249,10 @@ ignore = [
     "ARG001",  # unused-function-argument
     "ARG002",  # unused-method-argument
     "D",  # pydocstyle
-    "SLF001"  # private-member-access
+    "S",  # bandit - tests use hardcoded values, subprocess, etc.
+    "SLF001",  # private-member-access
+    "RUF043",  # pytest-raises-ambiguous-pattern
+    "RUF061",  # legacy-form-pytest-raises
 ]
 "**/__init__.py" = ["F401"] # unused-import
 
@@ -210,6 +267,9 @@ extend-ignore-names = ["_*", "of*", "__*", "X*"]
 convention = "google"
 ignore-decorators = ["typing.overload"]
 ignore-var-parameters = true
+
+[tool.ruff.lint.flake8-bandit]
+check-typed-exception = true
 
 [tool.ruff.lint.flake8-unused-arguments]
 ignore-variadic-names = true

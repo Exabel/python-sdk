@@ -1,5 +1,6 @@
 from unittest import mock
 
+import numpy as np
 import pandas as pd
 import pytest
 
@@ -33,7 +34,7 @@ class TestResourceNameNormalization:
             [
                 "entityTypes/BRAND/entities/acme.abc_Inc_",
                 "entityTypes/BRAND/entities/acme.abcXYZ0189-_",
-                None,
+                np.nan,
                 "entityTypes/BRAND/entities/acme._l_",
             ],
             name="entity",
@@ -49,7 +50,7 @@ class TestResourceNameNormalization:
             [
                 "entityTypes/brand/entities/acme.abc_Inc_",
                 "entityTypes/brand/entities/acme.abcXYZ0189-_",
-                None,
+                np.nan,
                 "entityTypes/brand/entities/acme._l_",
             ],
             name="entity",
@@ -65,7 +66,7 @@ class TestResourceNameNormalization:
             [
                 "entityTypes/country/entities/I_DE",
                 "entityTypes/country/entities/I_US",
-                None,
+                np.nan,
                 "entityTypes/country/entities/abcXYZ0189",
             ],
             name="entity",
@@ -226,11 +227,11 @@ class TestResourceNameNormalization:
             [
                 "entityTypes/company/entities/telenor_asa",
                 "entityTypes/company/entities/apple_inc",
-                None,
-                None,
+                np.nan,
+                np.nan,
                 "entityTypes/company/entities/orkla_asa",
-                None,
-                None,
+                np.nan,
+                np.nan,
             ],
             name="entity",
         )

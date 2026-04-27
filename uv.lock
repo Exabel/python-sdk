@@ -314,7 +314,7 @@ wheels = [
 
 [[package]]
 name = "exabel"
-version = "8.1.0"
+version = "8.2.0"
 source = { editable = "." }
 dependencies = [
     { name = "google-api-core" },
@@ -337,6 +337,9 @@ bigquery = [
     { name = "google-cloud-bigquery" },
     { name = "sqlalchemy-bigquery" },
 ]
+export = [
+    { name = "pyarrow" },
+]
 snowflake = [
     { name = "snowflake-connector-python", extra = ["pandas"] },
     { name = "snowflake-sqlalchemy" },
@@ -345,6 +348,7 @@ snowflake = [
 [package.dev-dependencies]
 dev = [
     { name = "mypy" },
+    { name = "pyarrow" },
     { name = "pytest" },
     { name = "ruff" },
     { name = "types-protobuf" },
@@ -362,6 +366,7 @@ requires-dist = [
     { name = "pandas" },
     { name = "protobuf", specifier = ">=6" },
     { name = "pyarrow", marker = "extra == 'athena'" },
+    { name = "pyarrow", marker = "extra == 'export'" },
     { name = "pyathena", marker = "extra == 'athena'" },
     { name = "requests" },
     { name = "snowflake-connector-python", extras = ["pandas"], marker = "extra == 'snowflake'" },
@@ -370,11 +375,12 @@ requires-dist = [
     { name = "sqlalchemy-bigquery", marker = "extra == 'bigquery'" },
     { name = "tqdm" },
 ]
-provides-extras = ["snowflake", "bigquery", "athena"]
+provides-extras = ["snowflake", "bigquery", "athena", "export"]
 
 [package.metadata.requires-dev]
 dev = [
     { name = "mypy" },
+    { name = "pyarrow" },
     { name = "pytest" },
     { name = "ruff" },
     { name = "types-protobuf" },

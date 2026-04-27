@@ -190,6 +190,11 @@ class TestRelationshipLoaderColumnConfiguration:
 
 
 class TestCsvRelationshipLoader(unittest.TestCase):
+    pytestmark = pytest.mark.filterwarnings(
+        "ignore:The 'entity_from' and 'entity_to' columns:"
+        "exabel.util.warnings.ExabelDeprecationWarning"
+    )
+
     def test_load_relationships_with_properties(self):
         client: ExabelClient = ExabelMockClient()
         CsvRelationshipLoader(client).load_relationships(
