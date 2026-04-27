@@ -1,5 +1,7 @@
 from unittest.mock import MagicMock, patch
 
+import pytest
+
 from exabel import ExabelClient
 from exabel.client.api.data_classes.relationship import Relationship
 from exabel.scripts.load_relationships_from_csv import LoadRelationshipsFromCsv
@@ -21,6 +23,11 @@ common_args_with_entity_to_column = common_args + [
 
 
 class TestLoadRelationships:
+    pytestmark = pytest.mark.filterwarnings(
+        "ignore:The 'entity_from' and 'entity_to' columns:"
+        "exabel.util.warnings.ExabelDeprecationWarning"
+    )
+
     def check_relationships(self, client: ExabelClient, expected_relationships: list[Relationship]):
         """Check expected entities against actual entities retrieved from the client"""
         relationship_type = expected_relationships[0].relationship_type
