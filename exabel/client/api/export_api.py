@@ -33,7 +33,7 @@ _MULTI_TS_METADATA_KEY = b"exabel_multi_ts_signals"
 def _read_v2_parquet(content: bytes) -> tuple[pd.DataFrame, frozenset[str]]:
     """Read a v2 parquet response and extract the multi-ts signal set.
 
-    The server emits ``exabel_multi_ts_signals`` (UTF-8 JSON list of labels)
+    The server emits exabel_multi_ts_signals (UTF-8 JSON list of labels)
     into the parquet schema metadata — always present, empty list when no
     multi-ts signals participated. A missing key indicates a contract
     violation (e.g. an unexpected non-server parquet).
@@ -162,10 +162,10 @@ class ExportApi:
 
     @staticmethod
     def _build_v2_signals(
-        signal: str | Column | DerivedSignal | Sequence[str | Column | DerivedSignal],
+        signal: str | DerivedSignal | Sequence[str | DerivedSignal],
     ) -> list[dict[str, str]]:
         """Convert signal arguments to the v2 JSON format."""
-        items = [signal] if isinstance(signal, (str, Column, DerivedSignal)) else signal
+        items = [signal] if isinstance(signal, (str, DerivedSignal)) else signal
         result: list[dict[str, str]] = []
         for item in items:
             if isinstance(item, DerivedSignal):
@@ -175,11 +175,6 @@ class ExportApi:
                         f"got label={item.label!r}, expression={item.expression!r}"
                     )
                 result.append({"label": item.label, "expression": item.expression})
-            elif isinstance(item, Column):
-                entry: dict[str, str] = {"label": item.name}
-                if item.expression:
-                    entry["expression"] = item.expression
-                result.append(entry)
             else:
                 result.append({"label": item})
         return result
@@ -188,8 +183,8 @@ class ExportApi:
         self,
         signals: list[dict[str, str]],
         *,
-        entities: list[str] | None = None,
-        tags: list[str] | None = None,
+        entities: Sequence[str] | None = None,
+        tags: Sequence[str] | None = None,
         start_time: str | pd.Timestamp | None = None,
         end_time: str | pd.Timestamp | None = None,
         version: str | pd.Timestamp | None = None,
@@ -246,10 +241,10 @@ class ExportApi:
         self,
         signals: list[dict[str, str]],
         *,
-        entities: list[str] | None = None,
-        tags: list[str] | None = None,
-        start_time: str | pd.Timestamp | None = None,
-        end_time: str | pd.Timestamp | None = None,
+        start_time: str | pd.Timestamp,
+        end_time: str | pd.Timestamp,
+        entities: Sequence[str] | None = None,
+        tags: Sequence[str] | None = None,
         version: str | pd.Timestamp | None = None,
     ) -> pd.DataFrame:
         """Run a v2 signal export, returning the unprocessed server response as a DataFrame.
@@ -258,6 +253,10 @@ class ExportApi:
         example to access Bloomberg tickers or time series labels embedded in the column
         headers. For a simpler interface that returns flat columns, use export_signals_v2().
 
+        Unlike export_signals_v2, this method does NOT drop all-NaN rows — the response is
+        returned in the exact shape the server emitted, so sparse signals retain their
+        empty rows. Use export_signals_v2 if you want sparse rows stripped.
+
         The returned DataFrame has:
         - A RangeIndex (integer rows).
         - The first column contains timestamps (column header is a tuple of level names).
@@ -265,7 +264,7 @@ class ExportApi:
           shape — Signal and a time-series level are always present; Entity,
           Bloomberg ticker, and Currency levels may be present or absent depending on
           whether the query targets entities and whether any signals carry currency
-          metadata. Index levels by name (e.g. ``get_level_values("Signal")``) rather
+          metadata. Index levels by name (e.g. get_level_values("Signal")) rather
           than by position when consuming this frame.
 
         Example::
@@ -306,7 +305,6 @@ class ExportApi:
     @staticmethod
     def _reshape_v2_response(
         df: pd.DataFrame,
-        multi_entity: bool,
         multi_ts_signals: frozenset[str],
     ) -> pd.DataFrame:
         """Reshape a v2 response DataFrame to the signal_query format.
@@ -318,12 +316,17 @@ class ExportApi:
         RangeIndex. Levels are addressed by name so server-side level reordering
         or the addition of new levels does not silently mis-route columns.
 
-        Multi-ts signals keep the ``"{signal}/{ts_name}"`` column naming for
-        *every* entity, even one whose query happens to match a single sub-entity
+        Whenever the response carries an Entity level, the result is pivoted to a
+        (name, time) MultiIndex regardless of how many distinct entities are
+        present — single- and multi-entity calls return the same row-index shape
+        so callers don't branch on entity count.
+
+        Multi-ts signals keep the {signal_label}/{ts_name} column naming for
+        every entity, even one whose query happens to match a single sub-entity
         — otherwise callers cannot tell which sub-entity that value belongs to.
 
-        ``multi_ts_signals`` is the authoritative set emitted by the server in
-        the parquet schema metadata (see ``_read_v2_parquet``).
+        multi_ts_signals is the authoritative set emitted by the server in
+        the parquet schema metadata (see _read_v2_parquet).
         """
         time_values = pd.DatetimeIndex(df.iloc[:, 0])
         data_df = df.iloc[:, 1:]
@@ -339,73 +342,61 @@ class ExportApi:
         time_series_labels = data_df.columns.get_level_values("Time series")
         has_entity_level = "Entity" in level_names
         entity_labels = data_df.columns.get_level_values("Entity") if has_entity_level else None
-        unique_signals = list(dict.fromkeys(signal_labels))
 
         def _column_name(sig: str, ts_name: str) -> str:
             return f"{sig}/{ts_name}" if sig in multi_ts_signals else sig
 
-        if has_entity_level and multi_entity:
+        data_df = data_df.set_axis(time_values, axis=0)
+
+        if has_entity_level:
             assert entity_labels is not None  # narrowed by has_entity_level
             unique_entities = list(dict.fromkeys(entity_labels))
 
             pieces = []
             for entity in unique_entities:
                 entity_mask = entity_labels == entity
-                entity_data = data_df.loc[:, entity_mask]
-                entity_signal_labels = signal_labels[entity_mask]
-                entity_ts_labels = time_series_labels[entity_mask]
+                entity_slice = data_df.loc[:, entity_mask].copy()
+                entity_slice.columns = [
+                    _column_name(sig, ts_name)
+                    for sig, ts_name in zip(
+                        signal_labels[entity_mask], time_series_labels[entity_mask]
+                    )
+                ]
+                pieces.append(entity_slice)
 
-                entity_df = pd.DataFrame(index=time_values)
-                for sig in unique_signals:
-                    sig_mask = entity_signal_labels == sig
-                    sig_cols = entity_data.loc[:, sig_mask]
-                    if sig_cols.shape[1] == 0:
-                        continue
-                    ts_names = entity_ts_labels[sig_mask]
-                    for i, ts_name in enumerate(ts_names):
-                        entity_df[_column_name(sig, ts_name)] = sig_cols.iloc[:, i].values
+            return pd.concat(pieces, keys=unique_entities, names=["name", "time"])
 
-                entity_df["__entity__"] = entity
-                pieces.append(entity_df)
-
-            result = pd.concat(pieces)
-            result.index.name = "time"
-            result = result.reset_index().set_index(["__entity__", "time"])
-            result.index.names = ["name", "time"]
-            return result
-
-        # Single entity or no entity level
-        result = pd.DataFrame(index=time_values)
-        result.index.name = "time"
-
-        for sig in unique_signals:
-            sig_mask = signal_labels == sig
-            sig_cols = data_df.loc[:, sig_mask]
-            ts_names = time_series_labels[sig_mask]
-            for i, ts_name in enumerate(ts_names):
-                result[_column_name(sig, ts_name)] = sig_cols.iloc[:, i].values
-
-        return result
+        # No entity level — keep the flat DatetimeIndex.
+        data_df.index.name = "time"
+        data_df.columns = [
+            _column_name(sig, ts_name) for sig, ts_name in zip(signal_labels, time_series_labels)
+        ]
+        return data_df
 
     def export_signals_v2(
         self,
-        signal: str | Column | DerivedSignal | Sequence[str | Column | DerivedSignal],
+        signals: str | DerivedSignal | Sequence[str | DerivedSignal],
         *,
-        resource_name: str | Sequence[str] | None = None,
-        tag: str | Sequence[str] | None = None,
-        start_time: str | pd.Timestamp | None = None,
-        end_time: str | pd.Timestamp | None = None,
+        start_time: str | pd.Timestamp,
+        end_time: str | pd.Timestamp,
+        entities: str | Sequence[str] | None = None,
+        tags: str | Sequence[str] | None = None,
         version: str | pd.Timestamp | None = None,
-    ) -> pd.Series | pd.DataFrame:
+    ) -> pd.DataFrame:
         """Export one or more signals using the v2 export endpoint.
+
+        Parameter names align with the wire contract on
+        ExportSignalsV2Request (proto exabel/export/export_service.proto):
+        signals, entities, tags. Pass both entities and tags in the same
+        call to evaluate against the union of the two sets.
 
         Unlike signal_query(), this method uses the v2 export API which supports
         multi-timeseries signals (e.g., expressions using for_type() that return one time
-        series per sub-entity). Entities must be specified by resource_name or tag rather
+        series per sub-entity). Entities must be specified by entities or tags rather
         than bloomberg_ticker or factset_id.
 
         For multi-timeseries signals, each time series becomes a separate column named
-        ``"{signal_label}/{time_series_name}"`` (e.g., ``"Visits/domain1.com"``).
+        {signal_label}/{ts_name} (e.g., Visits/domain1.com).
 
         For access to multi-level column headers (including Bloomberg tickers
         and entity names), use run_export_signals_v2() instead.
@@ -418,48 +409,43 @@ class ExportApi:
                     label="brand_sales",
                     expression="data('sales').for_type('brand')",
                 ),
-                resource_name="entityTypes/company/entities/F_000C7F-E",
+                entities="entityTypes/company/entities/F_000C7F-E",
                 start_time="2024-01-01",
                 end_time="2024-12-31",
             )
 
         Args:
-            signal:     the signal(s) to retrieve. A string is interpreted as a signal label
-                        from the library. Column and DerivedSignal objects allow specifying
-                        a DSL expression with a label. At least one signal must be requested.
-            resource_name: an Exabel resource name such as
-                        "entityTypes/company/entities/F_000C7F-E", or a list of such names.
-            tag:        an Exabel tag resource name such as "tags/user:123",
-                        or a list of such names.
+            signals:    the signal(s) to retrieve. A string is sent to the server as a
+                        label and resolved there — either as a saved library signal
+                        (e.g. "close") or as a DSL expression
+                        (e.g. "data('similarweb.all_visits')"). A DerivedSignal lets
+                        you pass a DSL expression with an explicit label that becomes
+                        the column header. At least one signal must be requested.
+            entities:   one Exabel resource name such as
+                        "entityTypes/company/entities/F_000C7F-E", or a sequence of
+                        such names.
+            tags:       one Exabel tag resource name such as "tags/user:123", or a
+                        sequence of such names. Signals are exported for the union of
+                        the entities given by entities and tags.
             start_time: the first date to retrieve data for.
             end_time:   the last date to retrieve data for.
             version:    the point-in-time at which to evaluate the signals.
 
         Returns:
-            A pandas Series if the result is a single time series,
-            or a pandas DataFrame if there are multiple time series in the result.
-            If a single entity was specified, the index is a DatetimeIndex.
-            If multiple entities or a tag was given, the index is a MultiIndex with
-            entity on the first level and time on the second level.
+            A DataFrame. Rows are a MultiIndex (name, time) whenever entities
+            or tags is set (the response carries an Entity level); otherwise the
+            rows are a DatetimeIndex. One flat column per signal, or per
+            {signal_label}/{ts_name} for multi-timeseries signals. All-NaN rows are dropped.
         """
-        if not signal:
-            raise ValueError("Must specify signal to retrieve")
+        if not signals:
+            raise ValueError("Must specify signals to retrieve")
 
-        v2_signals = self._build_v2_signals(signal)
-
-        entities: list[str] | None = None
-        tags: list[str] | None = None
-        multi_entity = False
-
-        if resource_name is not None:
-            entities = [resource_name] if isinstance(resource_name, str) else list(resource_name)
-            multi_entity = len(entities) > 1
-        if tag is not None:
-            tags = [tag] if isinstance(tag, str) else list(tag)
-            multi_entity = True
-
+        if isinstance(entities, str):
+            entities = (entities,)
+        if isinstance(tags, str):
+            tags = (tags,)
         content = self._post_v2_signals(
-            v2_signals,
+            self._build_v2_signals(signals),
             entities=entities,
             tags=tags,
             start_time=start_time,
@@ -468,20 +454,19 @@ class ExportApi:
             output_format="parquet",
         )
         raw_df, multi_ts_signals = _read_v2_parquet(content)
-        df = self._reshape_v2_response(
-            raw_df, multi_entity=multi_entity, multi_ts_signals=multi_ts_signals
-        )
-        return df.squeeze(axis=1).infer_objects()
+        df = self._reshape_v2_response(raw_df, multi_ts_signals=multi_ts_signals)
+        # Drop rows where every value is NaN so sparse signals don't pad the result.
+        return df.dropna(how="all").infer_objects()
 
     def export_signals_v2_bytes(
         self,
-        signal: str | Column | DerivedSignal | Sequence[str | Column | DerivedSignal],
+        signals: str | DerivedSignal | Sequence[str | DerivedSignal],
         *,
+        start_time: str | pd.Timestamp,
+        end_time: str | pd.Timestamp,
         file_format: str = "parquet",
-        resource_name: str | Sequence[str] | None = None,
-        tag: str | Sequence[str] | None = None,
-        start_time: str | pd.Timestamp | None = None,
-        end_time: str | pd.Timestamp | None = None,
+        entities: str | Sequence[str] | None = None,
+        tags: str | Sequence[str] | None = None,
         version: str | pd.Timestamp | None = None,
     ) -> bytes:
         """Run a v2 signal export and return the raw response bytes.
@@ -489,87 +474,35 @@ class ExportApi:
         Use this when you need the exported file bytes directly — e.g. to
         persist to disk or forward to another system — without parsing them
         into a DataFrame. This is the only v2 method that works without
-        ``pyarrow`` installed when ``file_format`` is ``csv``, ``excel``, or
-        ``json``; ``parquet`` and ``feather`` bytes come back fine but reading
-        them back as a DataFrame still requires ``pyarrow``.
+        pyarrow installed when file_format is csv, excel, or json; parquet
+        and feather bytes come back fine but reading them back as a
+        DataFrame still requires pyarrow.
 
         Args:
-            signal:      the signal(s) to retrieve, same semantics as in
-                         :meth:`export_signals_v2`.
-            file_format: one of ``parquet``, ``feather``, ``csv``, ``excel``, ``json``.
-            resource_name: entity resource name(s) to evaluate for.
-            tag:         tag resource name(s) to evaluate for.
+            signals:     the signal(s) to retrieve, same semantics as in
+                         export_signals_v2.
+            file_format: one of parquet, feather, csv, excel, json.
+            entities:    entity resource name(s) to evaluate for.
+            tags:        tag resource name(s) to evaluate for. Signals are exported for
+                         the union of the entities given by entities and tags.
             start_time:  first date to retrieve data for.
             end_time:    last date to retrieve data for.
             version:     point-in-time at which to evaluate the signals.
         """
-        if not signal:
-            raise ValueError("Must specify signal to retrieve")
-        v2_signals = self._build_v2_signals(signal)
-        entities: list[str] | None = None
-        tags: list[str] | None = None
-        if resource_name is not None:
-            entities = [resource_name] if isinstance(resource_name, str) else list(resource_name)
-        if tag is not None:
-            tags = [tag] if isinstance(tag, str) else list(tag)
+        if not signals:
+            raise ValueError("Must specify signals to retrieve")
+        if isinstance(entities, str):
+            entities = (entities,)
+        if isinstance(tags, str):
+            tags = (tags,)
         return self._post_v2_signals(
-            v2_signals,
+            self._build_v2_signals(signals),
             entities=entities,
             tags=tags,
             start_time=start_time,
             end_time=end_time,
             version=version,
             output_format=file_format,
-        )
-
-    def signal_query_v2(
-        self,
-        signal: str | Column | DerivedSignal | Sequence[str | Column | DerivedSignal],
-        *,
-        resource_name: str | Sequence[str] | None = None,
-        tag: str | Sequence[str] | None = None,
-        start_time: str | pd.Timestamp | None = None,
-        end_time: str | pd.Timestamp | None = None,
-        version: str | pd.Timestamp | None = None,
-    ) -> pd.Series | pd.DataFrame:
-        """Deprecated alias for :meth:`export_signals_v2`."""
-        warnings.warn(
-            "signal_query_v2 is deprecated, use export_signals_v2 instead",
-            DeprecationWarning,
-            stacklevel=2,
-        )
-        return self.export_signals_v2(
-            signal,
-            resource_name=resource_name,
-            tag=tag,
-            start_time=start_time,
-            end_time=end_time,
-            version=version,
-        )
-
-    def run_signal_query_v2(
-        self,
-        signals: list[dict[str, str]],
-        *,
-        entities: list[str] | None = None,
-        tags: list[str] | None = None,
-        start_time: str | pd.Timestamp | None = None,
-        end_time: str | pd.Timestamp | None = None,
-        version: str | pd.Timestamp | None = None,
-    ) -> pd.DataFrame:
-        """Deprecated alias for :meth:`run_export_signals_v2`."""
-        warnings.warn(
-            "run_signal_query_v2 is deprecated, use run_export_signals_v2 instead",
-            DeprecationWarning,
-            stacklevel=2,
-        )
-        return self.run_export_signals_v2(
-            signals,
-            entities=entities,
-            tags=tags,
-            start_time=start_time,
-            end_time=end_time,
-            version=version,
         )
 
     def signal_query(

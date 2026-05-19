@@ -17,6 +17,10 @@ from exabel.client.client_config import ClientConfig
 from exabel.query.column import Column
 from exabel.query.signals import Signals
 
+# Default time range for v2 export tests where the actual dates don't matter
+# (calls are mocked); spread into kwargs to satisfy the required parameters.
+_V2_TIME_RANGE = {"start_time": "2024-01-01", "end_time": "2024-12-31"}
+
 
 class TestExportApi:
     def test_signal_query(self):
@@ -274,14 +278,6 @@ class TestExportApiV2:
         result = ExportApi._build_v2_signals("Sales_Actual")
         assert result == [{"label": "Sales_Actual"}]
 
-    def test_build_v2_signals_column(self):
-        result = ExportApi._build_v2_signals(Column("Q", "sales_actual(alignment='afp')"))
-        assert result == [{"label": "Q", "expression": "sales_actual(alignment='afp')"}]
-
-    def test_build_v2_signals_column_without_expression(self):
-        result = ExportApi._build_v2_signals(Column("Sales_Actual"))
-        assert result == [{"label": "Sales_Actual"}]
-
     def test_build_v2_signals_derived_signal(self):
         signal = DerivedSignal(name=None, label="brand_sales", expression="data('sales')")
         result = ExportApi._build_v2_signals(signal)
@@ -290,13 +286,11 @@ class TestExportApiV2:
     def test_build_v2_signals_sequence(self):
         signals = [
             "Sales_Actual",
-            Column("Q", "sales_actual(alignment='afp')"),
             DerivedSignal(name=None, label="derived", expression="expr()"),
         ]
         result = ExportApi._build_v2_signals(signals)
         assert result == [
             {"label": "Sales_Actual"},
-            {"label": "Q", "expression": "sales_actual(alignment='afp')"},
             {"label": "derived", "expression": "expr()"},
         ]
 
@@ -330,8 +324,7 @@ class TestExportApiV2:
             [{"label": "Pop", "expression": "graph_signal('ns.popularity')"}],
             entities=["entityTypes/company/entities/abc"],
             tags=["tags/user:123"],
-            start_time="2024-01-01",
-            end_time="2024-12-31",
+            **_V2_TIME_RANGE,
             version="2024-06-01",
         )
 
@@ -375,14 +368,14 @@ class TestExportApiV2:
             data=[[100, 200]],
         )
 
-        result = ExportApi._reshape_v2_response(
-            raw_df, multi_entity=False, multi_ts_signals=frozenset()
-        )
+        result = ExportApi._reshape_v2_response(raw_df, multi_ts_signals=frozenset())
 
+        # Single-entity responses now also pivot to (name, time) so the row-index
+        # shape is uniform with multi-entity responses.
         assert list(result.columns) == ["Popularity"]
-        assert list(result.index) == times
-        assert result.index.name == "time"
-        assert list(result["Popularity"]) == [100, 200]
+        assert result.index.names == ["name", "time"]
+        assert list(result.index.get_level_values("name").unique()) == ["Company A"]
+        assert list(result.loc["Company A"]["Popularity"]) == [100, 200]
 
     def test_reshape_v2_response_multi_entity_single_signal(self):
         times = [pd.Timestamp("2024-03-31"), pd.Timestamp("2024-06-30")]
@@ -395,9 +388,7 @@ class TestExportApiV2:
             data=[[100, 200], [400, 300]],
         )
 
-        result = ExportApi._reshape_v2_response(
-            raw_df, multi_entity=True, multi_ts_signals=frozenset()
-        )
+        result = ExportApi._reshape_v2_response(raw_df, multi_ts_signals=frozenset())
 
         assert result.index.names == ["name", "time"]
         assert list(result.columns) == ["Popularity"]
@@ -416,9 +407,7 @@ class TestExportApiV2:
             data=[[100, 200], [400, 300], [1, 2]],
         )
 
-        result = ExportApi._reshape_v2_response(
-            raw_df, multi_entity=True, multi_ts_signals=frozenset()
-        )
+        result = ExportApi._reshape_v2_response(raw_df, multi_ts_signals=frozenset())
 
         assert result.index.names == ["name", "time"]
         assert sorted(result.columns) == ["Popularity", "Reputation"]
@@ -438,17 +427,16 @@ class TestExportApiV2:
             data=[[100], [200]],
         )
 
-        result = ExportApi._reshape_v2_response(
-            raw_df, multi_entity=False, multi_ts_signals=frozenset({"Visits"})
-        )
+        result = ExportApi._reshape_v2_response(raw_df, multi_ts_signals=frozenset({"Visits"}))
 
+        assert result.index.names == ["name", "time"]
         assert "Visits/domain1.com" in result.columns
         assert "Visits/domain2.com" in result.columns
-        assert result["Visits/domain1.com"].iloc[0] == 100
-        assert result["Visits/domain2.com"].iloc[0] == 200
+        assert result.loc["Company A", times[0]]["Visits/domain1.com"] == 100
+        assert result.loc["Company A", times[0]]["Visits/domain2.com"] == 200
 
     def test_reshape_v2_response_no_entity_level(self):
-        """3-level shape: (Signal, Time series, Currency) — dataset-scoped query with no entity."""
+        """3-level shape: (Signal, Time series, Currency) — query with no entity."""
         times = [pd.Timestamp("2024-03-31"), pd.Timestamp("2024-06-30")]
         raw_df = _make_v2_response_df(
             time_values=times,
@@ -457,9 +445,7 @@ class TestExportApiV2:
             level_names=("Signal", "Time series", "Currency"),
         )
 
-        result = ExportApi._reshape_v2_response(
-            raw_df, multi_entity=False, multi_ts_signals=frozenset()
-        )
+        result = ExportApi._reshape_v2_response(raw_df, multi_ts_signals=frozenset())
 
         assert list(result.columns) == ["GDP"]
         assert list(result.index) == times
@@ -477,18 +463,17 @@ class TestExportApiV2:
             level_names=("Signal", "Entity", "Time series", "Currency"),
         )
 
-        result = ExportApi._reshape_v2_response(
-            raw_df, multi_entity=False, multi_ts_signals=frozenset()
-        )
+        result = ExportApi._reshape_v2_response(raw_df, multi_ts_signals=frozenset())
 
+        assert result.index.names == ["name", "time"]
         assert list(result.columns) == ["Revenue"]
-        assert result["Revenue"].iloc[0] == 1000
+        assert result.loc["Company A", times[0]]["Revenue"] == 1000
 
     def test_reshape_v2_response_multi_ts_single_entity_match(self):
         """When a multi-ts signal matches exactly one sub-entity for a given
-        entity, the SDK must still produce a "signal/sub_entity" column name
+        entity, the SDK must still produce a {signal_label}/{ts_name} column name
         so the caller can tell which sub-entity the value belongs to —
-        multi-ts signals get the suffix for *every* entity, not just those
+        multi-ts signals get the suffix for every entity, not just those
         with multiple sub-entities in the result."""
         times = [pd.Timestamp("2024-03-31")]
         raw_df = _make_v2_response_df(
@@ -501,9 +486,7 @@ class TestExportApiV2:
             data=[[100], [200], [50]],
         )
 
-        result = ExportApi._reshape_v2_response(
-            raw_df, multi_entity=True, multi_ts_signals=frozenset({"Visits"})
-        )
+        result = ExportApi._reshape_v2_response(raw_df, multi_ts_signals=frozenset({"Visits"}))
 
         assert result.index.names == ["name", "time"]
         assert result.loc["Company A", times[0]]["Visits/domain1.com"] == 100
@@ -527,9 +510,7 @@ class TestExportApiV2:
             level_names=("Signal", "Entity", "Bloomberg ticker", "Time series", "Currency"),
         )
 
-        result = ExportApi._reshape_v2_response(
-            raw_df, multi_entity=True, multi_ts_signals=frozenset({"Visits"})
-        )
+        result = ExportApi._reshape_v2_response(raw_df, multi_ts_signals=frozenset({"Visits"}))
 
         assert result.index.names == ["name", "time"]
         assert result.loc["Company A", times[0]]["Visits/domain1.com"] == 100
@@ -552,11 +533,42 @@ class TestExportApiV2:
             data=[[42]],
         )
 
-        result = ExportApi._reshape_v2_response(
-            raw_df, multi_entity=False, multi_ts_signals=frozenset({"BrandValue"})
-        )
+        result = ExportApi._reshape_v2_response(raw_df, multi_ts_signals=frozenset({"BrandValue"}))
 
+        assert result.index.names == ["name", "time"]
         assert list(result.columns) == ["BrandValue/Nike Inc"]
+
+    def test_reshape_v2_response_no_performance_warning_with_many_columns(self):
+        """Regression: assembling the result column-by-column tripped pandas'
+        BlockManager fragmentation heuristic past ~100 columns, emitting a
+        PerformanceWarning per assignment. Real ``for_type()`` queries (e.g.
+        ~360 Similarweb domains per company) hit this on every call. The
+        reshape must stay warning-free regardless of column count."""
+        times = [pd.Timestamp("2024-03-31")]
+        columns = [("Visits", "Company A", "COMP US", f"domain{i}.com") for i in range(200)]
+        data = [[i] for i in range(200)]
+        raw_df = _make_v2_response_df(time_values=times, columns=columns, data=data)
+
+        with warnings.catch_warnings():
+            warnings.simplefilter("error", pd.errors.PerformanceWarning)
+            ExportApi._reshape_v2_response(raw_df, multi_ts_signals=frozenset({"Visits"}))
+
+    def test_reshape_v2_response_no_performance_warning_multi_entity(self):
+        """Same fragmentation guard for the multi-entity branch — it used to
+        build each entity's frame column-by-column too, so a watchlist of N
+        companies × M sub-entities tripped the same warning per entity."""
+        times = [pd.Timestamp("2024-03-31")]
+        columns = [
+            ("Visits", entity, ticker, f"domain{i}.com")
+            for entity, ticker in [("Company A", "COMP US"), ("Company B", "ANOT US")]
+            for i in range(200)
+        ]
+        data = [[i] for i in range(len(columns))]
+        raw_df = _make_v2_response_df(time_values=times, columns=columns, data=data)
+
+        with warnings.catch_warnings():
+            warnings.simplefilter("error", pd.errors.PerformanceWarning)
+            ExportApi._reshape_v2_response(raw_df, multi_ts_signals=frozenset({"Visits"}))
 
     def test_export_signals_v2_raises_on_missing_metadata(self):
         """The SDK treats a response without ``exabel_multi_ts_signals`` as a
@@ -568,11 +580,15 @@ class TestExportApiV2:
         export_api._post_v2_signals = MagicMock(return_value=buffer.getvalue())
 
         with pytest.raises(ValueError, match="exabel_multi_ts_signals"):
-            export_api.export_signals_v2("Sales", resource_name="entityTypes/company/entities/abc")
+            export_api.export_signals_v2(
+                "Sales",
+                entities="entityTypes/company/entities/abc",
+                **_V2_TIME_RANGE,
+            )
 
     def test_export_signals_v2_reads_multi_ts_from_metadata(self):
         """End-to-end: when the server embeds the metadata, the caller sees
-        ``{signal}/{ts_name}`` columns even in the name-collision case."""
+        {signal_label}/{ts_name} columns even in the name-collision case."""
         export_api = ExportApi(ClientConfig(api_key="api-key"))
         times = [pd.Timestamp("2024-03-31")]
         raw_df = _make_v2_response_df(
@@ -585,11 +601,14 @@ class TestExportApiV2:
         )
 
         result = export_api.export_signals_v2(
-            "BrandValue", resource_name="entityTypes/company/entities/nke"
+            "BrandValue",
+            entities="entityTypes/company/entities/nke",
+            **_V2_TIME_RANGE,
         )
 
-        assert isinstance(result, pd.Series)
-        assert result.name == "BrandValue/Nike Inc"
+        assert isinstance(result, pd.DataFrame)
+        assert list(result.columns) == ["BrandValue/Nike Inc"]
+        assert result.index.names == ["name", "time"]
 
     def test_export_signals_v2_single_entity(self):
         export_api = ExportApi(ClientConfig(api_key="api-key"))
@@ -604,19 +623,20 @@ class TestExportApiV2:
 
         result = export_api.export_signals_v2(
             "Sales",
-            resource_name="entityTypes/company/entities/abc",
-            start_time="2024-01-01",
-            end_time="2024-12-31",
+            entities="entityTypes/company/entities/abc",
+            **_V2_TIME_RANGE,
         )
 
-        # Single signal, single entity -> Series
-        assert isinstance(result, pd.Series)
-        assert result.name == "Sales"
-        assert list(result.index) == times
+        # Single signal, single entity -> DataFrame with MultiIndex (uniform shape).
+        assert isinstance(result, pd.DataFrame)
+        assert list(result.columns) == ["Sales"]
+        assert result.index.names == ["name", "time"]
+        assert list(result.index.get_level_values("time")) == times
+        assert list(result.index.get_level_values("name").unique()) == ["Company A"]
         mock_post.assert_called_once()
         call_kwargs = mock_post.call_args
         assert call_kwargs[0][0] == [{"label": "Sales"}]
-        assert call_kwargs[1]["entities"] == ["entityTypes/company/entities/abc"]
+        assert call_kwargs[1]["entities"] == ("entityTypes/company/entities/abc",)
 
     def test_export_signals_v2_multi_entity(self):
         export_api = ExportApi(ClientConfig(api_key="api-key"))
@@ -633,10 +653,12 @@ class TestExportApiV2:
 
         result = export_api.export_signals_v2(
             "Sales",
-            resource_name=["entityTypes/company/entities/abc", "entityTypes/company/entities/def"],
+            entities=["entityTypes/company/entities/abc", "entityTypes/company/entities/def"],
+            **_V2_TIME_RANGE,
         )
 
-        assert isinstance(result, pd.Series)
+        assert isinstance(result, pd.DataFrame)
+        assert list(result.columns) == ["Sales"]
         assert result.index.names == ["name", "time"]
 
     def test_export_signals_v2_with_tag(self):
@@ -650,9 +672,9 @@ class TestExportApiV2:
         mock_post = MagicMock(return_value=_df_to_parquet_bytes(raw_df))
         export_api._post_v2_signals = mock_post
 
-        export_api.export_signals_v2("Sales", tag="tags/user:123")
+        export_api.export_signals_v2("Sales", tags="tags/user:123", **_V2_TIME_RANGE)
 
-        assert mock_post.call_args[1]["tags"] == ["tags/user:123"]
+        assert mock_post.call_args[1]["tags"] == ("tags/user:123",)
 
     def test_export_signals_v2_with_derived_signal(self):
         export_api = ExportApi(ClientConfig(api_key="api-key"))
@@ -670,7 +692,9 @@ class TestExportApiV2:
             expression="data('sales').for_type('brand')",
         )
         result = export_api.export_signals_v2(
-            signal, resource_name="entityTypes/company/entities/abc"
+            signal,
+            entities="entityTypes/company/entities/abc",
+            **_V2_TIME_RANGE,
         )
 
         call_args = export_api._post_v2_signals.call_args[0][0]
@@ -683,8 +707,51 @@ class TestExportApiV2:
 
     def test_export_signals_v2_empty_signal_raises(self):
         export_api = ExportApi(ClientConfig(api_key="api-key"))
-        with pytest.raises(ValueError, match="Must specify signal to retrieve"):
-            export_api.export_signals_v2([], resource_name="entityTypes/company/entities/abc")
+        with pytest.raises(ValueError, match="Must specify signals to retrieve"):
+            export_api.export_signals_v2(
+                [],
+                entities="entityTypes/company/entities/abc",
+                **_V2_TIME_RANGE,
+            )
+
+    def test_export_signals_v2_drops_all_nan_rows_keeps_partial_nan(self):
+        """All-NaN rows from sparse signals are dropped; rows with any value survive.
+
+        Critical for the common case: a quarterly signal (e.g. Visible Alpha
+        actuals) exported across a daily range otherwise produces an output
+        padded with empty rows for every non-period day.
+        """
+        export_api = ExportApi(ClientConfig(api_key="api-key"))
+        times = [
+            pd.Timestamp("2024-03-31"),
+            pd.Timestamp("2024-04-01"),  # all-NaN — should be dropped
+            pd.Timestamp("2024-06-30"),
+            pd.Timestamp("2024-07-01"),  # partial-NaN — should survive
+        ]
+        raw_df = _make_v2_response_df(
+            time_values=times,
+            columns=[
+                ("actual", "Company A", "COMP US", "Company A"),
+                ("consensus", "Company A", "COMP US", "Company A"),
+            ],
+            data=[
+                [100, float("nan"), 200, float("nan")],
+                [110, float("nan"), 210, 220],
+            ],
+        )
+        export_api._post_v2_signals = MagicMock(return_value=_df_to_parquet_bytes(raw_df))
+
+        result = export_api.export_signals_v2(
+            ["actual", "consensus"],
+            entities="entityTypes/company/entities/abc",
+            **_V2_TIME_RANGE,
+        )
+
+        result_times = list(result.index.get_level_values("time"))
+        assert pd.Timestamp("2024-04-01") not in result_times, "all-NaN row was not dropped"
+        assert pd.Timestamp("2024-07-01") in result_times, "partial-NaN row was incorrectly dropped"
+        assert pd.Timestamp("2024-03-31") in result_times
+        assert pd.Timestamp("2024-06-30") in result_times
 
     def test_run_export_signals_v2(self):
         export_api = ExportApi(ClientConfig(api_key="api-key"))
@@ -702,8 +769,7 @@ class TestExportApiV2:
         result_df = export_api.run_export_signals_v2(
             [{"label": "Sales"}],
             entities=["entityTypes/company/entities/abc"],
-            start_time="2024-01-01",
-            end_time="2024-12-31",
+            **_V2_TIME_RANGE,
         )
 
         assert isinstance(result_df, pd.DataFrame)
@@ -712,7 +778,7 @@ class TestExportApiV2:
         assert result_df.shape == (2, 2)  # time column + 1 data column
 
     def test_export_signals_v2_bytes_returns_raw_response(self):
-        """``export_signals_v2_bytes`` posts the v2 request in the requested format
+        """export_signals_v2_bytes posts the v2 request in the requested format
         and returns the server's raw bytes unchanged — no pyarrow parsing."""
         export_api = ExportApi(ClientConfig(api_key="api-key"))
         wire_bytes = b"time,Sales\n2024-03-31,100\n"
@@ -722,19 +788,22 @@ class TestExportApiV2:
         result = export_api.export_signals_v2_bytes(
             "Sales",
             file_format="csv",
-            resource_name="entityTypes/company/entities/abc",
-            start_time="2024-01-01",
-            end_time="2024-12-31",
+            entities="entityTypes/company/entities/abc",
+            **_V2_TIME_RANGE,
         )
 
         assert result == wire_bytes
         assert mock_post.call_args[1]["output_format"] == "csv"
-        assert mock_post.call_args[1]["entities"] == ["entityTypes/company/entities/abc"]
+        assert mock_post.call_args[1]["entities"] == ("entityTypes/company/entities/abc",)
 
     def test_export_signals_v2_bytes_empty_signal_raises(self):
         export_api = ExportApi(ClientConfig(api_key="api-key"))
-        with pytest.raises(ValueError, match="Must specify signal to retrieve"):
-            export_api.export_signals_v2_bytes([], resource_name="entityTypes/company/entities/abc")
+        with pytest.raises(ValueError, match="Must specify signals to retrieve"):
+            export_api.export_signals_v2_bytes(
+                [],
+                entities="entityTypes/company/entities/abc",
+                **_V2_TIME_RANGE,
+            )
 
     def test_export_signals_v2_bytes_rejects_pickle(self):
         export_api = ExportApi(ClientConfig(api_key="api-key"))
@@ -744,54 +813,16 @@ class TestExportApiV2:
             export_api.export_signals_v2_bytes(
                 "Sales",
                 file_format="pickle",
-                resource_name="entityTypes/company/entities/abc",
+                entities="entityTypes/company/entities/abc",
+                **_V2_TIME_RANGE,
             )
 
         export_api._session.post.assert_not_called()
 
-    def test_signal_query_v2_emits_deprecation_warning(self):
-        """The old name remains a thin wrapper that delegates to
-        ``export_signals_v2`` with a ``DeprecationWarning``."""
-        export_api = ExportApi(ClientConfig(api_key="api-key"))
-        times = [pd.Timestamp("2024-03-31")]
-        raw_df = _make_v2_response_df(
-            time_values=times,
-            columns=[("Sales", "Company A", "COMP US", "Company A")],
-            data=[[100]],
-        )
-        export_api._post_v2_signals = MagicMock(return_value=_df_to_parquet_bytes(raw_df))
-
-        with pytest.warns(DeprecationWarning, match="signal_query_v2 is deprecated"):
-            result = export_api.signal_query_v2(
-                "Sales", resource_name="entityTypes/company/entities/abc"
-            )
-        assert isinstance(result, pd.Series)
-
-    def test_run_signal_query_v2_emits_deprecation_warning(self):
-        export_api = ExportApi(ClientConfig(api_key="api-key"))
-        times = [pd.Timestamp("2024-03-31")]
-        raw_df = _make_v2_response_df(
-            time_values=times,
-            columns=[("Sales", "Company A", "COMP US", "Company A")],
-            data=[[100]],
-        )
-        mock_response = MagicMock()
-        mock_response.status_code = 200
-        mock_response.content = _df_to_parquet_bytes(raw_df)
-        export_api._session.post = MagicMock(return_value=mock_response)
-
-        with pytest.warns(DeprecationWarning, match="run_signal_query_v2 is deprecated"):
-            result = export_api.run_signal_query_v2(
-                [{"label": "Sales"}], entities=["entityTypes/company/entities/abc"]
-            )
-        assert isinstance(result, pd.DataFrame)
-
     def test_reshape_v2_response_non_multiindex(self):
         flat_df = pd.DataFrame({"time": [pd.Timestamp("2024-03-31")], "Sales": [100]})
 
-        result = ExportApi._reshape_v2_response(
-            flat_df, multi_entity=False, multi_ts_signals=frozenset()
-        )
+        result = ExportApi._reshape_v2_response(flat_df, multi_ts_signals=frozenset())
 
         assert result.index.name == "time"
         assert list(result.columns) == ["Sales"]
