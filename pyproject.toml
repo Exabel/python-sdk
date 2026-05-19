@@ -1,7 +1,7 @@
 [project]
 name = "exabel"
 description = "Python SDK for the Exabel Data API"
-version = "8.2.0"
+version = "9.0.0"
 license = "MIT"
 license-files = ["LICENSE"]
 readme = "README.md"
@@ -54,7 +54,7 @@ Source = "https://github.com/Exabel/python-sdk"
 Changelog = "https://github.com/Exabel/python-sdk/releases"
 
 [build-system]
-requires = ["uv_build>=0.9.28"]
+requires = ["uv_build>=0.11.15,<0.12"]
 build-backend = "uv_build"
 
 [tool.uv]

@@ -70,14 +70,14 @@ class ExportSignalsV2(BaseScript):
     def __init__(self, argv: Sequence[str], description: str):
         super().__init__(argv, description)
         self.parser.add_argument(
-            "--signal",
+            "--signals",
             nargs="+",
             required=False,
             default=[],
             type=str,
             help=(
                 "Signal label(s) to export from the library. "
-                "At least one of --signal or --expression must be given."
+                "At least one of --signals or --expression must be given."
             ),
         )
         self.parser.add_argument(
@@ -95,13 +95,13 @@ class ExportSignalsV2(BaseScript):
         )
         entity_group = self.parser.add_mutually_exclusive_group(required=True)
         entity_group.add_argument(
-            "--resource-name",
+            "--entities",
             nargs="+",
             type=str,
             help="Entity resource name(s) to evaluate the signal(s) for.",
         )
         entity_group.add_argument(
-            "--tag",
+            "--tags",
             nargs="+",
             type=str,
             help="Tag(s) whose entities should be evaluated.",
@@ -136,9 +136,9 @@ class ExportSignalsV2(BaseScript):
 
     def run_script(self, client: ExabelClient, args: argparse.Namespace) -> None:
         start_time = time()
-        signals: list[str | DerivedSignal] = [*args.signal, *args.expression]
+        signals: list[str | DerivedSignal] = [*args.signals, *args.expression]
         if not signals:
-            self.parser.error("at least one of --signal or --expression must be provided")
+            self.parser.error("at least one of --signals or --expression must be provided")
         signal_labels = [s if isinstance(s, str) else s.label for s in signals]
         print("Downloading signal(s):", ", ".join(signal_labels))
 
@@ -148,8 +148,8 @@ class ExportSignalsV2(BaseScript):
         content = client.export_api.export_signals_v2_bytes(
             signals,
             file_format=file_format,
-            resource_name=args.resource_name,
-            tag=args.tag,
+            entities=args.entities,
+            tags=args.tags,
             start_time=args.start_date,
             end_time=args.end_date,
             version=args.known_time,

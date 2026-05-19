@@ -16,7 +16,7 @@ class TestExportSignalsV2(unittest.TestCase):
     def setUp(self):
         self.common_args = [
             "script",
-            "--signal",
+            "--signals",
             "signalA",
             "signalB",
             "--start-date",
@@ -27,7 +27,7 @@ class TestExportSignalsV2(unittest.TestCase):
         ]
 
     def _assert_common_args(self, args: argparse.Namespace):
-        assert args.signal == ["signalA", "signalB"]
+        assert args.signals == ["signalA", "signalB"]
         assert args.start_date == pd.Timestamp("2023-01-31")
         assert args.end_date == pd.Timestamp("2024-02-29")
 
@@ -36,7 +36,7 @@ class TestExportSignalsV2(unittest.TestCase):
             self.common_args
             + [
                 "foo.csv",
-                "--tag",
+                "--tags",
                 "tags/user:1",
                 "tags/user:2",
                 "--api-key",
@@ -47,8 +47,8 @@ class TestExportSignalsV2(unittest.TestCase):
         args = script.parse_arguments()
         self._assert_common_args(args)
         assert args.filename == "foo.csv"
-        assert args.tag == ["tags/user:1", "tags/user:2"]
-        assert args.resource_name is None
+        assert args.tags == ["tags/user:1", "tags/user:2"]
+        assert args.entities is None
         assert args.api_key == "api-key"
 
     def test_args_with_resource_name(self):
@@ -56,7 +56,7 @@ class TestExportSignalsV2(unittest.TestCase):
             self.common_args
             + [
                 "foo.parquet",
-                "--resource-name",
+                "--entities",
                 "entityTypes/company/entities/A",
                 "entityTypes/company/entities/B",
                 "--api-key",
@@ -67,11 +67,11 @@ class TestExportSignalsV2(unittest.TestCase):
         args = script.parse_arguments()
         self._assert_common_args(args)
         assert args.filename == "foo.parquet"
-        assert args.resource_name == [
+        assert args.entities == [
             "entityTypes/company/entities/A",
             "entityTypes/company/entities/B",
         ]
-        assert args.tag is None
+        assert args.tags is None
 
     def test_args_env_variable(self):
         os.environ["EXABEL_API_KEY"] = "env_key"
@@ -80,7 +80,7 @@ class TestExportSignalsV2(unittest.TestCase):
                 self.common_args
                 + [
                     "foo.csv",
-                    "--tag",
+                    "--tags",
                     "tags/user:1",
                 ],
                 "desc",
@@ -97,7 +97,7 @@ class TestExportSignalsV2(unittest.TestCase):
             self.common_args
             + [
                 "foo.csv",
-                "--tag",
+                "--tags",
                 "tags/user:1",
                 "--api-key",
                 "api-key",
@@ -119,9 +119,9 @@ class TestExportSignalsV2(unittest.TestCase):
             self.common_args
             + [
                 "foo.csv",
-                "--tag",
+                "--tags",
                 "tags/user:1",
-                "--resource-name",
+                "--entities",
                 "entityTypes/company/entities/A",
                 "--api-key",
                 "api-key",
@@ -136,7 +136,7 @@ class TestExportSignalsV2(unittest.TestCase):
             self.common_args
             + [
                 "foo.pdf",
-                "--tag",
+                "--tags",
                 "tags/user:1",
                 "--api-key",
                 "api-key",
@@ -147,7 +147,7 @@ class TestExportSignalsV2(unittest.TestCase):
             script.parse_arguments()
 
     def test_args_expression_only(self):
-        """--expression alone (no --signal) should parse and produce DerivedSignal objects."""
+        """--expression alone (no --signals) should parse and produce DerivedSignal objects."""
         script = ExportSignalsV2(
             [
                 "script",
@@ -159,7 +159,7 @@ class TestExportSignalsV2(unittest.TestCase):
                 "2024-02-29",
                 "--filename",
                 "foo.csv",
-                "--tag",
+                "--tags",
                 "tags/user:1",
                 "--api-key",
                 "api-key",
@@ -167,7 +167,7 @@ class TestExportSignalsV2(unittest.TestCase):
             "desc",
         )
         args = script.parse_arguments()
-        assert args.signal == []
+        assert args.signals == []
         assert len(args.expression) == 1
         derived = args.expression[0]
         assert isinstance(derived, DerivedSignal)
@@ -182,7 +182,7 @@ class TestExportSignalsV2(unittest.TestCase):
                 "missing_separator",
                 "--filename",
                 "foo.csv",
-                "--tag",
+                "--tags",
                 "tags/user:1",
                 "--api-key",
                 "api-key",
@@ -201,7 +201,7 @@ class TestExportSignalsV2(unittest.TestCase):
                 'cmp=data("x") == 1',
                 "--filename",
                 "foo.csv",
-                "--tag",
+                "--tags",
                 "tags/user:1",
                 "--api-key",
                 "api-key",
@@ -224,7 +224,7 @@ class TestExportSignalsV2(unittest.TestCase):
                 self.common_args
                 + [
                     filename,
-                    "--tag",
+                    "--tags",
                     "tags/user:1",
                     "--api-key",
                     "api-key",
@@ -241,7 +241,7 @@ class TestExportSignalsV2(unittest.TestCase):
             client.export_api.export_signals_v2_bytes.assert_called_once()
             kwargs = client.export_api.export_signals_v2_bytes.call_args.kwargs
             assert kwargs["file_format"] == "csv"
-            assert kwargs["tag"] == ["tags/user:1"]
+            assert kwargs["tags"] == ["tags/user:1"]
             assert kwargs["start_time"] == pd.Timestamp("2023-01-31")
             assert kwargs["end_time"] == pd.Timestamp("2024-02-29")
             assert Path(filename).read_bytes() == wire_bytes
@@ -254,7 +254,7 @@ class TestExportSignalsV2(unittest.TestCase):
                 self.common_args
                 + [
                     filename,
-                    "--tag",
+                    "--tags",
                     "tags/user:1",
                     "--api-key",
                     "api-key",
