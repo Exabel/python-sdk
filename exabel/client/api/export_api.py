@@ -4,13 +4,19 @@ import logging
 import pickle
 import warnings
 from time import time
-from typing import Sequence
+from typing import Sequence, TypeVar
 
 import pandas as pd
 from requests import Session
 from requests.adapters import HTTPAdapter
 from urllib3 import Retry
 
+from exabel.client.api.data_classes.dashboard_table import (
+    ColumnRef,
+    TableColumnFilter,
+    TableColumnOrdering,
+    column_ref_to_json,
+)
 from exabel.client.api.data_classes.derived_signal import DerivedSignal
 from exabel.client.client_config import ClientConfig
 from exabel.query.column import Column
@@ -28,6 +34,72 @@ _PICKLE_DEPRECATED_MESSAGE = (
 )
 
 _MULTI_TS_METADATA_KEY = b"exabel_multi_ts_signals"
+
+
+# One item or a sequence of them: a string, a filter and an ordering are all things a
+# caller naturally passes one of, and a bare string is one item rather than a sequence of
+# characters.
+_Item = TypeVar("_Item", str, TableColumnFilter, TableColumnOrdering)
+
+
+def _to_list(value: _Item | Sequence[_Item] | None) -> list[_Item]:
+    """Accept a single item or a sequence of them, and return a list either way."""
+    if value is None:
+        return []
+    if isinstance(value, (str, TableColumnFilter, TableColumnOrdering)):
+        return [value]
+    return list(value)
+
+
+def _to_column_refs(value: ColumnRef | Sequence[ColumnRef] | None) -> list[ColumnRef]:
+    """Accept a single column reference or a sequence of them, and return a list either way.
+
+    Separate from _to_list because a column reference is itself a union, which a value
+    restricted type variable cannot express.
+    """
+    if value is None:
+        return []
+    if isinstance(value, (str, int)):
+        return [value]
+    return list(value)
+
+
+_DEFAULT_PORTS = {"https": 443, "http": 80}
+
+
+def _merge_headers(extra_headers: Sequence[tuple[str, str]]) -> dict[str, str]:
+    """
+    Collect the configured extra headers into the form a requests Session takes.
+
+    A header given more than once is comma-joined rather than overwritten, which is how HTTP
+    carries a repeated field in one line, and keeps every value the caller asked for: the gRPC
+    clients append each pair to their metadata, so dropping all but the last here would make the
+    same configuration mean different things on the two transports.
+    """
+    headers: dict[str, str] = {}
+    for name, value in extra_headers:
+        headers[name] = f"{headers[name]}, {value}" if name in headers else value
+    return headers
+
+
+def _read_parquet(content: bytes) -> pd.DataFrame:
+    """
+    Read a parquet response into a DataFrame.
+
+    Guards the engine import so that a caller without pyarrow is told which extra to install,
+    rather than getting pandas' own "Unable to find a usable engine". The ``_bytes`` variants
+    write the same response straight to disk and need no engine at all.
+    """
+    with handle_missing_imports(
+        warning=(
+            "'pyarrow' must be installed to read an export response as a DataFrame. "
+            "Install it with: pip install 'exabel[export]'"
+        ),
+        reraise=True,
+    ):
+        import pyarrow  # noqa: F401
+
+    return pd.read_parquet(io.BytesIO(content))
 
 
 def _read_v2_parquet(content: bytes) -> tuple[pd.DataFrame, frozenset[str]]:
@@ -70,6 +142,21 @@ class ExportApi:
             auth_headers["x-api-key"] = client_config.api_key
         session = Session()
         session.headers.update(auth_headers)
+        # The headers ClientConfig documents as "included in the request", which the gRPC clients
+        # apply and this one did not. They carry the GCP consumer identity that a project-number
+        # caller authenticates with, and are the only way to add a header the SDK does not model.
+        session.headers.update(_merge_headers(client_config.extra_headers))
+        # The port is dropped only when it is the default for the scheme in use. Dropping 443
+        # unconditionally would silently turn an http request on 443 into one on port 80.
+        default_port = _DEFAULT_PORTS[client_config.export_api_scheme]
+        backend = (
+            client_config.export_api_host
+            if not client_config.export_api_host or client_config.export_api_port == default_port
+            else f"{client_config.export_api_host}:{client_config.export_api_port}"
+        )
+        # Held whole rather than assembled per request, so that every endpoint is reached the same
+        # way and the scheme is decided once.
+        self._base_url = f"{client_config.export_api_scheme}://{backend}"
         if client_config.retries:
             retry = Retry(
                 total=client_config.retries,
@@ -77,13 +164,8 @@ class ExportApi:
                 allowed_methods=["POST"],
                 status_forcelist=[500, 502, 503, 504],
             )
-            session.mount("https://", HTTPAdapter(max_retries=retry))
+            session.mount(f"{client_config.export_api_scheme}://", HTTPAdapter(max_retries=retry))
         self._session = session
-        self._backend = (
-            client_config.export_api_host
-            if not client_config.export_api_host or client_config.export_api_port == 443
-            else f"{client_config.export_api_host}:{client_config.export_api_port}"
-        )
 
     def run_query_bytes(self, query: str | Query, file_format: str) -> bytes:
         """
@@ -119,7 +201,7 @@ class ExportApi:
         if isinstance(query, Query):
             query = query.sql()
         data = {"format": file_format, "query": query}
-        url = f"https://{self._backend}/v1/export/file"
+        url = f"{self._base_url}/v1/export/file"
         start_time = time()
         logger.info("Sending query: %s", query)
         response = self._session.post(url, data=data, timeout=600)
@@ -217,15 +299,26 @@ class ExportApi:
         if version is not None:
             body["version"] = self._to_timestamp_string(version)
 
-        url = f"https://{self._backend}/v2/export/signals"
+        return self._post_json("/v2/export/signals", body, description="v2 signal export")
+
+    def _post_json(self, path: str, body: dict[str, object], *, description: str) -> bytes:
+        """POST a JSON body to an export endpoint, and return the response bytes.
+
+        Shared by every structured export method. They differ in the body they build and
+        the path they post it to; the timeout, the logging and the error shape — a failure
+        body that is a JSON string, whose quotes are stripped so the message reads as a
+        sentence — are the same for all of them.
+        """
+        url = f"{self._base_url}{path}"
         start = time()
-        logger.info("Sending v2 signal export request: %s", body)
+        logger.info("Sending %s request: %s", description, body)
         response = self._session.post(
             url, data=json.dumps(body), headers={"Content-Type": "application/json"}, timeout=600
         )
         spent_time = time() - start
         logger.info(
-            "v2 export completed in %.1f seconds, received %d bytes, status %d",
+            "%s completed in %.1f seconds, received %d bytes, status %d",
+            description,
             spent_time,
             len(response.content),
             response.status_code,
@@ -504,6 +597,238 @@ class ExportApi:
             version=version,
             output_format=file_format,
         )
+
+    def export_chart(
+        self,
+        chart: str,
+        *,
+        entities: str | Sequence[str] | None = None,
+        start_time: str | pd.Timestamp | None = None,
+        end_time: str | pd.Timestamp | None = None,
+        version: str | pd.Timestamp | None = None,
+        width: int | None = None,
+        height: int | None = None,
+    ) -> bytes:
+        """Render a saved chart as a PNG image, and return the image bytes.
+
+        The chart is rendered as the web app draws it, so nothing here describes what to
+        plot: the saved chart carries its signals, its entities and its time range, and
+        the arguments below only override the last two.
+
+        Example::
+
+            image = export_api.export_chart("dashboards/1234/widgets/1")
+            Path("chart.png").write_bytes(image)
+
+        Args:
+            chart:      the chart to render, either a saved chart, "charts/123", or a chart
+                        widget in a dashboard, "dashboards/1234/widgets/1". The second form
+                        is the only way to reach a chart built inside a dashboard, since
+                        such a chart is stored in the dashboard and has no name of its own;
+                        list a dashboard's widgets with the Management API to find them.
+            entities:   entity resource name(s) to render for, replacing the entities saved
+                        with the chart. At most 100 may be given. If empty, the chart's own
+                        entities are used.
+            start_time: the start of the time range to render over. If neither bound is
+                        given, the chart's saved range is used, which is resolved at
+                        request time when it is relative.
+            end_time:   the end of the time range to render over.
+            version:    the point-in-time at which to evaluate the chart's signals.
+            width:      image width in pixels, between 100 and 4000. Defaults to 1600, the
+                        width the web app's own chart download produces.
+            height:     image height in pixels, between 100 and 4000. Defaults to 800.
+
+        Returns:
+            The PNG image bytes.
+        """
+        if not chart:
+            raise ValueError("Must specify the chart to render")
+        body: dict[str, object] = {"chart": chart}
+        chart_entities = _to_list(entities)
+        if chart_entities:
+            body["entities"] = chart_entities
+        time_range: dict[str, str] = {}
+        if start_time:
+            time_range["from"] = self._to_timestamp_string(start_time)
+        if end_time:
+            time_range["to"] = self._to_timestamp_string(end_time)
+        if time_range:
+            body["timeRange"] = time_range
+        if version is not None:
+            body["version"] = self._to_timestamp_string(version)
+        if width is not None:
+            body["width"] = width
+        if height is not None:
+            body["height"] = height
+        return self._post_json("/v1/export/chart", body, description="chart export")
+
+    def export_dashboard_table(
+        self,
+        table: str,
+        *,
+        columns: ColumnRef | Sequence[ColumnRef] | None = None,
+        entities: str | Sequence[str] | None = None,
+        included_tags: str | Sequence[str] | None = None,
+        any_of_tags: str | Sequence[str] | None = None,
+        excluded_tags: str | Sequence[str] | None = None,
+        column_filters: TableColumnFilter | Sequence[TableColumnFilter] | None = None,
+        column_orderings: TableColumnOrdering | Sequence[TableColumnOrdering] | None = None,
+    ) -> pd.DataFrame:
+        """Export one dashboard table widget, and return it as a DataFrame.
+
+        The structured counterpart to exporting a dashboard with run_query(): it reaches
+        filters that have no SQL syntax, and reports an unknown column as an error rather
+        than failing inside the query interpreter. The table is exported as the dashboard
+        computed it — this evaluates nothing itself, so a column's own settings, formatting
+        and time period are whatever the dashboard says they are.
+
+        Example::
+
+            df = export_api.export_dashboard_table(
+                "dashboards/1234/widgets/2",
+                columns=["Revenue", "Close price"],
+                column_filters=TableColumnFilter("Market cap", above=1e9),
+                column_orderings=TableColumnOrdering(0, use_ticker=True),
+            )
+
+        Args:
+            columns:          the column(s) to export, in the order they should appear,
+                              named by identifier, display name or position. If empty,
+                              every column is exported in the order the table shows them.
+                              The entity columns on the left of the table — the entity
+                              name, and for companies also MIC, ticker, FactSet id and
+                              Bloomberg ticker — are always included, so naming position 0
+                              here adds nothing.
+            entities:         entity resource name(s), "entityTypes/company/entities/...",
+                              or semantic entity id(s), "graph:entity:...", whose rows are
+                              exported. Combined with the tag arguments as a union.
+            included_tags:    a row is exported only if its entity has *all* of these tags.
+            any_of_tags:      a row is exported only if its entity has *at least one* of
+                              these tags. Tags are given either as resource names,
+                              "tags/...", or as semantic tag ids, "graph:tag:...".
+            excluded_tags:    a row is not exported if its entity has *any* of these tags.
+                              This has no equivalent in the SQL export.
+            column_filters:   filter(s) on column values. A row is exported only if it
+                              passes every one of them.
+            column_orderings: the sort order of the rows. At most one is supported; giving
+                              more is an error rather than a silent choice of one of them.
+                              If empty, rows are sorted by the entity column, ascending.
+
+        Returns:
+            A DataFrame with one row per entity and one column per exported table column.
+        """
+        content = self.export_dashboard_table_bytes(
+            table,
+            columns=columns,
+            entities=entities,
+            included_tags=included_tags,
+            any_of_tags=any_of_tags,
+            excluded_tags=excluded_tags,
+            column_filters=column_filters,
+            column_orderings=column_orderings,
+            file_format="parquet",
+        )
+        return _read_parquet(content)
+
+    def export_dashboard_table_bytes(
+        self,
+        table: str,
+        *,
+        columns: ColumnRef | Sequence[ColumnRef] | None = None,
+        entities: str | Sequence[str] | None = None,
+        included_tags: str | Sequence[str] | None = None,
+        any_of_tags: str | Sequence[str] | None = None,
+        excluded_tags: str | Sequence[str] | None = None,
+        column_filters: TableColumnFilter | Sequence[TableColumnFilter] | None = None,
+        column_orderings: TableColumnOrdering | Sequence[TableColumnOrdering] | None = None,
+        file_format: str = "parquet",
+    ) -> bytes:
+        """Export one dashboard table widget, and return the raw response bytes.
+
+        Use this when you need the exported file bytes directly — to write an Excel file to
+        disk, say — without parsing them into a DataFrame. Excel is the one format that
+        carries the table's own formatting and its sub-row grouping, both of which a
+        DataFrame flattens away.
+
+        Args:
+            file_format: one of parquet, csv, excel, json, feather. Note that this defaults
+                         to parquet, while the endpoint itself defaults to csv. Unlike the
+                         other export methods here, pickle is not accepted.
+
+        See export_dashboard_table for the remaining arguments.
+        """
+        if file_format.lower() == "pickle":
+            raise ValueError(
+                "pickle is not supported by the dashboard table export; "
+                "use parquet, csv, excel, json or feather"
+            )
+        body = self._build_dashboard_table_body(
+            table,
+            columns=columns,
+            entities=entities,
+            included_tags=included_tags,
+            any_of_tags=any_of_tags,
+            excluded_tags=excluded_tags,
+            column_filters=column_filters,
+            column_orderings=column_orderings,
+            output_format=file_format,
+        )
+        return self._post_json(
+            "/v1/export/dashboardTable", body, description="dashboard table export"
+        )
+
+    @staticmethod
+    def _build_dashboard_table_body(
+        table: str,
+        *,
+        columns: ColumnRef | Sequence[ColumnRef] | None = None,
+        entities: str | Sequence[str] | None = None,
+        included_tags: str | Sequence[str] | None = None,
+        any_of_tags: str | Sequence[str] | None = None,
+        excluded_tags: str | Sequence[str] | None = None,
+        column_filters: TableColumnFilter | Sequence[TableColumnFilter] | None = None,
+        column_orderings: TableColumnOrdering | Sequence[TableColumnOrdering] | None = None,
+        output_format: str = "csv",
+    ) -> dict[str, object]:
+        """Build the JSON body of a dashboard table export request.
+
+        The three tag arguments are separate parameters rather than one filter object
+        because they are combined with AND, so a caller passing two of them is asking for
+        one filter, not two.
+        """
+        if not table or not table.startswith("dashboards/") or "/widgets/" not in table:
+            raise ValueError(
+                f"The table must be named as 'dashboards/{{dashboard}}/widgets/{{widget}}', "
+                f"but got {table!r}"
+            )
+        body: dict[str, object] = {"table": table, "outputFormat": output_format}
+        # Each argument is normalised before it is tested, rather than testing the argument
+        # itself: position 0 is a column reference and not an unset field, and a falsy check
+        # on the argument would drop it.
+        selected_columns = _to_column_refs(columns)
+        if selected_columns:
+            body["columns"] = [column_ref_to_json(column) for column in selected_columns]
+        selected_entities = _to_list(entities)
+        if selected_entities:
+            body["entities"] = selected_entities
+        tag_filter = {
+            field: tags
+            for field, tags in (
+                ("includedTags", _to_list(included_tags)),
+                ("anyOfTags", _to_list(any_of_tags)),
+                ("excludedTags", _to_list(excluded_tags)),
+            )
+            if tags
+        }
+        if tag_filter:
+            body["tagFilter"] = tag_filter
+        filters = _to_list(column_filters)
+        if filters:
+            body["columnFilters"] = [column_filter.to_json() for column_filter in filters]
+        orderings = _to_list(column_orderings)
+        if orderings:
+            body["columnOrderings"] = [ordering.to_json() for ordering in orderings]
+        return body
 
     def signal_query(
         self,

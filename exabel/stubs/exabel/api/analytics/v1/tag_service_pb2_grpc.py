@@ -31,11 +31,12 @@ class TagServiceStub(object):
     """Service for managing tags. See the User Guide for more information about tags:
     https://help.exabel.com/docs/tags-screens
 
-    Requests to the TagService are executed in the context of the customer's service account (SA).
+    Requests to the TagService are executed as the authenticated caller: the customer's service
+    account (SA) when using an API key, or the user themselves when using a personal access token.
     The SA is a special user that is a member of the customer user group, giving it access to all
     folders that are shared with this user group, but not to private folders.
-    Hence, only tags that are in folders shared to the SA, via the customer user group,
-    will be accessible via the TagService.
+    Hence, an API key reaches only tags in folders shared via the customer user group, while a
+    personal access token additionally reaches the user's own private tags.
     """
 
     def __init__(self, channel):
@@ -90,11 +91,12 @@ class TagServiceServicer(object):
     """Service for managing tags. See the User Guide for more information about tags:
     https://help.exabel.com/docs/tags-screens
 
-    Requests to the TagService are executed in the context of the customer's service account (SA).
+    Requests to the TagService are executed as the authenticated caller: the customer's service
+    account (SA) when using an API key, or the user themselves when using a personal access token.
     The SA is a special user that is a member of the customer user group, giving it access to all
     folders that are shared with this user group, but not to private folders.
-    Hence, only tags that are in folders shared to the SA, via the customer user group,
-    will be accessible via the TagService.
+    Hence, an API key reaches only tags in folders shared via the customer user group, while a
+    personal access token additionally reaches the user's own private tags.
     """
 
     def CreateTag(self, request, context):
@@ -212,11 +214,12 @@ class TagService(object):
     """Service for managing tags. See the User Guide for more information about tags:
     https://help.exabel.com/docs/tags-screens
 
-    Requests to the TagService are executed in the context of the customer's service account (SA).
+    Requests to the TagService are executed as the authenticated caller: the customer's service
+    account (SA) when using an API key, or the user themselves when using a personal access token.
     The SA is a special user that is a member of the customer user group, giving it access to all
     folders that are shared with this user group, but not to private folders.
-    Hence, only tags that are in folders shared to the SA, via the customer user group,
-    will be accessible via the TagService.
+    Hence, an API key reaches only tags in folders shared via the customer user group, while a
+    personal access token additionally reaches the user's own private tags.
     """
 
     @staticmethod
