@@ -99,8 +99,12 @@ class PredictionModelApi:
         return PredictionModel.from_proto(response)
 
     def delete_model(self, name: str) -> None:
-        """Delete a model from the Library without cancelling submitted runs."""
-        self.client.delete_model(DeletePredictionModelRequest(name=name))
+        """Delete a Library model if present, without cancelling submitted runs."""
+        try:
+            self.client.delete_model(DeletePredictionModelRequest(name=name))
+        except RequestError as error:
+            if error.error_type != ErrorType.NOT_FOUND:
+                raise
 
     def get_run(self, name: str) -> PredictionModelRun | None:
         """Inspect the exact run resource returned by create_run."""

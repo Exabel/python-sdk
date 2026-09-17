@@ -178,8 +178,9 @@ def test_delete_model_sends_resource_name(api):
     )
 
 
-def test_delete_model_preserves_permission_error(api):
-    error = RequestError(ErrorType.PERMISSION_DENIED)
+@pytest.mark.parametrize("error_type", [ErrorType.PERMISSION_DENIED, ErrorType.UNAVAILABLE])
+def test_delete_model_preserves_other_errors(api, error_type):
+    error = RequestError(error_type)
     api.client.delete_model.side_effect = error
     with pytest.raises(RequestError) as raised:
         api.delete_model("predictionModels/123")
@@ -233,7 +234,7 @@ def test_transport_preserves_credentials_and_timeout(method, rpc, request_type):
     getattr(client.stub, rpc).assert_called_once_with(request, metadata=client.metadata, timeout=12)
 
 
-def test_transport_does_not_retry_creation_but_retries_reads():
+def test_transport_retries_reads_and_deletes_but_not_creation():
     from concurrent.futures import ThreadPoolExecutor
 
     import grpc
@@ -252,6 +253,7 @@ def test_transport_does_not_retry_creation_but_retries_reads():
         creates = 0
         run_creates = 0
         reads = 0
+        deletes = 0
 
         def CreatePredictionModel(self, request, context):
             self.creates += 1
@@ -260,6 +262,12 @@ def test_transport_does_not_retry_creation_but_retries_reads():
         def CreatePredictionModelRun(self, request, context):
             self.run_creates += 1
             context.abort(grpc.StatusCode.UNAVAILABLE, "Ambiguous run creation failure")
+
+        def DeletePredictionModel(self, request, context):
+            self.deletes += 1
+            if self.deletes == 1:
+                context.abort(grpc.StatusCode.UNAVAILABLE, "Response lost after deletion")
+            context.abort(grpc.StatusCode.NOT_FOUND, "Model already deleted")
 
         def GetPredictionModel(self, request, context):
             self.reads += 1
@@ -294,6 +302,10 @@ def test_transport_does_not_retry_creation_but_retries_reads():
                     == "predictionModels/1"
                 )
                 assert implementation.reads == 2
+                api = PredictionModelApi.__new__(PredictionModelApi)
+                api.client = client
+                assert api.delete_model("predictionModels/1") is None
+                assert implementation.deletes == 2
         finally:
             server.stop(None).wait()
 
@@ -365,3 +377,8 @@ def test_specific_run_source_zero_round_trips():
     proto = run.to_proto()
     assert proto.HasField("configuration_source")
     assert PredictionModelRun.from_proto(proto).configuration_source == 0
+
+
+def test_delete_model_tolerates_missing_model(api):
+    api.client.delete_model.side_effect = RequestError(ErrorType.NOT_FOUND)
+    assert api.delete_model("predictionModels/123") is None
