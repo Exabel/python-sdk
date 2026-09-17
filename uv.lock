@@ -364,7 +364,7 @@ requires-dist = [
     { name = "grpcio", specifier = ">=1.78.0" },
     { name = "openpyxl" },
     { name = "pandas" },
-    { name = "protobuf", specifier = ">=6.33.5" },
+    { name = "protobuf", specifier = ">=6.31.1" },
     { name = "pyarrow", marker = "extra == 'athena'" },
     { name = "pyarrow", marker = "extra == 'export'" },
     { name = "pyathena", marker = "extra == 'athena'" },
