@@ -38,6 +38,9 @@ To use the SDK against, you need an API key or personal access token. This can b
 
 [Examples of usage](https://github.com/Exabel/python-sdk/tree/main/exabel/examples).
 
+[Notebook examples](examples/notebooks/) cover prediction model discovery, configuration,
+and runs using a user access token or API key.
+
 ## Exabel API documentation
 
 ### Data API

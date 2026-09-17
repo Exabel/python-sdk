@@ -19,6 +19,12 @@ default_language_version:
 exclude: (^|/)stubs/
 fail_fast: true
 repos:
+  - repo: https://github.com/kynan/nbstripout
+    rev: 0.9.1
+    hooks:
+      - id: nbstripout
+        args: [--keep-count, --keep-id]
+
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v6.0.0
     hooks:
