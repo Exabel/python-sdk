@@ -13,6 +13,7 @@ from exabel.client.client_config import ClientConfig
 from exabel.stubs.exabel.api.analytics.v1.prediction_model_service_pb2 import (
     CreatePredictionModelRequest,
     CreatePredictionModelRunRequest,
+    DeletePredictionModelRequest,
     GetPredictionModelRequest,
     GetPredictionModelRunRequest,
     ListPredictionModelRunsRequest,
@@ -96,6 +97,10 @@ class PredictionModelApi:
             )
         )
         return PredictionModel.from_proto(response)
+
+    def delete_model(self, name: str) -> None:
+        """Delete a model from the Library without cancelling submitted runs."""
+        self.client.delete_model(DeletePredictionModelRequest(name=name))
 
     def get_run(self, name: str) -> PredictionModelRun | None:
         """Inspect the exact run resource returned by create_run."""

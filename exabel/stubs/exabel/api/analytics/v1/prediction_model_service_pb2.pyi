@@ -175,6 +175,25 @@ class UpdatePredictionModelRequest(_message.Message):
 Global___UpdatePredictionModelRequest: _TypeAlias = UpdatePredictionModelRequest  # noqa: Y015
 
 @_typing.final
+class DeletePredictionModelRequest(_message.Message):
+    """Request to delete a prediction model."""
+
+    DESCRIPTOR: _descriptor.Descriptor
+
+    NAME_FIELD_NUMBER: _builtins.int
+    name: _builtins.str
+    """Model resource name, for example `predictionModels/123`."""
+    def __init__(
+        self,
+        *,
+        name: _builtins.str | None = ...,
+    ) -> None: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["name", b"name"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
+
+Global___DeletePredictionModelRequest: _TypeAlias = DeletePredictionModelRequest  # noqa: Y015
+
+@_typing.final
 class GetPredictionModelRunRequest(_message.Message):
     """Request to inspect one exact regular run."""
 

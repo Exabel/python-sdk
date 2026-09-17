@@ -5,6 +5,7 @@ import warnings
 
 from . import prediction_model_messages_pb2 as exabel_dot_api_dot_analytics_dot_v1_dot_prediction__model__messages__pb2
 from . import prediction_model_service_pb2 as exabel_dot_api_dot_analytics_dot_v1_dot_prediction__model__service__pb2
+from google.protobuf import empty_pb2 as google_dot_protobuf_dot_empty__pb2
 
 GRPC_GENERATED_VERSION = '1.78.0'
 GRPC_VERSION = grpc.__version__
@@ -64,6 +65,11 @@ class PredictionModelServiceStub(object):
                 '/exabel.api.analytics.v1.PredictionModelService/UpdatePredictionModel',
                 request_serializer=exabel_dot_api_dot_analytics_dot_v1_dot_prediction__model__service__pb2.UpdatePredictionModelRequest.SerializeToString,
                 response_deserializer=exabel_dot_api_dot_analytics_dot_v1_dot_prediction__model__messages__pb2.PredictionModel.FromString,
+                _registered_method=True)
+        self.DeletePredictionModel = channel.unary_unary(
+                '/exabel.api.analytics.v1.PredictionModelService/DeletePredictionModel',
+                request_serializer=exabel_dot_api_dot_analytics_dot_v1_dot_prediction__model__service__pb2.DeletePredictionModelRequest.SerializeToString,
+                response_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
                 _registered_method=True)
         self.GetPredictionModelRun = channel.unary_unary(
                 '/exabel.api.analytics.v1.PredictionModelService/GetPredictionModelRun',
@@ -132,6 +138,16 @@ class PredictionModelServiceServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def DeletePredictionModel(self, request, context):
+        """Deletes a prediction model using the same permissions and behavior as the app.
+
+        Removes the model from the Library and marks it deleted. Historical data awaits cleanup;
+        this operation does not cancel runs that have already been submitted.
+        """
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
     def GetPredictionModelRun(self, request, context):
         """Gets a prediction model run.
 
@@ -182,6 +198,11 @@ def add_PredictionModelServiceServicer_to_server(servicer, server):
                     servicer.UpdatePredictionModel,
                     request_deserializer=exabel_dot_api_dot_analytics_dot_v1_dot_prediction__model__service__pb2.UpdatePredictionModelRequest.FromString,
                     response_serializer=exabel_dot_api_dot_analytics_dot_v1_dot_prediction__model__messages__pb2.PredictionModel.SerializeToString,
+            ),
+            'DeletePredictionModel': grpc.unary_unary_rpc_method_handler(
+                    servicer.DeletePredictionModel,
+                    request_deserializer=exabel_dot_api_dot_analytics_dot_v1_dot_prediction__model__service__pb2.DeletePredictionModelRequest.FromString,
+                    response_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
             ),
             'GetPredictionModelRun': grpc.unary_unary_rpc_method_handler(
                     servicer.GetPredictionModelRun,
@@ -317,6 +338,33 @@ class PredictionModelService(object):
             '/exabel.api.analytics.v1.PredictionModelService/UpdatePredictionModel',
             exabel_dot_api_dot_analytics_dot_v1_dot_prediction__model__service__pb2.UpdatePredictionModelRequest.SerializeToString,
             exabel_dot_api_dot_analytics_dot_v1_dot_prediction__model__messages__pb2.PredictionModel.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def DeletePredictionModel(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/exabel.api.analytics.v1.PredictionModelService/DeletePredictionModel',
+            exabel_dot_api_dot_analytics_dot_v1_dot_prediction__model__service__pb2.DeletePredictionModelRequest.SerializeToString,
+            google_dot_protobuf_dot_empty__pb2.Empty.FromString,
             options,
             channel_credentials,
             insecure,

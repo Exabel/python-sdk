@@ -10,6 +10,7 @@ from exabel.client.api.data_classes.prediction_model_run import (
     PredictionModelRun,
     PredictionModelRunState,
 )
+from exabel.client.api.data_classes.request_error import ErrorType, RequestError
 from exabel.client.api.prediction_model_api import PredictionModelApi
 from exabel.stubs.exabel.api.analytics.v1 import prediction_model_messages_pb2 as messages
 from exabel.stubs.exabel.api.analytics.v1 import prediction_model_service_pb2 as service
@@ -170,6 +171,21 @@ def test_invalid_mask_is_rejected_before_rpc(api, mask):
     api.client.update_model.assert_not_called()
 
 
+def test_delete_model_sends_resource_name(api):
+    assert api.delete_model("predictionModels/123") is None
+    api.client.delete_model.assert_called_once_with(
+        service.DeletePredictionModelRequest(name="predictionModels/123")
+    )
+
+
+def test_delete_model_preserves_permission_error(api):
+    error = RequestError(ErrorType.PERMISSION_DENIED)
+    api.client.delete_model.side_effect = error
+    with pytest.raises(RequestError) as raised:
+        api.delete_model("predictionModels/123")
+    assert raised.value is error
+
+
 def test_run_entity_outcomes_and_timestamp():
     from google.protobuf.timestamp_pb2 import Timestamp
 
@@ -198,6 +214,7 @@ def test_run_entity_outcomes_and_timestamp():
         ("list_models", "ListPredictionModels", service.ListPredictionModelsRequest),
         ("create_model", "CreatePredictionModel", service.CreatePredictionModelRequest),
         ("update_model", "UpdatePredictionModel", service.UpdatePredictionModelRequest),
+        ("delete_model", "DeletePredictionModel", service.DeletePredictionModelRequest),
         ("get_run", "GetPredictionModelRun", service.GetPredictionModelRunRequest),
         ("list_runs", "ListPredictionModelRuns", service.ListPredictionModelRunsRequest),
     ],
@@ -216,7 +233,7 @@ def test_transport_preserves_credentials_and_timeout(method, rpc, request_type):
     getattr(client.stub, rpc).assert_called_once_with(request, metadata=client.metadata, timeout=12)
 
 
-def test_transport_does_not_retry_model_creation_but_retries_reads():
+def test_transport_does_not_retry_creation_but_retries_reads():
     from concurrent.futures import ThreadPoolExecutor
 
     import grpc
@@ -233,11 +250,16 @@ def test_transport_does_not_retry_model_creation_but_retries_reads():
 
     class FailingService(PredictionModelServiceServicer):
         creates = 0
+        run_creates = 0
         reads = 0
 
         def CreatePredictionModel(self, request, context):
             self.creates += 1
             context.abort(grpc.StatusCode.UNAVAILABLE, "Ambiguous creation failure")
+
+        def CreatePredictionModelRun(self, request, context):
+            self.run_creates += 1
+            context.abort(grpc.StatusCode.UNAVAILABLE, "Ambiguous run creation failure")
 
         def GetPredictionModel(self, request, context):
             self.reads += 1
@@ -262,6 +284,9 @@ def test_transport_does_not_retry_model_creation_but_retries_reads():
                 with pytest.raises(RequestError):
                     client.create_model(service.CreatePredictionModelRequest())
                 assert implementation.creates == 1
+                with pytest.raises(RequestError):
+                    client.create_model_run(service.CreatePredictionModelRunRequest())
+                assert implementation.run_creates == 1
                 assert (
                     client.get_model(
                         service.GetPredictionModelRequest(name="predictionModels/1")
@@ -307,3 +332,36 @@ def test_model_timestamps_are_read_only():
     assert model.update_time == datetime(2024, 2, 1, tzinfo=timezone.utc)
     assert not model.to_proto().HasField("create_time")
     assert not model.to_proto().HasField("update_time")
+
+
+@pytest.mark.parametrize("source", [None, 0])
+def test_specific_run_readback_preserves_source_presence(api, source):
+    proto = messages.PredictionModelRun(
+        name="predictionModels/1/runs/2",
+        configuration=messages.SPECIFIC_RUN,
+        configuration_source=source,
+    )
+    api.client.get_run.return_value = proto
+    api.client.list_runs.return_value = service.ListPredictionModelRunsResponse(
+        runs=[proto, messages.PredictionModelRun(name="predictionModels/1/runs/3")]
+    )
+    run = api.get_run(proto.name)
+    assert run.configuration == ModelConfiguration.SPECIFIC_RUN
+    assert run.configuration_source == source
+    runs = list(api.get_run_iterator("predictionModels/1"))
+    assert len(runs) == 2
+    assert runs[0].configuration_source == source
+
+
+def test_missing_specific_run_source_is_rejected_before_rpc(api):
+    run = PredictionModelRun(configuration=ModelConfiguration.SPECIFIC_RUN)
+    with pytest.raises(ValueError, match="configuration_source"):
+        api.create_run(run, "predictionModels/1")
+    api.client.create_model_run.assert_not_called()
+
+
+def test_specific_run_source_zero_round_trips():
+    run = PredictionModelRun(configuration=ModelConfiguration.SPECIFIC_RUN, configuration_source=0)
+    proto = run.to_proto()
+    assert proto.HasField("configuration_source")
+    assert PredictionModelRun.from_proto(proto).configuration_source == 0

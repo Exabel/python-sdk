@@ -78,6 +78,7 @@ def _merge_headers(extra_headers: Sequence[tuple[str, str]]) -> dict[str, str]:
     """
     headers: dict[str, str] = {}
     for name, value in extra_headers:
+        name = name.lower()
         headers[name] = f"{headers[name]}, {value}" if name in headers else value
     return headers
 

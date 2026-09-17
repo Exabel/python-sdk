@@ -938,10 +938,11 @@ class TestExportApiEndpoint:
         assert "P" == export_api._session.headers["x-endpoint-api-consumer-type"]
         assert "api-key" == export_api._session.headers["x-api-key"]
 
-    def test_a_repeated_extra_header_keeps_every_value(self):
+    @pytest.mark.parametrize("second_name", ["x-tag", "X-Tag"])
+    def test_a_repeated_extra_header_keeps_every_value(self, second_name):
         """gRPC sends a repeated header as two values; HTTP carries them comma-joined."""
         export_api = ExportApi(
-            ClientConfig(api_key="api-key", extra_headers=[("x-tag", "a"), ("x-tag", "b")])
+            ClientConfig(api_key="api-key", extra_headers=[("x-tag", "a"), (second_name, "b")])
         )
 
         assert "a, b" == export_api._session.headers["x-tag"]

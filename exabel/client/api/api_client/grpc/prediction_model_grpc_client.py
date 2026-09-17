@@ -16,6 +16,7 @@ from exabel.client.client_config import ClientConfig
 from exabel.stubs.exabel.api.analytics.v1.all_pb2 import (
     CreatePredictionModelRequest,
     CreatePredictionModelRunRequest,
+    DeletePredictionModelRequest,
     GetPredictionModelRequest,
     GetPredictionModelRunRequest,
     ListPredictionModelRunsRequest,
@@ -57,7 +58,11 @@ class PredictionModelGrpcClient(PredictionModelApiClient, BaseGrpcClient):
                     {
                         "service": "exabel.api.analytics.v1.PredictionModelService",
                         "method": "CreatePredictionModel",
-                    }
+                    },
+                    {
+                        "service": "exabel.api.analytics.v1.PredictionModelService",
+                        "method": "CreatePredictionModelRun",
+                    },
                 ]
             }
         )
@@ -94,6 +99,13 @@ class PredictionModelGrpcClient(PredictionModelApiClient, BaseGrpcClient):
     def update_model(self, request: UpdatePredictionModelRequest) -> PredictionModel:
         """UpdatePredictionModel."""
         return self.stub.UpdatePredictionModel(
+            request, metadata=self.metadata, timeout=self.config.timeout
+        )
+
+    @handle_grpc_error
+    def delete_model(self, request: DeletePredictionModelRequest) -> None:
+        """Delete a prediction model."""
+        self.stub.DeletePredictionModel(
             request, metadata=self.metadata, timeout=self.config.timeout
         )
 

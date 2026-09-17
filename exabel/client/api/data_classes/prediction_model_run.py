@@ -128,11 +128,6 @@ class PredictionModelRun:
         self.configuration_error = configuration_error
         self.model_configuration_writable = model_configuration_writable
         self.entity_outcomes = entity_outcomes
-        if self.configuration == ModelConfiguration.SPECIFIC_RUN and not self.configuration_source:
-            raise ValueError(
-                "The argument 'configuration_source' must be specified when using "
-                "ModelConfiguration.SPECIFIC_RUN."
-            )
 
     @staticmethod
     def from_proto(model_run: ProtoPredictionModelRun) -> "PredictionModelRun":
@@ -178,6 +173,14 @@ class PredictionModelRun:
 
     def to_proto(self) -> ProtoPredictionModelRun:
         """Create a protobuf PredictionModelRun from this PredictionModelRun."""
+        if (
+            self.configuration == ModelConfiguration.SPECIFIC_RUN
+            and self.configuration_source is None
+        ):
+            raise ValueError(
+                "The argument 'configuration_source' must be specified when using "
+                "ModelConfiguration.SPECIFIC_RUN."
+            )
         return ProtoPredictionModelRun(
             name=self.name,
             description=self.description,

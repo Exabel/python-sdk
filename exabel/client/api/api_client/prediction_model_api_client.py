@@ -3,6 +3,7 @@ from abc import ABC, abstractmethod
 from exabel.stubs.exabel.api.analytics.v1.all_pb2 import (
     CreatePredictionModelRequest,
     CreatePredictionModelRunRequest,
+    DeletePredictionModelRequest,
     GetPredictionModelRequest,
     GetPredictionModelRunRequest,
     ListPredictionModelRunsRequest,
@@ -39,6 +40,10 @@ class PredictionModelApiClient(ABC):
     @abstractmethod
     def update_model(self, request: UpdatePredictionModelRequest) -> PredictionModel:
         """UpdatePredictionModel."""
+
+    @abstractmethod
+    def delete_model(self, request: DeletePredictionModelRequest) -> None:
+        """Delete a prediction model."""
 
     @abstractmethod
     def get_run(self, request: GetPredictionModelRunRequest) -> PredictionModelRun:
