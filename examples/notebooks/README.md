@@ -17,11 +17,15 @@ uv sync
 Set either EXABEL_ACCESS_TOKEN to a user access token or EXABEL_API_KEY to an API key.
 Set only one credential. The following
 reads it without echoing it or putting its value in shell history. Paste the token
-after the first command and press Enter:
+when the shell waits for input and press Enter:
 
 ```bash
-read -rs EXABEL_ACCESS_TOKEN
-export EXABEL_ACCESS_TOKEN
+read -rs EXABEL_ACCESS_TOKEN && export EXABEL_ACCESS_TOKEN
+```
+
+Then launch the notebook from the same shell:
+
+```bash
 uv run --with jupyterlab jupyter lab examples/notebooks/prediction_models.ipynb
 ```
 
@@ -48,10 +52,10 @@ in the Exabel app when finished.
 The notebook includes illustrative outputs so it can be read on GitHub. Running it
 against Exabel replaces those examples with the credential's accessible data.
 
-The nbstripout pre-commit hook strips outputs by default. This example opts in to
+The nbstripout hook strips outputs by default. This example opts in to
 preserving outputs with `keep_output: true` in notebook metadata. Execution counts
 and cell IDs are preserved; transient execution metadata is removed.
 
-Install the hooks with `prek install`. Before committing a re-executed notebook,
-review every output and replace private data with illustrative values. The hook
-does not redact secrets. Keep credentials out of cells and saved outputs.
+Before committing a re-executed notebook, review every output and replace private
+data with illustrative values. The hook does not redact secrets. Keep credentials
+out of cells and saved outputs.
