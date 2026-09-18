@@ -88,8 +88,10 @@ class DerivedSignalServiceServicer(object):
     def GetDerivedSignal(self, request, context):
         """Gets a derived signal.
 
-        The derived signal must be in a folder that is shared to your service account (which is always
-        in your main customer user group).
+        The derived signal must be in a folder the caller can read. With an API key that is the
+        customer's service account, which is always in your main customer user group, so the folder
+        must be shared with that group; with a personal access token your own private folders count
+        too.
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')

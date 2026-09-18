@@ -214,7 +214,7 @@ class Kpi(_message.Message):
     """The type of the KPI. A KPI is one of the following types:
     - `FACTSET_ESTIMATES`: FactSet actuals/estimates.
     - `FACTSET_FUNDAMENTALS`: FactSet fundamentals.
-    - `FACTSET_SEGMENTS`: FactSet segments.
+    - `FACTSET_SEGMENTS`: Deprecated. FactSet segments are decommissioned and no longer accepted.
     - `VISIBLE_ALPHA_STANDARD_KPI`: Visible Alpha standard KPI.
     - `CUSTOM_KPI`: Custom KPI.
     """
@@ -222,7 +222,6 @@ class Kpi(_message.Message):
     """A value which is dependent on the type:
     - `FACTSET_ESTIMATES`: Reporting number, e.g. `SALES`.
     - `FACTSET_FUNDAMENTALS`: Reporting number, e.g. `SALES`.
-    - `FACTSET_SEGMENTS`: Factset segment resource name, e.g. `entityTypes/geo_segment/entities/factset.segment_123`.
     - `VISIBLE_ALPHA_STANDARD_KPI`: Line item parameter id. For example, the "Total revenue" parameter has a parameter id of `190`.
     - `CUSTOM_KPI`: Custom KPI id. For example, `1234`.
     """

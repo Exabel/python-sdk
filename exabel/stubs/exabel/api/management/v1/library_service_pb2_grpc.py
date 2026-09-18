@@ -30,9 +30,11 @@ if _version_not_supported:
 class LibraryServiceStub(object):
     """Service to manage library items.
 
-    Requests to the LibraryService are executed in the context of the customer's service account (SA).
-    The SA is a special user that is a member of the customer user group, giving it access to all
-    folders that are shared with this user group, but not to private folders.
+    Requests to the LibraryService are executed as the authenticated caller: the customer's service
+    account (SA) when using an API key, or the user themselves when using a personal access token.
+    Folders and items are visible according to that caller's access. The SA is a special user that is
+    a member of the customer user group, so it sees everything shared with that group but no private
+    folders, while a user additionally sees their own.
     """
 
     def __init__(self, channel):
@@ -101,9 +103,11 @@ class LibraryServiceStub(object):
 class LibraryServiceServicer(object):
     """Service to manage library items.
 
-    Requests to the LibraryService are executed in the context of the customer's service account (SA).
-    The SA is a special user that is a member of the customer user group, giving it access to all
-    folders that are shared with this user group, but not to private folders.
+    Requests to the LibraryService are executed as the authenticated caller: the customer's service
+    account (SA) when using an API key, or the user themselves when using a personal access token.
+    Folders and items are visible according to that caller's access. The SA is a special user that is
+    a member of the customer user group, so it sees everything shared with that group but no private
+    folders, while a user additionally sees their own.
     """
 
     def ListFolders(self, request, context):
@@ -131,8 +135,9 @@ class LibraryServiceServicer(object):
         Only the display name and description can be set. Items must be added to the new folder
         subsequently with the "Move folder items" method.
 
-        The folder will be created as private to the service account user. To let other users access
-        this folder, you must also share it with the "Share folder" method.
+        The folder will be created as private to the caller — the service account when using an API
+        key, or you when using a personal access token. To let other users access this folder, you must
+        also share it with the "Share folder" method.
 
         It is also possible to create a folder type by calling `UpdateFolder`
         with `allow_missing` set to `true`.
@@ -178,8 +183,8 @@ class LibraryServiceServicer(object):
     def MoveItems(self, request, context):
         """Moves items to a folder.
 
-        Specify the target folder that items should be moved into. The service account must have write
-        access to all items that you want to move.
+        Specify the target folder that items should be moved into. The caller must have write access to
+        all items that you want to move.
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -293,9 +298,11 @@ def add_LibraryServiceServicer_to_server(servicer, server):
 class LibraryService(object):
     """Service to manage library items.
 
-    Requests to the LibraryService are executed in the context of the customer's service account (SA).
-    The SA is a special user that is a member of the customer user group, giving it access to all
-    folders that are shared with this user group, but not to private folders.
+    Requests to the LibraryService are executed as the authenticated caller: the customer's service
+    account (SA) when using an API key, or the user themselves when using a personal access token.
+    Folders and items are visible according to that caller's access. The SA is a special user that is
+    a member of the customer user group, so it sees everything shared with that group but no private
+    folders, while a user additionally sees their own.
     """
 
     @staticmethod

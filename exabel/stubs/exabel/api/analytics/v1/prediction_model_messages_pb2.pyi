@@ -3,8 +3,14 @@
 isort:skip_file
 Copyright (c) 2022 Exabel AS. All rights reserved."""
 
+from collections import abc as _abc
+from . import kpi_mapping_messages_pb2 as _kpi_mapping_messages_pb2
 from google.protobuf import descriptor as _descriptor
 from google.protobuf import message as _message
+from google.protobuf import struct_pb2 as _struct_pb2
+from google.protobuf import timestamp_pb2 as _timestamp_pb2
+from google.protobuf import wrappers_pb2 as _wrappers_pb2
+from google.protobuf.internal import containers as _containers
 from google.protobuf.internal import enum_type_wrapper as _enum_type_wrapper
 import builtins as _builtins
 import sys
@@ -47,6 +53,58 @@ SPECIFIC_RUN: ModelConfiguration.ValueType  # 3
 """Configuration of a specific run. The run number must be specified as well."""
 Global___ModelConfiguration: _TypeAlias = ModelConfiguration  # noqa: Y015
 
+class _PredictionModelRunState:
+    ValueType = _typing.NewType("ValueType", _builtins.int)
+    V: _TypeAlias = ValueType  # noqa: Y015
+
+class _PredictionModelRunStateEnumTypeWrapper(_enum_type_wrapper._EnumTypeWrapper[_PredictionModelRunState.ValueType], _builtins.type):
+    DESCRIPTOR: _descriptor.EnumDescriptor
+    PREDICTION_MODEL_RUN_STATE_UNSPECIFIED: _PredictionModelRunState.ValueType  # 0
+    """No recognized execution state is available."""
+    WAITING: _PredictionModelRunState.ValueType  # 1
+    """Waiting for prerequisites before scheduling."""
+    SCHEDULED: _PredictionModelRunState.ValueType  # 2
+    """Queued for execution."""
+    RUNNING: _PredictionModelRunState.ValueType  # 3
+    """Execution has started and has not completed."""
+    SUCCEEDED: _PredictionModelRunState.ValueType  # 4
+    """Execution completed successfully."""
+    FAILED: _PredictionModelRunState.ValueType  # 5
+    """Execution failed."""
+    CANCELLED: _PredictionModelRunState.ValueType  # 6
+    """Execution was cancelled."""
+    MIXED: _PredictionModelRunState.ValueType  # 7
+    """The run completed with both successful and failed outcomes."""
+    TIMED_OUT: _PredictionModelRunState.ValueType  # 8
+    """Execution exceeded its time limit."""
+    OUT_OF_MEMORY: _PredictionModelRunState.ValueType  # 9
+    """Execution exhausted its available memory."""
+
+class PredictionModelRunState(_PredictionModelRunState, metaclass=_PredictionModelRunStateEnumTypeWrapper):
+    """Aggregate execution state of a run or a recorded entity outcome."""
+
+PREDICTION_MODEL_RUN_STATE_UNSPECIFIED: PredictionModelRunState.ValueType  # 0
+"""No recognized execution state is available."""
+WAITING: PredictionModelRunState.ValueType  # 1
+"""Waiting for prerequisites before scheduling."""
+SCHEDULED: PredictionModelRunState.ValueType  # 2
+"""Queued for execution."""
+RUNNING: PredictionModelRunState.ValueType  # 3
+"""Execution has started and has not completed."""
+SUCCEEDED: PredictionModelRunState.ValueType  # 4
+"""Execution completed successfully."""
+FAILED: PredictionModelRunState.ValueType  # 5
+"""Execution failed."""
+CANCELLED: PredictionModelRunState.ValueType  # 6
+"""Execution was cancelled."""
+MIXED: PredictionModelRunState.ValueType  # 7
+"""The run completed with both successful and failed outcomes."""
+TIMED_OUT: PredictionModelRunState.ValueType  # 8
+"""Execution exceeded its time limit."""
+OUT_OF_MEMORY: PredictionModelRunState.ValueType  # 9
+"""Execution exhausted its available memory."""
+Global___PredictionModelRunState: _TypeAlias = PredictionModelRunState  # noqa: Y015
+
 @_typing.final
 class PredictionModelRun(_message.Message):
     """A prediction model run."""
@@ -58,6 +116,16 @@ class PredictionModelRun(_message.Message):
     CONFIGURATION_FIELD_NUMBER: _builtins.int
     CONFIGURATION_SOURCE_FIELD_NUMBER: _builtins.int
     AUTO_ACTIVATE_FIELD_NUMBER: _builtins.int
+    STATE_FIELD_NUMBER: _builtins.int
+    CREATE_TIME_FIELD_NUMBER: _builtins.int
+    START_TIME_FIELD_NUMBER: _builtins.int
+    END_TIME_FIELD_NUMBER: _builtins.int
+    ACTIVE_FIELD_NUMBER: _builtins.int
+    ERROR_FIELD_NUMBER: _builtins.int
+    MODEL_CONFIGURATION_FIELD_NUMBER: _builtins.int
+    CONFIGURATION_ERROR_FIELD_NUMBER: _builtins.int
+    ENTITY_OUTCOMES_FIELD_NUMBER: _builtins.int
+    MODEL_CONFIGURATION_WRITABLE_FIELD_NUMBER: _builtins.int
     name: _builtins.str
     """Unique resource name of the run, e.g. `predictionModels/123/runs/3`."""
     description: _builtins.str
@@ -76,6 +144,36 @@ class PredictionModelRun(_message.Message):
     """Whether to automatically set this run as active once it completes.
     The run will not be activated if it fails for any of the entities in the model.
     """
+    state: Global___PredictionModelRunState.ValueType
+    """Execution state of the run."""
+    active: _builtins.bool
+    """Whether this is currently the model's active run."""
+    error: _builtins.str
+    """Customer-readable failure explanation, when available. Never contains debug logs."""
+    configuration_error: _builtins.str
+    """Nonempty when the stored configuration cannot be submitted as a new model."""
+    model_configuration_writable: _builtins.bool
+    """Returned by GetPredictionModelRun. Whether the saved configuration is supported for model creation."""
+    @_builtins.property
+    def create_time(self) -> _timestamp_pb2.Timestamp:
+        """Time the run was requested."""
+
+    @_builtins.property
+    def start_time(self) -> _timestamp_pb2.Timestamp:
+        """Earliest recorded job start time. Absent when no job has started."""
+
+    @_builtins.property
+    def end_time(self) -> _timestamp_pb2.Timestamp:
+        """Latest recorded job end time. Absent until every job has ended."""
+
+    @_builtins.property
+    def model_configuration(self) -> Global___PredictionModelConfiguration:
+        """Configuration at the time of the run, not the current model configuration."""
+
+    @_builtins.property
+    def entity_outcomes(self) -> _containers.RepeatedCompositeFieldContainer[Global___PredictionModelEntityOutcome]:
+        """Recorded entity outcomes. Absent while running or when the job failed before evaluation."""
+
     def __init__(
         self,
         *,
@@ -84,13 +182,673 @@ class PredictionModelRun(_message.Message):
         configuration: Global___ModelConfiguration.ValueType | None = ...,
         configuration_source: _builtins.int | None = ...,
         auto_activate: _builtins.bool | None = ...,
+        state: Global___PredictionModelRunState.ValueType | None = ...,
+        create_time: _timestamp_pb2.Timestamp | None = ...,
+        start_time: _timestamp_pb2.Timestamp | None = ...,
+        end_time: _timestamp_pb2.Timestamp | None = ...,
+        active: _builtins.bool | None = ...,
+        error: _builtins.str | None = ...,
+        model_configuration: Global___PredictionModelConfiguration | None = ...,
+        configuration_error: _builtins.str | None = ...,
+        entity_outcomes: _abc.Iterable[Global___PredictionModelEntityOutcome] | None = ...,
+        model_configuration_writable: _builtins.bool | None = ...,
     ) -> None: ...
-    _HasFieldArgType: _TypeAlias = _typing.Literal["_configuration_source", b"_configuration_source", "configuration_source", b"configuration_source"]  # noqa: Y015
+    _HasFieldArgType: _TypeAlias = _typing.Literal["_configuration_source", b"_configuration_source", "_model_configuration_writable", b"_model_configuration_writable", "configuration_source", b"configuration_source", "create_time", b"create_time", "end_time", b"end_time", "model_configuration", b"model_configuration", "model_configuration_writable", b"model_configuration_writable", "start_time", b"start_time"]  # noqa: Y015
     def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
-    _ClearFieldArgType: _TypeAlias = _typing.Literal["_configuration_source", b"_configuration_source", "auto_activate", b"auto_activate", "configuration", b"configuration", "configuration_source", b"configuration_source", "description", b"description", "name", b"name"]  # noqa: Y015
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["_configuration_source", b"_configuration_source", "_model_configuration_writable", b"_model_configuration_writable", "active", b"active", "auto_activate", b"auto_activate", "configuration", b"configuration", "configuration_error", b"configuration_error", "configuration_source", b"configuration_source", "create_time", b"create_time", "description", b"description", "end_time", b"end_time", "entity_outcomes", b"entity_outcomes", "error", b"error", "model_configuration", b"model_configuration", "model_configuration_writable", b"model_configuration_writable", "name", b"name", "start_time", b"start_time", "state", b"state"]  # noqa: Y015
     def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
     _WhichOneofReturnType__configuration_source: _TypeAlias = _typing.Literal["configuration_source"]  # noqa: Y015
     _WhichOneofArgType__configuration_source: _TypeAlias = _typing.Literal["_configuration_source", b"_configuration_source"]  # noqa: Y015
+    _WhichOneofReturnType__model_configuration_writable: _TypeAlias = _typing.Literal["model_configuration_writable"]  # noqa: Y015
+    _WhichOneofArgType__model_configuration_writable: _TypeAlias = _typing.Literal["_model_configuration_writable", b"_model_configuration_writable"]  # noqa: Y015
+    @_typing.overload
     def WhichOneof(self, oneof_group: _WhichOneofArgType__configuration_source) -> _WhichOneofReturnType__configuration_source | None: ...
+    @_typing.overload
+    def WhichOneof(self, oneof_group: _WhichOneofArgType__model_configuration_writable) -> _WhichOneofReturnType__model_configuration_writable | None: ...
 
 Global___PredictionModelRun: _TypeAlias = PredictionModelRun  # noqa: Y015
+
+@_typing.final
+class PredictionModelEntityOutcome(_message.Message):
+    """The recorded evaluation outcome for one entity."""
+
+    DESCRIPTOR: _descriptor.Descriptor
+
+    ENTITY_FIELD_NUMBER: _builtins.int
+    STATE_FIELD_NUMBER: _builtins.int
+    ERROR_FIELD_NUMBER: _builtins.int
+    entity: _builtins.str
+    """Entity resource name associated with this outcome."""
+    state: Global___PredictionModelRunState.ValueType
+    """Recorded evaluation state for this entity."""
+    error: _builtins.str
+    """Customer-readable explanation of this entity's failure, when available."""
+    def __init__(
+        self,
+        *,
+        entity: _builtins.str | None = ...,
+        state: Global___PredictionModelRunState.ValueType | None = ...,
+        error: _builtins.str | None = ...,
+    ) -> None: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["entity", b"entity", "error", b"error", "state", b"state"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
+
+Global___PredictionModelEntityOutcome: _TypeAlias = PredictionModelEntityOutcome  # noqa: Y015
+
+@_typing.final
+class PredictionModel(_message.Message):
+    """A saved prediction model. Configuration is returned by GetPredictionModel,
+    CreatePredictionModel, and UpdatePredictionModel. ListPredictionModels returns metadata only.
+    """
+
+    DESCRIPTOR: _descriptor.Descriptor
+
+    NAME_FIELD_NUMBER: _builtins.int
+    DISPLAY_NAME_FIELD_NUMBER: _builtins.int
+    DESCRIPTION_FIELD_NUMBER: _builtins.int
+    FOLDER_FIELD_NUMBER: _builtins.int
+    CONFIGURATION_FIELD_NUMBER: _builtins.int
+    CONFIGURATION_ERROR_FIELD_NUMBER: _builtins.int
+    CONFIGURATION_WRITABLE_FIELD_NUMBER: _builtins.int
+    MODEL_TYPE_FIELD_NUMBER: _builtins.int
+    SCHEDULE_FIELD_NUMBER: _builtins.int
+    CREATE_TIME_FIELD_NUMBER: _builtins.int
+    UPDATE_TIME_FIELD_NUMBER: _builtins.int
+    name: _builtins.str
+    """Unique resource name. Assigned on creation."""
+    display_name: _builtins.str
+    """Model label shown in the Library. Leading and trailing whitespace are not allowed."""
+    description: _builtins.str
+    """Optional description of the model."""
+    folder: _builtins.str
+    """Resource name of the Library folder containing the model."""
+    configuration_error: _builtins.str
+    """Nonempty when configuration writes are unsupported. Configuration remains readable."""
+    configuration_writable: _builtins.bool
+    """Returned by GetPredictionModel, CreatePredictionModel, and UpdatePredictionModel.
+    Whether the configuration is supported for writes; this does not grant write permission.
+    Values supplied in create or update requests are ignored. This field cannot be updated
+    through update_mask. ListPredictionModels omits it.
+    """
+    model_type: _builtins.str
+    """Stored model type, for example `ratio_prediction` or `auto`."""
+    @_builtins.property
+    def configuration(self) -> Global___PredictionModelConfiguration:
+        """Saved modelling setup. Returned by GetPredictionModel, CreatePredictionModel, and
+        UpdatePredictionModel, including for read-only configurations. ListPredictionModels omits it.
+        """
+
+    @_builtins.property
+    def schedule(self) -> _struct_pb2.Struct:
+        """Saved recurring schedule, when present, with weekdays and a local timeOfDay.
+        The owner's timezone is not exposed; this cannot predict a UTC next-run time
+        and does not prove that scheduling is currently active.
+        """
+
+    @_builtins.property
+    def create_time(self) -> _timestamp_pb2.Timestamp:
+        """Time the model was created, when available."""
+
+    @_builtins.property
+    def update_time(self) -> _timestamp_pb2.Timestamp:
+        """Time the model was last updated; falls back to create_time for models never updated."""
+
+    def __init__(
+        self,
+        *,
+        name: _builtins.str | None = ...,
+        display_name: _builtins.str | None = ...,
+        description: _builtins.str | None = ...,
+        folder: _builtins.str | None = ...,
+        configuration: Global___PredictionModelConfiguration | None = ...,
+        configuration_error: _builtins.str | None = ...,
+        configuration_writable: _builtins.bool | None = ...,
+        model_type: _builtins.str | None = ...,
+        schedule: _struct_pb2.Struct | None = ...,
+        create_time: _timestamp_pb2.Timestamp | None = ...,
+        update_time: _timestamp_pb2.Timestamp | None = ...,
+    ) -> None: ...
+    _HasFieldArgType: _TypeAlias = _typing.Literal["_configuration_writable", b"_configuration_writable", "configuration", b"configuration", "configuration_writable", b"configuration_writable", "create_time", b"create_time", "schedule", b"schedule", "update_time", b"update_time"]  # noqa: Y015
+    def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["_configuration_writable", b"_configuration_writable", "configuration", b"configuration", "configuration_error", b"configuration_error", "configuration_writable", b"configuration_writable", "create_time", b"create_time", "description", b"description", "display_name", b"display_name", "folder", b"folder", "model_type", b"model_type", "name", b"name", "schedule", b"schedule", "update_time", b"update_time"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
+    _WhichOneofReturnType__configuration_writable: _TypeAlias = _typing.Literal["configuration_writable"]  # noqa: Y015
+    _WhichOneofArgType__configuration_writable: _TypeAlias = _typing.Literal["_configuration_writable", b"_configuration_writable"]  # noqa: Y015
+    def WhichOneof(self, oneof_group: _WhichOneofArgType__configuration_writable) -> _WhichOneofReturnType__configuration_writable | None: ...
+
+Global___PredictionModel: _TypeAlias = PredictionModel  # noqa: Y015
+
+@_typing.final
+class PredictionModelConfiguration(_message.Message):
+    """Inputs, algorithm, training period, and evaluation settings of a saved prediction model.
+    Saving configuration does not start a run. Unsupported configurations remain inspectable;
+    check the enclosing resource's configurationWritable before submitting configuration changes.
+    """
+
+    DESCRIPTOR: _descriptor.Descriptor
+
+    @_typing.final
+    class ParametersToEvaluateEntry(_message.Message):
+        DESCRIPTOR: _descriptor.Descriptor
+
+        KEY_FIELD_NUMBER: _builtins.int
+        VALUE_FIELD_NUMBER: _builtins.int
+        key: _builtins.str
+        value: _builtins.str
+        def __init__(
+            self,
+            *,
+            key: _builtins.str | None = ...,
+            value: _builtins.str | None = ...,
+        ) -> None: ...
+        _ClearFieldArgType: _TypeAlias = _typing.Literal["key", b"key", "value", b"value"]  # noqa: Y015
+        def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
+
+    MODEL_OPTIONS_FIELD_NUMBER: _builtins.int
+    ENTITIES_FIELD_NUMBER: _builtins.int
+    COMPANIES_FIELD_NUMBER: _builtins.int
+    TARGET_SIGNALS_FIELD_NUMBER: _builtins.int
+    PREDICTOR_SIGNALS_FIELD_NUMBER: _builtins.int
+    BENCHMARK_SIGNALS_FIELD_NUMBER: _builtins.int
+    KPI_AUTO_PREDICTORS_FIELD_NUMBER: _builtins.int
+    FREQUENCY_FIELD_NUMBER: _builtins.int
+    TRAINING_RANGE_FIELD_NUMBER: _builtins.int
+    TRAINING_DURATION_FIELD_NUMBER: _builtins.int
+    GOAL_FIELD_NUMBER: _builtins.int
+    HYPEROPT_SETTINGS_FIELD_NUMBER: _builtins.int
+    BACKTEST_FIELD_NUMBER: _builtins.int
+    AUTO_MODEL_TYPE_FIELD_NUMBER: _builtins.int
+    PARAMETERS_TO_EVALUATE_FIELD_NUMBER: _builtins.int
+    LEGACY_CONFIGURATION_FIELD_NUMBER: _builtins.int
+    kpi_auto_predictors: _builtins.bool
+    """Resolve predictors from the target KPI's accessible proxies. Requires one entity and a KPI
+    target. Explicit predictor_signals do not specify the resolved inputs in this mode.
+    """
+    frequency: _builtins.str
+    """Optional evaluation frequency, such as QS, Q, MS, M, YS, AS, A, D, B, or W."""
+    goal: _builtins.str
+    """Model goal. Configuration writes currently support PREDICT only.
+    Other saved goals are returned unchanged for inspection.
+    """
+    auto_model_type: _builtins.str
+    """Pipeline selection. Omit or use AUTO_CONFIGURATION for writes.
+    ALTERNATIVE_CONFIGURATION is inspectable but not writable through this API.
+    """
+    @_builtins.property
+    def model_options(self) -> _kpi_mapping_messages_pb2.ModelOptions:
+        """Algorithm settings. A model_type must be supplied when creating a saved model.
+        Unlike KPI mapping groups, saved models do not choose a default type from the target KPI.
+        """
+
+    @_builtins.property
+    def entities(self) -> _containers.RepeatedCompositeFieldContainer[Global___PredictionModelEntity]:
+        """Entities to model. At least one entity or legacy company is needed."""
+
+    @_builtins.property
+    def companies(self) -> _containers.RepeatedCompositeFieldContainer[Global___PredictionModelCompany]:
+        """Legacy company references. Prefer entities for new configurations."""
+
+    @_builtins.property
+    def target_signals(self) -> _containers.RepeatedCompositeFieldContainer[Global___PredictionModelInput]:
+        """Exactly one target is supported for configuration writes."""
+
+    @_builtins.property
+    def predictor_signals(self) -> _containers.RepeatedCompositeFieldContainer[Global___PredictionModelInput]:
+        """At least one enabled predictor is needed unless kpi_auto_predictors is true."""
+
+    @_builtins.property
+    def benchmark_signals(self) -> _containers.RepeatedCompositeFieldContainer[Global___PredictionModelInput]:
+        """At most one benchmark is supported for configuration writes."""
+
+    @_builtins.property
+    def training_range(self) -> Global___PredictionModelTrainingRange:
+        """Fixed training period with a required start and optional later end."""
+
+    @_builtins.property
+    def training_duration(self) -> Global___PredictionModelTrainingDuration:
+        """Rolling training period. Configuration writes support years only."""
+
+    @_builtins.property
+    def hyperopt_settings(self) -> Global___PredictionModelOptimizationSettings:
+        """Optimization and preprocessing settings. Omitted settings retain framework defaults."""
+
+    @_builtins.property
+    def backtest(self) -> Global___PredictionModelBacktest:
+        """Walk-forward backtest settings. Omission uses framework defaults."""
+
+    @_builtins.property
+    def parameters_to_evaluate(self) -> _containers.ScalarMap[_builtins.str, _builtins.str]:
+        """Saved parameter expressions. Only blank values may be submitted; nonblank values are
+        executable expressions and make the configuration read-only, including SARIMAX order settings.
+        """
+
+    @_builtins.property
+    def legacy_configuration(self) -> _struct_pb2.Struct:
+        """Complete saved configuration in the legacy JSON format when some settings cannot be represented
+        by the typed fields. Includes those settings for inspection, without model metadata or the signal
+        library. Configurations with this field are read-only; it cannot be submitted in a configuration
+        write or selected in update_mask. Metadata updates remain available.
+        """
+
+    def __init__(
+        self,
+        *,
+        model_options: _kpi_mapping_messages_pb2.ModelOptions | None = ...,
+        entities: _abc.Iterable[Global___PredictionModelEntity] | None = ...,
+        companies: _abc.Iterable[Global___PredictionModelCompany] | None = ...,
+        target_signals: _abc.Iterable[Global___PredictionModelInput] | None = ...,
+        predictor_signals: _abc.Iterable[Global___PredictionModelInput] | None = ...,
+        benchmark_signals: _abc.Iterable[Global___PredictionModelInput] | None = ...,
+        kpi_auto_predictors: _builtins.bool | None = ...,
+        frequency: _builtins.str | None = ...,
+        training_range: Global___PredictionModelTrainingRange | None = ...,
+        training_duration: Global___PredictionModelTrainingDuration | None = ...,
+        goal: _builtins.str | None = ...,
+        hyperopt_settings: Global___PredictionModelOptimizationSettings | None = ...,
+        backtest: Global___PredictionModelBacktest | None = ...,
+        auto_model_type: _builtins.str | None = ...,
+        parameters_to_evaluate: _abc.Mapping[_builtins.str, _builtins.str] | None = ...,
+        legacy_configuration: _struct_pb2.Struct | None = ...,
+    ) -> None: ...
+    _HasFieldArgType: _TypeAlias = _typing.Literal["backtest", b"backtest", "hyperopt_settings", b"hyperopt_settings", "legacy_configuration", b"legacy_configuration", "model_options", b"model_options", "training_duration", b"training_duration", "training_period", b"training_period", "training_range", b"training_range"]  # noqa: Y015
+    def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["auto_model_type", b"auto_model_type", "backtest", b"backtest", "benchmark_signals", b"benchmark_signals", "companies", b"companies", "entities", b"entities", "frequency", b"frequency", "goal", b"goal", "hyperopt_settings", b"hyperopt_settings", "kpi_auto_predictors", b"kpi_auto_predictors", "legacy_configuration", b"legacy_configuration", "model_options", b"model_options", "parameters_to_evaluate", b"parameters_to_evaluate", "predictor_signals", b"predictor_signals", "target_signals", b"target_signals", "training_duration", b"training_duration", "training_period", b"training_period", "training_range", b"training_range"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
+    _WhichOneofReturnType_training_period: _TypeAlias = _typing.Literal["training_range", "training_duration"]  # noqa: Y015
+    _WhichOneofArgType_training_period: _TypeAlias = _typing.Literal["training_period", b"training_period"]  # noqa: Y015
+    def WhichOneof(self, oneof_group: _WhichOneofArgType_training_period) -> _WhichOneofReturnType_training_period | None: ...
+
+Global___PredictionModelConfiguration: _TypeAlias = PredictionModelConfiguration  # noqa: Y015
+
+@_typing.final
+class PredictionModelEntity(_message.Message):
+    """An entity identified by its Data API resource name."""
+
+    DESCRIPTOR: _descriptor.Descriptor
+
+    NAME_FIELD_NUMBER: _builtins.int
+    SEMANTIC_ID_FIELD_NUMBER: _builtins.int
+    name: _builtins.str
+    """Entity resource name."""
+    semantic_id: _builtins.str
+    """Optional legacy semantic identity. When supplied it must identify the same entity as name."""
+    def __init__(
+        self,
+        *,
+        name: _builtins.str | None = ...,
+        semantic_id: _builtins.str | None = ...,
+    ) -> None: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["name", b"name", "semantic_id", b"semantic_id"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
+
+Global___PredictionModelEntity: _TypeAlias = PredictionModelEntity  # noqa: Y015
+
+@_typing.final
+class PredictionModelCompany(_message.Message):
+    """A legacy company reference retained for configuration round trips."""
+
+    DESCRIPTOR: _descriptor.Descriptor
+
+    DATA_ID_FIELD_NUMBER: _builtins.int
+    data_id: _builtins.str
+    """Entity data ID, such as company:F_000C7F-E."""
+    def __init__(
+        self,
+        *,
+        data_id: _builtins.str | None = ...,
+    ) -> None: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["data_id", b"data_id"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
+
+Global___PredictionModelCompany: _TypeAlias = PredictionModelCompany  # noqa: Y015
+
+@_typing.final
+class PredictionModelInput(_message.Message):
+    """A target, predictor, or benchmark. Predictor controls are only writable on predictor_signals."""
+
+    DESCRIPTOR: _descriptor.Descriptor
+
+    SIGNAL_FIELD_NUMBER: _builtins.int
+    DISABLED_FIELD_NUMBER: _builtins.int
+    MODEL_PARAMETERS_FIELD_NUMBER: _builtins.int
+    disabled: _builtins.bool
+    """Exclude this predictor from training."""
+    @_builtins.property
+    def signal(self) -> Global___PredictionModelSignal:
+        """Stored signal, structured KPI, or KPI mapping-group reference."""
+
+    @_builtins.property
+    def model_parameters(self) -> Global___PredictionModelPredictorOptions:
+        """Predictor-specific controls. Applicability depends on the trainer."""
+
+    def __init__(
+        self,
+        *,
+        signal: Global___PredictionModelSignal | None = ...,
+        disabled: _builtins.bool | None = ...,
+        model_parameters: Global___PredictionModelPredictorOptions | None = ...,
+    ) -> None: ...
+    _HasFieldArgType: _TypeAlias = _typing.Literal["model_parameters", b"model_parameters", "signal", b"signal"]  # noqa: Y015
+    def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["disabled", b"disabled", "model_parameters", b"model_parameters", "signal", b"signal"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
+
+Global___PredictionModelInput: _TypeAlias = PredictionModelInput  # noqa: Y015
+
+@_typing.final
+class PredictionModelSignal(_message.Message):
+    """A signal reference. Supply exactly one of id, kpi, and kpi_mapping_group."""
+
+    DESCRIPTOR: _descriptor.Descriptor
+
+    ID_FIELD_NUMBER: _builtins.int
+    KPI_FIELD_NUMBER: _builtins.int
+    KPI_MAPPING_GROUP_FIELD_NUMBER: _builtins.int
+    LABEL_FIELD_NUMBER: _builtins.int
+    id: _builtins.int
+    """Positive identifier of an accessible stored signal."""
+    label: _builtins.str
+    """Optional label for a KPI mapping-group signal."""
+    @_builtins.property
+    def kpi(self) -> Global___PredictionModelKpi:
+        """Structured KPI selection."""
+
+    @_builtins.property
+    def kpi_mapping_group(self) -> Global___PredictionModelKpiMappingGroup:
+        """KPI mapping group providing a proxy signal."""
+
+    def __init__(
+        self,
+        *,
+        id: _builtins.int | None = ...,
+        kpi: Global___PredictionModelKpi | None = ...,
+        kpi_mapping_group: Global___PredictionModelKpiMappingGroup | None = ...,
+        label: _builtins.str | None = ...,
+    ) -> None: ...
+    _HasFieldArgType: _TypeAlias = _typing.Literal["kpi", b"kpi", "kpi_mapping_group", b"kpi_mapping_group"]  # noqa: Y015
+    def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["id", b"id", "kpi", b"kpi", "kpi_mapping_group", b"kpi_mapping_group", "label", b"label"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
+
+Global___PredictionModelSignal: _TypeAlias = PredictionModelSignal  # noqa: Y015
+
+@_typing.final
+class PredictionModelKpi(_message.Message):
+    """KPI selection for prediction. Additional selection controls distinguish this from KPI metadata."""
+
+    DESCRIPTOR: _descriptor.Descriptor
+
+    TYPE_FIELD_NUMBER: _builtins.int
+    VALUE_FIELD_NUMBER: _builtins.int
+    MODE_FIELD_NUMBER: _builtins.int
+    FREQ_FIELD_NUMBER: _builtins.int
+    ALIGNMENT_FIELD_NUMBER: _builtins.int
+    STATISTIC_TYPE_FIELD_NUMBER: _builtins.int
+    DISPLAY_NAME_FIELD_NUMBER: _builtins.int
+    IS_RATIO_FIELD_NUMBER: _builtins.int
+    IS_PERCENT_FIELD_NUMBER: _builtins.int
+    type: _builtins.str
+    """KPI provider: FACTSET_ESTIMATES, FACTSET_FUNDAMENTALS, VISIBLE_ALPHA_STANDARD_KPI, or CUSTOM_KPI."""
+    value: _builtins.str
+    """Provider identifier: a reporting number, Visible Alpha line item ID, or custom KPI ID."""
+    mode: _builtins.str
+    """ACTUAL, ESTIMATE, or MIXED. Omission uses the framework's default selection."""
+    freq: _builtins.str
+    """FQ/FS, FQ, FS, or FY. Omission uses FQ/FS."""
+    alignment: _builtins.str
+    """afp (actual fiscal periods), fp (normalized fiscal periods), or rd (report date).
+    Omission uses afp.
+    """
+    statistic_type: _builtins.str
+    """Estimate statistic: mean, median, count, high, low, std_dev, up, or down."""
+    display_name: _builtins.str
+    """Saved display name of the KPI."""
+    is_ratio: _builtins.bool
+    """Whether this is a ratio KPI. Year-over-year modelling uses absolute changes for ratios."""
+    is_percent: _builtins.bool
+    """Whether the KPI is expressed as a percentage."""
+    def __init__(
+        self,
+        *,
+        type: _builtins.str | None = ...,
+        value: _builtins.str | None = ...,
+        mode: _builtins.str | None = ...,
+        freq: _builtins.str | None = ...,
+        alignment: _builtins.str | None = ...,
+        statistic_type: _builtins.str | None = ...,
+        display_name: _builtins.str | None = ...,
+        is_ratio: _builtins.bool | None = ...,
+        is_percent: _builtins.bool | None = ...,
+    ) -> None: ...
+    _HasFieldArgType: _TypeAlias = _typing.Literal["_alignment", b"_alignment", "_display_name", b"_display_name", "_freq", b"_freq", "_is_percent", b"_is_percent", "_is_ratio", b"_is_ratio", "_statistic_type", b"_statistic_type", "_value", b"_value", "alignment", b"alignment", "display_name", b"display_name", "freq", b"freq", "is_percent", b"is_percent", "is_ratio", b"is_ratio", "statistic_type", b"statistic_type", "value", b"value"]  # noqa: Y015
+    def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["_alignment", b"_alignment", "_display_name", b"_display_name", "_freq", b"_freq", "_is_percent", b"_is_percent", "_is_ratio", b"_is_ratio", "_statistic_type", b"_statistic_type", "_value", b"_value", "alignment", b"alignment", "display_name", b"display_name", "freq", b"freq", "is_percent", b"is_percent", "is_ratio", b"is_ratio", "mode", b"mode", "statistic_type", b"statistic_type", "type", b"type", "value", b"value"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
+    _WhichOneofReturnType__alignment: _TypeAlias = _typing.Literal["alignment"]  # noqa: Y015
+    _WhichOneofArgType__alignment: _TypeAlias = _typing.Literal["_alignment", b"_alignment"]  # noqa: Y015
+    _WhichOneofReturnType__display_name: _TypeAlias = _typing.Literal["display_name"]  # noqa: Y015
+    _WhichOneofArgType__display_name: _TypeAlias = _typing.Literal["_display_name", b"_display_name"]  # noqa: Y015
+    _WhichOneofReturnType__freq: _TypeAlias = _typing.Literal["freq"]  # noqa: Y015
+    _WhichOneofArgType__freq: _TypeAlias = _typing.Literal["_freq", b"_freq"]  # noqa: Y015
+    _WhichOneofReturnType__is_percent: _TypeAlias = _typing.Literal["is_percent"]  # noqa: Y015
+    _WhichOneofArgType__is_percent: _TypeAlias = _typing.Literal["_is_percent", b"_is_percent"]  # noqa: Y015
+    _WhichOneofReturnType__is_ratio: _TypeAlias = _typing.Literal["is_ratio"]  # noqa: Y015
+    _WhichOneofArgType__is_ratio: _TypeAlias = _typing.Literal["_is_ratio", b"_is_ratio"]  # noqa: Y015
+    _WhichOneofReturnType__statistic_type: _TypeAlias = _typing.Literal["statistic_type"]  # noqa: Y015
+    _WhichOneofArgType__statistic_type: _TypeAlias = _typing.Literal["_statistic_type", b"_statistic_type"]  # noqa: Y015
+    _WhichOneofReturnType__value: _TypeAlias = _typing.Literal["value"]  # noqa: Y015
+    _WhichOneofArgType__value: _TypeAlias = _typing.Literal["_value", b"_value"]  # noqa: Y015
+    @_typing.overload
+    def WhichOneof(self, oneof_group: _WhichOneofArgType__alignment) -> _WhichOneofReturnType__alignment | None: ...
+    @_typing.overload
+    def WhichOneof(self, oneof_group: _WhichOneofArgType__display_name) -> _WhichOneofReturnType__display_name | None: ...
+    @_typing.overload
+    def WhichOneof(self, oneof_group: _WhichOneofArgType__freq) -> _WhichOneofReturnType__freq | None: ...
+    @_typing.overload
+    def WhichOneof(self, oneof_group: _WhichOneofArgType__is_percent) -> _WhichOneofReturnType__is_percent | None: ...
+    @_typing.overload
+    def WhichOneof(self, oneof_group: _WhichOneofArgType__is_ratio) -> _WhichOneofReturnType__is_ratio | None: ...
+    @_typing.overload
+    def WhichOneof(self, oneof_group: _WhichOneofArgType__statistic_type) -> _WhichOneofReturnType__statistic_type | None: ...
+    @_typing.overload
+    def WhichOneof(self, oneof_group: _WhichOneofArgType__value) -> _WhichOneofReturnType__value | None: ...
+
+Global___PredictionModelKpi: _TypeAlias = PredictionModelKpi  # noqa: Y015
+
+@_typing.final
+class PredictionModelKpiMappingGroup(_message.Message):
+    """Proxy reference. Referencing a group does not inherit the group's model_options."""
+
+    DESCRIPTOR: _descriptor.Descriptor
+
+    RESOURCE_NAME_FIELD_NUMBER: _builtins.int
+    DISABLE_PERSISTED_FIELD_NUMBER: _builtins.int
+    DISPLAY_NAME_FIELD_NUMBER: _builtins.int
+    CUSTOMER_DISPLAY_NAME_FIELD_NUMBER: _builtins.int
+    resource_name: _builtins.str
+    """KPI mapping-group resource name."""
+    disable_persisted: _builtins.bool
+    """Evaluate the proxy directly instead of using its persisted time series."""
+    display_name: _builtins.str
+    """Saved display name of the group."""
+    customer_display_name: _builtins.str
+    """Saved display name of the group's customer or data vendor."""
+    def __init__(
+        self,
+        *,
+        resource_name: _builtins.str | None = ...,
+        disable_persisted: _builtins.bool | None = ...,
+        display_name: _builtins.str | None = ...,
+        customer_display_name: _builtins.str | None = ...,
+    ) -> None: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["customer_display_name", b"customer_display_name", "disable_persisted", b"disable_persisted", "display_name", b"display_name", "resource_name", b"resource_name"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
+
+Global___PredictionModelKpiMappingGroup: _TypeAlias = PredictionModelKpiMappingGroup  # noqa: Y015
+
+@_typing.final
+class PredictionModelPredictorOptions(_message.Message):
+    """Controls for a model predictor. They do not guarantee that every trainer supports the constraint."""
+
+    DESCRIPTOR: _descriptor.Descriptor
+
+    MONOTONE_FIELD_NUMBER: _builtins.int
+    ALLOW_MISSING_FIELD_NUMBER: _builtins.int
+    monotone: _builtins.bool
+    """Restrict the relationship with the target to be monotonically increasing where supported."""
+    allow_missing: _builtins.bool
+    """Impute missing predictor values instead of dropping the observation where supported."""
+    def __init__(
+        self,
+        *,
+        monotone: _builtins.bool | None = ...,
+        allow_missing: _builtins.bool | None = ...,
+    ) -> None: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["allow_missing", b"allow_missing", "monotone", b"monotone"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
+
+Global___PredictionModelPredictorOptions: _TypeAlias = PredictionModelPredictorOptions  # noqa: Y015
+
+@_typing.final
+class PredictionModelTrainingRange(_message.Message):
+    """Fixed training period. The end must be later than the start when supplied."""
+
+    DESCRIPTOR: _descriptor.Descriptor
+
+    FROM_FIELD_NUMBER: _builtins.int
+    TO_FIELD_NUMBER: _builtins.int
+    @_builtins.property
+    def to(self) -> _timestamp_pb2.Timestamp:
+        """Optional end timestamp in RFC 3339 format."""
+
+    def __init__(
+        self,
+        *,
+        to: _timestamp_pb2.Timestamp | None = ...,
+    ) -> None: ...
+    _HasFieldArgType: _TypeAlias = _typing.Literal["from", b"from", "to", b"to"]  # noqa: Y015
+    def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["from", b"from", "to", b"to"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
+
+Global___PredictionModelTrainingRange: _TypeAlias = PredictionModelTrainingRange  # noqa: Y015
+
+@_typing.final
+class PredictionModelTrainingDuration(_message.Message):
+    """Rolling training period. Legacy zero multiplier means one year."""
+
+    DESCRIPTOR: _descriptor.Descriptor
+
+    BASE_FIELD_NUMBER: _builtins.int
+    MULTIPLIER_FIELD_NUMBER: _builtins.int
+    base: _builtins.str
+    """YEAR is supported for writes. Other saved units remain inspectable."""
+    multiplier: _builtins.int
+    """Nonnegative number of years. Zero means one year."""
+    def __init__(
+        self,
+        *,
+        base: _builtins.str | None = ...,
+        multiplier: _builtins.int | None = ...,
+    ) -> None: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["base", b"base", "multiplier", b"multiplier"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
+
+Global___PredictionModelTrainingDuration: _TypeAlias = PredictionModelTrainingDuration  # noqa: Y015
+
+@_typing.final
+class PredictionModelOptimizationSettings(_message.Message):
+    """Optimization and preprocessing options for the standard prediction pipeline."""
+
+    DESCRIPTOR: _descriptor.Descriptor
+
+    DISABLE_HYPEROPT_FIELD_NUMBER: _builtins.int
+    DISABLE_PREDICTOR_SELECTION_FIELD_NUMBER: _builtins.int
+    PANEL_FIELD_NUMBER: _builtins.int
+    SEASONALITY_FIELD_NUMBER: _builtins.int
+    ORDER_FIELD_NUMBER: _builtins.int
+    LINEAR_TREND_FIELD_NUMBER: _builtins.int
+    AUTOREGRESSIVE_FIELD_NUMBER: _builtins.int
+    DISABLE_ENSEMBLE_FIELD_NUMBER: _builtins.int
+    LEVEL_FIELD_NUMBER: _builtins.int
+    USE_DELTAS_FIELD_NUMBER: _builtins.int
+    disable_hyperopt: _builtins.bool
+    """Bypass optimization and fit the configured trainer directly."""
+    disable_predictor_selection: _builtins.bool
+    """Disable predictor subset selection."""
+    panel: _builtins.str
+    """Panel training is read-only. Only omission, HYPEROPT_BOOL_UNSPECIFIED, or FALSE is writable."""
+    seasonality: _builtins.str
+    """Seasonality feature selection: TRUE, FALSE, AUTO, or HYPEROPT_BOOL_UNSPECIFIED."""
+    linear_trend: _builtins.str
+    """Linear trend feature selection: TRUE, FALSE, AUTO, or HYPEROPT_BOOL_UNSPECIFIED."""
+    autoregressive: _builtins.str
+    """Lagged-target feature selection: TRUE, FALSE, AUTO, or HYPEROPT_BOOL_UNSPECIFIED."""
+    disable_ensemble: _builtins.bool
+    """Select the best single model instead of combining models."""
+    level: _builtins.str
+    """Search effort: LEVEL_0, LEVEL_1, LEVEL_2, LEVEL_3, or HYPEROPT_LEVEL_UNSPECIFIED.
+    Omission lets the framework classify the data.
+    """
+    use_deltas: _builtins.str
+    """Difference lagged features: TRUE, FALSE, AUTO, or HYPEROPT_BOOL_UNSPECIFIED."""
+    @_builtins.property
+    def order(self) -> _wrappers_pb2.Int32Value:
+        """Maximum lag order. Omission lets the framework choose; explicit zero is preserved."""
+
+    def __init__(
+        self,
+        *,
+        disable_hyperopt: _builtins.bool | None = ...,
+        disable_predictor_selection: _builtins.bool | None = ...,
+        panel: _builtins.str | None = ...,
+        seasonality: _builtins.str | None = ...,
+        order: _wrappers_pb2.Int32Value | None = ...,
+        linear_trend: _builtins.str | None = ...,
+        autoregressive: _builtins.str | None = ...,
+        disable_ensemble: _builtins.bool | None = ...,
+        level: _builtins.str | None = ...,
+        use_deltas: _builtins.str | None = ...,
+    ) -> None: ...
+    _HasFieldArgType: _TypeAlias = _typing.Literal["order", b"order"]  # noqa: Y015
+    def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["autoregressive", b"autoregressive", "disable_ensemble", b"disable_ensemble", "disable_hyperopt", b"disable_hyperopt", "disable_predictor_selection", b"disable_predictor_selection", "level", b"level", "linear_trend", b"linear_trend", "order", b"order", "panel", b"panel", "seasonality", b"seasonality", "use_deltas", b"use_deltas"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
+
+Global___PredictionModelOptimizationSettings: _TypeAlias = PredictionModelOptimizationSettings  # noqa: Y015
+
+@_typing.final
+class PredictionModelBacktest(_message.Message):
+    """Walk-forward evaluation limits. Successful validation does not guarantee enough data for a run."""
+
+    DESCRIPTOR: _descriptor.Descriptor
+
+    NUMBER_OF_BACKTESTS_FIELD_NUMBER: _builtins.int
+    MIN_NUMBER_OF_BACKTESTS_FIELD_NUMBER: _builtins.int
+    DESIRED_NUMBER_OF_BACKTESTS_FIELD_NUMBER: _builtins.int
+    K_FOLD_CROSS_VALIDATION_FIELD_NUMBER: _builtins.int
+    number_of_backtests: _builtins.int
+    """Maximum backtests. Zero uses the framework default of 50."""
+    min_number_of_backtests: _builtins.int
+    """Minimum backtests. Zero uses the framework default of 2. Must not exceed the maximum."""
+    desired_number_of_backtests: _builtins.int
+    """Requested count within the effective minimum and maximum. Also filters short-history predictors."""
+    k_fold_cross_validation: _builtins.bool
+    """Saved k-fold setting. True is inspectable but unsupported for configuration writes."""
+    def __init__(
+        self,
+        *,
+        number_of_backtests: _builtins.int | None = ...,
+        min_number_of_backtests: _builtins.int | None = ...,
+        desired_number_of_backtests: _builtins.int | None = ...,
+        k_fold_cross_validation: _builtins.bool | None = ...,
+    ) -> None: ...
+    _HasFieldArgType: _TypeAlias = _typing.Literal["_desired_number_of_backtests", b"_desired_number_of_backtests", "desired_number_of_backtests", b"desired_number_of_backtests"]  # noqa: Y015
+    def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["_desired_number_of_backtests", b"_desired_number_of_backtests", "desired_number_of_backtests", b"desired_number_of_backtests", "k_fold_cross_validation", b"k_fold_cross_validation", "min_number_of_backtests", b"min_number_of_backtests", "number_of_backtests", b"number_of_backtests"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
+    _WhichOneofReturnType__desired_number_of_backtests: _TypeAlias = _typing.Literal["desired_number_of_backtests"]  # noqa: Y015
+    _WhichOneofArgType__desired_number_of_backtests: _TypeAlias = _typing.Literal["_desired_number_of_backtests", b"_desired_number_of_backtests"]  # noqa: Y015
+    def WhichOneof(self, oneof_group: _WhichOneofArgType__desired_number_of_backtests) -> _WhichOneofReturnType__desired_number_of_backtests | None: ...
+
+Global___PredictionModelBacktest: _TypeAlias = PredictionModelBacktest  # noqa: Y015

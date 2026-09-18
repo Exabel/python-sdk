@@ -25,10 +25,12 @@ _sym_db = _symbol_database.Default()
 from . import prediction_model_messages_pb2 as exabel_dot_api_dot_analytics_dot_v1_dot_prediction__model__messages__pb2
 from google.api import annotations_pb2 as google_dot_api_dot_annotations__pb2
 from google.api import field_behavior_pb2 as google_dot_api_dot_field__behavior__pb2
+from google.protobuf import empty_pb2 as google_dot_protobuf_dot_empty__pb2
+from google.protobuf import field_mask_pb2 as google_dot_protobuf_dot_field__mask__pb2
 from .....protoc_gen_openapiv2.options import annotations_pb2 as protoc__gen__openapiv2_dot_options_dot_annotations__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n6exabel/api/analytics/v1/prediction_model_service.proto\x12\x17\x65xabel.api.analytics.v1\x1a\x37\x65xabel/api/analytics/v1/prediction_model_messages.proto\x1a\x1cgoogle/api/annotations.proto\x1a\x1fgoogle/api/field_behavior.proto\x1a.protoc_gen_openapiv2/options/annotations.proto\"\x91\x01\n\x1f\x43reatePredictionModelRunRequest\x12/\n\x06parent\x18\x01 \x01(\tB\x1f\x92\x41\x19\xca>\x16\xfa\x02\x13predictionModelName\xe0\x41\x02\x12=\n\x03run\x18\x02 \x01(\x0b\x32+.exabel.api.analytics.v1.PredictionModelRunB\x03\xe0\x41\x02\x32\xe8\x01\n\x16PredictionModelService\x12\xcd\x01\n\x18\x43reatePredictionModelRun\x12\x38.exabel.api.analytics.v1.CreatePredictionModelRunRequest\x1a+.exabel.api.analytics.v1.PredictionModelRun\"J\x92\x41\x16\x12\x14Run prediction model\x82\xd3\xe4\x93\x02+\"$/v1/{parent=predictionModels/*}/runs:\x03runBY\n\x1b\x63om.exabel.api.analytics.v1B\x1bPredictionModelServiceProtoP\x01Z\x1b\x65xabel.com/api/analytics/v1b\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n6exabel/api/analytics/v1/prediction_model_service.proto\x12\x17\x65xabel.api.analytics.v1\x1a\x37\x65xabel/api/analytics/v1/prediction_model_messages.proto\x1a\x1cgoogle/api/annotations.proto\x1a\x1fgoogle/api/field_behavior.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a google/protobuf/field_mask.proto\x1a.protoc_gen_openapiv2/options/annotations.proto\"b\n\x19GetPredictionModelRequest\x12\x45\n\x04name\x18\x01 \x01(\tB7\x92\x41\x31J\x16\"predictionModels/123\"\xca>\x16\xfa\x02\x13predictionModelName\xe0\x41\x02\"f\n\x1bListPredictionModelsRequest\x12\x11\n\tpage_size\x18\x01 \x01(\x05\x12\x12\n\npage_token\x18\x02 \x01(\t\x12\x10\n\x08order_by\x18\x03 \x01(\t\x12\x0e\n\x06\x66ilter\x18\x04 \x01(\t\"\x85\x01\n\x1cListPredictionModelsResponse\x12\x38\n\x06models\x18\x01 \x03(\x0b\x32(.exabel.api.analytics.v1.PredictionModel\x12\x17\n\x0fnext_page_token\x18\x02 \x01(\t\x12\x12\n\ntotal_size\x18\x03 \x01(\x05\"l\n\x1c\x43reatePredictionModelRequest\x12<\n\x05model\x18\x01 \x01(\x0b\x32(.exabel.api.analytics.v1.PredictionModelB\x03\xe0\x41\x02\x12\x0e\n\x06\x66older\x18\x02 \x01(\t\"\x92\x01\n\x1cUpdatePredictionModelRequest\x12<\n\x05model\x18\x01 \x01(\x0b\x32(.exabel.api.analytics.v1.PredictionModelB\x03\xe0\x41\x02\x12\x34\n\x0bupdate_mask\x18\x02 \x01(\x0b\x32\x1a.google.protobuf.FieldMaskB\x03\xe0\x41\x02\"e\n\x1c\x44\x65letePredictionModelRequest\x12\x45\n\x04name\x18\x01 \x01(\tB7\x92\x41\x31J\x16\"predictionModels/123\"\xca>\x16\xfa\x02\x13predictionModelName\xe0\x41\x02\"o\n\x1cGetPredictionModelRunRequest\x12O\n\x04name\x18\x01 \x01(\tBA\x92\x41;J\x1d\"predictionModels/123/runs/3\"\xca>\x19\xfa\x02\x16predictionModelRunName\xe0\x41\x02\"\x90\x01\n\x1eListPredictionModelRunsRequest\x12G\n\x06parent\x18\x01 \x01(\tB7\x92\x41\x31J\x16\"predictionModels/123\"\xca>\x16\xfa\x02\x13predictionModelName\xe0\x41\x02\x12\x11\n\tpage_size\x18\x02 \x01(\x05\x12\x12\n\npage_token\x18\x03 \x01(\t\"u\n\x1fListPredictionModelRunsResponse\x12\x39\n\x04runs\x18\x01 \x03(\x0b\x32+.exabel.api.analytics.v1.PredictionModelRun\x12\x17\n\x0fnext_page_token\x18\x02 \x01(\t\"\x91\x01\n\x1f\x43reatePredictionModelRunRequest\x12/\n\x06parent\x18\x01 \x01(\tB\x1f\x92\x41\x19\xca>\x16\xfa\x02\x13predictionModelName\xe0\x41\x02\x12=\n\x03run\x18\x02 \x01(\x0b\x32+.exabel.api.analytics.v1.PredictionModelRunB\x03\xe0\x41\x02\x32\xb4\x0c\n\x16PredictionModelService\x12\xb2\x01\n\x12GetPredictionModel\x12\x32.exabel.api.analytics.v1.GetPredictionModelRequest\x1a(.exabel.api.analytics.v1.PredictionModel\">\x92\x41\x16\x12\x14Get prediction model\x82\xd3\xe4\x93\x02\x1f\x12\x1d/v1/{name=predictionModels/*}\x12\xbc\x01\n\x14ListPredictionModels\x12\x34.exabel.api.analytics.v1.ListPredictionModelsRequest\x1a\x35.exabel.api.analytics.v1.ListPredictionModelsResponse\"7\x92\x41\x18\x12\x16List prediction models\x82\xd3\xe4\x93\x02\x16\x12\x14/v1/predictionModels\x12\xb9\x01\n\x15\x43reatePredictionModel\x12\x35.exabel.api.analytics.v1.CreatePredictionModelRequest\x1a(.exabel.api.analytics.v1.PredictionModel\"?\x92\x41\x19\x12\x17\x43reate prediction model\x82\xd3\xe4\x93\x02\x1d\"\x14/v1/predictionModels:\x05model\x12\xc8\x01\n\x15UpdatePredictionModel\x12\x35.exabel.api.analytics.v1.UpdatePredictionModelRequest\x1a(.exabel.api.analytics.v1.PredictionModel\"N\x92\x41\x19\x12\x17Update prediction model\x82\xd3\xe4\x93\x02,2#/v1/{model.name=predictionModels/*}:\x05model\x12\xa9\x01\n\x15\x44\x65letePredictionModel\x12\x35.exabel.api.analytics.v1.DeletePredictionModelRequest\x1a\x16.google.protobuf.Empty\"A\x92\x41\x19\x12\x17\x44\x65lete prediction model\x82\xd3\xe4\x93\x02\x1f*\x1d/v1/{name=predictionModels/*}\x12\xc6\x01\n\x15GetPredictionModelRun\x12\x35.exabel.api.analytics.v1.GetPredictionModelRunRequest\x1a+.exabel.api.analytics.v1.PredictionModelRun\"I\x92\x41\x1a\x12\x18Get prediction model run\x82\xd3\xe4\x93\x02&\x12$/v1/{name=predictionModels/*/runs/*}\x12\xd9\x01\n\x17ListPredictionModelRuns\x12\x37.exabel.api.analytics.v1.ListPredictionModelRunsRequest\x1a\x38.exabel.api.analytics.v1.ListPredictionModelRunsResponse\"K\x92\x41\x1c\x12\x1aList prediction model runs\x82\xd3\xe4\x93\x02&\x12$/v1/{parent=predictionModels/*}/runs\x12\xcd\x01\n\x18\x43reatePredictionModelRun\x12\x38.exabel.api.analytics.v1.CreatePredictionModelRunRequest\x1a+.exabel.api.analytics.v1.PredictionModelRun\"J\x92\x41\x16\x12\x14Run prediction model\x82\xd3\xe4\x93\x02+\"$/v1/{parent=predictionModels/*}/runs:\x03runBY\n\x1b\x63om.exabel.api.analytics.v1B\x1bPredictionModelServiceProtoP\x01Z\x1b\x65xabel.com/api/analytics/v1b\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -36,14 +38,60 @@ _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'exabel.api.analytics.v1.pre
 if not _descriptor._USE_C_DESCRIPTORS:
   _globals['DESCRIPTOR']._loaded_options = None
   _globals['DESCRIPTOR']._serialized_options = b'\n\033com.exabel.api.analytics.v1B\033PredictionModelServiceProtoP\001Z\033exabel.com/api/analytics/v1'
+  _globals['_GETPREDICTIONMODELREQUEST'].fields_by_name['name']._loaded_options = None
+  _globals['_GETPREDICTIONMODELREQUEST'].fields_by_name['name']._serialized_options = b'\222A1J\026\"predictionModels/123\"\312>\026\372\002\023predictionModelName\340A\002'
+  _globals['_CREATEPREDICTIONMODELREQUEST'].fields_by_name['model']._loaded_options = None
+  _globals['_CREATEPREDICTIONMODELREQUEST'].fields_by_name['model']._serialized_options = b'\340A\002'
+  _globals['_UPDATEPREDICTIONMODELREQUEST'].fields_by_name['model']._loaded_options = None
+  _globals['_UPDATEPREDICTIONMODELREQUEST'].fields_by_name['model']._serialized_options = b'\340A\002'
+  _globals['_UPDATEPREDICTIONMODELREQUEST'].fields_by_name['update_mask']._loaded_options = None
+  _globals['_UPDATEPREDICTIONMODELREQUEST'].fields_by_name['update_mask']._serialized_options = b'\340A\002'
+  _globals['_DELETEPREDICTIONMODELREQUEST'].fields_by_name['name']._loaded_options = None
+  _globals['_DELETEPREDICTIONMODELREQUEST'].fields_by_name['name']._serialized_options = b'\222A1J\026\"predictionModels/123\"\312>\026\372\002\023predictionModelName\340A\002'
+  _globals['_GETPREDICTIONMODELRUNREQUEST'].fields_by_name['name']._loaded_options = None
+  _globals['_GETPREDICTIONMODELRUNREQUEST'].fields_by_name['name']._serialized_options = b'\222A;J\035\"predictionModels/123/runs/3\"\312>\031\372\002\026predictionModelRunName\340A\002'
+  _globals['_LISTPREDICTIONMODELRUNSREQUEST'].fields_by_name['parent']._loaded_options = None
+  _globals['_LISTPREDICTIONMODELRUNSREQUEST'].fields_by_name['parent']._serialized_options = b'\222A1J\026\"predictionModels/123\"\312>\026\372\002\023predictionModelName\340A\002'
   _globals['_CREATEPREDICTIONMODELRUNREQUEST'].fields_by_name['parent']._loaded_options = None
   _globals['_CREATEPREDICTIONMODELRUNREQUEST'].fields_by_name['parent']._serialized_options = b'\222A\031\312>\026\372\002\023predictionModelName\340A\002'
   _globals['_CREATEPREDICTIONMODELRUNREQUEST'].fields_by_name['run']._loaded_options = None
   _globals['_CREATEPREDICTIONMODELRUNREQUEST'].fields_by_name['run']._serialized_options = b'\340A\002'
+  _globals['_PREDICTIONMODELSERVICE'].methods_by_name['GetPredictionModel']._loaded_options = None
+  _globals['_PREDICTIONMODELSERVICE'].methods_by_name['GetPredictionModel']._serialized_options = b'\222A\026\022\024Get prediction model\202\323\344\223\002\037\022\035/v1/{name=predictionModels/*}'
+  _globals['_PREDICTIONMODELSERVICE'].methods_by_name['ListPredictionModels']._loaded_options = None
+  _globals['_PREDICTIONMODELSERVICE'].methods_by_name['ListPredictionModels']._serialized_options = b'\222A\030\022\026List prediction models\202\323\344\223\002\026\022\024/v1/predictionModels'
+  _globals['_PREDICTIONMODELSERVICE'].methods_by_name['CreatePredictionModel']._loaded_options = None
+  _globals['_PREDICTIONMODELSERVICE'].methods_by_name['CreatePredictionModel']._serialized_options = b'\222A\031\022\027Create prediction model\202\323\344\223\002\035\"\024/v1/predictionModels:\005model'
+  _globals['_PREDICTIONMODELSERVICE'].methods_by_name['UpdatePredictionModel']._loaded_options = None
+  _globals['_PREDICTIONMODELSERVICE'].methods_by_name['UpdatePredictionModel']._serialized_options = b'\222A\031\022\027Update prediction model\202\323\344\223\002,2#/v1/{model.name=predictionModels/*}:\005model'
+  _globals['_PREDICTIONMODELSERVICE'].methods_by_name['DeletePredictionModel']._loaded_options = None
+  _globals['_PREDICTIONMODELSERVICE'].methods_by_name['DeletePredictionModel']._serialized_options = b'\222A\031\022\027Delete prediction model\202\323\344\223\002\037*\035/v1/{name=predictionModels/*}'
+  _globals['_PREDICTIONMODELSERVICE'].methods_by_name['GetPredictionModelRun']._loaded_options = None
+  _globals['_PREDICTIONMODELSERVICE'].methods_by_name['GetPredictionModelRun']._serialized_options = b'\222A\032\022\030Get prediction model run\202\323\344\223\002&\022$/v1/{name=predictionModels/*/runs/*}'
+  _globals['_PREDICTIONMODELSERVICE'].methods_by_name['ListPredictionModelRuns']._loaded_options = None
+  _globals['_PREDICTIONMODELSERVICE'].methods_by_name['ListPredictionModelRuns']._serialized_options = b'\222A\034\022\032List prediction model runs\202\323\344\223\002&\022$/v1/{parent=predictionModels/*}/runs'
   _globals['_PREDICTIONMODELSERVICE'].methods_by_name['CreatePredictionModelRun']._loaded_options = None
   _globals['_PREDICTIONMODELSERVICE'].methods_by_name['CreatePredictionModelRun']._serialized_options = b'\222A\026\022\024Run prediction model\202\323\344\223\002+\"$/v1/{parent=predictionModels/*}/runs:\003run'
-  _globals['_CREATEPREDICTIONMODELRUNREQUEST']._serialized_start=252
-  _globals['_CREATEPREDICTIONMODELRUNREQUEST']._serialized_end=397
-  _globals['_PREDICTIONMODELSERVICE']._serialized_start=400
-  _globals['_PREDICTIONMODELSERVICE']._serialized_end=632
+  _globals['_GETPREDICTIONMODELREQUEST']._serialized_start=314
+  _globals['_GETPREDICTIONMODELREQUEST']._serialized_end=412
+  _globals['_LISTPREDICTIONMODELSREQUEST']._serialized_start=414
+  _globals['_LISTPREDICTIONMODELSREQUEST']._serialized_end=516
+  _globals['_LISTPREDICTIONMODELSRESPONSE']._serialized_start=519
+  _globals['_LISTPREDICTIONMODELSRESPONSE']._serialized_end=652
+  _globals['_CREATEPREDICTIONMODELREQUEST']._serialized_start=654
+  _globals['_CREATEPREDICTIONMODELREQUEST']._serialized_end=762
+  _globals['_UPDATEPREDICTIONMODELREQUEST']._serialized_start=765
+  _globals['_UPDATEPREDICTIONMODELREQUEST']._serialized_end=911
+  _globals['_DELETEPREDICTIONMODELREQUEST']._serialized_start=913
+  _globals['_DELETEPREDICTIONMODELREQUEST']._serialized_end=1014
+  _globals['_GETPREDICTIONMODELRUNREQUEST']._serialized_start=1016
+  _globals['_GETPREDICTIONMODELRUNREQUEST']._serialized_end=1127
+  _globals['_LISTPREDICTIONMODELRUNSREQUEST']._serialized_start=1130
+  _globals['_LISTPREDICTIONMODELRUNSREQUEST']._serialized_end=1274
+  _globals['_LISTPREDICTIONMODELRUNSRESPONSE']._serialized_start=1276
+  _globals['_LISTPREDICTIONMODELRUNSRESPONSE']._serialized_end=1393
+  _globals['_CREATEPREDICTIONMODELRUNREQUEST']._serialized_start=1396
+  _globals['_CREATEPREDICTIONMODELRUNREQUEST']._serialized_end=1541
+  _globals['_PREDICTIONMODELSERVICE']._serialized_start=1544
+  _globals['_PREDICTIONMODELSERVICE']._serialized_end=3132
 # @@protoc_insertion_point(module_scope)

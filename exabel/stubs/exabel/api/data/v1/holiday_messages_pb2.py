@@ -23,9 +23,10 @@ _sym_db = _symbol_database.Default()
 
 
 from ...time import date_pb2 as exabel_dot_api_dot_time_dot_date__pb2
+from .....protoc_gen_openapiv2.options import annotations_pb2 as protoc__gen__openapiv2_dot_options_dot_annotations__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n)exabel/api/data/v1/holiday_messages.proto\x12\x12\x65xabel.api.data.v1\x1a\x1a\x65xabel/api/time/date.proto\"i\n\x14HolidaySpecification\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x14\n\x0c\x64isplay_name\x18\x02 \x01(\t\x12-\n\x08holidays\x18\x03 \x03(\x0b\x32\x1b.exabel.api.data.v1.Holiday\"\x7f\n\x07Holiday\x12\r\n\x05label\x18\x01 \x01(\t\x12\x14\n\x0clower_window\x18\x02 \x01(\x05\x12\x14\n\x0cupper_window\x18\x03 \x01(\x05\x12\x13\n\x0bprior_scale\x18\x04 \x01(\x01\x12$\n\x05\x64\x61tes\x18\x05 \x03(\x0b\x32\x15.exabel.api.time.DateBH\n\x16\x63om.exabel.api.data.v1B\x14HolidayMessagesProtoP\x01Z\x16\x65xabel.com/api/data/v1b\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n)exabel/api/data/v1/holiday_messages.proto\x12\x12\x65xabel.api.data.v1\x1a\x1a\x65xabel/api/time/date.proto\x1a.protoc_gen_openapiv2/options/annotations.proto\"\x8c\x01\n\x14HolidaySpecification\x12/\n\x04name\x18\x01 \x01(\tB!\x92\x41\x1e\xca>\x1b\xfa\x02\x18holidaySpecificationName\x12\x14\n\x0c\x64isplay_name\x18\x02 \x01(\t\x12-\n\x08holidays\x18\x03 \x03(\x0b\x32\x1b.exabel.api.data.v1.Holiday\"\x7f\n\x07Holiday\x12\r\n\x05label\x18\x01 \x01(\t\x12\x14\n\x0clower_window\x18\x02 \x01(\x05\x12\x14\n\x0cupper_window\x18\x03 \x01(\x05\x12\x13\n\x0bprior_scale\x18\x04 \x01(\x01\x12$\n\x05\x64\x61tes\x18\x05 \x03(\x0b\x32\x15.exabel.api.time.DateBH\n\x16\x63om.exabel.api.data.v1B\x14HolidayMessagesProtoP\x01Z\x16\x65xabel.com/api/data/v1b\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -33,8 +34,10 @@ _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'exabel.api.data.v1.holiday_
 if not _descriptor._USE_C_DESCRIPTORS:
   _globals['DESCRIPTOR']._loaded_options = None
   _globals['DESCRIPTOR']._serialized_options = b'\n\026com.exabel.api.data.v1B\024HolidayMessagesProtoP\001Z\026exabel.com/api/data/v1'
-  _globals['_HOLIDAYSPECIFICATION']._serialized_start=93
-  _globals['_HOLIDAYSPECIFICATION']._serialized_end=198
-  _globals['_HOLIDAY']._serialized_start=200
-  _globals['_HOLIDAY']._serialized_end=327
+  _globals['_HOLIDAYSPECIFICATION'].fields_by_name['name']._loaded_options = None
+  _globals['_HOLIDAYSPECIFICATION'].fields_by_name['name']._serialized_options = b'\222A\036\312>\033\372\002\030holidaySpecificationName'
+  _globals['_HOLIDAYSPECIFICATION']._serialized_start=142
+  _globals['_HOLIDAYSPECIFICATION']._serialized_end=282
+  _globals['_HOLIDAY']._serialized_start=284
+  _globals['_HOLIDAY']._serialized_end=411
 # @@protoc_insertion_point(module_scope)

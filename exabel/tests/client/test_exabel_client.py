@@ -1,6 +1,7 @@
 from unittest import mock
 
 from exabel import ExabelClient
+from exabel.client.api.dashboard_api import DashboardApi
 from exabel.client.api.data_classes.namespace import Namespace
 
 
@@ -11,6 +12,7 @@ class TestExabelClient:
         assert client.time_series_api is not None
         assert client.relationship_api is not None
         assert client.signal_api is not None
+        assert isinstance(client.dashboard_api, DashboardApi)
 
     def test_namespace(self):
         client = ExabelClient(api_key="123")

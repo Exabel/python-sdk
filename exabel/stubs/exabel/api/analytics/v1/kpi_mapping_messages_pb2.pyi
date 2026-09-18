@@ -167,7 +167,7 @@ class ForecastingOptions(_message.Message):
 
     Default: `auto`.
 
-    For information about forecasting, see https://doc.exabel.com/dsl/modelling/forecasting.html
+    For information about forecasting, see https://help.exabel.com/docs/dsl-modelling-forecasting
     """
     country_holidays: _builtins.str
     """Country code for standard country holidays (e.g., 'US', 'UK').
@@ -199,7 +199,7 @@ Global___ForecastingOptions: _TypeAlias = ForecastingOptions  # noqa: Y015
 
 @_typing.final
 class ModelOptions(_message.Message):
-    """Options for the KPI prediction models."""
+    """Algorithm settings shared by KPI mapping groups and saved prediction models."""
 
     DESCRIPTOR: _descriptor.Descriptor
 
@@ -207,15 +207,16 @@ class ModelOptions(_message.Message):
     PARAMETERS_FIELD_NUMBER: _builtins.int
     YEAR_OVER_YEAR_FIELD_NUMBER: _builtins.int
     model_type: _builtins.str
-    """The type of the model.
+    """Model algorithm.
 
-    Supported values: `ard_regression`, `elastic_net`, `elastic_net_cv`, `huber_regression`,
-    `linear_regression`, `ratio_prediction`, `ratio_prediction_ml`, `sarimax`, `spread_model`,
-    and `unobserved_components`.
+    KPI mapping groups support `ard_regression`, `elastic_net`, `elastic_net_cv`,
+    `huber_regression`, `linear_regression`, `ratio_prediction`, `ratio_prediction_ml`, `sarimax`,
+    `spread_model`, and `unobserved_components`. Saved prediction models also support `ensemble`
+    and the legacy spelling `SARIMAX`. Other saved types may be returned for read-only inspection.
 
-    Default: `sarimax` is used for ratio KPIs and `ratio_prediction` for other KPIs.
-
-    For information about model types, see https://doc.exabel.com/dsl/modelling/models.html
+    For KPI mapping groups, omission selects `sarimax` for ratio KPIs and `ratio_prediction` otherwise.
+    Saved prediction models require an explicit `model_type` when creating configuration.
+    See https://help.exabel.com/docs/dsl-modelling-models for algorithm descriptions.
     """
     year_over_year: _builtins.bool
     """Whether to apply year-over-year transformation.
@@ -224,7 +225,13 @@ class ModelOptions(_message.Message):
     """
     @_builtins.property
     def parameters(self) -> _struct_pb2.Struct:
-        """Model-specific parameters. Only takes effect if `model_type` is set."""
+        """Model-specific parameters, using the algorithm's parameter names, including `snake_case` keys.
+        Only takes effect when model_type is set. KPI mapping models disable the baseline for ratio
+        and spread models; saved prediction models use their explicitly configured baseline.
+        Saved-model writes validate supported keys and values; a null value clears a parameter.
+        See https://help.exabel.com/reference/prediction-model-configuration for saved-model examples
+        and supported parameters. A successful save does not guarantee a successful numerical fit.
+        """
 
     def __init__(
         self,
