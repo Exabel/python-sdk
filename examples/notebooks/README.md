@@ -28,6 +28,3 @@ uv run --with jupyterlab jupyter lab examples/notebooks/prediction_models.ipynb
 Run the cells in order. Reads work with the default settings; set
 RUN_WRITE_EXAMPLES to True to also create a model copy and start a run. The
 public API cannot delete models, so remove copies in the Exabel app.
-
-Outputs are committed so the notebook can be read on GitHub. Review them before
-committing a re-executed notebook, as the nbstripout hook does not redact.
