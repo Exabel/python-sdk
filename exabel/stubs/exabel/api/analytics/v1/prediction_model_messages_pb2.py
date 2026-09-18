@@ -22,11 +22,15 @@ _runtime_version.ValidateProtobufRuntimeVersion(
 _sym_db = _symbol_database.Default()
 
 
+from . import kpi_mapping_messages_pb2 as exabel_dot_api_dot_analytics_dot_v1_dot_kpi__mapping__messages__pb2
 from google.api import field_behavior_pb2 as google_dot_api_dot_field__behavior__pb2
+from google.protobuf import struct_pb2 as google_dot_protobuf_dot_struct__pb2
+from google.protobuf import timestamp_pb2 as google_dot_protobuf_dot_timestamp__pb2
+from google.protobuf import wrappers_pb2 as google_dot_protobuf_dot_wrappers__pb2
 from .....protoc_gen_openapiv2.options import annotations_pb2 as protoc__gen__openapiv2_dot_options_dot_annotations__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n7exabel/api/analytics/v1/prediction_model_messages.proto\x12\x17\x65xabel.api.analytics.v1\x1a\x1fgoogle/api/field_behavior.proto\x1a.protoc_gen_openapiv2/options/annotations.proto\"\x96\x02\n\x12PredictionModelRun\x12\x33\n\x04name\x18\x01 \x01(\tB%\x92\x41\x1fJ\x1d\"predictionModels/123/runs/3\"\xe0\x41\x03\x12\x34\n\x0b\x64\x65scription\x18\x02 \x01(\tB\x1f\x92\x41\x1cJ\x1a\"Initiated by API request\"\x12\x42\n\rconfiguration\x18\x03 \x01(\x0e\x32+.exabel.api.analytics.v1.ModelConfiguration\x12!\n\x14\x63onfiguration_source\x18\x04 \x01(\x05H\x00\x88\x01\x01\x12\x15\n\rauto_activate\x18\x05 \x01(\x08\x42\x17\n\x15_configuration_source*e\n\x12ModelConfiguration\x12%\n!MODEL_CONFIGURATION_NOT_SPECIFIED\x10\x00\x12\n\n\x06LATEST\x10\x01\x12\n\n\x06\x41\x43TIVE\x10\x02\x12\x10\n\x0cSPECIFIC_RUN\x10\x03\x42Z\n\x1b\x63om.exabel.api.analytics.v1B\x1cPredictionModelMessagesProtoP\x01Z\x1b\x65xabel.com/api/analytics/v1b\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n7exabel/api/analytics/v1/prediction_model_messages.proto\x12\x17\x65xabel.api.analytics.v1\x1a\x32\x65xabel/api/analytics/v1/kpi_mapping_messages.proto\x1a\x1fgoogle/api/field_behavior.proto\x1a\x1cgoogle/protobuf/struct.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x1egoogle/protobuf/wrappers.proto\x1a.protoc_gen_openapiv2/options/annotations.proto\"\xc4\x06\n\x12PredictionModelRun\x12\x33\n\x04name\x18\x01 \x01(\tB%\x92\x41\x1fJ\x1d\"predictionModels/123/runs/3\"\xe0\x41\x03\x12\x34\n\x0b\x64\x65scription\x18\x02 \x01(\tB\x1f\x92\x41\x1cJ\x1a\"Initiated by API request\"\x12\x42\n\rconfiguration\x18\x03 \x01(\x0e\x32+.exabel.api.analytics.v1.ModelConfiguration\x12!\n\x14\x63onfiguration_source\x18\x04 \x01(\x05H\x00\x88\x01\x01\x12\x15\n\rauto_activate\x18\x05 \x01(\x08\x12\x44\n\x05state\x18\x06 \x01(\x0e\x32\x30.exabel.api.analytics.v1.PredictionModelRunStateB\x03\xe0\x41\x03\x12\x34\n\x0b\x63reate_time\x18\x07 \x01(\x0b\x32\x1a.google.protobuf.TimestampB\x03\xe0\x41\x03\x12\x33\n\nstart_time\x18\x08 \x01(\x0b\x32\x1a.google.protobuf.TimestampB\x03\xe0\x41\x03\x12\x31\n\x08\x65nd_time\x18\t \x01(\x0b\x32\x1a.google.protobuf.TimestampB\x03\xe0\x41\x03\x12\x13\n\x06\x61\x63tive\x18\n \x01(\x08\x42\x03\xe0\x41\x03\x12\x12\n\x05\x65rror\x18\x0b \x01(\tB\x03\xe0\x41\x03\x12W\n\x13model_configuration\x18\x0c \x01(\x0b\x32\x35.exabel.api.analytics.v1.PredictionModelConfigurationB\x03\xe0\x41\x03\x12 \n\x13\x63onfiguration_error\x18\r \x01(\tB\x03\xe0\x41\x03\x12S\n\x0f\x65ntity_outcomes\x18\x0e \x03(\x0b\x32\x35.exabel.api.analytics.v1.PredictionModelEntityOutcomeB\x03\xe0\x41\x03\x12.\n\x1cmodel_configuration_writable\x18\x0f \x01(\x08\x42\x03\xe0\x41\x03H\x01\x88\x01\x01\x42\x17\n\x15_configuration_sourceB\x1f\n\x1d_model_configuration_writable\"~\n\x1cPredictionModelEntityOutcome\x12\x0e\n\x06\x65ntity\x18\x01 \x01(\t\x12?\n\x05state\x18\x02 \x01(\x0e\x32\x30.exabel.api.analytics.v1.PredictionModelRunState\x12\r\n\x05\x65rror\x18\x03 \x01(\t\"\x92\x04\n\x0fPredictionModel\x12H\n\x04name\x18\x01 \x01(\tB:\x92\x41\x31J\x16\"predictionModels/123\"\xca>\x16\xfa\x02\x13predictionModelName\xe0\x41\x05\xe0\x41\x03\x12!\n\x0c\x64isplay_name\x18\x02 \x01(\tB\x0b\x92\x41\x05xd\x80\x01\x01\xe0\x41\x02\x12\x13\n\x0b\x64\x65scription\x18\x03 \x01(\t\x12\x13\n\x06\x66older\x18\x04 \x01(\tB\x03\xe0\x41\x03\x12L\n\rconfiguration\x18\x05 \x01(\x0b\x32\x35.exabel.api.analytics.v1.PredictionModelConfiguration\x12 \n\x13\x63onfiguration_error\x18\x06 \x01(\tB\x03\xe0\x41\x03\x12(\n\x16\x63onfiguration_writable\x18\x07 \x01(\x08\x42\x03\xe0\x41\x03H\x00\x88\x01\x01\x12\x17\n\nmodel_type\x18\x08 \x01(\tB\x03\xe0\x41\x03\x12.\n\x08schedule\x18\t \x01(\x0b\x32\x17.google.protobuf.StructB\x03\xe0\x41\x03\x12\x34\n\x0b\x63reate_time\x18\n \x01(\x0b\x32\x1a.google.protobuf.TimestampB\x03\xe0\x41\x03\x12\x34\n\x0bupdate_time\x18\x0b \x01(\x0b\x32\x1a.google.protobuf.TimestampB\x03\xe0\x41\x03\x42\x19\n\x17_configuration_writable\"\xe6\x08\n\x1cPredictionModelConfiguration\x12<\n\rmodel_options\x18\x01 \x01(\x0b\x32%.exabel.api.analytics.v1.ModelOptions\x12@\n\x08\x65ntities\x18\x02 \x03(\x0b\x32..exabel.api.analytics.v1.PredictionModelEntity\x12\x42\n\tcompanies\x18\x03 \x03(\x0b\x32/.exabel.api.analytics.v1.PredictionModelCompany\x12\x45\n\x0etarget_signals\x18\x04 \x03(\x0b\x32-.exabel.api.analytics.v1.PredictionModelInput\x12H\n\x11predictor_signals\x18\x05 \x03(\x0b\x32-.exabel.api.analytics.v1.PredictionModelInput\x12H\n\x11\x62\x65nchmark_signals\x18\x06 \x03(\x0b\x32-.exabel.api.analytics.v1.PredictionModelInput\x12\x1b\n\x13kpi_auto_predictors\x18\x07 \x01(\x08\x12\x11\n\tfrequency\x18\x08 \x01(\t\x12O\n\x0etraining_range\x18\t \x01(\x0b\x32\x35.exabel.api.analytics.v1.PredictionModelTrainingRangeH\x00\x12U\n\x11training_duration\x18\n \x01(\x0b\x32\x38.exabel.api.analytics.v1.PredictionModelTrainingDurationH\x00\x12\x1c\n\x04goal\x18\x0b \x01(\tB\x0e\x92\x41\x0bJ\t\"PREDICT\"\x12W\n\x11hyperopt_settings\x18\x0c \x01(\x0b\x32<.exabel.api.analytics.v1.PredictionModelOptimizationSettings\x12\x42\n\x08\x62\x61\x63ktest\x18\r \x01(\x0b\x32\x30.exabel.api.analytics.v1.PredictionModelBacktest\x12\x17\n\x0f\x61uto_model_type\x18\x0e \x01(\t\x12o\n\x16parameters_to_evaluate\x18\x0f \x03(\x0b\x32O.exabel.api.analytics.v1.PredictionModelConfiguration.ParametersToEvaluateEntry\x12:\n\x14legacy_configuration\x18\x10 \x01(\x0b\x32\x17.google.protobuf.StructB\x03\xe0\x41\x03\x1a;\n\x19ParametersToEvaluateEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\t:\x02\x38\x01\x42\x11\n\x0ftraining_period\"j\n\x15PredictionModelEntity\x12<\n\x04name\x18\x01 \x01(\tB.\x92\x41+J)\"entityTypes/company/entities/F_000C7F-E\"\x12\x13\n\x0bsemantic_id\x18\x02 \x01(\t\")\n\x16PredictionModelCompany\x12\x0f\n\x07\x64\x61ta_id\x18\x01 \x01(\t\"\xbc\x01\n\x14PredictionModelInput\x12>\n\x06signal\x18\x01 \x01(\x0b\x32..exabel.api.analytics.v1.PredictionModelSignal\x12\x10\n\x08\x64isabled\x18\x02 \x01(\x08\x12R\n\x10model_parameters\x18\x03 \x01(\x0b\x32\x38.exabel.api.analytics.v1.PredictionModelPredictorOptions\"\xc0\x01\n\x15PredictionModelSignal\x12\n\n\x02id\x18\x01 \x01(\x05\x12\x38\n\x03kpi\x18\x02 \x01(\x0b\x32+.exabel.api.analytics.v1.PredictionModelKpi\x12R\n\x11kpi_mapping_group\x18\x03 \x01(\x0b\x32\x37.exabel.api.analytics.v1.PredictionModelKpiMappingGroup\x12\r\n\x05label\x18\x04 \x01(\t\"\xb8\x02\n\x12PredictionModelKpi\x12\x0c\n\x04type\x18\x01 \x01(\t\x12\x12\n\x05value\x18\x02 \x01(\tH\x00\x88\x01\x01\x12\x0c\n\x04mode\x18\x03 \x01(\t\x12\x11\n\x04\x66req\x18\x04 \x01(\tH\x01\x88\x01\x01\x12\x16\n\talignment\x18\x05 \x01(\tH\x02\x88\x01\x01\x12\x1b\n\x0estatistic_type\x18\x06 \x01(\tH\x03\x88\x01\x01\x12\x19\n\x0c\x64isplay_name\x18\x07 \x01(\tH\x04\x88\x01\x01\x12\x15\n\x08is_ratio\x18\x08 \x01(\x08H\x05\x88\x01\x01\x12\x17\n\nis_percent\x18\t \x01(\x08H\x06\x88\x01\x01\x42\x08\n\x06_valueB\x07\n\x05_freqB\x0c\n\n_alignmentB\x11\n\x0f_statistic_typeB\x0f\n\r_display_nameB\x0b\n\t_is_ratioB\r\n\x0b_is_percent\"\xaa\x01\n\x1ePredictionModelKpiMappingGroup\x12\x38\n\rresource_name\x18\x01 \x01(\tB!\x92\x41\x1eJ\x1c\"kpiMappings/123/groups/456\"\x12\x19\n\x11\x64isable_persisted\x18\x02 \x01(\x08\x12\x14\n\x0c\x64isplay_name\x18\x03 \x01(\t\x12\x1d\n\x15\x63ustomer_display_name\x18\x04 \x01(\t\"J\n\x1fPredictionModelPredictorOptions\x12\x10\n\x08monotone\x18\x01 \x01(\x08\x12\x15\n\rallow_missing\x18\x02 \x01(\x08\"p\n\x1cPredictionModelTrainingRange\x12(\n\x04\x66rom\x18\x01 \x01(\x0b\x32\x1a.google.protobuf.Timestamp\x12&\n\x02to\x18\x02 \x01(\x0b\x32\x1a.google.protobuf.Timestamp\"C\n\x1fPredictionModelTrainingDuration\x12\x0c\n\x04\x62\x61se\x18\x01 \x01(\t\x12\x12\n\nmultiplier\x18\x02 \x01(\x05\"\x9f\x02\n#PredictionModelOptimizationSettings\x12\x18\n\x10\x64isable_hyperopt\x18\x01 \x01(\x08\x12#\n\x1b\x64isable_predictor_selection\x18\x02 \x01(\x08\x12\r\n\x05panel\x18\x03 \x01(\t\x12\x13\n\x0bseasonality\x18\x04 \x01(\t\x12*\n\x05order\x18\x05 \x01(\x0b\x32\x1b.google.protobuf.Int32Value\x12\x14\n\x0clinear_trend\x18\x06 \x01(\t\x12\x16\n\x0e\x61utoregressive\x18\x07 \x01(\t\x12\x18\n\x10\x64isable_ensemble\x18\x08 \x01(\x08\x12\r\n\x05level\x18\t \x01(\t\x12\x12\n\nuse_deltas\x18\n \x01(\t\"\xc2\x01\n\x17PredictionModelBacktest\x12\x1b\n\x13number_of_backtests\x18\x01 \x01(\x05\x12\x1f\n\x17min_number_of_backtests\x18\x02 \x01(\x05\x12(\n\x1b\x64\x65sired_number_of_backtests\x18\x03 \x01(\x05H\x00\x88\x01\x01\x12\x1f\n\x17k_fold_cross_validation\x18\x04 \x01(\x08\x42\x1e\n\x1c_desired_number_of_backtests*e\n\x12ModelConfiguration\x12%\n!MODEL_CONFIGURATION_NOT_SPECIFIED\x10\x00\x12\n\n\x06LATEST\x10\x01\x12\n\n\x06\x41\x43TIVE\x10\x02\x12\x10\n\x0cSPECIFIC_RUN\x10\x03*\xc5\x01\n\x17PredictionModelRunState\x12*\n&PREDICTION_MODEL_RUN_STATE_UNSPECIFIED\x10\x00\x12\x0b\n\x07WAITING\x10\x01\x12\r\n\tSCHEDULED\x10\x02\x12\x0b\n\x07RUNNING\x10\x03\x12\r\n\tSUCCEEDED\x10\x04\x12\n\n\x06\x46\x41ILED\x10\x05\x12\r\n\tCANCELLED\x10\x06\x12\t\n\x05MIXED\x10\x07\x12\r\n\tTIMED_OUT\x10\x08\x12\x11\n\rOUT_OF_MEMORY\x10\tBZ\n\x1b\x63om.exabel.api.analytics.v1B\x1cPredictionModelMessagesProtoP\x01Z\x1b\x65xabel.com/api/analytics/v1b\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -38,8 +42,88 @@ if not _descriptor._USE_C_DESCRIPTORS:
   _globals['_PREDICTIONMODELRUN'].fields_by_name['name']._serialized_options = b'\222A\037J\035\"predictionModels/123/runs/3\"\340A\003'
   _globals['_PREDICTIONMODELRUN'].fields_by_name['description']._loaded_options = None
   _globals['_PREDICTIONMODELRUN'].fields_by_name['description']._serialized_options = b'\222A\034J\032\"Initiated by API request\"'
-  _globals['_MODELCONFIGURATION']._serialized_start=446
-  _globals['_MODELCONFIGURATION']._serialized_end=547
-  _globals['_PREDICTIONMODELRUN']._serialized_start=166
-  _globals['_PREDICTIONMODELRUN']._serialized_end=444
+  _globals['_PREDICTIONMODELRUN'].fields_by_name['state']._loaded_options = None
+  _globals['_PREDICTIONMODELRUN'].fields_by_name['state']._serialized_options = b'\340A\003'
+  _globals['_PREDICTIONMODELRUN'].fields_by_name['create_time']._loaded_options = None
+  _globals['_PREDICTIONMODELRUN'].fields_by_name['create_time']._serialized_options = b'\340A\003'
+  _globals['_PREDICTIONMODELRUN'].fields_by_name['start_time']._loaded_options = None
+  _globals['_PREDICTIONMODELRUN'].fields_by_name['start_time']._serialized_options = b'\340A\003'
+  _globals['_PREDICTIONMODELRUN'].fields_by_name['end_time']._loaded_options = None
+  _globals['_PREDICTIONMODELRUN'].fields_by_name['end_time']._serialized_options = b'\340A\003'
+  _globals['_PREDICTIONMODELRUN'].fields_by_name['active']._loaded_options = None
+  _globals['_PREDICTIONMODELRUN'].fields_by_name['active']._serialized_options = b'\340A\003'
+  _globals['_PREDICTIONMODELRUN'].fields_by_name['error']._loaded_options = None
+  _globals['_PREDICTIONMODELRUN'].fields_by_name['error']._serialized_options = b'\340A\003'
+  _globals['_PREDICTIONMODELRUN'].fields_by_name['model_configuration']._loaded_options = None
+  _globals['_PREDICTIONMODELRUN'].fields_by_name['model_configuration']._serialized_options = b'\340A\003'
+  _globals['_PREDICTIONMODELRUN'].fields_by_name['configuration_error']._loaded_options = None
+  _globals['_PREDICTIONMODELRUN'].fields_by_name['configuration_error']._serialized_options = b'\340A\003'
+  _globals['_PREDICTIONMODELRUN'].fields_by_name['entity_outcomes']._loaded_options = None
+  _globals['_PREDICTIONMODELRUN'].fields_by_name['entity_outcomes']._serialized_options = b'\340A\003'
+  _globals['_PREDICTIONMODELRUN'].fields_by_name['model_configuration_writable']._loaded_options = None
+  _globals['_PREDICTIONMODELRUN'].fields_by_name['model_configuration_writable']._serialized_options = b'\340A\003'
+  _globals['_PREDICTIONMODEL'].fields_by_name['name']._loaded_options = None
+  _globals['_PREDICTIONMODEL'].fields_by_name['name']._serialized_options = b'\222A1J\026\"predictionModels/123\"\312>\026\372\002\023predictionModelName\340A\005\340A\003'
+  _globals['_PREDICTIONMODEL'].fields_by_name['display_name']._loaded_options = None
+  _globals['_PREDICTIONMODEL'].fields_by_name['display_name']._serialized_options = b'\222A\005xd\200\001\001\340A\002'
+  _globals['_PREDICTIONMODEL'].fields_by_name['folder']._loaded_options = None
+  _globals['_PREDICTIONMODEL'].fields_by_name['folder']._serialized_options = b'\340A\003'
+  _globals['_PREDICTIONMODEL'].fields_by_name['configuration_error']._loaded_options = None
+  _globals['_PREDICTIONMODEL'].fields_by_name['configuration_error']._serialized_options = b'\340A\003'
+  _globals['_PREDICTIONMODEL'].fields_by_name['configuration_writable']._loaded_options = None
+  _globals['_PREDICTIONMODEL'].fields_by_name['configuration_writable']._serialized_options = b'\340A\003'
+  _globals['_PREDICTIONMODEL'].fields_by_name['model_type']._loaded_options = None
+  _globals['_PREDICTIONMODEL'].fields_by_name['model_type']._serialized_options = b'\340A\003'
+  _globals['_PREDICTIONMODEL'].fields_by_name['schedule']._loaded_options = None
+  _globals['_PREDICTIONMODEL'].fields_by_name['schedule']._serialized_options = b'\340A\003'
+  _globals['_PREDICTIONMODEL'].fields_by_name['create_time']._loaded_options = None
+  _globals['_PREDICTIONMODEL'].fields_by_name['create_time']._serialized_options = b'\340A\003'
+  _globals['_PREDICTIONMODEL'].fields_by_name['update_time']._loaded_options = None
+  _globals['_PREDICTIONMODEL'].fields_by_name['update_time']._serialized_options = b'\340A\003'
+  _globals['_PREDICTIONMODELCONFIGURATION_PARAMETERSTOEVALUATEENTRY']._loaded_options = None
+  _globals['_PREDICTIONMODELCONFIGURATION_PARAMETERSTOEVALUATEENTRY']._serialized_options = b'8\001'
+  _globals['_PREDICTIONMODELCONFIGURATION'].fields_by_name['goal']._loaded_options = None
+  _globals['_PREDICTIONMODELCONFIGURATION'].fields_by_name['goal']._serialized_options = b'\222A\013J\t\"PREDICT\"'
+  _globals['_PREDICTIONMODELCONFIGURATION'].fields_by_name['legacy_configuration']._loaded_options = None
+  _globals['_PREDICTIONMODELCONFIGURATION'].fields_by_name['legacy_configuration']._serialized_options = b'\340A\003'
+  _globals['_PREDICTIONMODELENTITY'].fields_by_name['name']._loaded_options = None
+  _globals['_PREDICTIONMODELENTITY'].fields_by_name['name']._serialized_options = b'\222A+J)\"entityTypes/company/entities/F_000C7F-E\"'
+  _globals['_PREDICTIONMODELKPIMAPPINGGROUP'].fields_by_name['resource_name']._loaded_options = None
+  _globals['_PREDICTIONMODELKPIMAPPINGGROUP'].fields_by_name['resource_name']._serialized_options = b'\222A\036J\034\"kpiMappings/123/groups/456\"'
+  _globals['_MODELCONFIGURATION']._serialized_start=4712
+  _globals['_MODELCONFIGURATION']._serialized_end=4813
+  _globals['_PREDICTIONMODELRUNSTATE']._serialized_start=4816
+  _globals['_PREDICTIONMODELRUNSTATE']._serialized_end=5013
+  _globals['_PREDICTIONMODELRUN']._serialized_start=313
+  _globals['_PREDICTIONMODELRUN']._serialized_end=1149
+  _globals['_PREDICTIONMODELENTITYOUTCOME']._serialized_start=1151
+  _globals['_PREDICTIONMODELENTITYOUTCOME']._serialized_end=1277
+  _globals['_PREDICTIONMODEL']._serialized_start=1280
+  _globals['_PREDICTIONMODEL']._serialized_end=1810
+  _globals['_PREDICTIONMODELCONFIGURATION']._serialized_start=1813
+  _globals['_PREDICTIONMODELCONFIGURATION']._serialized_end=2939
+  _globals['_PREDICTIONMODELCONFIGURATION_PARAMETERSTOEVALUATEENTRY']._serialized_start=2861
+  _globals['_PREDICTIONMODELCONFIGURATION_PARAMETERSTOEVALUATEENTRY']._serialized_end=2920
+  _globals['_PREDICTIONMODELENTITY']._serialized_start=2941
+  _globals['_PREDICTIONMODELENTITY']._serialized_end=3047
+  _globals['_PREDICTIONMODELCOMPANY']._serialized_start=3049
+  _globals['_PREDICTIONMODELCOMPANY']._serialized_end=3090
+  _globals['_PREDICTIONMODELINPUT']._serialized_start=3093
+  _globals['_PREDICTIONMODELINPUT']._serialized_end=3281
+  _globals['_PREDICTIONMODELSIGNAL']._serialized_start=3284
+  _globals['_PREDICTIONMODELSIGNAL']._serialized_end=3476
+  _globals['_PREDICTIONMODELKPI']._serialized_start=3479
+  _globals['_PREDICTIONMODELKPI']._serialized_end=3791
+  _globals['_PREDICTIONMODELKPIMAPPINGGROUP']._serialized_start=3794
+  _globals['_PREDICTIONMODELKPIMAPPINGGROUP']._serialized_end=3964
+  _globals['_PREDICTIONMODELPREDICTOROPTIONS']._serialized_start=3966
+  _globals['_PREDICTIONMODELPREDICTOROPTIONS']._serialized_end=4040
+  _globals['_PREDICTIONMODELTRAININGRANGE']._serialized_start=4042
+  _globals['_PREDICTIONMODELTRAININGRANGE']._serialized_end=4154
+  _globals['_PREDICTIONMODELTRAININGDURATION']._serialized_start=4156
+  _globals['_PREDICTIONMODELTRAININGDURATION']._serialized_end=4223
+  _globals['_PREDICTIONMODELOPTIMIZATIONSETTINGS']._serialized_start=4226
+  _globals['_PREDICTIONMODELOPTIMIZATIONSETTINGS']._serialized_end=4513
+  _globals['_PREDICTIONMODELBACKTEST']._serialized_start=4516
+  _globals['_PREDICTIONMODELBACKTEST']._serialized_end=4710
 # @@protoc_insertion_point(module_scope)

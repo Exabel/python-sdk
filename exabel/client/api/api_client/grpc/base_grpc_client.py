@@ -46,8 +46,8 @@ class BaseGrpcClient:
                 ),
                 **common_kwargs,
             )
-        for header in self.config.extra_headers:
-            self.metadata.append(header)
+        for name, value in self.config.extra_headers:
+            self.metadata.append((name.lower(), value))
 
     def _get_service_config(
         self,

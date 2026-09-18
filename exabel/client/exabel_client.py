@@ -1,6 +1,7 @@
 from typing import Sequence
 
 from exabel.client.api.calendar_api import CalendarApi
+from exabel.client.api.dashboard_api import DashboardApi
 from exabel.client.api.data_set_api import DataSetApi
 from exabel.client.api.derived_signal_api import DerivedSignalApi
 from exabel.client.api.entity_api import EntityApi
@@ -40,6 +41,7 @@ class ExabelClient:
         retries: int | None = None,
         root_certificates: str | None = None,
         extra_headers: Sequence[tuple[str, str]] | None = None,
+        export_api_scheme: str | None = None,
     ):
         """
         Initialize a new client.
@@ -65,6 +67,11 @@ class ExabelClient:
                                  API).
             root_certificates:   Additional allowed root certificates for verifying TLS connection
                                  (only affects gRPC APIs).
+            extra_headers:       A list of headers to include in every request.
+            export_api_scheme:   Override the URL scheme of the Exabel Export API, "https" or
+                                 "http" (only affects the Export API, which is the only one
+                                 reached over plain HTTP rather than gRPC). Use "http" only for a
+                                 local or proxied endpoint that terminates TLS elsewhere.
         """
         config = ClientConfig(
             api_key=api_key,
@@ -82,6 +89,7 @@ class ExabelClient:
             retries=retries,
             root_certificates=root_certificates,
             extra_headers=extra_headers,
+            export_api_scheme=export_api_scheme,
         )
 
         self.entity_api = EntityApi(config)
@@ -94,6 +102,7 @@ class ExabelClient:
         self.tag_api = TagApi(config)
         self.user_api = UserApi(config)
         self.library_api = LibraryApi(config)
+        self.dashboard_api = DashboardApi(config)
         self.kpi_api = KpiApi(config)
         self.calendar_api = CalendarApi(config)
         self.holiday_api = HolidayApi(config)

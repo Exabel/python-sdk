@@ -11,15 +11,29 @@ import pyarrow as pa
 import pyarrow.parquet as pq
 import pytest
 
+from exabel.client.api.data_classes.dashboard_table import (
+    Interval,
+    TableColumnFilter,
+    TableColumnOrdering,
+)
 from exabel.client.api.data_classes.derived_signal import DerivedSignal
 from exabel.client.api.export_api import ExportApi
 from exabel.client.client_config import ClientConfig
+from exabel.client.exabel_client import ExabelClient
 from exabel.query.column import Column
 from exabel.query.signals import Signals
 
 # Default time range for v2 export tests where the actual dates don't matter
 # (calls are mocked); spread into kwargs to satisfy the required parameters.
 _V2_TIME_RANGE = {"start_time": "2024-01-01", "end_time": "2024-12-31"}
+
+
+def _ok_response(content: bytes) -> MagicMock:
+    """A successful HTTP response carrying the given body."""
+    response = MagicMock()
+    response.status_code = 200
+    response.content = content
+    return response
 
 
 class TestExportApi:
@@ -844,3 +858,272 @@ class TestExportApiV2:
             "SELECT time, Sales_Actual FROM signals "
             "WHERE resource_name = 'entityTypes/company/entities/A1-E'"
         )
+
+
+class TestExportApiEndpoint:
+    def test_https_and_the_default_port_are_the_default(self):
+        export_api = ExportApi(ClientConfig(api_key="api-key"))
+
+        assert "https://export.api.exabel.com" == export_api._base_url
+
+    def test_the_default_port_is_dropped_from_another_host(self):
+        export_api = ExportApi(
+            ClientConfig(api_key="api-key", export_api_host="export.api-test.exabel.com")
+        )
+
+        assert "https://export.api-test.exabel.com" == export_api._base_url
+
+    def test_a_non_default_port_is_carried(self):
+        export_api = ExportApi(
+            ClientConfig(
+                api_key="api-key",
+                export_api_host="export.api-test.exabel.com",
+                export_api_port=8443,
+            )
+        )
+
+        assert "https://export.api-test.exabel.com:8443" == export_api._base_url
+
+    def test_http_reaches_a_plaintext_endpoint(self):
+        export_api = ExportApi(
+            ClientConfig(
+                api_key="api-key",
+                export_api_host="localhost",
+                export_api_port=28081,
+                export_api_scheme="http",
+            )
+        )
+
+        assert "http://localhost:28081" == export_api._base_url
+
+    def test_the_default_http_port_is_dropped(self):
+        export_api = ExportApi(
+            ClientConfig(
+                api_key="api-key",
+                export_api_host="localhost",
+                export_api_port=80,
+                export_api_scheme="http",
+            )
+        )
+
+        assert "http://localhost" == export_api._base_url
+
+    def test_http_keeps_the_https_default_port(self):
+        """443 is not http's default, so discarding it would silently move the request to port 80."""
+        export_api = ExportApi(
+            ClientConfig(api_key="api-key", export_api_host="localhost", export_api_scheme="http")
+        )
+
+        assert "http://localhost:443" == export_api._base_url
+
+    def test_an_unknown_scheme_is_rejected(self):
+        with pytest.raises(ValueError, match="must be 'https' or 'http'"):
+            ClientConfig(api_key="api-key", export_api_scheme="ftp")
+
+    def test_the_scheme_is_reachable_from_the_client(self):
+        client = ExabelClient(
+            api_key="api-key",
+            export_api_host="localhost",
+            export_api_port=28081,
+            export_api_scheme="http",
+        )
+
+        assert "http://localhost:28081" == client.export_api._base_url
+
+    def test_extra_headers_are_sent(self):
+        export_api = ExportApi(
+            ClientConfig(api_key="api-key", extra_headers=[("x-endpoint-api-consumer-type", "P")])
+        )
+
+        assert "P" == export_api._session.headers["x-endpoint-api-consumer-type"]
+        assert "api-key" == export_api._session.headers["x-api-key"]
+
+    @pytest.mark.parametrize("second_name", ["x-tag", "X-Tag"])
+    def test_a_repeated_extra_header_keeps_every_value(self, second_name):
+        """gRPC sends a repeated header as two values; HTTP carries them comma-joined."""
+        export_api = ExportApi(
+            ClientConfig(api_key="api-key", extra_headers=[("x-tag", "a"), (second_name, "b")])
+        )
+
+        assert "a, b" == export_api._session.headers["x-tag"]
+
+
+class TestExportChart:
+    def test_request_format(self):
+        export_api = ExportApi(ClientConfig(api_key="api-key"))
+        export_api._session.post = MagicMock(return_value=_ok_response(b"\x89PNG"))
+
+        image = export_api.export_chart(
+            "dashboards/1234/widgets/1",
+            entities="entityTypes/company/entities/abc",
+            start_time="2024-01-01",
+            end_time="2024-12-31",
+            version="2024-06-01",
+            width=800,
+            height=400,
+        )
+
+        assert image == b"\x89PNG"
+        call_args = export_api._session.post.call_args
+        assert "/v1/export/chart" in call_args[0][0]
+        assert json.loads(call_args[1]["data"]) == {
+            "chart": "dashboards/1234/widgets/1",
+            "entities": ["entityTypes/company/entities/abc"],
+            "timeRange": {"from": "2024-01-01T00:00:00Z", "to": "2024-12-31T00:00:00Z"},
+            "version": "2024-06-01T00:00:00Z",
+            "width": 800,
+            "height": 400,
+        }
+
+    def test_only_the_chart_is_required(self):
+        export_api = ExportApi(ClientConfig(api_key="api-key"))
+        export_api._session.post = MagicMock(return_value=_ok_response(b"\x89PNG"))
+
+        export_api.export_chart("charts/123")
+
+        assert json.loads(export_api._session.post.call_args[1]["data"]) == {"chart": "charts/123"}
+
+    def test_empty_chart_raises(self):
+        export_api = ExportApi(ClientConfig(api_key="api-key"))
+        export_api._session.post = MagicMock()
+
+        with pytest.raises(ValueError, match="Must specify the chart to render"):
+            export_api.export_chart("")
+
+        export_api._session.post.assert_not_called()
+
+    def test_error_response_raises(self):
+        export_api = ExportApi(ClientConfig(api_key="api-key"))
+        mock_response = MagicMock()
+        mock_response.status_code = 404
+        mock_response.content = b'"Chart charts/123 not found"'
+        export_api._session.post = MagicMock(return_value=mock_response)
+
+        with pytest.raises(ValueError, match="Got 404: Chart charts/123 not found"):
+            export_api.export_chart("charts/123")
+
+
+class TestExportDashboardTable:
+    def test_request_format(self):
+        export_api = ExportApi(ClientConfig(api_key="api-key"))
+        export_api._session.post = MagicMock(return_value=_ok_response(b"a,b\n1,2\n"))
+
+        content = export_api.export_dashboard_table_bytes(
+            "dashboards/1234/widgets/2",
+            columns=["9c4e2f", 3],
+            entities="entityTypes/company/entities/abc",
+            included_tags="tags/user:123",
+            excluded_tags=["graph:tag:excluded"],
+            column_filters=TableColumnFilter("Market cap", above=1e9),
+            column_orderings=TableColumnOrdering(0, use_ticker=True),
+            file_format="csv",
+        )
+
+        assert content == b"a,b\n1,2\n"
+        call_args = export_api._session.post.call_args
+        assert "/v1/export/dashboardTable" in call_args[0][0]
+        assert json.loads(call_args[1]["data"]) == {
+            "table": "dashboards/1234/widgets/2",
+            "outputFormat": "csv",
+            "columns": [{"column": "9c4e2f"}, {"index": 3}],
+            "entities": ["entityTypes/company/entities/abc"],
+            "tagFilter": {
+                "includedTags": ["tags/user:123"],
+                "excludedTags": ["graph:tag:excluded"],
+            },
+            "columnFilters": [
+                {"column": {"column": "Market cap"}, "numericFilter": {"above": 1e9}}
+            ],
+            "columnOrderings": [{"column": {"index": 0}, "useTicker": True}],
+        }
+
+    def test_only_the_table_is_required(self):
+        export_api = ExportApi(ClientConfig(api_key="api-key"))
+        export_api._session.post = MagicMock(return_value=_ok_response(b""))
+
+        export_api.export_dashboard_table_bytes("dashboards/1234/widgets/2")
+
+        assert json.loads(export_api._session.post.call_args[1]["data"]) == {
+            "table": "dashboards/1234/widgets/2",
+            "outputFormat": "parquet",
+        }
+
+    def test_several_filters_and_orderings(self):
+        export_api = ExportApi(ClientConfig(api_key="api-key"))
+        export_api._session.post = MagicMock(return_value=_ok_response(b""))
+
+        export_api.export_dashboard_table_bytes(
+            "dashboards/1234/widgets/2",
+            column_filters=[
+                TableColumnFilter("Market cap", above=1e9),
+                TableColumnFilter("Next report", inside_relative_days=Interval(start=0, end=30)),
+            ],
+            column_orderings=[TableColumnOrdering("Revenue", descending=True)],
+        )
+
+        body = json.loads(export_api._session.post.call_args[1]["data"])
+        assert body["columnFilters"] == [
+            {"column": {"column": "Market cap"}, "numericFilter": {"above": 1e9}},
+            {
+                "column": {"column": "Next report"},
+                "dateFilter": {"insideRelativeDays": {"start": 0, "end": 30}},
+            },
+        ]
+        assert body["columnOrderings"] == [
+            {"column": {"column": "Revenue"}, "direction": "DESCENDING"}
+        ]
+
+    def test_position_zero_is_not_read_as_an_unset_column(self):
+        export_api = ExportApi(ClientConfig(api_key="api-key"))
+        export_api._session.post = MagicMock(return_value=_ok_response(b""))
+
+        export_api.export_dashboard_table_bytes("dashboards/1234/widgets/2", columns=0)
+
+        body = json.loads(export_api._session.post.call_args[1]["data"])
+        assert body["columns"] == [{"index": 0}]
+
+    @pytest.mark.parametrize(
+        "table", ["", "dashboards/1234", "dashboard:widget:2", "1234/widgets/2"]
+    )
+    def test_a_table_that_is_not_a_widget_resource_name_raises(self, table):
+        export_api = ExportApi(ClientConfig(api_key="api-key"))
+        export_api._session.post = MagicMock()
+
+        with pytest.raises(ValueError, match="dashboards/"):
+            export_api.export_dashboard_table_bytes(table)
+
+        export_api._session.post.assert_not_called()
+
+    def test_rejects_pickle(self):
+        export_api = ExportApi(ClientConfig(api_key="api-key"))
+        export_api._session.post = MagicMock()
+
+        with pytest.raises(ValueError, match="pickle is not supported"):
+            export_api.export_dashboard_table_bytes(
+                "dashboards/1234/widgets/2", file_format="pickle"
+            )
+
+        export_api._session.post.assert_not_called()
+
+    def test_error_response_raises(self):
+        export_api = ExportApi(ClientConfig(api_key="api-key"))
+        mock_response = MagicMock()
+        mock_response.status_code = 400
+        mock_response.content = b'"No column of table dashboards/1234/widgets/2 is named Sales"'
+        export_api._session.post = MagicMock(return_value=mock_response)
+
+        with pytest.raises(ValueError, match="Got 400: No column of table"):
+            export_api.export_dashboard_table_bytes("dashboards/1234/widgets/2")
+
+    def test_dataframe_is_read_from_parquet(self):
+        export_api = ExportApi(ClientConfig(api_key="api-key"))
+        expected = pd.DataFrame({"Company": ["Apple"], "Revenue": [100.0]})
+        export_api._session.post = MagicMock(
+            return_value=_ok_response(_df_to_parquet_bytes(expected))
+        )
+
+        result = export_api.export_dashboard_table("dashboards/1234/widgets/2", columns="Revenue")
+
+        pd.testing.assert_frame_equal(expected, result)
+        body = json.loads(export_api._session.post.call_args[1]["data"])
+        assert body["outputFormat"] == "parquet"

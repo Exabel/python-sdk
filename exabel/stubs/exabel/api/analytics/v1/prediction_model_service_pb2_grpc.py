@@ -5,6 +5,7 @@ import warnings
 
 from . import prediction_model_messages_pb2 as exabel_dot_api_dot_analytics_dot_v1_dot_prediction__model__messages__pb2
 from . import prediction_model_service_pb2 as exabel_dot_api_dot_analytics_dot_v1_dot_prediction__model__service__pb2
+from google.protobuf import empty_pb2 as google_dot_protobuf_dot_empty__pb2
 
 GRPC_GENERATED_VERSION = '1.78.0'
 GRPC_VERSION = grpc.__version__
@@ -29,7 +30,8 @@ if _version_not_supported:
 class PredictionModelServiceStub(object):
     """Service to manage prediction models.
 
-    The only current supported operation is to request to run a given prediction model.
+    Discover models, manage supported model configurations, and inspect model runs.
+    See https://help.exabel.com/reference/prediction-model-configuration for workflows and examples.
 
     Requests to the PredictionModelService are executed in the context of the customer's service
     account (SA). The SA is a special user that is a member of the customer user group, giving
@@ -44,6 +46,41 @@ class PredictionModelServiceStub(object):
         Args:
             channel: A grpc.Channel.
         """
+        self.GetPredictionModel = channel.unary_unary(
+                '/exabel.api.analytics.v1.PredictionModelService/GetPredictionModel',
+                request_serializer=exabel_dot_api_dot_analytics_dot_v1_dot_prediction__model__service__pb2.GetPredictionModelRequest.SerializeToString,
+                response_deserializer=exabel_dot_api_dot_analytics_dot_v1_dot_prediction__model__messages__pb2.PredictionModel.FromString,
+                _registered_method=True)
+        self.ListPredictionModels = channel.unary_unary(
+                '/exabel.api.analytics.v1.PredictionModelService/ListPredictionModels',
+                request_serializer=exabel_dot_api_dot_analytics_dot_v1_dot_prediction__model__service__pb2.ListPredictionModelsRequest.SerializeToString,
+                response_deserializer=exabel_dot_api_dot_analytics_dot_v1_dot_prediction__model__service__pb2.ListPredictionModelsResponse.FromString,
+                _registered_method=True)
+        self.CreatePredictionModel = channel.unary_unary(
+                '/exabel.api.analytics.v1.PredictionModelService/CreatePredictionModel',
+                request_serializer=exabel_dot_api_dot_analytics_dot_v1_dot_prediction__model__service__pb2.CreatePredictionModelRequest.SerializeToString,
+                response_deserializer=exabel_dot_api_dot_analytics_dot_v1_dot_prediction__model__messages__pb2.PredictionModel.FromString,
+                _registered_method=True)
+        self.UpdatePredictionModel = channel.unary_unary(
+                '/exabel.api.analytics.v1.PredictionModelService/UpdatePredictionModel',
+                request_serializer=exabel_dot_api_dot_analytics_dot_v1_dot_prediction__model__service__pb2.UpdatePredictionModelRequest.SerializeToString,
+                response_deserializer=exabel_dot_api_dot_analytics_dot_v1_dot_prediction__model__messages__pb2.PredictionModel.FromString,
+                _registered_method=True)
+        self.DeletePredictionModel = channel.unary_unary(
+                '/exabel.api.analytics.v1.PredictionModelService/DeletePredictionModel',
+                request_serializer=exabel_dot_api_dot_analytics_dot_v1_dot_prediction__model__service__pb2.DeletePredictionModelRequest.SerializeToString,
+                response_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
+                _registered_method=True)
+        self.GetPredictionModelRun = channel.unary_unary(
+                '/exabel.api.analytics.v1.PredictionModelService/GetPredictionModelRun',
+                request_serializer=exabel_dot_api_dot_analytics_dot_v1_dot_prediction__model__service__pb2.GetPredictionModelRunRequest.SerializeToString,
+                response_deserializer=exabel_dot_api_dot_analytics_dot_v1_dot_prediction__model__messages__pb2.PredictionModelRun.FromString,
+                _registered_method=True)
+        self.ListPredictionModelRuns = channel.unary_unary(
+                '/exabel.api.analytics.v1.PredictionModelService/ListPredictionModelRuns',
+                request_serializer=exabel_dot_api_dot_analytics_dot_v1_dot_prediction__model__service__pb2.ListPredictionModelRunsRequest.SerializeToString,
+                response_deserializer=exabel_dot_api_dot_analytics_dot_v1_dot_prediction__model__service__pb2.ListPredictionModelRunsResponse.FromString,
+                _registered_method=True)
         self.CreatePredictionModelRun = channel.unary_unary(
                 '/exabel.api.analytics.v1.PredictionModelService/CreatePredictionModelRun',
                 request_serializer=exabel_dot_api_dot_analytics_dot_v1_dot_prediction__model__service__pb2.CreatePredictionModelRunRequest.SerializeToString,
@@ -54,7 +91,8 @@ class PredictionModelServiceStub(object):
 class PredictionModelServiceServicer(object):
     """Service to manage prediction models.
 
-    The only current supported operation is to request to run a given prediction model.
+    Discover models, manage supported model configurations, and inspect model runs.
+    See https://help.exabel.com/reference/prediction-model-configuration for workflows and examples.
 
     Requests to the PredictionModelService are executed in the context of the customer's service
     account (SA). The SA is a special user that is a member of the customer user group, giving
@@ -63,8 +101,76 @@ class PredictionModelServiceServicer(object):
     will be accessible via the PredictionModelService.
     """
 
+    def GetPredictionModel(self, request, context):
+        """Gets a prediction model.
+
+        Returns a saved model and its configuration, including read-only model types.
+        """
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def ListPredictionModels(self, request, context):
+        """Lists prediction models.
+
+        Returns metadata for the models accessible to the service account.
+        """
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def CreatePredictionModel(self, request, context):
+        """Creates a prediction model.
+
+        Saves a configuration without running it. Creation is not safe to retry automatically.
+        """
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def UpdatePredictionModel(self, request, context):
+        """Updates a prediction model.
+
+        Only fields listed in `update_mask` are changed. Sections, lists, and dictionaries are replaced.
+        Omitted selected sections are cleared. Serialize updates to the same model to avoid lost updates.
+        """
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def DeletePredictionModel(self, request, context):
+        """Deletes a prediction model using the same permissions and behavior as the app.
+
+        Removes the model from the Library and marks it deleted. Historical data awaits cleanup;
+        this operation does not cancel runs that have already been submitted.
+        """
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def GetPredictionModelRun(self, request, context):
+        """Gets a prediction model run.
+
+        Returns the exact requested run, its state, and its saved configuration.
+        """
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def ListPredictionModelRuns(self, request, context):
+        """Lists prediction model runs.
+
+        Returns the regular runs for a model, ordered by descending run number.
+        """
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
     def CreatePredictionModelRun(self, request, context):
         """Runs a prediction model.
+
+        Returns the exact run name and the requested options. Poll GetPredictionModelRun for
+        execution state, timestamps, and the saved configuration.
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -73,6 +179,41 @@ class PredictionModelServiceServicer(object):
 
 def add_PredictionModelServiceServicer_to_server(servicer, server):
     rpc_method_handlers = {
+            'GetPredictionModel': grpc.unary_unary_rpc_method_handler(
+                    servicer.GetPredictionModel,
+                    request_deserializer=exabel_dot_api_dot_analytics_dot_v1_dot_prediction__model__service__pb2.GetPredictionModelRequest.FromString,
+                    response_serializer=exabel_dot_api_dot_analytics_dot_v1_dot_prediction__model__messages__pb2.PredictionModel.SerializeToString,
+            ),
+            'ListPredictionModels': grpc.unary_unary_rpc_method_handler(
+                    servicer.ListPredictionModels,
+                    request_deserializer=exabel_dot_api_dot_analytics_dot_v1_dot_prediction__model__service__pb2.ListPredictionModelsRequest.FromString,
+                    response_serializer=exabel_dot_api_dot_analytics_dot_v1_dot_prediction__model__service__pb2.ListPredictionModelsResponse.SerializeToString,
+            ),
+            'CreatePredictionModel': grpc.unary_unary_rpc_method_handler(
+                    servicer.CreatePredictionModel,
+                    request_deserializer=exabel_dot_api_dot_analytics_dot_v1_dot_prediction__model__service__pb2.CreatePredictionModelRequest.FromString,
+                    response_serializer=exabel_dot_api_dot_analytics_dot_v1_dot_prediction__model__messages__pb2.PredictionModel.SerializeToString,
+            ),
+            'UpdatePredictionModel': grpc.unary_unary_rpc_method_handler(
+                    servicer.UpdatePredictionModel,
+                    request_deserializer=exabel_dot_api_dot_analytics_dot_v1_dot_prediction__model__service__pb2.UpdatePredictionModelRequest.FromString,
+                    response_serializer=exabel_dot_api_dot_analytics_dot_v1_dot_prediction__model__messages__pb2.PredictionModel.SerializeToString,
+            ),
+            'DeletePredictionModel': grpc.unary_unary_rpc_method_handler(
+                    servicer.DeletePredictionModel,
+                    request_deserializer=exabel_dot_api_dot_analytics_dot_v1_dot_prediction__model__service__pb2.DeletePredictionModelRequest.FromString,
+                    response_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
+            ),
+            'GetPredictionModelRun': grpc.unary_unary_rpc_method_handler(
+                    servicer.GetPredictionModelRun,
+                    request_deserializer=exabel_dot_api_dot_analytics_dot_v1_dot_prediction__model__service__pb2.GetPredictionModelRunRequest.FromString,
+                    response_serializer=exabel_dot_api_dot_analytics_dot_v1_dot_prediction__model__messages__pb2.PredictionModelRun.SerializeToString,
+            ),
+            'ListPredictionModelRuns': grpc.unary_unary_rpc_method_handler(
+                    servicer.ListPredictionModelRuns,
+                    request_deserializer=exabel_dot_api_dot_analytics_dot_v1_dot_prediction__model__service__pb2.ListPredictionModelRunsRequest.FromString,
+                    response_serializer=exabel_dot_api_dot_analytics_dot_v1_dot_prediction__model__service__pb2.ListPredictionModelRunsResponse.SerializeToString,
+            ),
             'CreatePredictionModelRun': grpc.unary_unary_rpc_method_handler(
                     servicer.CreatePredictionModelRun,
                     request_deserializer=exabel_dot_api_dot_analytics_dot_v1_dot_prediction__model__service__pb2.CreatePredictionModelRunRequest.FromString,
@@ -89,7 +230,8 @@ def add_PredictionModelServiceServicer_to_server(servicer, server):
 class PredictionModelService(object):
     """Service to manage prediction models.
 
-    The only current supported operation is to request to run a given prediction model.
+    Discover models, manage supported model configurations, and inspect model runs.
+    See https://help.exabel.com/reference/prediction-model-configuration for workflows and examples.
 
     Requests to the PredictionModelService are executed in the context of the customer's service
     account (SA). The SA is a special user that is a member of the customer user group, giving
@@ -97,6 +239,195 @@ class PredictionModelService(object):
     Hence, only prediction models that are in folders shared to the SA, via the customer user group,
     will be accessible via the PredictionModelService.
     """
+
+    @staticmethod
+    def GetPredictionModel(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/exabel.api.analytics.v1.PredictionModelService/GetPredictionModel',
+            exabel_dot_api_dot_analytics_dot_v1_dot_prediction__model__service__pb2.GetPredictionModelRequest.SerializeToString,
+            exabel_dot_api_dot_analytics_dot_v1_dot_prediction__model__messages__pb2.PredictionModel.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def ListPredictionModels(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/exabel.api.analytics.v1.PredictionModelService/ListPredictionModels',
+            exabel_dot_api_dot_analytics_dot_v1_dot_prediction__model__service__pb2.ListPredictionModelsRequest.SerializeToString,
+            exabel_dot_api_dot_analytics_dot_v1_dot_prediction__model__service__pb2.ListPredictionModelsResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def CreatePredictionModel(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/exabel.api.analytics.v1.PredictionModelService/CreatePredictionModel',
+            exabel_dot_api_dot_analytics_dot_v1_dot_prediction__model__service__pb2.CreatePredictionModelRequest.SerializeToString,
+            exabel_dot_api_dot_analytics_dot_v1_dot_prediction__model__messages__pb2.PredictionModel.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def UpdatePredictionModel(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/exabel.api.analytics.v1.PredictionModelService/UpdatePredictionModel',
+            exabel_dot_api_dot_analytics_dot_v1_dot_prediction__model__service__pb2.UpdatePredictionModelRequest.SerializeToString,
+            exabel_dot_api_dot_analytics_dot_v1_dot_prediction__model__messages__pb2.PredictionModel.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def DeletePredictionModel(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/exabel.api.analytics.v1.PredictionModelService/DeletePredictionModel',
+            exabel_dot_api_dot_analytics_dot_v1_dot_prediction__model__service__pb2.DeletePredictionModelRequest.SerializeToString,
+            google_dot_protobuf_dot_empty__pb2.Empty.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def GetPredictionModelRun(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/exabel.api.analytics.v1.PredictionModelService/GetPredictionModelRun',
+            exabel_dot_api_dot_analytics_dot_v1_dot_prediction__model__service__pb2.GetPredictionModelRunRequest.SerializeToString,
+            exabel_dot_api_dot_analytics_dot_v1_dot_prediction__model__messages__pb2.PredictionModelRun.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def ListPredictionModelRuns(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/exabel.api.analytics.v1.PredictionModelService/ListPredictionModelRuns',
+            exabel_dot_api_dot_analytics_dot_v1_dot_prediction__model__service__pb2.ListPredictionModelRunsRequest.SerializeToString,
+            exabel_dot_api_dot_analytics_dot_v1_dot_prediction__model__service__pb2.ListPredictionModelRunsResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
 
     @staticmethod
     def CreatePredictionModelRun(request,

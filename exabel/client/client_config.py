@@ -19,6 +19,7 @@ class DefaultConfig:
             "EXABEL_MANAGEMENT_API_HOST", "management.api.exabel.com"
         )
         self.export_api_host = os.getenv("EXABEL_EXPORT_API_HOST", "export.api.exabel.com")
+        self.export_api_scheme = os.getenv("EXABEL_EXPORT_API_SCHEME", "https")
         self.data_api_port = int(os.getenv("EXABEL_DATA_API_PORT", "21443"))
         self.analytics_api_port = int(os.getenv("EXABEL_ANALYTICS_API_PORT", "21443"))
         self.management_api_port = int(os.getenv("EXABEL_MANAGEMENT_API_PORT", "21443"))
@@ -51,6 +52,9 @@ class ClientConfig(DefaultConfig):
         retries: int | None = None,
         root_certificates: str | None = None,
         extra_headers: Sequence[tuple[str, str]] | None = None,
+        # Appended rather than grouped with export_api_host: every parameter before it is
+        # positional in callers written before this one existed.
+        export_api_scheme: str | None = None,
     ):
         """
         Initialize a new client configuration.
@@ -71,6 +75,11 @@ class ClientConfig(DefaultConfig):
             retries:             Default number of retries to use for API requests.
             root_certificates:   Additional allowed root certificates for verifying TLS connection.
             extra_headers:       A list of headers to include in the request.
+            export_api_scheme:   URL scheme for the Exabel Export API, "https" or "http". The
+                                 export endpoints are the only ones reached over plain HTTP rather
+                                 than gRPC, so they are the only ones with a scheme to choose;
+                                 "http" is for a local or proxied endpoint that terminates TLS
+                                 elsewhere, and is never right against Exabel's own hosts.
         """
         super().__init__()
 
@@ -83,6 +92,7 @@ class ClientConfig(DefaultConfig):
         self.analytics_api_host = analytics_api_host or self.analytics_api_host
         self.management_api_host = management_api_host or self.management_api_host
         self.export_api_host = export_api_host or self.export_api_host
+        self.export_api_scheme = export_api_scheme or self.export_api_scheme
         self.data_api_port = data_api_port or self.data_api_port
         self.analytics_api_port = analytics_api_port or self.analytics_api_port
         self.management_api_port = management_api_port or self.management_api_port
@@ -91,6 +101,11 @@ class ClientConfig(DefaultConfig):
         self.retries = retries or self.retries
         self.root_certificates = root_certificates or self.root_certificates
         self.extra_headers = extra_headers or self.extra_headers
+
+        if self.export_api_scheme not in ("https", "http"):
+            raise ValueError(
+                f"Export API scheme must be 'https' or 'http', but was '{self.export_api_scheme}'."
+            )
 
         if self.api_key and self.access_token:
             raise ValueError(

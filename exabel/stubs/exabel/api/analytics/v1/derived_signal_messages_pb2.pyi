@@ -114,9 +114,7 @@ class DerivedSignal(_message.Message):
     DISPLAY_NAME_FIELD_NUMBER: _builtins.int
     METADATA_FIELD_NUMBER: _builtins.int
     name: _builtins.str
-    """Unique resource name of the derived signal, e.g. `derivedSignals/123`. In the "Create derived
-    signal" method, this is ignored and may be left empty.
-    """
+    """Unique resource name of the derived signal, e.g. `derivedSignals/123`."""
     label: _builtins.str
     """Label of the derived signal. This appears in the Library when browsing for derived signals,
     and when a derived signal is used in any Exabel feature (e.g. chart, dashboard). It can also

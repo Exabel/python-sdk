@@ -3,9 +3,12 @@
 isort:skip_file
 Copyright (c) 2019-2022 Exabel AS. All rights reserved."""
 
+from collections import abc as _abc
 from . import prediction_model_messages_pb2 as _prediction_model_messages_pb2
 from google.protobuf import descriptor as _descriptor
+from google.protobuf import field_mask_pb2 as _field_mask_pb2
 from google.protobuf import message as _message
+from google.protobuf.internal import containers as _containers
 import builtins as _builtins
 import sys
 import typing as _typing
@@ -16,6 +19,250 @@ else:
     from typing_extensions import TypeAlias as _TypeAlias
 
 DESCRIPTOR: _descriptor.FileDescriptor
+
+@_typing.final
+class GetPredictionModelRequest(_message.Message):
+    """Request to inspect a saved model."""
+
+    DESCRIPTOR: _descriptor.Descriptor
+
+    NAME_FIELD_NUMBER: _builtins.int
+    name: _builtins.str
+    """Model resource name, for example `predictionModels/123`."""
+    def __init__(
+        self,
+        *,
+        name: _builtins.str | None = ...,
+    ) -> None: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["name", b"name"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
+
+Global___GetPredictionModelRequest: _TypeAlias = GetPredictionModelRequest  # noqa: Y015
+
+@_typing.final
+class ListPredictionModelsRequest(_message.Message):
+    """Request for a page of accessible model metadata."""
+
+    DESCRIPTOR: _descriptor.Descriptor
+
+    PAGE_SIZE_FIELD_NUMBER: _builtins.int
+    PAGE_TOKEN_FIELD_NUMBER: _builtins.int
+    ORDER_BY_FIELD_NUMBER: _builtins.int
+    FILTER_FIELD_NUMBER: _builtins.int
+    page_size: _builtins.int
+    """Default 100, maximum 1000."""
+    page_token: _builtins.str
+    """Continuation token from the preceding response. Omit for the first page."""
+    order_by: _builtins.str
+    """One of `name`, `display_name`, `create_time`, or `update_time`, followed optionally by `asc` or `desc`.
+    Defaults to `name desc` (numeric model ID descending). Timestamp ties and display-name ties
+    are resolved by numeric model ID descending. Missing timestamps sort last.
+    """
+    filter: _builtins.str
+    """Filter for model metadata.
+
+    Supports `display_name` and `folder` with `=`, optionally combined with `AND`.
+    Display names match case-insensitively; `*` matches any sequence of characters.
+    Folder matching is exact and excludes subfolders. Unknown fields/operators are rejected.
+    Keep `filter` and `order_by` unchanged when requesting subsequent pages.
+
+    Example: `display_name="*Revenue*" AND folder="folders/123"`.
+    """
+    def __init__(
+        self,
+        *,
+        page_size: _builtins.int | None = ...,
+        page_token: _builtins.str | None = ...,
+        order_by: _builtins.str | None = ...,
+        filter: _builtins.str | None = ...,
+    ) -> None: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["filter", b"filter", "order_by", b"order_by", "page_size", b"page_size", "page_token", b"page_token"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
+
+Global___ListPredictionModelsRequest: _TypeAlias = ListPredictionModelsRequest  # noqa: Y015
+
+@_typing.final
+class ListPredictionModelsResponse(_message.Message):
+    """Response to list prediction models."""
+
+    DESCRIPTOR: _descriptor.Descriptor
+
+    MODELS_FIELD_NUMBER: _builtins.int
+    NEXT_PAGE_TOKEN_FIELD_NUMBER: _builtins.int
+    TOTAL_SIZE_FIELD_NUMBER: _builtins.int
+    next_page_token: _builtins.str
+    """Token for the next page. Empty when no further results remain."""
+    total_size: _builtins.int
+    """Total number of accessible models matching the filter."""
+    @_builtins.property
+    def models(self) -> _containers.RepeatedCompositeFieldContainer[_prediction_model_messages_pb2.PredictionModel]:
+        """Model metadata only. Use get to inspect configuration."""
+
+    def __init__(
+        self,
+        *,
+        models: _abc.Iterable[_prediction_model_messages_pb2.PredictionModel] | None = ...,
+        next_page_token: _builtins.str | None = ...,
+        total_size: _builtins.int | None = ...,
+    ) -> None: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["models", b"models", "next_page_token", b"next_page_token", "total_size", b"total_size"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
+
+Global___ListPredictionModelsResponse: _TypeAlias = ListPredictionModelsResponse  # noqa: Y015
+
+@_typing.final
+class CreatePredictionModelRequest(_message.Message):
+    """Request to create a saved model without starting a run."""
+
+    DESCRIPTOR: _descriptor.Descriptor
+
+    MODEL_FIELD_NUMBER: _builtins.int
+    FOLDER_FIELD_NUMBER: _builtins.int
+    folder: _builtins.str
+    """Resource name of the Library folder to create the model in, e.g. `folders/123`. If not
+    specified, the model will be created in an “Analytics API” folder that is shared with the
+    customer user group.
+    """
+    @_builtins.property
+    def model(self) -> _prediction_model_messages_pb2.PredictionModel:
+        """Model fields to save. Configuration is validated by the server."""
+
+    def __init__(
+        self,
+        *,
+        model: _prediction_model_messages_pb2.PredictionModel | None = ...,
+        folder: _builtins.str | None = ...,
+    ) -> None: ...
+    _HasFieldArgType: _TypeAlias = _typing.Literal["model", b"model"]  # noqa: Y015
+    def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["folder", b"folder", "model", b"model"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
+
+Global___CreatePredictionModelRequest: _TypeAlias = CreatePredictionModelRequest  # noqa: Y015
+
+@_typing.final
+class UpdatePredictionModelRequest(_message.Message):
+    """Request to change explicitly masked fields of a saved model."""
+
+    DESCRIPTOR: _descriptor.Descriptor
+
+    MODEL_FIELD_NUMBER: _builtins.int
+    UPDATE_MASK_FIELD_NUMBER: _builtins.int
+    @_builtins.property
+    def model(self) -> _prediction_model_messages_pb2.PredictionModel:
+        """Model fields to save. Configuration is validated by the server."""
+
+    @_builtins.property
+    def update_mask(self) -> _field_mask_pb2.FieldMask:
+        """Supports `display_name`, `description`, `configuration`, its top-level sections, and
+        `configuration.model_options.model_type`, `configuration.model_options.parameters`, and
+        `configuration.model_options.year_over_year`. Parent and child paths cannot be combined.
+        Sections and lists are replaced. Omitted masked sections are cleared. Immutable/output-only
+        fields and wildcard masks are rejected to avoid overwriting unexposed legacy settings.
+        """
+
+    def __init__(
+        self,
+        *,
+        model: _prediction_model_messages_pb2.PredictionModel | None = ...,
+        update_mask: _field_mask_pb2.FieldMask | None = ...,
+    ) -> None: ...
+    _HasFieldArgType: _TypeAlias = _typing.Literal["model", b"model", "update_mask", b"update_mask"]  # noqa: Y015
+    def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["model", b"model", "update_mask", b"update_mask"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
+
+Global___UpdatePredictionModelRequest: _TypeAlias = UpdatePredictionModelRequest  # noqa: Y015
+
+@_typing.final
+class DeletePredictionModelRequest(_message.Message):
+    """Request to delete a prediction model."""
+
+    DESCRIPTOR: _descriptor.Descriptor
+
+    NAME_FIELD_NUMBER: _builtins.int
+    name: _builtins.str
+    """Model resource name, for example `predictionModels/123`."""
+    def __init__(
+        self,
+        *,
+        name: _builtins.str | None = ...,
+    ) -> None: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["name", b"name"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
+
+Global___DeletePredictionModelRequest: _TypeAlias = DeletePredictionModelRequest  # noqa: Y015
+
+@_typing.final
+class GetPredictionModelRunRequest(_message.Message):
+    """Request to inspect one exact regular run."""
+
+    DESCRIPTOR: _descriptor.Descriptor
+
+    NAME_FIELD_NUMBER: _builtins.int
+    name: _builtins.str
+    """Exact name returned by create. Run numbers must be positive; zero is not an active-run alias."""
+    def __init__(
+        self,
+        *,
+        name: _builtins.str | None = ...,
+    ) -> None: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["name", b"name"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
+
+Global___GetPredictionModelRunRequest: _TypeAlias = GetPredictionModelRunRequest  # noqa: Y015
+
+@_typing.final
+class ListPredictionModelRunsRequest(_message.Message):
+    """Request for a page of regular runs belonging to a model."""
+
+    DESCRIPTOR: _descriptor.Descriptor
+
+    PARENT_FIELD_NUMBER: _builtins.int
+    PAGE_SIZE_FIELD_NUMBER: _builtins.int
+    PAGE_TOKEN_FIELD_NUMBER: _builtins.int
+    parent: _builtins.str
+    """Model resource name whose runs should be listed."""
+    page_size: _builtins.int
+    """Default 100, maximum 1000. Regular runs only, newest first."""
+    page_token: _builtins.str
+    """Continuation token from the preceding response. Omit for the first page."""
+    def __init__(
+        self,
+        *,
+        parent: _builtins.str | None = ...,
+        page_size: _builtins.int | None = ...,
+        page_token: _builtins.str | None = ...,
+    ) -> None: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["page_size", b"page_size", "page_token", b"page_token", "parent", b"parent"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
+
+Global___ListPredictionModelRunsRequest: _TypeAlias = ListPredictionModelRunsRequest  # noqa: Y015
+
+@_typing.final
+class ListPredictionModelRunsResponse(_message.Message):
+    """Response to list prediction model runs."""
+
+    DESCRIPTOR: _descriptor.Descriptor
+
+    RUNS_FIELD_NUMBER: _builtins.int
+    NEXT_PAGE_TOKEN_FIELD_NUMBER: _builtins.int
+    next_page_token: _builtins.str
+    """Token for the next page. Empty when no further results remain."""
+    @_builtins.property
+    def runs(self) -> _containers.RepeatedCompositeFieldContainer[_prediction_model_messages_pb2.PredictionModelRun]:
+        """Run metadata only. Get a run to inspect its configuration snapshot."""
+
+    def __init__(
+        self,
+        *,
+        runs: _abc.Iterable[_prediction_model_messages_pb2.PredictionModelRun] | None = ...,
+        next_page_token: _builtins.str | None = ...,
+    ) -> None: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["next_page_token", b"next_page_token", "runs", b"runs"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
+
+Global___ListPredictionModelRunsResponse: _TypeAlias = ListPredictionModelRunsResponse  # noqa: Y015
 
 @_typing.final
 class CreatePredictionModelRunRequest(_message.Message):

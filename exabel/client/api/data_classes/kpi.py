@@ -13,7 +13,8 @@ class KpiType(Enum):
     FACTSET_ESTIMATES = "FACTSET_ESTIMATES"
     # FactSet Fundamentals.
     FACTSET_FUNDAMENTALS = "FACTSET_FUNDAMENTALS"
-    # FactSet Segments.
+    # FactSet Segments. Deprecated: the dataset is decommissioned and no longer returns data.
+    # The member is retained because removing it would be a breaking change for SDK users.
     FACTSET_SEGMENTS = "FACTSET_SEGMENTS"
 
 
